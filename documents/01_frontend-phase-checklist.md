@@ -12,7 +12,7 @@
 - [x] Đã có backend production cho auth
 - [x] Đã có CORS cho frontend domain
 - [x] Đã có planning docs nền cho frontend
-- [ ] Chưa scaffold source frontend thực tế
+- [x] Đã scaffold source frontend thực tế
 - [ ] Chưa chốt domain deploy frontend
 
 ## Tổng quan phase
@@ -20,10 +20,10 @@
 | Phase | Mục tiêu | Status |
 | --- | --- | --- |
 | 00 | Chốt planning và baseline frontend | Completed |
-| 01 | Chốt stack và scaffold app frontend | Todo |
-| 02 | Xây dựng auth flow và protected app shell | Todo |
-| 03 | Xây dựng landing và public surface | Todo |
-| 04 | Xây dựng dashboard, profile, và empty states có dữ liệu thật | Todo |
+| 01 | Chốt stack và scaffold app frontend | Completed |
+| 02 | Xây dựng auth flow và protected app shell | Completed |
+| 03 | Xây dựng landing và public surface | Completed |
+| 04 | Xây dựng dashboard, profile, và empty states có dữ liệu thật | Completed |
 | 05 | Xây dựng `trips` workspace | Blocked by BE Phase 04 |
 | 06 | Xây dựng `itineraries` và `budgets` workspace | Blocked by BE Phase 05 |
 | 07 | Xây dựng `community` experience | Blocked by BE Phase 06 |
@@ -46,56 +46,56 @@ Status: `Completed`
 
 ## Phase 01 - Chốt stack và scaffold app frontend
 
-Status: `Todo`
+Status: `Completed`
 
-- [ ] Chốt framework và toolchain scaffold
-- [ ] Khởi tạo project frontend trong `frontend/`
-- [ ] Tạo cấu trúc thư mục theo `app/features/shared`
-- [ ] Tạo app router và route groups public/protected
-- [ ] Tạo HTTP client nền
-- [ ] Tạo config env nền
-- [ ] Tạo shared response/error handling strategy
-- [ ] Tạo token và design variable nền
-- [ ] Tạo lint, format, test, build scripts
-- [ ] Tạo `frontend/README.md` mô tả cách chạy package sau khi scaffold
+- [x] Chốt framework và toolchain scaffold
+- [x] Khởi tạo project frontend trong `frontend/`
+- [x] Tạo cấu trúc thư mục theo `app/features/shared`
+- [x] Tạo app router và route groups public/protected
+- [x] Tạo HTTP client nền
+- [x] Tạo config env nền
+- [x] Tạo shared response/error handling strategy
+- [x] Tạo token và design variable nền
+- [x] Tạo lint, format, test, build scripts
+- [x] Tạo `frontend/README.md` mô tả cách chạy package sau khi scaffold
 
 ## Phase 02 - Xây dựng auth flow và protected app shell
 
-Status: `Todo`
+Status: `Completed`
 
-- [ ] Tạo route `login`
-- [ ] Tạo route `register`
-- [ ] Kết nối `POST /auth/login`
-- [ ] Kết nối `POST /auth/register`
-- [ ] Kết nối `GET /auth/me`
-- [ ] Kết nối `POST /auth/refresh`
-- [ ] Tạo session persistence strategy
-- [ ] Tạo protected route guard
-- [ ] Tạo app shell cho khu vực đăng nhập
-- [ ] Tạo logout flow rõ ràng
+- [x] Tạo route `login`
+- [x] Tạo route `register`
+- [x] Kết nối `POST /auth/login`
+- [x] Kết nối `POST /auth/register`
+- [x] Kết nối `GET /auth/me`
+- [x] Kết nối `POST /auth/refresh`
+- [x] Tạo session persistence strategy
+- [x] Tạo protected route guard
+- [x] Tạo app shell cho khu vực đăng nhập
+- [x] Tạo logout flow rõ ràng
 
 ## Phase 03 - Xây dựng landing và public surface
 
-Status: `Todo`
+Status: `Completed`
 
-- [ ] Tạo landing page production thay vì demo state-machine
-- [ ] Chốt hero, CTA, và section hierarchy
-- [ ] Tạo public navigation
-- [ ] Tạo mobile navigation pattern
-- [ ] Tạo community teaser hoặc read-only blocks nếu cần
-- [ ] Tạo loading skeleton cho public image-heavy sections
-- [ ] Chốt copy baseline tiếng Việt
+- [x] Tạo landing page production thay vì demo state-machine
+- [x] Chốt hero, CTA, và section hierarchy
+- [x] Tạo public navigation
+- [x] Tạo mobile navigation pattern
+- [x] Tạo community teaser hoặc read-only blocks nếu cần
+- [x] Tạo loading skeleton cho public image-heavy sections nếu public surface chuyển sang dữ liệu động
+- [x] Chốt copy baseline tiếng Việt
 
 ## Phase 04 - Xây dựng dashboard, profile, và empty states có dữ liệu thật
 
-Status: `Todo`
+Status: `Completed`
 
-- [ ] Tạo dashboard route trong protected area
-- [ ] Tạo empty state khi chưa có chuyến đi
-- [ ] Tạo profile summary từ `GET /auth/me`
-- [ ] Tạo session boot flow khi refresh trình duyệt
-- [ ] Tạo unauthorized và expired-session handling
-- [ ] Tạo toast hoặc banner feedback cho auth actions
+- [x] Tạo dashboard route trong protected area
+- [x] Tạo empty state khi chưa có chuyến đi
+- [x] Tạo profile summary từ `GET /auth/me`
+- [x] Tạo session boot flow khi refresh trình duyệt
+- [x] Tạo unauthorized và expired-session handling
+- [x] Tạo toast hoặc banner feedback cho auth actions
 
 ## Phase 05 - Xây dựng `trips` workspace
 
@@ -136,13 +136,17 @@ Status: `Todo`
 - [ ] Thêm smoke e2e cho login -> dashboard
 - [ ] Kiểm tra accessibility các flow chính
 - [ ] Kiểm tra responsive trên mobile và desktop
-- [ ] Chốt env runtime cho frontend
-- [ ] Chốt deploy target
+- [x] Chốt env runtime cho frontend
+- [x] Chốt deploy target
 - [ ] Chạy post-deploy verification
 
 ## Immediate Todo Sau Planning
 
-- [ ] Review và chốt stack đề xuất
-- [ ] Review và chốt route map phase 1
-- [ ] Chốt session strategy cho auth phase đầu
-- [ ] Bắt đầu scaffold `frontend/`
+- [x] Review và chốt stack đề xuất
+- [x] Review và chốt route map phase 1
+- [x] Chốt session strategy cho auth phase đầu
+- [x] Bắt đầu scaffold `frontend/`
+- [ ] Chốt domain deploy frontend
+- [ ] Test login/register/me/refresh qua domain frontend thật
+- [x] Quyết định mức polish tiếp theo cho landing/public section trước khi mở phase 08
+- [ ] Chốt ưu tiên hardening tiếp theo trong phase 08

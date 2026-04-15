@@ -1,0 +1,25 @@
+:root {
+  color-scheme: light;
+  --color-forest: #546b41;
+  --color-forest-deep: #405334;
+  --color-moss: #99ad7a;
+  --color-sand: #dcccac;
+  --color-cream: #f7f2e8;
+  --color-white: #ffffff;
+  --color-ink: #1f2a1a;
+  --color-ink-soft: #4f5d48;
+  --color-border: rgba(84, 107, 65, 0.14);
+  --color-border-strong: rgba(84, 107, 65, 0.24);
+  --color-surface: rgba(255, 255, 255, 0.84);
+  --color-surface-strong: rgba(255, 255, 255, 0.94);
+  --color-danger: #b84747;
+  --color-success: #3f7f53;
+  --shadow-soft: 0 18px 60px rgba(70, 84, 55, 0.14);
+  --shadow-card: 0 18px 36px rgba(70, 84, 55, 0.1);
+  --radius-xl: 1.75rem;
+  --radius-lg: 1.25rem;
+  --radius-md: 0.875rem;
+  --space-section: clamp(4rem, 7vw, 7rem);
+  --font-heading: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  --font-body: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+}

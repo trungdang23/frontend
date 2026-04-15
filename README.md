@@ -4,9 +4,39 @@ Frontend package cho sản phẩm `journey`.
 
 ## Trạng thái hiện tại
 
-- `frontend/` hiện chưa được scaffold source app thực tế.
-- Giai đoạn hiện tại tập trung vào planning và chốt baseline để tránh làm frontend theo kiểu "đi tới đâu sửa tới đó".
-- Các tài liệu trong `documents/` là nguồn tham chiếu chính trước khi bắt đầu scaffold.
+- `frontend/` đã được scaffold thành app `React + Vite + TypeScript`.
+- App hiện đã có baseline cho:
+  - landing page
+  - auth routes `login/register`
+  - protected app shell
+  - dashboard empty state
+  - profile summary từ `GET /auth/me`
+  - session boot với `login/register/me/refresh`
+- Các tài liệu trong `documents/` vẫn là nguồn tham chiếu chính để giữ roadmap không trượt khỏi scope.
+
+## Chạy package
+
+```bash
+pnpm install
+pnpm dev
+```
+
+## Các lệnh verify hiện có
+
+```bash
+pnpm lint
+pnpm build
+npm test -- --run
+```
+
+## Env runtime hiện dùng
+
+- `VITE_API_BASE_URL`
+- `VITE_APP_ENV`
+
+File mẫu: `.env.example`
+
+Deploy thật không đọc giá trị này từ source. Workflow deploy frontend lấy build-time env từ GitHub `Variables`.
 
 ## Bộ tài liệu planning
 
@@ -36,9 +66,19 @@ Frontend package cho sản phẩm `journey`.
 - Chốt nguyên tắc thiết kế và kiến trúc app ở mức đủ rõ để scaffold một lần cho đúng.
 - Chỉ ra rõ phần nào có thể làm ngay với backend hiện tại và phần nào cần chờ backend phase tiếp theo.
 
-## Bước tiếp theo sau bộ planning
+## Cấu trúc source hiện tại
 
-1. Review và chốt stack frontend.
-2. Scaffold app trong `frontend/`.
-3. Dựng design tokens, app shell, auth flow, và dashboard empty state trước.
-4. Chỉ mở các màn phụ thuộc `trips/community` khi backend phase tương ứng đã sẵn contract thật.
+```text
+src/
+  app/
+  features/
+  shared/
+  tests/
+```
+
+## Bước tiếp theo hợp lý
+
+1. Cấu hình GitHub `Secrets` và `Variables` theo `documents/09_frontend-preview-deploy-runbook.md`.
+2. Chạy `deploy-frontend` để đưa bản preview đầu tiên lên domain thật.
+3. Test auth flow và i18n trên domain preview.
+4. Chỉ mở `trips/community` khi backend phase tương ứng đã sẵn contract thật.

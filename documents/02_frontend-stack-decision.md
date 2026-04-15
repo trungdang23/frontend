@@ -3,7 +3,7 @@
 ## Trạng thái
 
 - Date: `2026-04-14`
-- Status: `Proposed as baseline for scaffold`
+- Status: `Implemented as scaffold baseline`
 - Scope: stack và toolchain cho app frontend đầu tiên trong `frontend/`
 
 ## Mục tiêu của quyết định này
@@ -36,7 +36,7 @@
 - Chưa chốt animation library lớn.
 - Chưa chốt headless component library ngoài.
 - Chưa chốt analytics SDK.
-- Chưa chốt deploy target cụ thể.
+- Chưa chốt domain production cuối cùng, nhưng đã chốt luồng preview deploy thủ công qua GitHub Actions.
 
 ## Lý do chưa chọn SSR ở phase đầu
 

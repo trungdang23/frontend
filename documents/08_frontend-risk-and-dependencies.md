@@ -47,6 +47,12 @@
 - Reference demo giàu visual và nhiều one-off styling.
 - Nếu không token hóa sớm, app sẽ khó mở rộng khi nhiều feature xuất hiện.
 
+### 5. Frontend deploy rất dễ lệch API base URL nếu để env trong source
+
+- Với Vite, build-time env đi vào bundle ngay lúc build.
+- Nếu giữ URL thật trong source hoặc file env commit vào repo, preview và production rất dễ trỏ nhầm.
+- Vì vậy build-time env cho deploy phải lấy từ GitHub `Variables`.
+
 ## Risk giảm thiểu bằng planning hiện tại
 
 - Chốt route map trước khi scaffold

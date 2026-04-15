@@ -36,6 +36,7 @@
 - Heading dùng scale rõ ràng, không dùng nhiều cỡ gần nhau.
 - Body text tối ưu readability hơn là trang trí.
 - Không để font stack mặc định làm UI mất cá tính.
+- Baseline hiện tại dùng `Plus Jakarta Sans` cho cả heading và body để giữ giao diện đồng nhất trên nhiều máy.
 
 ### 3. Color system theo token
 
@@ -83,6 +84,7 @@
 - Ưu tiên tiếng Việt cho copy chính nếu product đang đi theo hướng đó.
 - Giữ nhất quán thuật ngữ như `chuyến đi`, `lịch trình`, `ngân sách`.
 - Nếu sau này có song ngữ, text phải đi qua layer config chứ không hardcode khắp component.
+- Locale hiện được tách thành file JSON theo ngôn ngữ để tránh trộn tiếng Việt và tiếng Anh trong cùng một flow.
 
 ## Anti-pattern cần tránh
 
