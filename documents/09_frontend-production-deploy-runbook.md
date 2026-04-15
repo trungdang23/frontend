@@ -146,7 +146,8 @@ Không bắt buộc phải SSH vào máy để `git clone` tay nữa. Nếu `DEP
 
 Trường hợp ngoại lệ:
 
-- nếu `DEPLOY_PATH` đang chứa file khác và checkout đầu tiên báo conflict, hãy dọn hoặc đổi tên thư mục đó rồi chạy lại workflow
+- `DEPLOY_PATH` phải là thư mục source dành riêng cho frontend; không nên đặt file tay như `index.html` hay static publish cũ trong đó
+- workflow bootstrap đầu tiên sẽ dùng `git checkout -f`, nên file local cũ đang chặn branch checkout có thể bị ghi đè
 - nếu máy đích chưa có GitHub SSH key hoặc key chưa được cấp quyền vào repo `frontend`, `git fetch` sẽ fail ngay từ lần bootstrap đầu tiên
 
 ## Quy trình deploy lặp lại
