@@ -36,6 +36,8 @@ npm test -- --run
 
 File mẫu: `.env.example`
 
+Deploy thật không đọc giá trị này từ source. Workflow deploy frontend lấy build-time env từ GitHub `Variables`.
+
 ## Bộ tài liệu planning
 
 - `documents/00_frontend-foundation.md`
@@ -76,7 +78,7 @@ src/
 
 ## Bước tiếp theo hợp lý
 
-1. Kết nối và test auth flow trên domain frontend thật.
-2. Hoàn thiện polish cho landing/public surface nếu cần thêm loading states.
-3. Chuẩn bị deploy target và env runtime cho frontend.
+1. Cấu hình GitHub `Secrets` và `Variables` theo `documents/09_frontend-preview-deploy-runbook.md`.
+2. Chạy `deploy-frontend` để đưa bản preview đầu tiên lên domain thật.
+3. Test auth flow và i18n trên domain preview.
 4. Chỉ mở `trips/community` khi backend phase tương ứng đã sẵn contract thật.

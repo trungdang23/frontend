@@ -1,0 +1,25 @@
+# Example Apache virtual host for a static SPA preview.
+#
+# Adjust:
+# - ServerName / ServerAlias
+# - DocumentRoot
+# - log file names
+
+<VirtualHost *:80>
+    ServerName preview.buicojourney.com
+    DocumentRoot "C:/xampp/htdocs/buicojourney-preview"
+
+    <Directory "C:/xampp/htdocs/buicojourney-preview">
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+
+        RewriteEngine On
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule ^ /index.html [L]
+    </Directory>
+
+    ErrorLog  "logs/preview.buicojourney.com-error.log"
+    CustomLog "logs/preview.buicojourney.com-access.log" combined
+</VirtualHost>

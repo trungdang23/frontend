@@ -136,8 +136,8 @@ Status: `Todo`
 - [ ] Thêm smoke e2e cho login -> dashboard
 - [ ] Kiểm tra accessibility các flow chính
 - [ ] Kiểm tra responsive trên mobile và desktop
-- [ ] Chốt env runtime cho frontend
-- [ ] Chốt deploy target
+- [x] Chốt env runtime cho frontend
+- [x] Chốt deploy target
 - [ ] Chạy post-deploy verification
 
 ## Immediate Todo Sau Planning
