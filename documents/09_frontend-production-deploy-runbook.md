@@ -106,6 +106,8 @@ Frontend có các script:
 - `scripts/restart-production.sh`
 - `scripts/check-production-health.sh`
 
+`stop-production.sh` sẽ cố dọn cả process đang giữ `APP_PORT` kể cả khi PID file cũ bị mất, để lượt restart sau reboot hoặc deploy dễ tự phục hồi hơn.
+
 Sau reboot, nếu bạn chỉ muốn bật lại frontend runtime bằng một lệnh trên máy đích:
 
 ```bash

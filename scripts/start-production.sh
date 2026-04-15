@@ -20,6 +20,14 @@ if [ -n "${existing_pid}" ] && kill -0 "${existing_pid}" >/dev/null 2>&1; then
   exit 1
 fi
 
+port_conflict_pid="$(port_listener_pids | head -n 1 || true)"
+
+if [ -n "${port_conflict_pid}" ]; then
+  echo "${APP_NAME:-journey-frontend} cannot start because 127.0.0.1:$(app_port) is already in use by PID ${port_conflict_pid}." >&2
+  echo "Run ./scripts/stop-production.sh to release the port before starting again." >&2
+  exit 1
+fi
+
 cd "${APP_DIR}"
 nohup setsid node scripts/serve-production.mjs </dev/null >>"${LOG_FILE}" 2>&1 &
 pid="$!"

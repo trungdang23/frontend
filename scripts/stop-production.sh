@@ -7,30 +7,34 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/common-production.sh"
 load_runtime_env
 
 pid="$(running_pid || true)"
+stopped_anything=false
 
-if [ -z "${pid}" ]; then
-  echo "${APP_NAME:-journey-frontend} is not running."
-  exit 0
-fi
-
-if ! kill -0 "${pid}" >/dev/null 2>&1; then
-  rm -f "${PID_FILE}"
-  echo "Removed stale PID file for ${APP_NAME:-journey-frontend}."
-  exit 0
-fi
-
-kill "${pid}"
-
-for _ in $(seq 1 20); do
-  if ! kill -0 "${pid}" >/dev/null 2>&1; then
-    rm -f "${PID_FILE}"
-    echo "${APP_NAME:-journey-frontend} stopped."
-    exit 0
+if [ -n "${pid}" ]; then
+  if kill -0 "${pid}" >/dev/null 2>&1; then
+    stop_pid_gracefully "${pid}" "${APP_NAME:-journey-frontend} (PID ${pid})"
+    stopped_anything=true
+  else
+    echo "Removed stale PID file for ${APP_NAME:-journey-frontend}."
   fi
 
-  sleep 1
-done
+  rm -f "${PID_FILE}"
+fi
 
-kill -9 "${pid}" >/dev/null 2>&1 || true
-rm -f "${PID_FILE}"
-echo "${APP_NAME:-journey-frontend} was force stopped."
+while IFS= read -r listener_pid; do
+  if [ -z "${listener_pid}" ]; then
+    continue
+  fi
+
+  if [ -n "${pid}" ] && [ "${listener_pid}" = "${pid}" ]; then
+    continue
+  fi
+
+  if kill -0 "${listener_pid}" >/dev/null 2>&1; then
+    stop_pid_gracefully "${listener_pid}" "${APP_NAME:-journey-frontend} port listener PID ${listener_pid}"
+    stopped_anything=true
+  fi
+done < <(port_listener_pids)
+
+if [ "${stopped_anything}" = false ]; then
+  echo "${APP_NAME:-journey-frontend} is not running."
+fi
