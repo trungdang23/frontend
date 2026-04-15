@@ -15,10 +15,10 @@
 - SSH hostname ổn định: `ssh.buicojourney.com`
 - App frontend public:
   - `buicojourney.com -> http://localhost:3000`
-  - `www.buicojourney.com -> http://localhost:3000`
+- `www.buicojourney.com -> http://localhost:3000`
 - Deploy machine giữ source repo tại `DEPLOY_PATH`
 - Workflow render `.env.production` trên GitHub runner rồi copy lên `RUNTIME_ENV_PATH`
-- Nếu `DEPLOY_PATH` chưa là git repo, workflow sẽ tự `git init`, gắn `origin`, fetch đúng `ref`, rồi checkout lần đầu
+- Nếu `DEPLOY_PATH` chưa là git repo, workflow sẽ tự `git init`, gắn `origin` qua `git@github.com`, fetch đúng `ref`, rồi checkout lần đầu
 - Máy đích chạy:
   - `git fetch`
   - `git checkout`
@@ -139,10 +139,15 @@ frontend sẽ tự phục vụ toàn bộ SPA routes, kể cả refresh ở:
 
 Không bắt buộc phải SSH vào máy để `git clone` tay nữa. Nếu `DEPLOY_PATH` chưa có `.git`, workflow sẽ tự bootstrap repo ở đúng thư mục đó trong lần deploy đầu tiên.
 
+Điều kiện để bootstrap thành công:
+
+- user chạy deploy trên máy đích phải có GitHub SSH access tới repo `frontend`
+- phần này nên dùng cùng cấu hình SSH GitHub đang deploy được cho `backend`
+
 Trường hợp ngoại lệ:
 
 - nếu `DEPLOY_PATH` đang chứa file khác và checkout đầu tiên báo conflict, hãy dọn hoặc đổi tên thư mục đó rồi chạy lại workflow
-- nếu repo đổi từ public sang private trong tương lai, máy đích sẽ cần quyền clone phù hợp trước lần bootstrap đầu tiên
+- nếu máy đích chưa có GitHub SSH key hoặc key chưa được cấp quyền vào repo `frontend`, `git fetch` sẽ fail ngay từ lần bootstrap đầu tiên
 
 ## Quy trình deploy lặp lại
 
