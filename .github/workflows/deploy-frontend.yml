@@ -215,6 +215,7 @@ jobs:
           RUNTIME_ENV_PATH: ${{ vars.RUNTIME_ENV_PATH }}
           SERVICE_RESTART_COMMAND: ${{ vars.SERVICE_RESTART_COMMAND }}
           DEPLOY_REF: ${{ inputs.ref }}
+          REPOSITORY_CLONE_URL: ${{ github.server_url }}/${{ github.repository }}.git
         run: |
           ssh "${SSH_HOST}" \
             "set -euo pipefail && \
@@ -222,6 +223,14 @@ jobs:
             test -s \"\$NVM_DIR/nvm.sh\" && \
             . \"\$NVM_DIR/nvm.sh\" && \
             (nvm use 20.20.2 >/dev/null || nvm use default >/dev/null) && \
+            install -m 755 -d \"\$(dirname '${DEPLOY_PATH}')\" && \
+            install -m 755 -d '${DEPLOY_PATH}' && \
+            if [ ! -d '${DEPLOY_PATH}/.git' ]; then \
+              git -C '${DEPLOY_PATH}' init && \
+              git -C '${DEPLOY_PATH}' remote add origin '${REPOSITORY_CLONE_URL}' || git -C '${DEPLOY_PATH}' remote set-url origin '${REPOSITORY_CLONE_URL}' && \
+              git -C '${DEPLOY_PATH}' fetch origin '${DEPLOY_REF}' && \
+              git -C '${DEPLOY_PATH}' checkout -B '${DEPLOY_REF}' FETCH_HEAD; \
+            fi && \
             cd '${DEPLOY_PATH}' && \
             git fetch --all --prune && \
             git checkout '${DEPLOY_REF}' && \
