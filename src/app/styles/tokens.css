@@ -20,6 +20,6 @@
   --radius-lg: 1.25rem;
   --radius-md: 0.875rem;
   --space-section: clamp(4rem, 7vw, 7rem);
-  --font-heading: 'Georgia', 'Times New Roman', serif;
-  --font-body: 'Inter', 'Segoe UI', sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
+  --font-body: 'Plus Jakarta Sans', 'Segoe UI', sans-serif;
 }

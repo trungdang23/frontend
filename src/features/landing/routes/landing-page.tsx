@@ -1,32 +1,31 @@
 import { ArrowRight, Compass, NotebookPen, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useI18n } from '@/shared/i18n/use-i18n';
 import { getButtonClasses } from '@/shared/ui/button-styles';
 import { Card } from '@/shared/ui/card';
 import { PageSection } from '@/shared/ui/page-section';
 import { SiteHeader } from '@/shared/ui/site-header';
 
-const featureCards = [
-  {
-    icon: NotebookPen,
-    title: 'Lên kế hoạch có trật tự',
-    description:
-      'Từ bước auth, dashboard tới khung trips, toàn bộ flow được chốt trước để tránh phải sửa kiến trúc giữa chừng.',
-  },
-  {
-    icon: Compass,
-    title: 'Giữ trải nghiệm giàu cảm hứng',
-    description:
-      'Visual direction đi theo travel journal ấm áp, nhiều khoảng thở và có cá tính thay vì một dashboard generic.',
-  },
-  {
-    icon: Users,
-    title: 'Mở rộng sang cộng đồng đúng thời điểm',
-    description:
-      'Community đang được giữ ở mode teaser để đồng bộ với tiến độ backend thật, tránh rework không cần thiết.',
-  },
-];
-
 export function LandingPage() {
+  const { t } = useI18n();
+  const featureCards = [
+    {
+      icon: NotebookPen,
+      title: t('landing.features.plan.title'),
+      description: t('landing.features.plan.description'),
+    },
+    {
+      icon: Compass,
+      title: t('landing.features.experience.title'),
+      description: t('landing.features.experience.description'),
+    },
+    {
+      icon: Users,
+      title: t('landing.features.community.title'),
+      description: t('landing.features.community.description'),
+    },
+  ];
+
   return (
     <div className="min-h-screen pb-12">
       <SiteHeader />
@@ -34,59 +33,45 @@ export function LandingPage() {
       <PageSection className="pt-12">
         <div className="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <div className="space-y-6">
-            <p className="text-sm font-semibold uppercase tracking-[0.26em] text-[var(--color-forest)]">
-              Ke hoach cho mot hanh trinh ro rang
-            </p>
+            <p className="eyebrow-text text-[var(--color-forest)]">{t('landing.eyebrow')}</p>
             <div className="space-y-4">
               <h1 className="headline max-w-4xl text-5xl leading-tight text-[var(--color-ink)] sm:text-6xl">
-                Journey giúp bạn gom cảm hứng, giữ nhịp chuẩn bị và bắt đầu chuyến đi với tâm thế
-                nhẹ hơn.
+                {t('landing.title')}
               </h1>
               <p className="max-w-2xl text-base leading-8 text-[var(--color-ink-soft)]">
-                Phase frontend đầu tiên tập trung vào nền tảng đúng: auth thật, protected shell,
-                dashboard rỗng có chủ đích, profile đồng bộ backend và roadmap rõ ràng cho trips về
-                sau.
+                {t('landing.description')}
               </p>
             </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link className={getButtonClasses()} to="/auth/register">
                 <span className="inline-flex items-center gap-2">
-                  Tạo tài khoản
+                  {t('common.actions.register')}
                   <ArrowRight className="h-4 w-4" />
                 </span>
               </Link>
               <Link className={getButtonClasses('secondary')} to="/community">
-                Xem teaser cộng đồng
+                {t('landing.secondaryCta')}
               </Link>
             </div>
           </div>
 
           <Card className="overflow-hidden">
             <div className="rounded-[1.75rem] bg-[linear-gradient(135deg,rgba(84,107,65,0.92),rgba(153,173,122,0.8))] p-8 text-white">
-              <p className="text-sm uppercase tracking-[0.22em] text-white/72">Phase 01-04</p>
-              <h2 className="headline mt-3 text-4xl">Tập trung dựng nền đúng một lần</h2>
-              <p className="mt-4 text-sm leading-7 text-white/78">
-                Router public/protected, session boot bằng auth thật, token strategy rõ ràng và các
-                màn P0 sẵn sàng cho vòng phát triển tiếp theo.
-              </p>
+              <p className="eyebrow-text text-white/72">{t('landing.phaseEyebrow')}</p>
+              <h2 className="headline mt-3 text-4xl">{t('landing.phaseTitle')}</h2>
+              <p className="mt-4 text-sm leading-7 text-white/78">{t('landing.phaseDescription')}</p>
             </div>
             <div className="grid gap-4 pt-6 sm:grid-cols-2">
               <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/72 p-5">
-                <p className="text-sm uppercase tracking-[0.2em] text-[var(--color-forest)]">
-                  Ready now
-                </p>
-                <p className="mt-3 text-lg font-semibold text-[var(--color-ink)]">
-                  Login, register, me, refresh
-                </p>
+                <p className="eyebrow-text text-[var(--color-forest)]">{t('landing.readyNowLabel')}</p>
+                <p className="mt-3 text-lg font-semibold text-[var(--color-ink)]">{t('landing.readyNowValue')}</p>
               </div>
               <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/72 p-5">
-                <p className="text-sm uppercase tracking-[0.2em] text-[var(--color-forest)]">
-                  Next dependency
+                <p className="eyebrow-text text-[var(--color-forest)]">
+                  {t('landing.nextDependencyLabel')}
                 </p>
-                <p className="mt-3 text-lg font-semibold text-[var(--color-ink)]">
-                  Trips workspace từ backend phase 04
-                </p>
+                <p className="mt-3 text-lg font-semibold text-[var(--color-ink)]">{t('landing.nextDependencyValue')}</p>
               </div>
             </div>
           </Card>

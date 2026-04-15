@@ -3,32 +3,39 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { AuthStatusBanner } from '@/features/auth/components/auth-status-banner';
+import { localizeAuthError } from '@/features/auth/lib/localize-auth-error';
 import { AuthShell } from '@/features/auth/components/auth-shell';
 import { useAuth } from '@/features/auth/session/use-auth';
+import { useI18n } from '@/shared/i18n/use-i18n';
 import { ApiError } from '@/shared/api/api-error';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { PasswordInput } from '@/shared/ui/password-input';
 
-const registerSchema = z.object({
-  displayName: z
-    .string()
-    .trim()
-    .min(2, 'Tên hiển thị phải có ít nhất 2 ký tự.')
-    .max(50, 'Tên hiển thị quá dài.'),
-  email: z.string().trim().email('Vui lòng nhập email hợp lệ.'),
-  password: z
-    .string()
-    .min(8, 'Mật khẩu phải có ít nhất 8 ký tự.')
-    .regex(/[A-Za-z]/, 'Mật khẩu cần có ít nhất 1 chữ cái.')
-    .regex(/[0-9]/, 'Mật khẩu cần có ít nhất 1 chữ số.'),
-});
+function createRegisterSchema(t: (key: string) => string) {
+  return z.object({
+    displayName: z
+      .string()
+      .trim()
+      .min(2, t('auth.validation.displayNameMin'))
+      .max(50, t('auth.validation.displayNameMax')),
+    email: z.string().trim().email(t('auth.validation.invalidEmail')),
+    password: z
+      .string()
+      .min(8, t('auth.validation.passwordMin'))
+      .regex(/[A-Za-z]/, t('auth.validation.passwordLetter'))
+      .regex(/[0-9]/, t('auth.validation.passwordNumber')),
+  });
+}
 
-type RegisterFormValues = z.infer<typeof registerSchema>;
+type RegisterSchema = ReturnType<typeof createRegisterSchema>;
+type RegisterFormValues = z.infer<RegisterSchema>;
 
 export function RegisterPage() {
   const auth = useAuth();
   const navigate = useNavigate();
+  const { t } = useI18n();
+  const registerSchema = createRegisterSchema(t);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     formState: { errors, isSubmitting },
@@ -64,39 +71,39 @@ export function RegisterPage() {
       navigate('/app', { replace: true });
     } catch (error) {
       if (error instanceof ApiError) {
-        setSubmitError(error.message);
+        setSubmitError(localizeAuthError(error, t));
         return;
       }
 
-      setSubmitError('Không thể tạo tài khoản lúc này. Vui lòng thử lại sau ít phút.');
+      setSubmitError(t('auth.errors.registerUnavailable'));
     }
   });
 
   return (
     <AuthShell
-      description="Tạo tài khoản để lưu ý tưởng, lên kế hoạch chuyến đi và đồng bộ phiên làm việc thật với backend hiện tại."
-      eyebrow="Tao tai khoan"
+      description={t('auth.register.description')}
+      eyebrow={t('auth.register.eyebrow')}
       footer={
         <>
-          Đã có tài khoản?{' '}
+          {t('auth.register.footerQuestion')}{' '}
           <Link className="font-semibold text-[var(--color-forest)]" to="/auth/login">
-            Đăng nhập
+            {t('auth.register.footerAction')}
           </Link>
         </>
       }
-      title="Bat dau mot hanh trinh duoc sap xep ro rang"
+      title={t('auth.register.title')}
     >
       <form className="space-y-5" onSubmit={onSubmit}>
         <AuthStatusBanner message={submitError} tone="danger" />
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="register-display-name">
-            Tên hiển thị
+            {t('common.labels.displayName')}
           </label>
           <Input
             hasError={Boolean(errors.displayName)}
             id="register-display-name"
-            placeholder="Bui Co Journey"
+            placeholder={t('common.placeholders.displayName')}
             type="text"
             {...register('displayName')}
           />
@@ -107,12 +114,12 @@ export function RegisterPage() {
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="register-email">
-            Email
+            {t('common.labels.email')}
           </label>
           <Input
             hasError={Boolean(errors.email)}
             id="register-email"
-            placeholder="you@example.com"
+            placeholder={t('common.placeholders.email')}
             type="email"
             {...register('email')}
           />
@@ -121,12 +128,12 @@ export function RegisterPage() {
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="register-password">
-            Mật khẩu
+            {t('common.labels.password')}
           </label>
           <PasswordInput
             hasError={Boolean(errors.password)}
             id="register-password"
-            placeholder="Toi thieu 8 ky tu, gom chu va so"
+            placeholder={t('common.placeholders.registerPassword')}
             {...register('password')}
           />
           {errors.password ? (
@@ -135,7 +142,7 @@ export function RegisterPage() {
         </div>
 
         <Button className="w-full" disabled={isSubmitting} type="submit">
-          {isSubmitting ? 'Dang tao tai khoan...' : 'Tao tai khoan'}
+          {isSubmitting ? t('common.actions.registering') : t('common.actions.register')}
         </Button>
       </form>
     </AuthShell>

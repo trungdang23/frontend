@@ -3,24 +3,31 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { AuthStatusBanner } from '@/features/auth/components/auth-status-banner';
+import { localizeAuthError } from '@/features/auth/lib/localize-auth-error';
 import { AuthShell } from '@/features/auth/components/auth-shell';
 import { useAuth } from '@/features/auth/session/use-auth';
+import { useI18n } from '@/shared/i18n/use-i18n';
 import { ApiError } from '@/shared/api/api-error';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { PasswordInput } from '@/shared/ui/password-input';
 
-const loginSchema = z.object({
-  email: z.string().trim().email('Vui lòng nhập email hợp lệ.'),
-  password: z.string().min(8, 'Mật khẩu phải có ít nhất 8 ký tự.'),
-});
+function createLoginSchema(t: (key: string) => string) {
+  return z.object({
+    email: z.string().trim().email(t('auth.validation.invalidEmail')),
+    password: z.string().min(8, t('auth.validation.passwordMin')),
+  });
+}
 
-type LoginFormValues = z.infer<typeof loginSchema>;
+type LoginSchema = ReturnType<typeof createLoginSchema>;
+type LoginFormValues = z.infer<LoginSchema>;
 
 export function LoginPage() {
   const auth = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useI18n();
+  const loginSchema = createLoginSchema(t);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const {
     formState: { errors, isSubmitting },
@@ -57,27 +64,27 @@ export function LoginPage() {
       navigate(nextPath, { replace: true });
     } catch (error) {
       if (error instanceof ApiError) {
-        setSubmitError(error.message);
+        setSubmitError(localizeAuthError(error, t));
         return;
       }
 
-      setSubmitError('Không thể đăng nhập lúc này. Vui lòng thử lại sau ít phút.');
+      setSubmitError(t('auth.errors.loginUnavailable'));
     }
   });
 
   return (
     <AuthShell
-      description="Đăng nhập để tiếp tục với dashboard, trạng thái chuyến đi và hồ sơ cá nhân của bạn."
-      eyebrow="Dang nhap"
+      description={t('auth.login.description')}
+      eyebrow={t('auth.login.eyebrow')}
       footer={
         <>
-          Chưa có tài khoản?{' '}
+          {t('auth.login.footerQuestion')}{' '}
           <Link className="font-semibold text-[var(--color-forest)]" to="/auth/register">
-            Tạo tài khoản mới
+            {t('auth.login.footerAction')}
           </Link>
         </>
       }
-      title="Tro lai voi hanh trinh dang dang do"
+      title={t('auth.login.title')}
     >
       <form className="space-y-5" onSubmit={onSubmit}>
         <AuthStatusBanner message={auth.notice} tone={auth.noticeTone} />
@@ -85,12 +92,12 @@ export function LoginPage() {
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="login-email">
-            Email
+            {t('common.labels.email')}
           </label>
           <Input
             hasError={Boolean(errors.email)}
             id="login-email"
-            placeholder="you@example.com"
+            placeholder={t('common.placeholders.email')}
             type="email"
             {...register('email')}
           />
@@ -99,12 +106,12 @@ export function LoginPage() {
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="login-password">
-            Mật khẩu
+            {t('common.labels.password')}
           </label>
           <PasswordInput
             hasError={Boolean(errors.password)}
             id="login-password"
-            placeholder="Nhap mat khau cua ban"
+            placeholder={t('common.placeholders.password')}
             {...register('password')}
           />
           {errors.password ? (
@@ -113,7 +120,7 @@ export function LoginPage() {
         </div>
 
         <Button className="w-full" disabled={isSubmitting} type="submit">
-          {isSubmitting ? 'Dang dang nhap...' : 'Dang nhap'}
+          {isSubmitting ? t('common.actions.loggingIn') : t('common.actions.login')}
         </Button>
       </form>
     </AuthShell>

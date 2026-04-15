@@ -1,23 +1,25 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
+import { useI18n } from '@/shared/i18n/use-i18n';
 import { cn } from '@/shared/lib/cn';
 import { getButtonClasses } from '@/shared/ui/button-styles';
-
-const navItems = [
-  { label: 'Khám phá', to: '/' },
-  { label: 'Cộng đồng', to: '/community' },
-  { label: 'Đăng nhập', to: '/auth/login' },
-];
+import { LanguageSwitcher } from '@/shared/ui/language-switcher';
 
 export function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useI18n();
+  const navItems = [
+    { label: t('common.navigation.explore'), to: '/' },
+    { label: t('common.navigation.community'), to: '/community' },
+    { label: t('common.navigation.login'), to: '/auth/login' },
+  ];
 
   return (
     <header className="page-shell pt-5 sm:pt-7">
       <div className="glass-panel flex items-center justify-between rounded-full px-4 py-3 sm:px-6">
         <Link className="headline text-2xl text-[var(--color-forest)]" to="/">
-          Journey
+          {t('common.brand')}
         </Link>
 
         <nav className="hidden items-center gap-2 md:flex">
@@ -37,8 +39,9 @@ export function SiteHeader() {
               {item.label}
             </NavLink>
           ))}
+          <LanguageSwitcher />
           <Link className={cn(getButtonClasses(), 'ml-2')} to="/auth/register">
-            Bat dau
+            {t('common.navigation.getStarted')}
           </Link>
         </nav>
 
@@ -49,13 +52,16 @@ export function SiteHeader() {
           type="button"
         >
           {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          <span className="sr-only">Toggle navigation</span>
+          <span className="sr-only">{t('common.navigation.toggle')}</span>
         </button>
       </div>
 
       {isOpen ? (
         <div className="glass-panel mt-3 rounded-[var(--radius-lg)] p-4 md:hidden">
           <div className="flex flex-col gap-2">
+            <div className="pb-2">
+              <LanguageSwitcher />
+            </div>
             {navItems.map((item) => (
               <NavLink
                 className="rounded-2xl px-4 py-3 text-sm font-medium text-[var(--color-ink-soft)] transition hover:bg-white/60 hover:text-[var(--color-forest)]"
@@ -71,7 +77,7 @@ export function SiteHeader() {
               onClick={() => setIsOpen(false)}
               to="/auth/register"
             >
-              Bắt đầu
+              {t('common.navigation.getStarted')}
             </Link>
           </div>
         </div>

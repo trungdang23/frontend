@@ -25,6 +25,7 @@ import {
   readStoredSession,
   writeStoredSession,
 } from '@/features/auth/session/session-storage';
+import { useI18n } from '@/shared/i18n/use-i18n';
 import { configureHttpClient, resetHttpClientConfig } from '@/shared/api/http-client';
 import { User } from '@/shared/types/user';
 
@@ -36,21 +37,22 @@ function createStoredSession(session: AuthSession): StoredSession {
 }
 
 export function AuthProvider({ children }: PropsWithChildren) {
+  const { t } = useI18n();
   const [status, setStatus] = useState<AuthStatus>('booting');
   const [user, setUser] = useState<User | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const [noticeKey, setNoticeKey] = useState<string | null>(null);
   const [noticeTone, setNoticeTone] = useState<AuthNoticeTone>('info');
   const sessionRef = useRef<StoredSession | null>(null);
   const refreshPromiseRef = useRef<Promise<string | null> | null>(null);
 
   const setGuestState = useCallback(
-    (nextNotice?: string, nextTone: AuthNoticeTone = 'info') => {
+    (nextNoticeKey?: string, nextTone: AuthNoticeTone = 'info') => {
       sessionRef.current = null;
       clearStoredSession();
       startTransition(() => {
         setUser(null);
         setStatus('guest');
-        setNotice(nextNotice || null);
+        setNoticeKey(nextNoticeKey || null);
         setNoticeTone(nextTone);
       });
     },
@@ -63,7 +65,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     startTransition(() => {
       setUser(session.user);
       setStatus('authenticated');
-      setNotice(null);
+      setNoticeKey(null);
       setNoticeTone('info');
     });
   }, []);
@@ -93,7 +95,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         syncAuthenticatedSession(nextSession);
         return tokens.accessToken;
       } catch {
-        setGuestState('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', 'danger');
+        setGuestState('auth.notices.sessionExpired', 'danger');
         return null;
       } finally {
         refreshPromiseRef.current = null;
@@ -106,7 +108,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     configureHttpClient({
       getAccessToken: () => sessionRef.current?.tokens.accessToken || null,
-      onUnauthorized: () => setGuestState('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', 'danger'),
+      onUnauthorized: () => setGuestState('auth.notices.sessionExpired', 'danger'),
       refreshSession,
     });
 
@@ -147,7 +149,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
         if (!nextAccessToken) {
           if (isMounted) {
-            setGuestState('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.', 'danger');
+            setGuestState('auth.notices.sessionExpired', 'danger');
           }
           return;
         }
@@ -165,7 +167,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           });
         } catch {
           if (isMounted) {
-            setGuestState('Không thể khôi phục phiên đăng nhập. Vui lòng thử lại.', 'danger');
+            setGuestState('auth.notices.sessionRestoreFailed', 'danger');
           }
         }
       }
@@ -192,13 +194,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
   );
 
   const logout = useCallback(() => {
-    setGuestState('Bạn đã đăng xuất khỏi Journey.', 'success');
+    setGuestState('auth.notices.loggedOut', 'success');
   }, [setGuestState]);
 
   const clearNotice = useCallback(() => {
-    setNotice(null);
+    setNoticeKey(null);
     setNoticeTone('info');
   }, []);
+
+  const notice = noticeKey ? t(noticeKey) : null;
 
   const value = useMemo<AuthContextValue>(
     () => ({

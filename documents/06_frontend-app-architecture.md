@@ -31,6 +31,7 @@ frontend/
       shell/
     shared/
       api/
+      i18n/
       lib/
       hooks/
       ui/
@@ -59,6 +60,7 @@ frontend/
 
 - primitive UI
 - API base client
+- locale dictionaries và i18n helpers
 - utility functions
 - generic hooks
 - shared types và assets

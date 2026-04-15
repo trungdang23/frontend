@@ -1,0 +1,161 @@
+{
+  "common": {
+    "brand": "Journey",
+    "userFallback": "bạn",
+    "language": {
+      "label": "Ngôn ngữ",
+      "vi": "VI",
+      "en": "EN"
+    },
+    "navigation": {
+      "explore": "Khám phá",
+      "community": "Cộng đồng",
+      "login": "Đăng nhập",
+      "getStarted": "Bắt đầu",
+      "dashboard": "Bảng điều khiển",
+      "profile": "Hồ sơ",
+      "toggle": "Mở hoặc đóng điều hướng"
+    },
+    "actions": {
+      "login": "Đăng nhập",
+      "loggingIn": "Đang đăng nhập...",
+      "register": "Tạo tài khoản",
+      "registering": "Đang tạo tài khoản...",
+      "logout": "Đăng xuất",
+      "showPassword": "Hiện mật khẩu",
+      "hidePassword": "Ẩn mật khẩu",
+      "viewCurrentProfile": "Xem hồ sơ hiện tại",
+      "createFirstTrip": "Tạo chuyến đi đầu tiên",
+      "viewStory": "Xem bài viết",
+      "backToCommunity": "Quay lại cộng đồng",
+      "backToDashboard": "Quay lại bảng điều khiển"
+    },
+    "labels": {
+      "email": "Email",
+      "password": "Mật khẩu",
+      "displayName": "Tên hiển thị",
+      "createdAt": "Ngày tạo"
+    },
+    "placeholders": {
+      "email": "you@example.com",
+      "displayName": "Bùi Cỏ Journey",
+      "password": "Nhập mật khẩu của bạn",
+      "registerPassword": "Tối thiểu 8 ký tự, gồm chữ và số"
+    }
+  },
+  "auth": {
+    "shell": {
+      "eyebrow": "Một cuốn sổ cho những hành trình đáng nhớ",
+      "title": "Lên kế hoạch gọn gàng, giữ cảm hứng trọn vẹn và quay lại với hành trình vẫn còn nguyên rung động.",
+      "description": "Phiên bản hiện tại tập trung vào đăng nhập, bảng điều khiển nền tảng và không gian sẵn sàng cho những chuyến đi sắp tới."
+    },
+    "login": {
+      "eyebrow": "Đăng nhập",
+      "title": "Trở lại với hành trình đang dang dở",
+      "description": "Đăng nhập để quay lại bảng điều khiển, thông tin chuyến đi và hồ sơ cá nhân của bạn.",
+      "footerQuestion": "Chưa có tài khoản?",
+      "footerAction": "Tạo tài khoản mới"
+    },
+    "register": {
+      "eyebrow": "Tạo tài khoản",
+      "title": "Bắt đầu một hành trình được sắp xếp rõ ràng",
+      "description": "Tạo tài khoản để lưu ý tưởng, chuẩn bị chuyến đi và giữ phiên làm việc đồng bộ trên mọi lần quay lại.",
+      "footerQuestion": "Đã có tài khoản?",
+      "footerAction": "Đăng nhập"
+    },
+    "validation": {
+      "invalidEmail": "Vui lòng nhập email hợp lệ.",
+      "passwordMin": "Mật khẩu phải có ít nhất 8 ký tự.",
+      "displayNameMin": "Tên hiển thị phải có ít nhất 2 ký tự.",
+      "displayNameMax": "Tên hiển thị quá dài.",
+      "passwordLetter": "Mật khẩu cần có ít nhất 1 chữ cái.",
+      "passwordNumber": "Mật khẩu cần có ít nhất 1 chữ số."
+    },
+    "errors": {
+      "invalidCredentials": "Email hoặc mật khẩu không đúng.",
+      "emailAlreadyRegistered": "Email này đã được đăng ký.",
+      "loginUnavailable": "Không thể đăng nhập lúc này. Vui lòng thử lại sau ít phút.",
+      "registerUnavailable": "Không thể tạo tài khoản lúc này. Vui lòng thử lại sau ít phút."
+    },
+    "notices": {
+      "sessionExpired": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+      "sessionRestoreFailed": "Không thể khôi phục phiên đăng nhập. Vui lòng thử lại.",
+      "loggedOut": "Bạn đã đăng xuất khỏi Journey.",
+      "booting": "Journey đang khôi phục phiên đăng nhập..."
+    }
+  },
+  "landing": {
+    "eyebrow": "Kế hoạch rõ ràng cho một hành trình đáng nhớ",
+    "title": "Journey giúp bạn gom cảm hứng, giữ nhịp chuẩn bị và bắt đầu chuyến đi với tâm thế nhẹ hơn.",
+    "description": "Giai đoạn đầu tập trung vào nền tảng vững: đăng nhập thật, khu vực riêng được bảo vệ, bảng điều khiển rõ ràng, hồ sơ đồng bộ và lộ trình sẵn sàng cho phần chuyến đi về sau.",
+    "secondaryCta": "Xem phần cộng đồng",
+    "phaseEyebrow": "Giai đoạn 01-04",
+    "phaseTitle": "Dựng nền thật chắc ngay từ đầu",
+    "phaseDescription": "Đường dẫn công khai và riêng tư, khôi phục phiên đăng nhập, chiến lược phiên rõ ràng và các màn hình cốt lõi đã sẵn sàng cho chặng phát triển tiếp theo.",
+    "readyNowLabel": "Sẵn sàng ngay",
+    "readyNowValue": "đăng nhập, đăng ký, hồ sơ, làm mới phiên",
+    "nextDependencyLabel": "Tiếp theo",
+    "nextDependencyValue": "Không gian chuyến đi và lịch trình chi tiết",
+    "features": {
+      "plan": {
+        "title": "Lên kế hoạch có trật tự",
+        "description": "Từ đăng nhập, bảng điều khiển tới khung chuyến đi, toàn bộ luồng đã được chốt trước để tránh phải sửa lớn giữa chừng."
+      },
+      "experience": {
+        "title": "Giữ trải nghiệm giàu cảm hứng",
+        "description": "Hướng thị giác đi theo cảm giác nhật ký du lịch ấm áp, nhiều khoảng thở và có cá tính thay vì một màn hình chung chung."
+      },
+      "community": {
+        "title": "Mở rộng sang cộng đồng đúng thời điểm",
+        "description": "Khu vực cộng đồng đang được giữ ở dạng xem trước để giao diện phát triển đúng nhịp, tránh phải làm lại không cần thiết."
+      }
+    }
+  },
+  "community": {
+    "eyebrow": "Cộng đồng",
+    "title": "Góc cảm hứng cộng đồng",
+    "description": "Hiện tại đây là khu vực xem trước để giữ nhịp cảm hứng của sản phẩm. Bảng tin, lượt thích, bình luận và trang chi tiết đầy đủ sẽ được mở trong giai đoạn tiếp theo.",
+    "sampleStory": "Câu chuyện nổi bật",
+    "postPlaceholderEyebrow": "Chi tiết bài viết",
+    "postPlaceholderTitle": "Bài viết: {{postId}}",
+    "postPlaceholderDescription": "Đường dẫn chi tiết đã sẵn sàng để nối nội dung thật sau này. Ở giai đoạn này, màn hình chỉ đóng vai trò giữ chỗ rõ ràng để tránh cảm giác tính năng đã hoàn chỉnh.",
+    "fallbackPostId": "bài viết",
+    "posts": {
+      "haGiang": {
+        "title": "Một vòng Hà Giang yên chậm trong 4 ngày",
+        "summary": "Bài viết mẫu giúp giữ tinh thần thị giác của sản phẩm trước khi bảng tin thật được mở."
+      },
+      "hue": {
+        "title": "Checklist ăn uống ở Huế cho người đi cuối tuần",
+        "summary": "Nội dung xem trước để bạn hình dung khu vực cộng đồng mà không tạo cảm giác đây đã là bảng tin hoàn chỉnh."
+      }
+    }
+  },
+  "dashboard": {
+    "eyebrow": "Bảng điều khiển",
+    "title": "Chào {{name}}, hành trình tiếp theo đang chờ được lên lịch.",
+    "description": "Không gian này đang mở sẵn cho những chuyến đi tiếp theo. Khi dữ liệu chuyến đi được kết nối, danh sách và kế hoạch của bạn sẽ xuất hiện ngay tại đây.",
+    "nextActionEyebrow": "Việc nên làm tiếp",
+    "nextActionTitle": "Chuẩn bị cho chuyến đi đầu tiên",
+    "nextActionDescription": "Khu vực chuyến đi đang được hoàn thiện, nên nút hành động hiện đưa bạn tới màn hình giữ chỗ rõ ràng thay vì tạo cảm giác đây đã là tính năng hoàn chỉnh.",
+    "emptyEyebrow": "Trạng thái trống",
+    "emptyTitle": "Chưa có chuyến đi nào trong tài khoản của bạn",
+    "emptyDescription": "Bạn chưa có chuyến đi nào. Journey đã sẵn sàng phần tài khoản và giữ trạng thái trống này để bạn bắt đầu ngay khi khu vực chuyến đi được mở."
+  },
+  "profile": {
+    "eyebrow": "Hồ sơ",
+    "title": "Thông tin tài khoản hiện tại",
+    "description": "Trang này hiển thị thông tin tài khoản hiện tại của bạn và là nền tảng cho hồ sơ cá nhân về sau.",
+    "summary": "Tài khoản của bạn đã sẵn sàng để đồng bộ cùng bảng điều khiển và không gian riêng.",
+    "loadError": "Hiện chưa tải được thông tin tài khoản."
+  },
+  "shell": {
+    "title": "Không gian riêng của Journey",
+    "description": "Xin chào {{name}}, khu vực dành riêng cho bạn đã sẵn sàng."
+  },
+  "trips": {
+    "blockedEyebrow": "Sắp ra mắt",
+    "blockedTitle": "Khu vực chuyến đi đang được hoàn thiện",
+    "blockedDescription": "Trang {{path}} đã được chuẩn bị sẵn để bạn không phải làm quen lại điều hướng khi tính năng chính thức mở."
+  }
+}

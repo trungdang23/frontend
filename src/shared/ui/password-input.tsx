@@ -1,5 +1,6 @@
 import { forwardRef, InputHTMLAttributes, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useI18n } from '@/shared/i18n/use-i18n';
 import { cn } from '@/shared/lib/cn';
 
 type PasswordInputProps = InputHTMLAttributes<HTMLInputElement> & {
@@ -9,6 +10,7 @@ type PasswordInputProps = InputHTMLAttributes<HTMLInputElement> & {
 export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
   function PasswordInput({ className, hasError = false, ...props }, ref) {
     const [visible, setVisible] = useState(false);
+    const { t } = useI18n();
 
     return (
       <div
@@ -30,7 +32,9 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
           type="button"
         >
           {visible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          <span className="sr-only">{visible ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}</span>
+          <span className="sr-only">
+            {visible ? t('common.actions.hidePassword') : t('common.actions.showPassword')}
+          </span>
         </button>
       </div>
     );

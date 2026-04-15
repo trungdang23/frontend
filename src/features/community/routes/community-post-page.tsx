@@ -1,11 +1,13 @@
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { useI18n } from '@/shared/i18n/use-i18n';
 import { SiteHeader } from '@/shared/ui/site-header';
 import { Card } from '@/shared/ui/card';
 import { PageSection } from '@/shared/ui/page-section';
 
 export function CommunityPostPage() {
   const { postId } = useParams();
+  const { t } = useI18n();
 
   return (
     <div className="min-h-screen">
@@ -17,19 +19,16 @@ export function CommunityPostPage() {
             to="/community"
           >
             <ArrowLeft className="h-4 w-4" />
-            Quay lại cộng đồng
+            {t('common.actions.backToCommunity')}
           </Link>
           <div className="space-y-3">
-            <p className="text-sm uppercase tracking-[0.2em] text-[var(--color-forest)]">
-              Community detail placeholder
-            </p>
+            <p className="eyebrow-text text-[var(--color-forest)]">{t('community.postPlaceholderEyebrow')}</p>
             <h1 className="headline text-4xl text-[var(--color-ink)]">
-              Bài viết mẫu: {postId || 'post'}
+              {t('community.postPlaceholderTitle', { postId: postId || t('community.fallbackPostId') })}
             </h1>
           </div>
           <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
-            Route detail đã được chốt để sau này nối API thật mà không cần đổi cấu trúc router. Ở
-            phase này màn hình chỉ đóng vai trò giữ chỗ có chủ đích, không phát sinh tương tác giả.
+            {t('community.postPlaceholderDescription')}
           </p>
         </Card>
       </PageSection>

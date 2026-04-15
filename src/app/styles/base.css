@@ -1,6 +1,11 @@
 @layer base {
   html {
     font-family: var(--font-body);
+    font-optical-sizing: auto;
+    font-kerning: normal;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
     background:
       radial-gradient(circle at top, rgba(153, 173, 122, 0.34), transparent 38%),
       linear-gradient(180deg, #faf7f0 0%, #f4efe4 100%);
@@ -51,5 +56,24 @@
 
   .headline {
     font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+  }
+
+  .eyebrow-text {
+    @apply text-sm font-semibold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow-text-xs {
+    @apply text-xs font-semibold;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  html[data-language='vi'] .eyebrow-text,
+  html[data-language='vi'] .eyebrow-text-xs {
+    letter-spacing: 0.02em;
+    text-transform: none;
   }
 }
