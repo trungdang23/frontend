@@ -217,6 +217,11 @@ jobs:
           DEPLOY_REF: ${{ inputs.ref }}
           REPOSITORY_CLONE_URL: git@github.com:${{ github.repository }}.git
         run: |
+          service_restart_command="$(printf '%s' "${SERVICE_RESTART_COMMAND}" | perl -0pe 's/\r//g; s/^\s+//; s/\s+\z//')"
+          if [ -z "${service_restart_command}" ]; then
+            echo "SERVICE_RESTART_COMMAND is empty after sanitization." >&2
+            exit 1
+          fi
           ssh "${SSH_HOST}" \
             "set -euo pipefail && \
             export NVM_DIR=\"\$HOME/.nvm\" && \
@@ -243,7 +248,7 @@ jobs:
             . '${RUNTIME_ENV_PATH}' && \
             set +a && \
             pnpm build && \
-            ${SERVICE_RESTART_COMMAND}"
+            ${service_restart_command}"
 
       - name: Post-deploy verification
         if: ${{ vars.DEPLOY_VERIFY_URL != '' }}
