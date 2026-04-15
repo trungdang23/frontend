@@ -79,7 +79,7 @@ src/
 ## Bước tiếp theo hợp lý
 
 1. Cấu hình GitHub `Secrets` và `Variables` theo `documents/09_frontend-production-deploy-runbook.md`.
-2. Tạo deploy clone tại `/home/trungdang/apps/journey-frontend` trên máy đích nếu chưa có.
+2. Đảm bảo user deploy trên máy đích có GitHub SSH access tới repo `frontend` giống `backend`.
 3. Chạy `deploy-frontend` để đưa bản frontend đầu tiên lên domain thật.
 4. Test auth flow và i18n trên `https://buicojourney.com`.
 5. Chỉ mở `trips/community` khi backend phase tương ứng đã sẵn contract thật.
