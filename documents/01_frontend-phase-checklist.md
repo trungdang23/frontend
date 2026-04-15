@@ -146,7 +146,7 @@ Status: `Todo`
 - [x] Review và chốt route map phase 1
 - [x] Chốt session strategy cho auth phase đầu
 - [x] Bắt đầu scaffold `frontend/`
-- [ ] Chốt domain deploy frontend
+- [x] Chốt domain deploy frontend
 - [ ] Test login/register/me/refresh qua domain frontend thật
 - [x] Quyết định mức polish tiếp theo cho landing/public section trước khi mở phase 08
 - [ ] Chốt ưu tiên hardening tiếp theo trong phase 08

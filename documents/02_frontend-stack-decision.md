@@ -36,7 +36,7 @@
 - Chưa chốt animation library lớn.
 - Chưa chốt headless component library ngoài.
 - Chưa chốt analytics SDK.
-- Chưa chốt domain production cuối cùng, nhưng đã chốt luồng preview deploy thủ công qua GitHub Actions.
+- Không dùng preview/static publish riêng nữa; deploy production path đã được đồng bộ theo mô hình backend.
 
 ## Lý do chưa chọn SSR ở phase đầu
 

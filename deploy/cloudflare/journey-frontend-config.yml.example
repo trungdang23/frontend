@@ -1,0 +1,13 @@
+tunnel: journey-backend
+credentials-file: C:\Users\dangv\.cloudflared\<tunnel-id>.json
+
+ingress:
+  - hostname: ssh.buicojourney.com
+    service: ssh://localhost:22
+  - hostname: api.buicojourney.com
+    service: http://localhost:3001
+  - hostname: buicojourney.com
+    service: http://localhost:3000
+  - hostname: www.buicojourney.com
+    service: http://localhost:3000
+  - service: http_status:404
