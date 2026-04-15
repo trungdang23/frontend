@@ -29,6 +29,11 @@ pnpm build
 npm test -- --run
 ```
 
+## GitHub Actions hiện có
+
+- `frontend-ci`: tự chạy khi `push` và `pull_request`, dùng env test nội bộ để chạy `lint`, `test`, `build`
+- `deploy-frontend`: chạy tay khi cần deploy production
+
 ## Env runtime hiện dùng
 
 - `VITE_API_BASE_URL`

@@ -13,7 +13,8 @@
 - [x] Đã có CORS cho frontend domain
 - [x] Đã có planning docs nền cho frontend
 - [x] Đã scaffold source frontend thực tế
-- [ ] Chưa chốt domain deploy frontend
+- [x] Đã chốt domain deploy frontend
+- [x] Đã có CI riêng cho frontend
 
 ## Tổng quan phase
 
@@ -131,6 +132,7 @@ Status: `Blocked by BE Phase 06`
 
 Status: `Todo`
 
+- [x] Thêm GitHub Actions CI riêng cho frontend
 - [ ] Thêm unit/component test cho auth và shared UI quan trọng
 - [ ] Thêm route-level integration tests
 - [ ] Thêm smoke e2e cho login -> dashboard
