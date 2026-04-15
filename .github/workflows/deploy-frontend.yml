@@ -9,7 +9,7 @@ on:
         default: main
 
 concurrency:
-  group: frontend-preview
+  group: frontend-production
   cancel-in-progress: false
 
 jobs:
@@ -53,26 +53,15 @@ jobs:
       - name: Build
         run: pnpm build
 
-      - name: Package static artifact
-        run: tar -czf frontend-dist.tgz -C dist .
-
-      - name: Upload static artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: frontend-dist.tgz
-          if-no-files-found: error
-          retention-days: 7
-
   deploy-frontend:
     needs: verify-frontend
     runs-on: ubuntu-latest
-    environment: preview
+    environment: production
     steps:
-      - name: Download static artifact
-        uses: actions/download-artifact@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          name: frontend-dist
+          ref: ${{ inputs.ref }}
 
       - name: Validate deploy secrets and variables
         env:
@@ -83,7 +72,14 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
-          PUBLISH_PATH: ${{ vars.PUBLISH_PATH }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          RUNTIME_ENV_PATH: ${{ vars.RUNTIME_ENV_PATH }}
+          SERVICE_RESTART_COMMAND: ${{ vars.SERVICE_RESTART_COMMAND }}
+          RUNTIME_APP_NAME: ${{ vars.RUNTIME_APP_NAME }}
+          RUNTIME_APP_HOST: ${{ vars.RUNTIME_APP_HOST }}
+          RUNTIME_APP_PORT: ${{ vars.RUNTIME_APP_PORT }}
+          RUNTIME_VITE_API_BASE_URL: ${{ vars.RUNTIME_VITE_API_BASE_URL }}
+          RUNTIME_VITE_APP_ENV: ${{ vars.RUNTIME_VITE_APP_ENV }}
           DEPLOY_VERIFY_URL: ${{ vars.DEPLOY_VERIFY_URL }}
         run: |
           test -n "${CLOUDFLARE_ACCESS_CLIENT_ID}"
@@ -92,11 +88,18 @@ jobs:
           test -n "${SSH_USER}"
           test -n "${SSH_PRIVATE_KEY}"
           test -n "${SSH_KNOWN_HOSTS}"
-          test -n "${PUBLISH_PATH}"
-          case "${PUBLISH_PATH}" in
-            /*) ;;
+          test -n "${DEPLOY_PATH}"
+          test -n "${RUNTIME_ENV_PATH}"
+          test -n "${SERVICE_RESTART_COMMAND}"
+          test -n "${RUNTIME_APP_NAME}"
+          test -n "${RUNTIME_APP_HOST}"
+          test -n "${RUNTIME_APP_PORT}"
+          test -n "${RUNTIME_VITE_API_BASE_URL}"
+          test -n "${RUNTIME_VITE_APP_ENV}"
+          case "${RUNTIME_ENV_PATH}" in
+            */.env|*/.env.*) ;;
             *)
-              echo "PUBLISH_PATH must be an absolute path on the target machine." >&2
+              echo "RUNTIME_ENV_PATH must point to a file such as /path/to/.env.production." >&2
               exit 1
               ;;
           esac
@@ -172,26 +175,63 @@ jobs:
           chmod 600 ~/.ssh/config
           rm -f "${private_key_source}" "${decoded_key}"
 
-      - name: Upload static artifact to target machine
+      - name: Render runtime env file from GitHub configuration
+        env:
+          RUNTIME_APP_NAME: ${{ vars.RUNTIME_APP_NAME }}
+          RUNTIME_APP_HOST: ${{ vars.RUNTIME_APP_HOST }}
+          RUNTIME_APP_PORT: ${{ vars.RUNTIME_APP_PORT }}
+          RUNTIME_VITE_API_BASE_URL: ${{ vars.RUNTIME_VITE_API_BASE_URL }}
+          RUNTIME_VITE_APP_ENV: ${{ vars.RUNTIME_VITE_APP_ENV }}
+        run: |
+          {
+            printf 'NODE_ENV=production\n'
+            printf 'APP_NAME=%s\n' "${RUNTIME_APP_NAME}"
+            printf 'APP_HOST=%s\n' "${RUNTIME_APP_HOST}"
+            printf 'APP_PORT=%s\n' "${RUNTIME_APP_PORT}"
+            printf 'VITE_API_BASE_URL=%s\n' "${RUNTIME_VITE_API_BASE_URL}"
+            printf 'VITE_APP_ENV=%s\n' "${RUNTIME_VITE_APP_ENV}"
+          } > .deploy-runtime.env
+          chmod 600 .deploy-runtime.env
+
+      - name: Upload runtime env file
         env:
           TUNNEL_SERVICE_TOKEN_ID: ${{ secrets.CLOUDFLARE_ACCESS_CLIENT_ID }}
           TUNNEL_SERVICE_TOKEN_SECRET: ${{ secrets.CLOUDFLARE_ACCESS_CLIENT_SECRET }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
-          PUBLISH_PATH: ${{ vars.PUBLISH_PATH }}
+          RUNTIME_ENV_PATH: ${{ vars.RUNTIME_ENV_PATH }}
         run: |
-          publish_parent="$(dirname "${PUBLISH_PATH}")"
-          publish_tmp="${PUBLISH_PATH}.next"
-          publish_backup="${PUBLISH_PATH}.previous"
-          archive_tmp="${PUBLISH_PATH}.tgz"
-          ssh "${SSH_HOST}" "install -m 755 -d '${publish_parent}' && rm -rf '${publish_tmp}' '${publish_backup}' && install -m 755 -d '${publish_tmp}'"
-          scp frontend-dist.tgz "${SSH_HOST}:${archive_tmp}"
+          runtime_env_dir="$(dirname "${RUNTIME_ENV_PATH}")"
+          runtime_env_tmp="${RUNTIME_ENV_PATH}.tmp"
+          ssh "${SSH_HOST}" "install -m 700 -d '${runtime_env_dir}' && if [ -d '${RUNTIME_ENV_PATH}' ]; then echo 'RUNTIME_ENV_PATH points to a directory, expected a file path.' >&2; exit 1; fi"
+          scp .deploy-runtime.env "${SSH_HOST}:${runtime_env_tmp}"
+          ssh "${SSH_HOST}" "mv '${runtime_env_tmp}' '${RUNTIME_ENV_PATH}' && chmod 600 '${RUNTIME_ENV_PATH}'"
+
+      - name: Deploy on target machine
+        env:
+          TUNNEL_SERVICE_TOKEN_ID: ${{ secrets.CLOUDFLARE_ACCESS_CLIENT_ID }}
+          TUNNEL_SERVICE_TOKEN_SECRET: ${{ secrets.CLOUDFLARE_ACCESS_CLIENT_SECRET }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          DEPLOY_PATH: ${{ vars.DEPLOY_PATH }}
+          RUNTIME_ENV_PATH: ${{ vars.RUNTIME_ENV_PATH }}
+          SERVICE_RESTART_COMMAND: ${{ vars.SERVICE_RESTART_COMMAND }}
+          DEPLOY_REF: ${{ inputs.ref }}
+        run: |
           ssh "${SSH_HOST}" \
             "set -euo pipefail && \
-            tar -xzf '${archive_tmp}' -C '${publish_tmp}' && \
-            rm -f '${archive_tmp}' && \
-            if [ -d '${PUBLISH_PATH}' ]; then mv '${PUBLISH_PATH}' '${publish_backup}'; fi && \
-            mv '${publish_tmp}' '${PUBLISH_PATH}' && \
-            rm -rf '${publish_backup}'"
+            export NVM_DIR=\"\$HOME/.nvm\" && \
+            test -s \"\$NVM_DIR/nvm.sh\" && \
+            . \"\$NVM_DIR/nvm.sh\" && \
+            (nvm use 20.20.2 >/dev/null || nvm use default >/dev/null) && \
+            cd '${DEPLOY_PATH}' && \
+            git fetch --all --prune && \
+            git checkout '${DEPLOY_REF}' && \
+            git pull origin '${DEPLOY_REF}' && \
+            pnpm install --frozen-lockfile && \
+            set -a && \
+            . '${RUNTIME_ENV_PATH}' && \
+            set +a && \
+            pnpm build && \
+            ${SERVICE_RESTART_COMMAND}"
 
       - name: Post-deploy verification
         if: ${{ vars.DEPLOY_VERIFY_URL != '' }}

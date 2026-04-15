@@ -11,7 +11,7 @@
 - Base URL production: `https://api.buicojourney.com/api/v1`
 - Frontend env đề xuất sau khi scaffold:
   - `VITE_API_BASE_URL=https://api.buicojourney.com/api/v1`
-- Với deploy preview hoặc production, giá trị `VITE_API_BASE_URL` phải được cấp từ GitHub `Variables`, không hardcode trong source.
+- Với deploy thật, giá trị `VITE_API_BASE_URL` phải được cấp từ GitHub `Variables`, không hardcode trong source.
 
 ## Response envelope hiện tại
 

@@ -53,6 +53,11 @@
 - Nếu giữ URL thật trong source hoặc file env commit vào repo, preview và production rất dễ trỏ nhầm.
 - Vì vậy build-time env cho deploy phải lấy từ GitHub `Variables`.
 
+### 6. Root domain frontend cần route ổn định qua Cloudflare Tunnel
+
+- Nếu tunnel config không có `buicojourney.com` và `www.buicojourney.com`, deploy thành công vẫn không có traffic public.
+- Sau reboot máy, chỉ cần tunnel hostname và runtime scripts giữ nguyên là frontend vẫn có thể lên lại mà không đổi keys.
+
 ## Risk giảm thiểu bằng planning hiện tại
 
 - Chốt route map trước khi scaffold
