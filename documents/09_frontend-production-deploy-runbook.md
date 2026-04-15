@@ -96,6 +96,7 @@ Tại Access app của `ssh.buicojourney.com`:
 
 - giữ policy `Service Auth` cho GitHub Actions
 - có thể giữ thêm policy user-based riêng cho SSH thủ công
+- workflow deploy frontend sẽ truyền service token trực tiếp vào `ProxyCommand` của `cloudflared access ssh`
 
 ## Runtime scripts trên máy đích
 
