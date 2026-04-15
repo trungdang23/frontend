@@ -3,7 +3,7 @@
 ## Trạng thái
 
 - Date: `2026-04-14`
-- Status: `Proposed as baseline for scaffold`
+- Status: `Implemented as scaffold baseline`
 - Scope: stack và toolchain cho app frontend đầu tiên trong `frontend/`
 
 ## Mục tiêu của quyết định này
