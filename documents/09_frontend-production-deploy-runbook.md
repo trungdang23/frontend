@@ -18,6 +18,7 @@
   - `www.buicojourney.com -> http://localhost:3000`
 - Deploy machine giữ source repo tại `DEPLOY_PATH`
 - Workflow render `.env.production` trên GitHub runner rồi copy lên `RUNTIME_ENV_PATH`
+- Nếu `DEPLOY_PATH` chưa là git repo, workflow sẽ tự `git init`, gắn `origin`, fetch đúng `ref`, rồi checkout lần đầu
 - Máy đích chạy:
   - `git fetch`
   - `git checkout`
@@ -134,19 +135,14 @@ frontend sẽ tự phục vụ toàn bộ SPA routes, kể cả refresh ở:
 
 ## Quy trình deploy lặp lại
 
-### Bootstrap một lần trên máy đích
+### Bootstrap lần đầu
 
-Nếu máy đích chưa có source frontend:
+Không bắt buộc phải SSH vào máy để `git clone` tay nữa. Nếu `DEPLOY_PATH` chưa có `.git`, workflow sẽ tự bootstrap repo ở đúng thư mục đó trong lần deploy đầu tiên.
 
-```bash
-mkdir -p /home/trungdang/apps
-cd /home/trungdang/apps
-git clone https://github.com/trungdang23/frontend.git journey-frontend
-cd journey-frontend
-pnpm install
-```
+Trường hợp ngoại lệ:
 
-Sau bước này, các lần deploy sau chỉ cần chạy workflow trên GitHub.
+- nếu `DEPLOY_PATH` đang chứa file khác và checkout đầu tiên báo conflict, hãy dọn hoặc đổi tên thư mục đó rồi chạy lại workflow
+- nếu repo đổi từ public sang private trong tương lai, máy đích sẽ cần quyền clone phù hợp trước lần bootstrap đầu tiên
 
 ## Quy trình deploy lặp lại
 
@@ -155,11 +151,12 @@ Sau bước này, các lần deploy sau chỉ cần chạy workflow trên GitHub
 3. Mở workflow `deploy-frontend`.
 4. Chạy `Run workflow`.
 5. Chọn `ref`.
-6. Workflow sẽ verify rồi deploy lên máy đích.
-7. Mở:
+6. Nếu code chưa merge vào `main`, phải nhập đúng tên branch đang chứa code cần deploy, ví dụ `codex/scaffold-frontend-foundation`.
+7. Workflow sẽ verify rồi deploy lên máy đích.
+8. Mở:
    - `https://buicojourney.com`
    - `https://www.buicojourney.com`
-8. Test:
+9. Test:
    - landing
    - login
    - register
