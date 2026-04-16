@@ -21,7 +21,7 @@
   - source env thật
   - `pnpm build`
   - `bash ./scripts/restart-production.sh`
-- Sau khi self-hosted job kết thúc, workflow còn có một delayed public verification riêng trên GitHub-hosted runner để bắt lỗi runtime chết sau deploy
+- Sau khi self-hosted job kết thúc, workflow còn có một delayed local runtime verification riêng trên self-hosted runner để bắt lỗi runtime chết sau deploy mà không phụ thuộc vào Cloudflare challenge
 
 ## GitHub configuration bắt buộc
 
