@@ -2,6 +2,7 @@ tunnel: journey-backend
 credentials-file: C:\Users\dangv\.cloudflared\<tunnel-id>.json
 
 ingress:
+  # Optional manual/admin SSH route. GitHub Actions deploy no longer depends on this.
   - hostname: ssh.buicojourney.com
     service: ssh://localhost:22
   - hostname: api.buicojourney.com

@@ -41,7 +41,7 @@ npm test -- --run
 
 File mẫu: `.env.example`
 
-Deploy thật không đọc giá trị này từ source. Workflow deploy frontend render `.env.production` từ GitHub `Variables`, copy lên máy đích, rồi build và restart app trên máy đích giống backend.
+Deploy thật không đọc giá trị này từ source. Workflow deploy frontend render `.env.production` từ GitHub `Variables`, ghi file đó trực tiếp trên máy đích qua self-hosted runner, rồi build và restart app tại `DEPLOY_PATH`.
 
 ## Bộ tài liệu planning
 
@@ -83,8 +83,8 @@ src/
 
 ## Bước tiếp theo hợp lý
 
-1. Cấu hình GitHub `Secrets` và `Variables` theo `documents/09_frontend-production-deploy-runbook.md`.
-2. Đảm bảo user deploy trên máy đích có GitHub SSH access tới repo `frontend` giống `backend`.
+1. Cấu hình GitHub `Environment variables` theo `documents/09_frontend-production-deploy-runbook.md`.
+2. Đảm bảo self-hosted runner Linux/X64 trên máy đích đang online.
 3. Chạy `deploy-frontend` để đưa bản frontend đầu tiên lên domain thật.
 4. Test auth flow và i18n trên `https://buicojourney.com`.
 5. Chỉ mở `trips/community` khi backend phase tương ứng đã sẵn contract thật.
