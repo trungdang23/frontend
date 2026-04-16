@@ -179,14 +179,53 @@ Response data:
 
 ## Những phần chưa nên nối API thật ngay
 
-- trip list
-- trip detail
-- create trip
-- update trip
-- delete trip
 - community feed thật
 - post detail thật
 - follow/like/comment
+
+## Trips contract hiện đã sẵn
+
+Frontend có thể nối API thật cho `trips` với các endpoint:
+
+- `GET /trips?page=0&size=20&sort=startDate,asc`
+- `GET /trips/:tripId`
+- `POST /trips`
+- `PATCH /trips/:tripId`
+- `DELETE /trips/:tripId`
+
+Shape `Trip` hiện backend trả:
+
+```json
+{
+  "id": "string",
+  "userId": "string",
+  "name": "string",
+  "destination": "string",
+  "startDate": "string",
+  "endDate": "string",
+  "timezone": "string",
+  "budgetAmount": 1000000,
+  "budgetCurrency": "VND",
+  "createdAt": "date",
+  "updatedAt": "date"
+}
+```
+
+List response trả `data: Trip[]` kèm:
+
+```json
+{
+  "meta": {
+    "page": 0,
+    "size": 20,
+    "sort": "startDate,asc",
+    "totalElements": 1,
+    "totalPages": 1
+  }
+}
+```
+
+Frontend nên dùng contract này để mở Phase 05 thay vì giữ placeholder.
 
 ## Cách xử lý các phần chưa có backend
 
