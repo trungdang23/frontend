@@ -27,13 +27,22 @@ export function DashboardPage() {
           <p className="eyebrow-text text-white/72">{t('dashboard.nextActionEyebrow')}</p>
           <h2 className="headline mt-3 text-3xl">{t('dashboard.nextActionTitle')}</h2>
           <p className="mt-3 text-sm leading-7 text-white/78">{t('dashboard.nextActionDescription')}</p>
-          <Link
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[var(--color-forest)] transition hover:bg-[rgba(255,255,255,0.88)]"
-            to="/app/trips/new"
-          >
-            <Plus className="h-4 w-4" />
-            {t('common.actions.createFirstTrip')}
-          </Link>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <Link
+              className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-[var(--color-forest)] transition hover:bg-[rgba(255,255,255,0.88)]"
+              to="/app/trips/new"
+            >
+              <Plus className="h-4 w-4" />
+              {t('common.actions.createFirstTrip')}
+            </Link>
+            <Link
+              className="inline-flex items-center gap-2 rounded-full border border-white/24 bg-transparent px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
+              to="/app/trips"
+            >
+              <ArrowRight className="h-4 w-4" />
+              {t('trips.actions.viewList')}
+            </Link>
+          </div>
         </div>
       </Card>
 

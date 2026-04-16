@@ -1,6 +1,6 @@
 import { env } from '@/app/config/env';
 import { ApiError } from '@/shared/api/api-error';
-import { ApiResponse } from '@/shared/api/api-types';
+import { ApiResponse, ApiSuccess } from '@/shared/api/api-types';
 
 type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
 
@@ -37,10 +37,10 @@ export function resetHttpClientConfig() {
   };
 }
 
-export async function request<TResponse, TBody = unknown>(
+async function requestRaw<TResponse, TMeta = undefined, TBody = unknown>(
   path: string,
   options: RequestOptions<TBody> = {},
-): Promise<TResponse> {
+): Promise<ApiSuccess<TResponse, TMeta>> {
   const method = options.method || 'GET';
   const headers = new Headers(options.headers);
 
@@ -69,7 +69,7 @@ export async function request<TResponse, TBody = unknown>(
     const nextAccessToken = await clientConfig.refreshSession();
 
     if (nextAccessToken) {
-      return request<TResponse, TBody>(path, {
+      return requestRaw<TResponse, TMeta, TBody>(path, {
         ...options,
         retryOnUnauthorized: false,
       });
@@ -78,16 +78,47 @@ export async function request<TResponse, TBody = unknown>(
     clientConfig.onUnauthorized();
   }
 
-  const payload = (await response.json()) as ApiResponse<TResponse>;
+  const responseText = await response.text();
+  const payload = responseText ? (JSON.parse(responseText) as ApiResponse<TResponse, TMeta>) : null;
 
-  if (!response.ok || payload.success === false) {
+  if (payload?.success === false) {
     throw new ApiError({
-      code: payload.success === false ? payload.error.code : 'UNKNOWN_ERROR',
-      details: payload.success === false ? payload.error.details : undefined,
-      message: payload.success === false ? payload.error.message : 'Request failed.',
+      code: payload.error.code,
+      details: payload.error.details,
+      message: payload.error.message,
       status: response.status,
     });
   }
 
+  if (!response.ok) {
+    throw new ApiError({
+      message: 'Request failed.',
+      status: response.status,
+    });
+  }
+
+  if (payload?.success === true) {
+    return payload;
+  }
+
+  return {
+    success: true,
+    data: undefined as TResponse,
+  };
+}
+
+export async function request<TResponse, TBody = unknown>(
+  path: string,
+  options: RequestOptions<TBody> = {},
+): Promise<TResponse> {
+  const payload = await requestRaw<TResponse, undefined, TBody>(path, options);
+
   return payload.data;
+}
+
+export async function requestWithMeta<TResponse, TMeta = undefined, TBody = unknown>(
+  path: string,
+  options: RequestOptions<TBody> = {},
+): Promise<ApiSuccess<TResponse, TMeta>> {
+  return requestRaw<TResponse, TMeta, TBody>(path, options);
 }

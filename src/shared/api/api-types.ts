@@ -1,6 +1,7 @@
-export type ApiSuccess<TData> = {
+export type ApiSuccess<TData, TMeta = undefined> = {
   success: true;
   data: TData;
+  meta?: TMeta;
 };
 
 export type ApiFailure = {
@@ -14,4 +15,4 @@ export type ApiFailure = {
   };
 };
 
-export type ApiResponse<TData> = ApiSuccess<TData> | ApiFailure;
+export type ApiResponse<TData, TMeta = undefined> = ApiSuccess<TData, TMeta> | ApiFailure;

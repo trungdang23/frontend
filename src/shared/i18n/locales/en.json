@@ -13,6 +13,7 @@
       "login": "Log in",
       "getStarted": "Get started",
       "dashboard": "Dashboard",
+      "trips": "Trips",
       "profile": "Profile",
       "toggle": "Open or close navigation"
     },
@@ -134,13 +135,13 @@
   "dashboard": {
     "eyebrow": "Dashboard",
     "title": "Hi {{name}}, your next journey is waiting to be scheduled.",
-    "description": "This space is ready for the trips ahead. Once trip data is connected, your list and plans will appear here naturally.",
+    "description": "This space is your quick bridge to create a new trip, reopen your current list, and continue planning the next journey.",
     "nextActionEyebrow": "What to do next",
     "nextActionTitle": "Prepare for your first trip",
-    "nextActionDescription": "The trips area is still being completed, so this CTA leads to a clearly labeled placeholder instead of pretending the feature is already finished.",
+    "nextActionDescription": "The trips workspace is now connected to real data. You can create a new trip immediately or open the list to review, edit, and manage the trips you already have.",
     "emptyEyebrow": "Empty state",
     "emptyTitle": "There are no trips in your account yet",
-    "emptyDescription": "You do not have any trips yet. Journey already has the account foundation in place and keeps this state ready for the moment trips open."
+    "emptyDescription": "You do not have any trips yet. Start with your first one so Journey can keep your destination, date range, and budget inside the protected workspace."
   },
   "profile": {
     "eyebrow": "Profile",
@@ -154,8 +155,81 @@
     "description": "Hi {{name}}, your personal space is ready."
   },
   "trips": {
-    "blockedEyebrow": "Coming soon",
-    "blockedTitle": "The trips area is still being completed",
-    "blockedDescription": "Page {{path}} is already prepared so you will not need to relearn the navigation when the full feature goes live."
+    "listEyebrow": "Trips",
+    "listTitle": "Your trips",
+    "listDescription": "This list reads real data from your account so you can open, edit, or delete each trip directly.",
+    "listSummary": "You currently have {{count}} trips in your account.",
+    "createEyebrow": "Create trip",
+    "createTitle": "Start a new trip",
+    "createDescription": "Fill in the core details so Journey can open the trip detail page right after creation succeeds.",
+    "detailEyebrow": "Trip detail",
+    "detailDescription": "Review the overview, return to the list, or continue editing this trip.",
+    "editEyebrow": "Edit trip",
+    "editTitle": "Update trip details",
+    "editDescription": "Every change here is saved directly back to the current trip.",
+    "emptyEyebrow": "No data yet",
+    "emptyTitle": "Your account does not have any trips yet",
+    "emptyDescription": "Create your first trip so Journey can start keeping your destination, date range, timezone, and budget.",
+    "loadErrorTitle": "We couldn't load trip data right now",
+    "loadErrorDescription": "Please try again in a few minutes or reload the page to continue.",
+    "notFoundTitle": "This trip could not be found",
+    "notFoundDescription": "The trip may have been deleted or you may no longer have access to it.",
+    "fields": {
+      "name": "Trip name",
+      "destination": "Destination",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "dateRange": "Date range",
+      "timezone": "Timezone",
+      "budget": "Budget",
+      "budgetAmount": "Budget amount",
+      "budgetCurrency": "Currency",
+      "createdAt": "Created at",
+      "updatedAt": "Last updated"
+    },
+    "placeholders": {
+      "destination": "Example: Da Lat",
+      "timezone": "Example: Asia/Ho_Chi_Minh",
+      "budgetCurrency": "VND"
+    },
+    "validation": {
+      "nameRequired": "Trip name is required.",
+      "destinationRequired": "Destination is required.",
+      "startDateRequired": "Start date is required.",
+      "endDateRequired": "End date is required.",
+      "dateRangeInvalid": "End date cannot be earlier than start date.",
+      "timezoneRequired": "Timezone is required.",
+      "budgetAmountRequired": "Budget amount is required.",
+      "budgetAmountPositive": "Budget amount must be greater than 0.",
+      "budgetCurrencyRequired": "Currency is required.",
+      "budgetCurrencyLength": "Currency must be exactly 3 characters."
+    },
+    "actions": {
+      "viewList": "Open trips list",
+      "viewDetails": "View details",
+      "create": "Create trip",
+      "creating": "Creating trip...",
+      "save": "Save changes",
+      "saving": "Saving changes...",
+      "edit": "Edit trip",
+      "delete": "Delete trip",
+      "deleting": "Deleting trip...",
+      "retry": "Try again",
+      "backToList": "Back to trips list",
+      "cancel": "Cancel"
+    },
+    "feedback": {
+      "createSuccess": "The new trip was created successfully.",
+      "updateSuccess": "Trip details were updated successfully.",
+      "deleteSuccess": "The trip was deleted successfully.",
+      "createError": "Unable to create the trip right now. Please try again.",
+      "updateError": "Unable to save changes right now. Please try again.",
+      "deleteError": "Unable to delete the trip right now. Please try again."
+    },
+    "delete": {
+      "confirmTitle": "Delete this trip?",
+      "confirmDescription": "Trip \"{{name}}\" will be removed from your account.",
+      "confirmHint": "There is no restore step for this action in the current phase."
+    }
   }
 }

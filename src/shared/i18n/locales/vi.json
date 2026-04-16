@@ -13,6 +13,7 @@
       "login": "Đăng nhập",
       "getStarted": "Bắt đầu",
       "dashboard": "Bảng điều khiển",
+      "trips": "Chuyến đi",
       "profile": "Hồ sơ",
       "toggle": "Mở hoặc đóng điều hướng"
     },
@@ -134,13 +135,13 @@
   "dashboard": {
     "eyebrow": "Bảng điều khiển",
     "title": "Chào {{name}}, hành trình tiếp theo đang chờ được lên lịch.",
-    "description": "Không gian này đang mở sẵn cho những chuyến đi tiếp theo. Khi dữ liệu chuyến đi được kết nối, danh sách và kế hoạch của bạn sẽ xuất hiện ngay tại đây.",
+    "description": "Không gian này là điểm nối nhanh để bạn tạo chuyến đi mới, quay lại danh sách hiện có và tiếp tục chuẩn bị cho các hành trình tiếp theo.",
     "nextActionEyebrow": "Việc nên làm tiếp",
     "nextActionTitle": "Chuẩn bị cho chuyến đi đầu tiên",
-    "nextActionDescription": "Khu vực chuyến đi đang được hoàn thiện, nên nút hành động hiện đưa bạn tới màn hình giữ chỗ rõ ràng thay vì tạo cảm giác đây đã là tính năng hoàn chỉnh.",
+    "nextActionDescription": "Khu vực chuyến đi đã được nối dữ liệu thật. Bạn có thể tạo chuyến đi mới ngay bây giờ hoặc mở danh sách để xem, sửa và quản lý các chuyến đi hiện có.",
     "emptyEyebrow": "Trạng thái trống",
     "emptyTitle": "Chưa có chuyến đi nào trong tài khoản của bạn",
-    "emptyDescription": "Bạn chưa có chuyến đi nào. Journey đã sẵn sàng phần tài khoản và giữ trạng thái trống này để bạn bắt đầu ngay khi khu vực chuyến đi được mở."
+    "emptyDescription": "Bạn chưa có chuyến đi nào. Hãy bắt đầu bằng một chuyến đi đầu tiên để Journey lưu điểm đến, khoảng ngày và ngân sách ngay trong không gian riêng của bạn."
   },
   "profile": {
     "eyebrow": "Hồ sơ",
@@ -154,8 +155,81 @@
     "description": "Xin chào {{name}}, khu vực dành riêng cho bạn đã sẵn sàng."
   },
   "trips": {
-    "blockedEyebrow": "Sắp ra mắt",
-    "blockedTitle": "Khu vực chuyến đi đang được hoàn thiện",
-    "blockedDescription": "Trang {{path}} đã được chuẩn bị sẵn để bạn không phải làm quen lại điều hướng khi tính năng chính thức mở."
+    "listEyebrow": "Chuyến đi",
+    "listTitle": "Các chuyến đi của bạn",
+    "listDescription": "Danh sách này lấy dữ liệu thật từ tài khoản hiện tại để bạn mở chi tiết, chỉnh sửa hoặc xoá từng chuyến đi.",
+    "listSummary": "Hiện có {{count}} chuyến đi trong tài khoản của bạn.",
+    "createEyebrow": "Tạo chuyến đi",
+    "createTitle": "Bắt đầu một chuyến đi mới",
+    "createDescription": "Điền những thông tin nền để Journey mở trang chi tiết ngay sau khi tạo thành công.",
+    "detailEyebrow": "Chi tiết chuyến đi",
+    "detailDescription": "Kiểm tra thông tin tổng quan, quay lại danh sách hoặc tiếp tục chỉnh sửa chuyến đi này.",
+    "editEyebrow": "Chỉnh sửa chuyến đi",
+    "editTitle": "Cập nhật thông tin chuyến đi",
+    "editDescription": "Mọi thay đổi sẽ được lưu trực tiếp vào chuyến đi hiện tại của bạn.",
+    "emptyEyebrow": "Chưa có dữ liệu",
+    "emptyTitle": "Tài khoản của bạn chưa có chuyến đi nào",
+    "emptyDescription": "Tạo chuyến đi đầu tiên để Journey bắt đầu lưu điểm đến, khoảng ngày, múi giờ và ngân sách của bạn.",
+    "loadErrorTitle": "Chưa tải được dữ liệu chuyến đi",
+    "loadErrorDescription": "Hãy thử lại sau ít phút hoặc tải lại để tiếp tục làm việc.",
+    "notFoundTitle": "Không tìm thấy chuyến đi này",
+    "notFoundDescription": "Chuyến đi có thể đã bị xoá hoặc bạn không còn quyền truy cập.",
+    "fields": {
+      "name": "Tên chuyến đi",
+      "destination": "Điểm đến",
+      "startDate": "Ngày bắt đầu",
+      "endDate": "Ngày kết thúc",
+      "dateRange": "Khoảng ngày",
+      "timezone": "Múi giờ",
+      "budget": "Ngân sách",
+      "budgetAmount": "Số tiền ngân sách",
+      "budgetCurrency": "Tiền tệ",
+      "createdAt": "Ngày tạo",
+      "updatedAt": "Cập nhật lần cuối"
+    },
+    "placeholders": {
+      "destination": "Ví dụ: Đà Lạt",
+      "timezone": "Ví dụ: Asia/Ho_Chi_Minh",
+      "budgetCurrency": "VND"
+    },
+    "validation": {
+      "nameRequired": "Tên chuyến đi là bắt buộc.",
+      "destinationRequired": "Điểm đến là bắt buộc.",
+      "startDateRequired": "Ngày bắt đầu là bắt buộc.",
+      "endDateRequired": "Ngày kết thúc là bắt buộc.",
+      "dateRangeInvalid": "Ngày kết thúc không được sớm hơn ngày bắt đầu.",
+      "timezoneRequired": "Múi giờ là bắt buộc.",
+      "budgetAmountRequired": "Ngân sách là bắt buộc.",
+      "budgetAmountPositive": "Ngân sách phải lớn hơn 0.",
+      "budgetCurrencyRequired": "Tiền tệ là bắt buộc.",
+      "budgetCurrencyLength": "Tiền tệ cần đúng 3 ký tự."
+    },
+    "actions": {
+      "viewList": "Xem danh sách chuyến đi",
+      "viewDetails": "Xem chi tiết",
+      "create": "Tạo chuyến đi",
+      "creating": "Đang tạo chuyến đi...",
+      "save": "Lưu thay đổi",
+      "saving": "Đang lưu thay đổi...",
+      "edit": "Chỉnh sửa",
+      "delete": "Xoá chuyến đi",
+      "deleting": "Đang xoá chuyến đi...",
+      "retry": "Thử lại",
+      "backToList": "Quay lại danh sách chuyến đi",
+      "cancel": "Huỷ"
+    },
+    "feedback": {
+      "createSuccess": "Chuyến đi mới đã được tạo thành công.",
+      "updateSuccess": "Thông tin chuyến đi đã được cập nhật.",
+      "deleteSuccess": "Chuyến đi đã được xoá.",
+      "createError": "Không thể tạo chuyến đi lúc này. Vui lòng thử lại.",
+      "updateError": "Không thể lưu thay đổi lúc này. Vui lòng thử lại.",
+      "deleteError": "Không thể xoá chuyến đi lúc này. Vui lòng thử lại."
+    },
+    "delete": {
+      "confirmTitle": "Xoá chuyến đi này?",
+      "confirmDescription": "Chuyến đi \"{{name}}\" sẽ bị xoá khỏi tài khoản của bạn.",
+      "confirmHint": "Hành động này chưa có bước khôi phục trong phase hiện tại."
+    }
   }
 }

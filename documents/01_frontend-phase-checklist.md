@@ -25,7 +25,7 @@
 | 02 | Xây dựng auth flow và protected app shell | Completed |
 | 03 | Xây dựng landing và public surface | Completed |
 | 04 | Xây dựng dashboard, profile, và empty states có dữ liệu thật | Completed |
-| 05 | Xây dựng `trips` workspace | Blocked by BE Phase 04 |
+| 05 | Xây dựng `trips` workspace | Completed |
 | 06 | Xây dựng `itineraries` và `budgets` workspace | Blocked by BE Phase 05 |
 | 07 | Xây dựng `community` experience | Blocked by BE Phase 06 |
 | 08 | Hardening, test, accessibility, và deploy | Todo |
@@ -100,13 +100,17 @@ Status: `Completed`
 
 ## Phase 05 - Xây dựng `trips` workspace
 
-Status: `Blocked by BE Phase 04`
+Status: `Completed`
 
-- [ ] Tạo route list/detail/create/edit cho trips
-- [ ] Kết nối API create/list/detail/update/delete của `trips`
-- [ ] Tạo form tạo chuyến đi
-- [ ] Tạo empty, loading, error state cho danh sách chuyến đi
-- [ ] Tạo optimistic UX hoặc mutation feedback phù hợp
+- [x] Tạo backlog thực thi chi tiết cho `trips` workspace trong `documents/10_frontend-trips-execution-backlog.md`
+- [x] Thay placeholder routes bằng page thật cho `trips`, `trips/new`, `trips/:tripId`, `trips/:tripId/edit`
+- [x] Thêm route index `/app/trips` và nối lại protected navigation tới khu vực này
+- [x] Tạo API layer `features/trips/api` cho create/list/detail/update/delete
+- [x] Tạo types và mapper cho `Trip`, `TripListMeta`, `TripSort`
+- [x] Tạo form tạo/chỉnh sửa chuyến đi với validation phía client
+- [x] Tạo loading, empty, error, not-found state cho list/detail/edit
+- [x] Tạo mutation feedback rõ ràng cho create/update/delete
+- [x] Chốt verify tối thiểu cho Phase 05: lint, test, build
 
 ## Phase 06 - Xây dựng `itineraries` và `budgets` workspace
 

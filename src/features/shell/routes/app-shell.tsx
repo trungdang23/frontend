@@ -1,4 +1,4 @@
-import { House, LogOut, UserRound } from 'lucide-react';
+import { House, LogOut, Map, UserRound } from 'lucide-react';
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '@/features/auth/session/use-auth';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -11,6 +11,7 @@ export function AppShell() {
   const { t } = useI18n();
   const navItems = [
     { label: t('common.navigation.dashboard'), to: '/app', icon: House },
+    { label: t('common.navigation.trips'), to: '/app/trips', icon: Map },
     { label: t('common.navigation.profile'), to: '/app/profile', icon: UserRound },
   ];
 
