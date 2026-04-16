@@ -187,3 +187,29 @@ jobs:
           DEPLOY_VERIFY_URL: ${{ vars.DEPLOY_VERIFY_URL }}
         run: |
           curl -fsSLI "${DEPLOY_VERIFY_URL}"
+
+  verify-public-frontend:
+    needs: deploy-frontend
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Skip delayed public verification when URL is unset
+        env:
+          DEPLOY_VERIFY_URL: ${{ vars.DEPLOY_VERIFY_URL }}
+        run: |
+          if [ -z "${DEPLOY_VERIFY_URL}" ]; then
+            echo "DEPLOY_VERIFY_URL is empty. Skipping delayed public verification."
+            exit 0
+          fi
+
+      - name: Wait for runtime to settle after self-hosted job completes
+        if: ${{ vars.DEPLOY_VERIFY_URL != '' }}
+        run: |
+          sleep 20
+
+      - name: Delayed public verification
+        if: ${{ vars.DEPLOY_VERIFY_URL != '' }}
+        env:
+          DEPLOY_VERIFY_URL: ${{ vars.DEPLOY_VERIFY_URL }}
+        run: |
+          curl --fail --silent --show-error --retry 5 --retry-delay 3 --retry-connrefused --head "${DEPLOY_VERIFY_URL}"

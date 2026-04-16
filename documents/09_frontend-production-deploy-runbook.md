@@ -21,6 +21,7 @@
   - source env thật
   - `pnpm build`
   - `bash ./scripts/restart-production.sh`
+- Sau khi self-hosted job kết thúc, workflow còn có một delayed public verification riêng trên GitHub-hosted runner để bắt lỗi runtime chết sau deploy
 
 ## GitHub configuration bắt buộc
 
@@ -86,6 +87,8 @@ Frontend có các script:
 - `scripts/check-production-health.sh`
 
 `stop-production.sh` sẽ cố dọn cả process đang giữ `APP_PORT` kể cả khi PID file cũ bị mất, để lượt restart sau reboot hoặc deploy dễ tự phục hồi hơn.
+
+`start-production.sh` sẽ clear `RUNNER_TRACKING_ID` nếu được gọi từ self-hosted GitHub Actions runner, để process frontend không bị runner cleanup sau khi job kết thúc.
 
 ## Quy trình deploy lặp lại
 
@@ -170,6 +173,22 @@ Khắc phục:
 - xem log `pnpm build`
 - kiểm tra `RUNTIME_VITE_API_BASE_URL` và các env build-time
 - chạy lại workflow sau khi sửa lỗi build
+
+### Deploy báo xanh nhưng public domain rơi `502` ngay sau đó
+
+Nguyên nhân hay gặp:
+
+- frontend process được start từ self-hosted runner nhưng bị runner cleanup sau khi job kết thúc
+- port `APP_PORT` còn bị chiếm bởi process cũ trong lúc restart
+
+Khắc phục:
+
+- đảm bảo `SERVICE_RESTART_COMMAND` đang dùng `bash ./scripts/restart-production.sh`
+- giữ `scripts/start-production.sh` ở phiên bản đã clear `RUNNER_TRACKING_ID` trước khi detach process
+- chạy:
+  - `bash ./scripts/restart-production.sh`
+  - `bash ./scripts/check-production-health.sh`
+  - `curl -I https://buicojourney.com/health`
 
 ## Kết luận vận hành
 
