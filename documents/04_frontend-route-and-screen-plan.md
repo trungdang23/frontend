@@ -19,6 +19,7 @@
 
 - `/app`
 - `/app/profile`
+- `/app/trips`
 - `/app/trips/new`
 - `/app/trips/:tripId`
 - `/app/trips/:tripId/edit`
@@ -30,13 +31,14 @@
 | `/` | Landing page | No | static content | P0 |
 | `/auth/login` | Login | No | `POST /auth/login` | P0 |
 | `/auth/register` | Register | No | `POST /auth/register` | P0 |
-| `/app` | Dashboard | Yes | `GET /auth/me` + trips sau này | P0 |
+| `/app` | Dashboard | Yes | `GET /auth/me` + entrypoint tới `trips` | P0 |
 | `/app/profile` | Profile | Yes | `GET /auth/me` | P0 |
 | `/community` | Community teaser/feed | No | static trước, API sau | P2 |
 | `/community/:postId` | Post detail | No | static trước, API sau | P2 |
-| `/app/trips/new` | Create trip | Yes | chờ BE `trips` | P1 |
-| `/app/trips/:tripId` | Trip detail | Yes | chờ BE `trips` | P1 |
-| `/app/trips/:tripId/edit` | Trip edit | Yes | chờ BE `trips` | P1 |
+| `/app/trips` | Trips list | Yes | `GET /trips` | P1 |
+| `/app/trips/new` | Create trip | Yes | `POST /trips` | P1 |
+| `/app/trips/:tripId` | Trip detail | Yes | `GET /trips/:tripId` | P1 |
+| `/app/trips/:tripId/edit` | Trip edit | Yes | `GET /trips/:tripId` + `PATCH /trips/:tripId` | P1 |
 
 ## Mapping từ `UI_demo.txt`
 
@@ -66,7 +68,8 @@
 6. `Profile summary`
 7. `Landing production`
 8. `Community teaser`
-9. `Trips workspace` khi backend phase 04 sẵn
+9. `Trips workspace`
+10. `Itineraries + budgets` workspace
 
 ## Scope đề xuất cho phase FE đầu tiên
 
@@ -81,7 +84,7 @@
 - logout
 - expired session handling
 
-### P1 - Chờ backend `trips`
+### P1 - Đã hoàn thành với backend `trips` thật
 
 - trip list
 - trip detail
@@ -89,14 +92,16 @@
 - edit trip
 - delete trip
 
-### P2 - Chờ backend `community`
+### P2 - Chờ backend `itineraries`, `budgets`, và `community`
 
+- timeline/day planner
+- budget summary
 - community feed thật
 - post detail thật
 - like/comment/follow
 
 ## Điều cần tránh
 
-- Không implement trip detail production bằng mock rồi quên thay.
+- Không mở `itineraries` hoặc `budgets` production bằng mock rồi quên thay.
 - Không để login/register nằm chung một screen state-machine nếu đã có route thật.
 - Không để route protected phụ thuộc hoàn toàn vào client memory mà thiếu session boot strategy.

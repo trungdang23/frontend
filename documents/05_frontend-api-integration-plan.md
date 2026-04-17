@@ -227,6 +227,90 @@ List response trả `data: Trip[]` kèm:
 
 Frontend nên dùng contract này để mở Phase 05 thay vì giữ placeholder.
 
+## Itinerary và budget contract hiện đã sẵn
+
+Frontend có thể mở Phase 06 bằng API thật với các endpoint:
+
+- `GET /trips/:tripId/itinerary`
+- `POST /trips/:tripId/itinerary/days`
+- `POST /trips/:tripId/itinerary/days/:dayId/activities`
+- `PATCH /trips/:tripId/itinerary/days/:dayId/activities/:activityId`
+- `GET /trips/:tripId/budget-summary`
+
+Shape `itinerary` response hiện backend trả:
+
+```json
+{
+  "tripId": "string",
+  "startDate": "2026-07-12",
+  "endDate": "2026-07-15",
+  "days": [
+    {
+      "id": "string",
+      "tripId": "string",
+      "date": "2026-07-12",
+      "activities": [
+        {
+          "id": "string",
+          "itineraryDayId": "string",
+          "title": "Lantern Walk",
+          "startsAt": "18:30",
+          "location": "Hoi An Old Town",
+          "notes": "string",
+          "costAmount": 250000,
+          "costCurrency": "VND",
+          "position": 1,
+          "createdAt": "date",
+          "updatedAt": "date"
+        }
+      ],
+      "createdAt": "date",
+      "updatedAt": "date"
+    }
+  ]
+}
+```
+
+`POST /trips/:tripId/itinerary/days` hiện nhận:
+
+```json
+{
+  "date": "2026-07-12"
+}
+```
+
+`POST /trips/:tripId/itinerary/days/:dayId/activities` hiện nhận:
+
+```json
+{
+  "title": "Lantern Walk",
+  "startsAt": "18:30",
+  "location": "Hoi An Old Town",
+  "notes": "Bring camera",
+  "costAmount": 250000,
+  "costCurrency": "VND"
+}
+```
+
+`PATCH /trips/:tripId/itinerary/days/:dayId/activities/:activityId` cho phép update từng phần của activity với cùng shape field như create.
+
+`GET /trips/:tripId/budget-summary` hiện trả:
+
+```json
+{
+  "tripId": "string",
+  "currency": "VND",
+  "totalBudgetAmount": 2000000,
+  "totalPlannedAmount": 250000,
+  "remainingAmount": 1750000,
+  "totalDays": 1,
+  "totalActivities": 1,
+  "isOverBudget": false
+}
+```
+
+Frontend Phase 06 nên bám đúng contract này trước khi mở rộng chart, drag/drop, hay inline planner phức tạp.
+
 ## Cách xử lý các phần chưa có backend
 
 - Với public/community section:

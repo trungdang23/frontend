@@ -26,7 +26,7 @@
 | 03 | Xây dựng landing và public surface | Completed |
 | 04 | Xây dựng dashboard, profile, và empty states có dữ liệu thật | Completed |
 | 05 | Xây dựng `trips` workspace | Completed |
-| 06 | Xây dựng `itineraries` và `budgets` workspace | Blocked by BE Phase 05 |
+| 06 | Xây dựng `itineraries` và `budgets` workspace | Todo |
 | 07 | Xây dựng `community` experience | Blocked by BE Phase 06 |
 | 08 | Hardening, test, accessibility, và deploy | Todo |
 
@@ -114,7 +114,7 @@ Status: `Completed`
 
 ## Phase 06 - Xây dựng `itineraries` và `budgets` workspace
 
-Status: `Blocked by BE Phase 05`
+Status: `Todo`
 
 - [ ] Tạo timeline/day planner UI
 - [ ] Tạo budget summary UI

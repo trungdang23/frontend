@@ -9,9 +9,10 @@ Frontend package cho sản phẩm `journey`.
   - landing page
   - auth routes `login/register`
   - protected app shell
-  - dashboard empty state
-  - profile summary từ `GET /auth/me`
+  - dashboard và profile summary từ `GET /auth/me`
   - session boot với `login/register/me/refresh`
+  - trips workspace thật với `list/create/detail/edit/delete`
+  - community teaser và post placeholder có chủ đích
 - Các tài liệu trong `documents/` vẫn là nguồn tham chiếu chính để giữ roadmap không trượt khỏi scope.
 
 ## Chạy package
@@ -56,6 +57,8 @@ Khi frontend được start từ self-hosted GitHub Actions runner, `scripts/sta
 - `documents/06_frontend-app-architecture.md`
 - `documents/07_frontend-definition-of-done.md`
 - `documents/08_frontend-risk-and-dependencies.md`
+- `documents/09_frontend-production-deploy-runbook.md`
+- `documents/10_frontend-trips-execution-backlog.md`
 
 ## Giả định nền cho kế hoạch hiện tại
 
@@ -65,6 +68,18 @@ Khi frontend được start từ self-hosted GitHub Actions runner, `scripts/sta
   - `POST /auth/login`
   - `GET /auth/me`
   - `POST /auth/refresh`
+- Backend production hiện cũng đã sẵn `trips` CRUD thật với:
+  - `POST /trips`
+  - `GET /trips`
+  - `GET /trips/:tripId`
+  - `PATCH /trips/:tripId`
+  - `DELETE /trips/:tripId`
+- Backend production hiện cũng đã sẵn contract cho `itineraries` và `budgets` với:
+  - `GET /trips/:tripId/itinerary`
+  - `POST /trips/:tripId/itinerary/days`
+  - `POST /trips/:tripId/itinerary/days/:dayId/activities`
+  - `PATCH /trips/:tripId/itinerary/days/:dayId/activities/:activityId`
+  - `GET /trips/:tripId/budget-summary`
 - Các phase `trips`, `itineraries`, `budgets`, và `community` của backend vẫn là dependency cho các phase frontend tương ứng.
 
 ## Mục tiêu của bộ planning này
@@ -85,8 +100,7 @@ src/
 
 ## Bước tiếp theo hợp lý
 
-1. Cấu hình GitHub `Environment variables` theo `documents/09_frontend-production-deploy-runbook.md`.
-2. Đảm bảo self-hosted runner Linux/X64 trên máy đích đang online.
-3. Chạy `deploy-frontend` để đưa bản frontend đầu tiên lên domain thật.
-4. Test auth flow và i18n trên `https://buicojourney.com`.
-5. Chỉ mở `trips/community` khi backend phase tương ứng đã sẵn contract thật.
+1. Chạy post-deploy verification cho `login/register/me/refresh` và `trips` CRUD trên `https://buicojourney.com`.
+2. Hoàn tất các mục hardening còn lại của Phase 08: test auth/shared UI, route-level integration, smoke e2e, responsive, accessibility.
+3. Nối frontend Phase 06 cho `itineraries` và `budgets` theo contract backend thật.
+4. Chỉ mở `community` theo hướng API-driven khi backend Phase 06 sẵn contract.

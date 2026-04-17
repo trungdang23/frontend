@@ -13,13 +13,13 @@
 - auth login
 - auth me
 - auth refresh
+- trips CRUD
+- itinerary APIs
+- budget APIs
 - CORS production cho frontend domain
 
 ### Chưa sẵn cho production FE
 
-- trips CRUD
-- itinerary APIs
-- budget APIs
 - community feed APIs
 - post detail APIs
 - like/comment/follow APIs
@@ -32,10 +32,10 @@
 - FE phase đầu khó tránh việc lưu session client-side.
 - Đây là điểm cần revisit sau khi backend hỗ trợ cookie-based refresh token.
 
-### 2. Trips UI rất dễ vượt scope trước backend
+### 2. Itinerary và budget UI rất dễ vượt scope trước backend
 
-- `UI_demo.txt` có nhiều trạng thái `trips` hấp dẫn để làm sớm.
-- Nếu dựng full UI trips trước khi BE phase 04 sẵn, khả năng rework cao.
+- `UI_demo.txt` có nhiều trạng thái timeline/budget hấp dẫn để làm sớm.
+- Nếu dựng full UI `itineraries` hoặc `budgets` vượt ra ngoài contract Phase 05 hiện có, khả năng rework cao.
 
 ### 3. Community section dễ bị hiểu nhầm là production-ready
 
@@ -73,17 +73,17 @@
 - Phase nào bị block bởi backend
 - Screen nào là P0, P1, P2
 
-## Khuyến nghị thứ tự làm sau planning
+## Khuyến nghị thứ tự làm từ trạng thái hiện tại
 
-1. Scaffold app foundation
-2. Auth flow thật
-3. Protected shell
-4. Dashboard empty state + profile
-5. Landing polish
-6. Trips workspace khi backend phase 04 sẵn
+1. Giữ ổn định auth flow thật
+2. Giữ ổn định protected shell
+3. Hoàn tất hardening cho dashboard/profile/trips
+4. Chạy post-deploy verification trên domain thật
+5. Nối frontend phase 06 cho `itineraries` và `budgets` theo contract thật
+6. Chỉ mở `community` sau khi backend phase 06 sẵn
 
 ## Điều không nên làm tiếp theo
 
-- Không nên code trip detail production ngay.
+- Không nên dựng `itineraries` hoặc `budgets` production bằng mock rồi quên thay.
 - Không nên làm community interactive trước khi có backend thật.
 - Không nên vừa scaffold vừa đổi stack giữa chừng.
