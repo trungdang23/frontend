@@ -33,7 +33,7 @@ npm test -- --run
 ## GitHub Actions hiện có
 
 - `frontend-ci`: tự chạy khi `push` và `pull_request`, dùng env test nội bộ để chạy `lint`, `test`, `build`
-- `deploy-frontend`: chạy tay khi cần deploy production
+- `deploy-frontend`: tự chạy khi `push` vào `main`, đồng thời vẫn hỗ trợ `workflow_dispatch` để redeploy thủ công khi cần
 
 ## Env runtime hiện dùng
 

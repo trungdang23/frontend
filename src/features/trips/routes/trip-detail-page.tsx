@@ -72,11 +72,12 @@ export function TripDetailPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { tripId } = useParams();
-  const { formatDate, language, t } = useI18n();
+  const { language, t } = useI18n();
   const queryClient = useQueryClient();
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [plannerError, setPlannerError] = useState<string | null>(null);
+  const [isCreateStopFormOpen, setIsCreateStopFormOpen] = useState(false);
   const [createDayComposer, setCreateDayComposer] = useState<DayComposerState>(
     createEmptyDayComposer('VND'),
   );
@@ -123,6 +124,7 @@ export function TripDetailPage() {
       setCreateDayComposer(
         createEmptyDayComposer(tripQuery.data?.budgetCurrency || 'VND'),
       );
+      setIsCreateStopFormOpen(false);
       await invalidatePlannerQueries(queryClient, tripId as string);
     },
   });
@@ -477,7 +479,6 @@ export function TripDetailPage() {
   const trip = tripQuery.data;
   const itinerary = itineraryQuery.data;
   const budgetSummary = budgetSummaryQuery.data;
-
   return (
     <div className="space-y-5">
       <Card className="group overflow-hidden p-0">
@@ -500,27 +501,27 @@ export function TripDetailPage() {
               </div>
               <div className="flex flex-wrap gap-3 text-sm text-white/82">
                 <span className="rounded-full bg-white/14 px-3 py-1">
-                  {trip.destination}
-                </span>
-                <span className="rounded-full bg-white/14 px-3 py-1">
                   {formatTripDateRange(trip.startDate, trip.endDate, language)}
-                </span>
-                <span className="rounded-full bg-white/14 px-3 py-1">
-                  {trip.timezone}
                 </span>
               </div>
             </div>
 
             <div className="rounded-[1.75rem] border border-white/14 bg-white/10 p-5 backdrop-blur-md">
-              <p className="eyebrow-text-xs text-white/70">{t('trips.fields.budget')}</p>
+              <p className="eyebrow-text-xs text-white/70">{t('trips.overviewEyebrow')}</p>
               <p className="mt-2 text-xl font-semibold text-white">
-                {formatTripBudget(trip.budgetAmount, trip.budgetCurrency, language)}
+                {formatTripDateRange(trip.startDate, trip.endDate, language)}
+              </p>
+              <p className="mt-3 text-sm leading-7 text-white/76">
+                {t('trips.overviewDescription')}
               </p>
               <div className="mt-6 flex flex-col gap-3">
                 <Link className={getButtonClasses()} to={`/app/trips/${trip.id}/edit`}>
                   {t('trips.actions.edit')}
                 </Link>
-                <Link className={getButtonClasses('ghost')} to="/app/trips">
+                <Link
+                  className={`${getButtonClasses('secondary')} border-white/30 bg-white text-[var(--color-ink)] hover:bg-white/92`}
+                  to="/app/trips"
+                >
                   {t('trips.actions.backToList')}
                 </Link>
               </div>
@@ -532,37 +533,42 @@ export function TripDetailPage() {
       {noticeKey ? <StatusBanner tone="success">{t(noticeKey)}</StatusBanner> : null}
       {deleteError ? <StatusBanner tone="danger">{deleteError}</StatusBanner> : null}
 
-      <Card className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <SummaryMetric
-          label={t('trips.fields.destination')}
-          value={trip.destination}
-        />
-        <SummaryMetric
-          label={t('trips.fields.timezone')}
-          value={trip.timezone}
-        />
-        <SummaryMetric
-          label={t('trips.fields.createdAt')}
-          value={formatDate(trip.createdAt)}
-        />
-        <SummaryMetric
-          label={t('trips.fields.updatedAt')}
-          value={formatDate(trip.updatedAt)}
-        />
-      </Card>
-
       <Card className="space-y-5">
-        <div className="space-y-2">
-          <p className="eyebrow-text text-[var(--color-forest)]">
-            {t('trips.planner.budgetEyebrow')}
-          </p>
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(0,1.3fr)] xl:items-start">
           <div className="space-y-2">
-            <h2 className="headline text-3xl text-[var(--color-ink)]">
-              {t('trips.planner.budgetTitle')}
-            </h2>
-            <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
-              {t('trips.planner.budgetDescription')}
+            <p className="eyebrow-text text-[var(--color-forest)]">
+              {t('trips.overviewEyebrow')}
             </p>
+            <div className="space-y-3">
+              <h2 className="headline text-3xl text-[var(--color-ink)]">
+                {t('trips.overviewTitle')}
+              </h2>
+              <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
+                {t('trips.overviewDescription')}
+              </p>
+            </div>
+            <div className="rounded-[1.5rem] bg-[var(--color-surface-strong)] px-5 py-4">
+              <p className="eyebrow-text-xs text-[var(--color-forest)]">
+                {t('trips.fields.dateRange')}
+              </p>
+              <p className="mt-2 text-base font-semibold text-[var(--color-ink)]">
+                {formatTripDateRange(trip.startDate, trip.endDate, language)}
+              </p>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <p className="eyebrow-text text-[var(--color-forest)]">
+              {t('trips.planner.budgetEyebrow')}
+            </p>
+            <div className="space-y-2">
+              <h2 className="headline text-3xl text-[var(--color-ink)]">
+                {t('trips.planner.budgetTitle')}
+              </h2>
+              <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
+                {t('trips.planner.budgetDescription')}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -628,20 +634,37 @@ export function TripDetailPage() {
 
         {plannerError ? <StatusBanner tone="danger">{plannerError}</StatusBanner> : null}
 
-        <PlannerDayForm
-          maxDate={trip.endDate}
-          minDate={trip.startDate}
-          mode="create"
-          onChange={setCreateDayComposer}
-          onSubmit={(event) => void handleCreateDay(event)}
-          submitLabel={
-            createDayMutation.isPending
-              ? t('trips.planner.actions.addingStop')
-              : t('trips.planner.actions.addStop')
-          }
-          title={t('trips.planner.createStopTitle')}
-          value={createDayComposer}
-        />
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            onClick={() => setIsCreateStopFormOpen((currentValue) => !currentValue)}
+            type="button"
+          >
+            <span className="inline-flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              {isCreateStopFormOpen
+                ? t('trips.planner.actions.hideStopForm')
+                : t('trips.planner.actions.showStopForm')}
+            </span>
+          </Button>
+        </div>
+
+        {isCreateStopFormOpen ? (
+          <PlannerDayForm
+            maxDate={trip.endDate}
+            minDate={trip.startDate}
+            mode="create"
+            onCancel={() => setIsCreateStopFormOpen(false)}
+            onChange={setCreateDayComposer}
+            onSubmit={(event) => void handleCreateDay(event)}
+            submitLabel={
+              createDayMutation.isPending
+                ? t('trips.planner.actions.addingStop')
+                : t('trips.planner.actions.addStop')
+            }
+            title={t('trips.planner.createStopTitle')}
+            value={createDayComposer}
+          />
+        ) : null}
 
         {itineraryQuery.isLoading ? (
           <div className="space-y-4">
@@ -655,8 +678,20 @@ export function TripDetailPage() {
               : t('trips.planner.feedback.loadError')}
           </StatusBanner>
         ) : itinerary && itinerary.days.length === 0 ? (
-          <div className="rounded-[1.75rem] border border-dashed border-[var(--color-border-strong)] bg-white/50 p-6 text-sm leading-7 text-[var(--color-ink-soft)]">
-            {t('trips.planner.empty')}
+          <div className="rounded-[1.75rem] border border-dashed border-[var(--color-border-strong)] bg-white/50 p-6">
+            <p className="text-sm leading-7 text-[var(--color-ink-soft)]">
+              {t('trips.planner.empty')}
+            </p>
+            {!isCreateStopFormOpen ? (
+              <div className="mt-4">
+                <Button onClick={() => setIsCreateStopFormOpen(true)} type="button">
+                  <span className="inline-flex items-center gap-2">
+                    <Plus className="h-4 w-4" />
+                    {t('trips.planner.actions.addFirstStop')}
+                  </span>
+                </Button>
+              </div>
+            ) : null}
           </div>
         ) : (
           <div className="space-y-5">
@@ -883,15 +918,6 @@ export function TripDetailPage() {
         onConfirm={handleDelete}
         tripName={trip.name}
       />
-    </div>
-  );
-}
-
-function SummaryMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-[1.5rem] bg-white/70 p-5">
-      <p className="eyebrow-text-xs text-[var(--color-forest)]">{label}</p>
-      <p className="mt-2 text-base font-medium text-[var(--color-ink)]">{value}</p>
     </div>
   );
 }

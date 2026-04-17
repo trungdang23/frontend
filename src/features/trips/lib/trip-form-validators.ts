@@ -5,12 +5,10 @@ type Translate = (key: string) => string;
 
 export type TripFormValues = {
   name: string;
-  destination: string;
   summaryNotes: string;
   coverImageUrl: string;
   startDate: string;
   endDate: string;
-  timezone: string;
   budgetAmount: string;
   budgetCurrency: string;
 };
@@ -19,7 +17,6 @@ export function createTripFormSchema(t: Translate) {
   return z
     .object({
       name: z.string().trim().min(1, t('trips.validation.nameRequired')),
-      destination: z.string().trim().min(1, t('trips.validation.destinationRequired')),
       summaryNotes: z
         .string()
         .trim()
@@ -32,7 +29,6 @@ export function createTripFormSchema(t: Translate) {
         }),
       startDate: z.string().trim().min(1, t('trips.validation.startDateRequired')),
       endDate: z.string().trim().min(1, t('trips.validation.endDateRequired')),
-      timezone: z.string().trim().min(1, t('trips.validation.timezoneRequired')),
       budgetAmount: z
         .string()
         .trim()
@@ -66,12 +62,10 @@ export function createTripFormSchema(t: Translate) {
 export function mapTripFormValuesToPayload(values: TripFormValues): TripUpsertPayload {
   return {
     name: values.name.trim(),
-    destination: values.destination.trim(),
     summaryNotes: toNullableTrimmedValue(values.summaryNotes),
     coverImageUrl: toNullableTrimmedValue(values.coverImageUrl),
     startDate: values.startDate,
     endDate: values.endDate,
-    timezone: values.timezone.trim(),
     budgetAmount: Number(values.budgetAmount),
     budgetCurrency: values.budgetCurrency.trim().toUpperCase(),
   };

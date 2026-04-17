@@ -37,7 +37,7 @@
 | `/community/:postId` | Post detail | No | static trước, API sau | P2 |
 | `/app/trips` | Trips list | Yes | `GET /trips` | P1 |
 | `/app/trips/new` | Create trip | Yes | `POST /trips` | P1 |
-| `/app/trips/:tripId` | Trip planning workspace | Yes | `GET /trips/:tripId` + planning API mới | P1 |
+| `/app/trips/:tripId` | Trip planning workspace | Yes | `GET /trips/:tripId` + itinerary/budget bridge hiện tại | P1 |
 | `/app/trips/:tripId/edit` | Trip edit | Yes | `GET /trips/:tripId` + `PATCH /trips/:tripId` | P1 |
 
 ## Mapping từ `UI_demo.txt`
@@ -87,17 +87,16 @@
 ### P1 - Đã hoàn thành với backend `trips` thật
 
 - trip list
-- trip detail
 - create trip
 - edit trip
 - delete trip
+- trip detail/workspace shell có media
 
-### P2 - Chờ backend planning expansion, `budgets`, và `community`
+### P2 - Chờ backend planning recursive expansion và `community`
 
-- media-first trip detail
-- planning outline/list
-- node editor modal hoặc drawer
-- budget summary
+- planning recursive nhiều tầng
+- node editor modal hoặc drawer riêng
+- motion polish sâu hơn cho planner
 - community feed thật
 - post detail thật
 - like/comment/follow

@@ -1,6 +1,9 @@
 name: deploy-frontend
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       ref:
@@ -12,6 +15,9 @@ concurrency:
   group: frontend-production
   cancel-in-progress: false
 
+env:
+  DEPLOY_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.ref || github.sha }}
+
 jobs:
   verify-frontend:
     runs-on: ubuntu-latest
@@ -22,7 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ env.DEPLOY_REF }}
 
       - name: Validate build variables
         run: |
@@ -64,7 +70,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ env.DEPLOY_REF }}
 
       - name: Validate deploy configuration
         env:

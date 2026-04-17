@@ -2,12 +2,12 @@ export type Trip = {
   id: string;
   userId: string;
   name: string;
-  destination: string;
+  destination: string | null;
   summaryNotes: string | null;
   coverImageUrl: string | null;
   startDate: string;
   endDate: string;
-  timezone: string;
+  timezone: string | null;
   budgetAmount: number;
   budgetCurrency: string;
   createdAt: string;
@@ -37,12 +37,12 @@ export type TripListResult = {
 
 export type TripUpsertPayload = {
   name: string;
-  destination: string;
+  destination?: string | null;
   summaryNotes: string | null;
   coverImageUrl: string | null;
   startDate: string;
   endDate: string;
-  timezone: string;
+  timezone?: string | null;
   budgetAmount: number;
   budgetCurrency: string;
 };

@@ -9,7 +9,8 @@
 ## Kiến trúc deploy hiện tại
 
 - Workflow: `.github/workflows/deploy-frontend.yml`
-- Kiểu deploy: manual qua `workflow_dispatch`
+- Kiểu deploy chính: tự động khi `push` vào `main`
+- Fallback deploy: manual qua `workflow_dispatch`
 - Kiểu thực thi deploy: self-hosted runner Linux/X64 trên chính máy đích
 - App frontend public:
   - `buicojourney.com -> http://localhost:3000`
@@ -92,16 +93,14 @@ Frontend có các script:
 
 ## Quy trình deploy lặp lại
 
-1. Push code lên branch mong muốn.
-2. Vào repo `frontend` trên GitHub.
-3. Mở workflow `deploy-frontend`.
-4. Chạy `Run workflow`.
-5. Chọn `ref`.
-6. Workflow sẽ verify trên GitHub-hosted runner, rồi deploy trên self-hosted runner.
-7. Mở:
+1. Push code đã chốt lên `main`.
+2. GitHub Actions sẽ tự chạy `deploy-frontend`.
+3. Workflow sẽ verify trên GitHub-hosted runner, rồi deploy trên self-hosted runner.
+4. Nếu cần redeploy lại một ref cũ hoặc chạy lại sau khi runner bị lỗi, vào repo `frontend` trên GitHub rồi dùng `Run workflow`.
+5. Mở:
    - `https://buicojourney.com`
    - `https://www.buicojourney.com`
-8. Test:
+6. Test:
    - landing
    - login
    - register
@@ -173,6 +172,21 @@ Khắc phục:
 - xem log `pnpm build`
 - kiểm tra `RUNTIME_VITE_API_BASE_URL` và các env build-time
 - chạy lại workflow sau khi sửa lỗi build
+
+### Push `main` nhưng deploy không tự chạy
+
+Nguyên nhân:
+
+- workflow đang bị disable
+- push không vào đúng branch `main`
+- self-hosted runner đang offline nên run bị kẹt
+
+Khắc phục:
+
+- kiểm tra tab `Actions`
+- xác nhận commit đã vào `main`
+- xác nhận runner online
+- nếu cần, dùng `Run workflow` để redeploy thủ công
 
 ### Deploy báo xanh nhưng public domain rơi `502` ngay sau đó
 

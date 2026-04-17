@@ -39,8 +39,6 @@ export function TripForm({
   });
 
   const previewName = useWatch({ control, name: 'name' })?.trim() ?? '';
-  const previewDestination =
-    useWatch({ control, name: 'destination' })?.trim() ?? '';
   const previewCoverImageUrl = useWatch({ control, name: 'coverImageUrl' }) ?? '';
 
   useEffect(() => {
@@ -56,12 +54,10 @@ export function TripForm({
 
         if (
           field === 'name' ||
-          field === 'destination' ||
           field === 'summaryNotes' ||
           field === 'coverImageUrl' ||
           field === 'startDate' ||
           field === 'endDate' ||
-          field === 'timezone' ||
           field === 'budgetAmount' ||
           field === 'budgetCurrency'
         ) {
@@ -94,22 +90,6 @@ export function TripForm({
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-destination">
-            {t('trips.fields.destination')}
-          </label>
-          <Input
-            hasError={Boolean(errors.destination)}
-            id="trip-destination"
-            placeholder={t('trips.placeholders.destination')}
-            type="text"
-            {...register('destination')}
-          />
-          {errors.destination ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.destination.message}</p>
-          ) : null}
-        </div>
-
-        <div className="space-y-2 md:col-span-2">
           <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-cover-image-url">
             {t('trips.fields.coverImageUrl')}
           </label>
@@ -137,9 +117,6 @@ export function TripForm({
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,24,18,0.1),rgba(12,24,18,0.75))]" />
               <div className="relative flex h-full items-end p-5 sm:p-6">
                 <div className="space-y-2">
-                  <p className="eyebrow-text-xs text-white/75">
-                    {previewDestination || t('trips.preview.destinationFallback')}
-                  </p>
                   <p className="text-2xl font-semibold text-white">
                     {previewName || t('trips.preview.titleFallback')}
                   </p>
@@ -176,22 +153,6 @@ export function TripForm({
           />
           {errors.endDate ? (
             <p className="text-sm text-[var(--color-danger)]">{errors.endDate.message}</p>
-          ) : null}
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-timezone">
-            {t('trips.fields.timezone')}
-          </label>
-          <Input
-            hasError={Boolean(errors.timezone)}
-            id="trip-timezone"
-            placeholder={t('trips.placeholders.timezone')}
-            type="text"
-            {...register('timezone')}
-          />
-          {errors.timezone ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.timezone.message}</p>
           ) : null}
         </div>
 

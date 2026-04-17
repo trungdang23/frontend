@@ -31,11 +31,11 @@ export function TripListItem({ trip }: TripListItemProps) {
             src={trip.coverImageUrl}
           />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,24,18,0.14),rgba(12,24,18,0.76))]" />
-          <div className="absolute left-5 top-5 rounded-full bg-white/18 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-white backdrop-blur-sm">
-            {trip.destination}
-          </div>
           <div className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-6">
-            <p className="text-sm font-medium text-white/78">
+            <p className="text-sm font-medium uppercase tracking-[0.22em] text-white/72">
+              {t('trips.listCardEyebrow')}
+            </p>
+            <p className="mt-2 text-sm font-medium text-white/78">
               {formatTripDateRange(trip.startDate, trip.endDate, language)}
             </p>
             <h2 className="mt-2 text-3xl font-semibold leading-tight">{trip.name}</h2>
@@ -52,14 +52,10 @@ export function TripListItem({ trip }: TripListItemProps) {
           </p>
         )}
 
-        <div className="grid gap-3 rounded-[1.5rem] bg-white/70 px-4 py-4 text-sm text-[var(--color-ink-soft)] sm:grid-cols-2">
-          <div>
-            <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.timezone')}</p>
-            <p className="mt-1 font-medium text-[var(--color-ink)]">{trip.timezone}</p>
-          </div>
-          <div>
+        <div className="grid gap-3 rounded-[1.5rem] bg-white/70 px-4 py-4 text-sm text-[var(--color-ink-soft)]">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.budget')}</p>
-            <p className="mt-1 font-medium text-[var(--color-ink)]">
+            <p className="font-medium text-[var(--color-ink)]">
               {formatTripBudget(trip.budgetAmount, trip.budgetCurrency, language)}
             </p>
           </div>

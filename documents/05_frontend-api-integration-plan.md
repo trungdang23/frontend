@@ -200,10 +200,12 @@ Shape `Trip` hiện backend trả:
   "id": "string",
   "userId": "string",
   "name": "string",
-  "destination": "string",
+  "destination": "string | null",
+  "summaryNotes": "string | null",
+  "coverImageUrl": "string | null",
   "startDate": "string",
   "endDate": "string",
-  "timezone": "string",
+  "timezone": "string | null",
   "budgetAmount": 1000000,
   "budgetCurrency": "VND",
   "createdAt": "date",
@@ -211,16 +213,21 @@ Shape `Trip` hiện backend trả:
 }
 ```
 
-Hướng mở rộng tiếp theo cho `Trip` nên là additive:
+UI hiện tại chỉ yêu cầu gửi các field metadata tối thiểu:
 
 ```json
 {
+  "name": "string",
+  "startDate": "string",
+  "endDate": "string",
+  "budgetAmount": 1000000,
+  "budgetCurrency": "VND",
   "summaryNotes": "string | null",
   "coverImageUrl": "string | null"
 }
 ```
 
-Frontend nên chuẩn bị type và rendering để đọc hai field này trước khi có upload thực tế.
+`destination` và `timezone` vẫn được backend giữ lại dưới dạng nullable để tương thích ngược, nhưng không còn là field bắt buộc trong form tạo/chỉnh sửa chuyến đi của frontend.
 
 List response trả `data: Trip[]` kèm:
 
@@ -244,8 +251,11 @@ Frontend có thể mở Phase 06 bằng API thật với các endpoint:
 
 - `GET /trips/:tripId/itinerary`
 - `POST /trips/:tripId/itinerary/days`
+- `PATCH /trips/:tripId/itinerary/days/:dayId`
+- `DELETE /trips/:tripId/itinerary/days/:dayId`
 - `POST /trips/:tripId/itinerary/days/:dayId/activities`
 - `PATCH /trips/:tripId/itinerary/days/:dayId/activities/:activityId`
+- `DELETE /trips/:tripId/itinerary/days/:dayId/activities/:activityId`
 - `GET /trips/:tripId/budget-summary`
 
 Shape `itinerary` response hiện backend trả:
@@ -260,17 +270,28 @@ Shape `itinerary` response hiện backend trả:
       "id": "string",
       "tripId": "string",
       "date": "2026-07-12",
+      "title": "Đà Nẵng",
+      "startsAt": "08:00",
+      "endsAt": "21:00",
+      "location": "Đà Nẵng",
+      "notes": "string",
+      "costAmount": 800000,
+      "costCurrency": "VND",
+      "position": 1,
+      "imageUrls": ["https://images.unsplash.com/..."],
       "activities": [
         {
           "id": "string",
           "itineraryDayId": "string",
           "title": "Lantern Walk",
           "startsAt": "18:30",
+          "endsAt": "20:30",
           "location": "Hoi An Old Town",
           "notes": "string",
           "costAmount": 250000,
           "costCurrency": "VND",
           "position": 1,
+          "imageUrls": ["https://images.unsplash.com/..."],
           "createdAt": "date",
           "updatedAt": "date"
         }
@@ -286,7 +307,15 @@ Shape `itinerary` response hiện backend trả:
 
 ```json
 {
-  "date": "2026-07-12"
+  "date": "2026-07-12",
+  "title": "Đà Nẵng",
+  "startsAt": "08:00",
+  "endsAt": "21:00",
+  "location": "Đà Nẵng",
+  "notes": "Nhóm địa điểm chính trong ngày 1",
+  "costAmount": 800000,
+  "costCurrency": "VND",
+  "imageUrls": ["https://images.unsplash.com/..."]
 }
 ```
 
@@ -296,14 +325,20 @@ Shape `itinerary` response hiện backend trả:
 {
   "title": "Lantern Walk",
   "startsAt": "18:30",
+  "endsAt": "20:30",
   "location": "Hoi An Old Town",
   "notes": "Bring camera",
   "costAmount": 250000,
-  "costCurrency": "VND"
+  "costCurrency": "VND",
+  "imageUrls": ["https://images.unsplash.com/..."]
 }
 ```
 
+`PATCH /trips/:tripId/itinerary/days/:dayId` cho phép update từng phần của địa điểm chính với cùng nhóm field như create day.
+
 `PATCH /trips/:tripId/itinerary/days/:dayId/activities/:activityId` cho phép update từng phần của activity với cùng shape field như create.
+
+Các endpoint `DELETE` cho day và activity dùng để hỗ trợ planner list hiện tại mà không cần route sâu.
 
 `GET /trips/:tripId/budget-summary` hiện trả:
 
@@ -320,7 +355,7 @@ Shape `itinerary` response hiện backend trả:
 }
 ```
 
-Frontend Phase 06 nên bám đúng contract này trước khi mở rộng chart, drag/drop, hay inline planner phức tạp.
+Frontend Phase 06 hiện đang dùng contract này làm bridge để render planner 2 cấp theo kiểu list-first. Đây chưa phải `planning` module recursive cuối cùng, nhưng đủ để triển khai nhiều địa điểm chính, địa điểm con, nhiều ảnh URL, ghi chú, chi phí, và ngân sách ngay trên `/app/trips/:tripId`.
 
 ## Planning contract mục tiêu cho nhánh mở rộng tiếp theo
 

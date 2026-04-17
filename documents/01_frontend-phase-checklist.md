@@ -26,7 +26,7 @@
 | 03 | Xây dựng landing và public surface | Completed |
 | 04 | Xây dựng dashboard, profile, và empty states có dữ liệu thật | Completed |
 | 05 | Xây dựng `trips` workspace | Completed |
-| 06 | Xây dựng `planning`, media, `itineraries`, và `budgets` workspace | Todo |
+| 06 | Xây dựng `planning`, media, `itineraries`, và `budgets` workspace | In Progress |
 | 07 | Xây dựng `community` experience | Blocked by BE Phase 06 |
 | 08 | Hardening, test, accessibility, và deploy | Todo |
 
@@ -114,21 +114,24 @@ Status: `Completed`
 
 ## Phase 06 - Xây dựng `planning`, media, `itineraries`, và `budgets` workspace
 
-Status: `Todo`
+Status: `In Progress`
 
-- [ ] Mở rộng `Trip` UI với `coverImageUrl`
-- [ ] Mở rộng `Trip` UI với `summaryNotes`
-- [ ] Tạo trip cards có media placeholder hoặc ảnh thật từ DB
-- [ ] Chuyển `/app/trips/:tripId` từ metadata detail sang planning workspace
-- [ ] Tạo planner list hoặc outline UI dạng cuộn
-- [ ] Tạo planner node card với thời gian, chi phí, ghi chú, và ảnh
+- [x] Mở rộng `Trip` UI với `coverImageUrl`
+- [x] Mở rộng `Trip` UI với `summaryNotes`
+- [x] Tạo trip cards có media placeholder hoặc ảnh thật từ DB
+- [x] Chuyển `/app/trips/:tripId` từ metadata detail sang planning workspace
+- [x] Tạo planner list hoặc outline UI dạng cuộn
+- [x] Tạo planner node card với thời gian, chi phí, ghi chú, và ảnh
+- [x] Ẩn form tạo địa điểm chính mặc định và chỉ mở khi người dùng bấm CTA
+- [x] Loại bỏ `destination` và `timezone` khỏi form tạo/chỉnh sửa `Trip`
+- [x] Gộp overview và budget lên đầu workspace, đồng thời bỏ `createdAt`, `updatedAt`, và `timezone` khỏi UI detail chính
+- [x] Kết nối budget summary từ planner hoặc itinerary bridge
+- [x] Giữ route đơn giản, không mở route sâu cho từng node trừ khi có lý do mạnh
 - [ ] Tạo modal hoặc drawer để add/edit/delete planning node
 - [ ] Thêm motion cho trip cards, planning header, planner list, và node cards
 - [ ] Thêm expand/collapse animation cho planner sections hoặc node groups
 - [ ] Thêm enter/exit animation cho add/delete planning node
 - [ ] Kết nối contract planning mới của backend khi sẵn
-- [ ] Kết nối budget summary từ planner hoặc itinerary bridge
-- [ ] Giữ route đơn giản, không mở route sâu cho từng node trừ khi có lý do mạnh
 
 ## Phase 07 - Xây dựng `community` experience
 

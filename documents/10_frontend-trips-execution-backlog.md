@@ -6,6 +6,16 @@
 - Status: `Completed`
 - Scope: Phase 05 cho `trips` workspace trên frontend
 
+## Ghi chú phạm vi
+
+- Đây là backlog lịch sử của Phase 05.
+- Trạng thái source hiện tại đã đi xa hơn tài liệu gốc này:
+  - `Trip` đã có `summaryNotes` và `coverImageUrl`
+  - `destination` và `timezone` ở API là nullable
+  - form tạo/chỉnh sửa chuyến đi không còn yêu cầu `destination` và `timezone`
+  - `/app/trips/:tripId` đã trở thành planning workspace 2 cấp dựa trên itinerary bridge
+- Khi cần source of truth cho giai đoạn planner mở rộng, ưu tiên đọc `01_frontend-phase-checklist.md`, `04_frontend-route-and-screen-plan.md`, `05_frontend-api-integration-plan.md`, và `11_frontend-planning-expansion-plan.md`.
+
 ## Mục tiêu
 
 - Thay toàn bộ placeholder hiện tại của `trips` bằng flow thật.
@@ -29,10 +39,12 @@
   "id": "string",
   "userId": "string",
   "name": "string",
-  "destination": "string",
+  "destination": "string | null",
+  "summaryNotes": "string | null",
+  "coverImageUrl": "string | null",
   "startDate": "string",
   "endDate": "string",
-  "timezone": "string",
+  "timezone": "string | null",
   "budgetAmount": 1000000,
   "budgetCurrency": "VND",
   "createdAt": "date",
@@ -184,14 +196,14 @@ Việc làm:
 - Tạo `TripForm`
 - Field cần có:
   - `name`
-  - `destination`
   - `startDate`
   - `endDate`
-  - `timezone`
   - `budgetAmount`
   - `budgetCurrency`
+  - `summaryNotes`
+  - `coverImageUrl`
 - Validation tối thiểu phía client:
-  - required cho tất cả field
+  - required cho `name`, `startDate`, `endDate`, `budgetAmount`, `budgetCurrency`
   - `endDate >= startDate`
   - `budgetAmount > 0`
 - Submit gọi `POST /trips`
@@ -217,11 +229,11 @@ Việc làm:
 - Gọi `GET /trips/:tripId`
 - Render:
   - title
-  - destination
+  - cover image
+  - summary notes
   - date range
-  - timezone
   - budget
-  - created/updated timestamps nếu hữu ích
+  - overview actions
 - Thêm CTA:
   - edit
   - back to list
@@ -255,7 +267,7 @@ Việc làm:
 Definition of done:
 
 - Edit flow không duplicate form logic với create
-- User sửa được ít nhất `name`, `destination`, `date`, `budget`
+- User sửa được ít nhất `name`, `date`, `budget`, `summaryNotes`, `coverImageUrl`
 
 ### Slice 06 - Delete flow
 
@@ -324,6 +336,6 @@ Definition of done:
 - filter/search trips nâng cao
 - pagination UI nhiều trang
 - optimistic update phức tạp
-- timezone selector nâng cao
 - budget chart
 - itinerary/budget sub-workspace
+- recursive planning nhiều tầng
