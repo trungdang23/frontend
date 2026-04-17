@@ -6,6 +6,8 @@ type Translate = (key: string) => string;
 export type TripFormValues = {
   name: string;
   destination: string;
+  summaryNotes: string;
+  coverImageUrl: string;
   startDate: string;
   endDate: string;
   timezone: string;
@@ -18,6 +20,16 @@ export function createTripFormSchema(t: Translate) {
     .object({
       name: z.string().trim().min(1, t('trips.validation.nameRequired')),
       destination: z.string().trim().min(1, t('trips.validation.destinationRequired')),
+      summaryNotes: z
+        .string()
+        .trim()
+        .max(2000, t('trips.validation.summaryNotesLength')),
+      coverImageUrl: z
+        .string()
+        .trim()
+        .refine((value) => value.length === 0 || isHttpUrl(value), {
+          message: t('trips.validation.coverImageUrlInvalid'),
+        }),
       startDate: z.string().trim().min(1, t('trips.validation.startDateRequired')),
       endDate: z.string().trim().min(1, t('trips.validation.endDateRequired')),
       timezone: z.string().trim().min(1, t('trips.validation.timezoneRequired')),
@@ -55,10 +67,28 @@ export function mapTripFormValuesToPayload(values: TripFormValues): TripUpsertPa
   return {
     name: values.name.trim(),
     destination: values.destination.trim(),
+    summaryNotes: toNullableTrimmedValue(values.summaryNotes),
+    coverImageUrl: toNullableTrimmedValue(values.coverImageUrl),
     startDate: values.startDate,
     endDate: values.endDate,
     timezone: values.timezone.trim(),
     budgetAmount: Number(values.budgetAmount),
     budgetCurrency: values.budgetCurrency.trim().toUpperCase(),
   };
+}
+
+function toNullableTrimmedValue(value: string) {
+  const normalizedValue = value.trim();
+
+  return normalizedValue.length > 0 ? normalizedValue : null;
+}
+
+function isHttpUrl(value: string) {
+  try {
+    const parsedUrl = new URL(value);
+
+    return parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+  } catch {
+    return false;
+  }
 }

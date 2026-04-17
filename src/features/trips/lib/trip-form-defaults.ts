@@ -18,6 +18,8 @@ export function getTripFormDefaults(trip?: Trip): TripFormValues {
     return {
       name: trip.name,
       destination: trip.destination,
+      summaryNotes: trip.summaryNotes ?? '',
+      coverImageUrl: trip.coverImageUrl ?? '',
       startDate: toDateInputValue(trip.startDate),
       endDate: toDateInputValue(trip.endDate),
       timezone: trip.timezone,
@@ -29,6 +31,8 @@ export function getTripFormDefaults(trip?: Trip): TripFormValues {
   return {
     name: '',
     destination: '',
+    summaryNotes: '',
+    coverImageUrl: '',
     startDate: '',
     endDate: '',
     timezone: getDefaultTimezone(),

@@ -158,6 +158,7 @@
     "listEyebrow": "Trips",
     "listTitle": "Your trips",
     "listDescription": "This list reads real data from your account so you can open, edit, or delete each trip directly.",
+    "listCardFallback": "Add a cover image and a quick summary so each trip feels more tangible directly from the list.",
     "listSummary": "You currently have {{count}} trips in your account.",
     "createEyebrow": "Create trip",
     "createTitle": "Start a new trip",
@@ -177,6 +178,8 @@
     "fields": {
       "name": "Trip name",
       "destination": "Destination",
+      "summaryNotes": "Summary notes",
+      "coverImageUrl": "Cover image URL",
       "startDate": "Start date",
       "endDate": "End date",
       "dateRange": "Date range",
@@ -189,12 +192,16 @@
     },
     "placeholders": {
       "destination": "Example: Da Lat",
+      "summaryNotes": "Example: 3 slower days, coffee stops first, one sunset photo session near the river.",
+      "coverImageUrl": "https://example.com/trip-cover.jpg",
       "timezone": "Example: Asia/Ho_Chi_Minh",
       "budgetCurrency": "VND"
     },
     "validation": {
       "nameRequired": "Trip name is required.",
       "destinationRequired": "Destination is required.",
+      "summaryNotesLength": "Summary notes must be at most 2000 characters.",
+      "coverImageUrlInvalid": "Cover image URL must be a valid http or https URL.",
       "startDateRequired": "Start date is required.",
       "endDateRequired": "End date is required.",
       "dateRangeInvalid": "End date cannot be earlier than start date.",
@@ -226,6 +233,12 @@
       "updateError": "Unable to save changes right now. Please try again.",
       "deleteError": "Unable to delete the trip right now. Please try again."
     },
+    "preview": {
+      "titleFallback": "Trip title preview",
+      "destinationFallback": "Destination preview",
+      "coverAltFallback": "Trip cover preview"
+    },
+    "notesEmpty": "This trip does not have summary notes yet.",
     "delete": {
       "confirmTitle": "Delete this trip?",
       "confirmDescription": "Trip \"{{name}}\" will be removed from your account.",

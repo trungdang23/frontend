@@ -158,6 +158,7 @@
     "listEyebrow": "Chuyến đi",
     "listTitle": "Các chuyến đi của bạn",
     "listDescription": "Danh sách này lấy dữ liệu thật từ tài khoản hiện tại để bạn mở chi tiết, chỉnh sửa hoặc xoá từng chuyến đi.",
+    "listCardFallback": "Thêm ảnh bìa và ghi chú tổng quan để mỗi chuyến đi có ngữ cảnh rõ ràng hơn ngay từ danh sách.",
     "listSummary": "Hiện có {{count}} chuyến đi trong tài khoản của bạn.",
     "createEyebrow": "Tạo chuyến đi",
     "createTitle": "Bắt đầu một chuyến đi mới",
@@ -177,6 +178,8 @@
     "fields": {
       "name": "Tên chuyến đi",
       "destination": "Điểm đến",
+      "summaryNotes": "Ghi chú tổng quan",
+      "coverImageUrl": "Liên kết ảnh bìa",
       "startDate": "Ngày bắt đầu",
       "endDate": "Ngày kết thúc",
       "dateRange": "Khoảng ngày",
@@ -189,12 +192,16 @@
     },
     "placeholders": {
       "destination": "Ví dụ: Đà Lạt",
+      "summaryNotes": "Ví dụ: 3 ngày thư thả, ưu tiên quán cafe, có một buổi săn ảnh hoàng hôn.",
+      "coverImageUrl": "https://example.com/trip-cover.jpg",
       "timezone": "Ví dụ: Asia/Ho_Chi_Minh",
       "budgetCurrency": "VND"
     },
     "validation": {
       "nameRequired": "Tên chuyến đi là bắt buộc.",
       "destinationRequired": "Điểm đến là bắt buộc.",
+      "summaryNotesLength": "Ghi chú tổng quan không được vượt quá 2000 ký tự.",
+      "coverImageUrlInvalid": "Liên kết ảnh bìa phải là URL http hoặc https hợp lệ.",
       "startDateRequired": "Ngày bắt đầu là bắt buộc.",
       "endDateRequired": "Ngày kết thúc là bắt buộc.",
       "dateRangeInvalid": "Ngày kết thúc không được sớm hơn ngày bắt đầu.",
@@ -226,6 +233,12 @@
       "updateError": "Không thể lưu thay đổi lúc này. Vui lòng thử lại.",
       "deleteError": "Không thể xoá chuyến đi lúc này. Vui lòng thử lại."
     },
+    "preview": {
+      "titleFallback": "Tên chuyến đi sẽ hiện ở đây",
+      "destinationFallback": "Điểm đến sẽ hiện ở đây",
+      "coverAltFallback": "Ảnh bìa xem trước của chuyến đi"
+    },
+    "notesEmpty": "Bạn chưa thêm ghi chú tổng quan cho chuyến đi này.",
     "delete": {
       "confirmTitle": "Xoá chuyến đi này?",
       "confirmDescription": "Chuyến đi \"{{name}}\" sẽ bị xoá khỏi tài khoản của bạn.",

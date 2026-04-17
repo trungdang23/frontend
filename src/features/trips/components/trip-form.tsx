@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
+import { TripCoverImage } from '@/features/trips/components/trip-cover-image';
 import { TripFormValues, createTripFormSchema, mapTripFormValuesToPayload } from '@/features/trips/lib/trip-form-validators';
 import { TripUpsertPayload } from '@/features/trips/types/trip';
 import { useI18n } from '@/shared/i18n/use-i18n';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { StatusBanner } from '@/shared/ui/status-banner';
+import { Textarea } from '@/shared/ui/textarea';
 
 type TripFormProps = {
   cancelTo: string;
@@ -26,6 +28,7 @@ export function TripForm({
   const { t } = useI18n();
   const schema = createTripFormSchema(t);
   const {
+    control,
     formState: { errors, isSubmitting },
     handleSubmit,
     register,
@@ -34,6 +37,11 @@ export function TripForm({
   } = useForm<TripFormValues>({
     defaultValues: initialValues,
   });
+
+  const previewName = useWatch({ control, name: 'name' })?.trim() ?? '';
+  const previewDestination =
+    useWatch({ control, name: 'destination' })?.trim() ?? '';
+  const previewCoverImageUrl = useWatch({ control, name: 'coverImageUrl' }) ?? '';
 
   useEffect(() => {
     reset(initialValues);
@@ -49,6 +57,8 @@ export function TripForm({
         if (
           field === 'name' ||
           field === 'destination' ||
+          field === 'summaryNotes' ||
+          field === 'coverImageUrl' ||
           field === 'startDate' ||
           field === 'endDate' ||
           field === 'timezone' ||
@@ -97,6 +107,46 @@ export function TripForm({
           {errors.destination ? (
             <p className="text-sm text-[var(--color-danger)]">{errors.destination.message}</p>
           ) : null}
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-cover-image-url">
+            {t('trips.fields.coverImageUrl')}
+          </label>
+          <Input
+            hasError={Boolean(errors.coverImageUrl)}
+            id="trip-cover-image-url"
+            placeholder={t('trips.placeholders.coverImageUrl')}
+            type="url"
+            {...register('coverImageUrl')}
+          />
+          {errors.coverImageUrl ? (
+            <p className="text-sm text-[var(--color-danger)]">{errors.coverImageUrl.message}</p>
+          ) : null}
+        </div>
+
+        <div className="md:col-span-2">
+          <div className="overflow-hidden rounded-[1.75rem] border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)]">
+            <div className="relative h-52">
+              <TripCoverImage
+                alt={previewName || t('trips.preview.coverAltFallback')}
+                className="absolute inset-0"
+                imgClassName="h-full w-full object-cover"
+                src={previewCoverImageUrl}
+              />
+              <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,24,18,0.1),rgba(12,24,18,0.75))]" />
+              <div className="relative flex h-full items-end p-5 sm:p-6">
+                <div className="space-y-2">
+                  <p className="eyebrow-text-xs text-white/75">
+                    {previewDestination || t('trips.preview.destinationFallback')}
+                  </p>
+                  <p className="text-2xl font-semibold text-white">
+                    {previewName || t('trips.preview.titleFallback')}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-2">
@@ -178,6 +228,22 @@ export function TripForm({
           />
           {errors.budgetCurrency ? (
             <p className="text-sm text-[var(--color-danger)]">{errors.budgetCurrency.message}</p>
+          ) : null}
+        </div>
+
+        <div className="space-y-2 md:col-span-2">
+          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-summary-notes">
+            {t('trips.fields.summaryNotes')}
+          </label>
+          <Textarea
+            hasError={Boolean(errors.summaryNotes)}
+            id="trip-summary-notes"
+            placeholder={t('trips.placeholders.summaryNotes')}
+            rows={5}
+            {...register('summaryNotes')}
+          />
+          {errors.summaryNotes ? (
+            <p className="text-sm text-[var(--color-danger)]">{errors.summaryNotes.message}</p>
           ) : null}
         </div>
       </div>

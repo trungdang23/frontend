@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { deleteTrip, getTripDetail } from '@/features/trips/api/trips-api';
+import { TripCoverImage } from '@/features/trips/components/trip-cover-image';
 import { TripDeleteButton } from '@/features/trips/components/trip-delete-button';
 import { formatTripBudget, formatTripDateRange } from '@/features/trips/lib/trip-presenters';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -127,28 +128,57 @@ export function TripDetailPage() {
 
   return (
     <div className="space-y-5">
-      <Card className="space-y-4">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="space-y-2">
-            <p className="eyebrow-text text-[var(--color-forest)]">{t('trips.detailEyebrow')}</p>
-            <div className="space-y-2">
-              <h1 className="headline text-4xl text-[var(--color-ink)]">{trip.name}</h1>
-              <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
-                {t('trips.detailDescription')}
-              </p>
+      <Card className="group overflow-hidden p-0">
+        <div className="relative min-h-[320px]">
+          <TripCoverImage
+            alt={trip.name}
+            className="absolute inset-0"
+            imgClassName="h-full w-full object-cover motion-safe:transition motion-safe:duration-700 motion-safe:group-hover:scale-105"
+            src={trip.coverImageUrl}
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,24,18,0.18),rgba(12,24,18,0.82))]" />
+          <div className="relative flex min-h-[320px] flex-col justify-between gap-6 p-6 text-white sm:p-8 lg:p-10">
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div className="space-y-3">
+                <p className="eyebrow-text text-white/78">{t('trips.detailEyebrow')}</p>
+                <div className="space-y-3">
+                  <div className="inline-flex w-fit rounded-full bg-white/16 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-white backdrop-blur-sm">
+                    {trip.destination}
+                  </div>
+                  <h1 className="headline text-4xl text-white sm:text-5xl">{trip.name}</h1>
+                  <p className="max-w-3xl text-sm leading-7 text-white/82">
+                    {trip.summaryNotes || t('trips.detailDescription')}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Link className={getButtonClasses('secondary')} to="/app/trips">
+                  {t('trips.actions.backToList')}
+                </Link>
+                <Link className={getButtonClasses()} to={`/app/trips/${trip.id}/edit`}>
+                  {t('trips.actions.edit')}
+                </Link>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3 text-sm text-white/84">
+              <div className="rounded-full bg-white/12 px-4 py-2 backdrop-blur-sm">
+                {formatTripDateRange(trip.startDate, trip.endDate, language)}
+              </div>
+              <div className="rounded-full bg-white/12 px-4 py-2 backdrop-blur-sm">{trip.timezone}</div>
+              <div className="rounded-full bg-white/12 px-4 py-2 backdrop-blur-sm">
+                {formatTripBudget(trip.budgetAmount, trip.budgetCurrency, language)}
+              </div>
             </div>
           </div>
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <Link className={getButtonClasses('secondary')} to="/app/trips">
-              {t('trips.actions.backToList')}
-            </Link>
-            <Link className={getButtonClasses()} to={`/app/trips/${trip.id}/edit`}>
-              {t('trips.actions.edit')}
-            </Link>
-          </div>
         </div>
-        {noticeKey ? <StatusBanner tone="success">{t(noticeKey)}</StatusBanner> : null}
-        {deleteError ? <StatusBanner tone="danger">{deleteError}</StatusBanner> : null}
+
+        {noticeKey || deleteError ? (
+          <div className="space-y-3 px-6 pb-6 sm:px-8 sm:pb-8">
+            {noticeKey ? <StatusBanner tone="success">{t(noticeKey)}</StatusBanner> : null}
+            {deleteError ? <StatusBanner tone="danger">{deleteError}</StatusBanner> : null}
+          </div>
+        ) : null}
       </Card>
 
       <Card className="grid gap-4 md:grid-cols-2">
@@ -173,6 +203,13 @@ export function TripDetailPage() {
           <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.budget')}</p>
           <p className="mt-2 text-lg font-semibold text-[var(--color-ink)]">
             {formatTripBudget(trip.budgetAmount, trip.budgetCurrency, language)}
+          </p>
+        </div>
+
+        <div className="rounded-[1.5rem] bg-white/70 p-5 md:col-span-2">
+          <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.summaryNotes')}</p>
+          <p className="mt-2 text-sm leading-7 text-[var(--color-ink-soft)]">
+            {trip.summaryNotes || t('trips.notesEmpty')}
           </p>
         </div>
 

@@ -3,6 +3,8 @@ export type Trip = {
   userId: string;
   name: string;
   destination: string;
+  summaryNotes: string | null;
+  coverImageUrl: string | null;
   startDate: string;
   endDate: string;
   timezone: string;
@@ -36,6 +38,8 @@ export type TripListResult = {
 export type TripUpsertPayload = {
   name: string;
   destination: string;
+  summaryNotes: string | null;
+  coverImageUrl: string | null;
   startDate: string;
   endDate: string;
   timezone: string;
