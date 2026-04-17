@@ -1,6 +1,6 @@
 import { FormEvent, ReactNode, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { PencilLine, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, PencilLine, Plus, Trash2 } from 'lucide-react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { deleteTrip, getTripDetail } from '@/features/trips/api/trips-api';
 import {
@@ -78,6 +78,7 @@ export function TripDetailPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [plannerError, setPlannerError] = useState<string | null>(null);
   const [isCreateStopFormOpen, setIsCreateStopFormOpen] = useState(false);
+  const [expandedDayIds, setExpandedDayIds] = useState<string[]>([]);
   const [createDayComposer, setCreateDayComposer] = useState<DayComposerState>(
     createEmptyDayComposer('VND'),
   );
@@ -154,9 +155,12 @@ export function TripDetailPage() {
   });
   const deleteDayMutation = useMutation({
     mutationFn: (dayId: string) => deleteItineraryDay(tripId as string, dayId),
-    onSuccess: async () => {
+    onSuccess: async (_data, dayId) => {
       setEditingDayId(null);
       setActivityComposerTarget(null);
+      setExpandedDayIds((currentValue) =>
+        currentValue.filter((currentDayId) => currentDayId !== dayId),
+      );
       await invalidatePlannerQueries(queryClient, tripId as string);
     },
   });
@@ -394,14 +398,30 @@ export function TripDetailPage() {
     setEditingDayComposer(createDayComposerFromDay(day));
   }
 
+  function toggleDayExpansion(dayId: string) {
+    setExpandedDayIds((currentValue) =>
+      currentValue.includes(dayId)
+        ? currentValue.filter((currentDayId) => currentDayId !== dayId)
+        : [...currentValue, dayId],
+    );
+  }
+
+  function ensureDayExpanded(dayId: string) {
+    setExpandedDayIds((currentValue) =>
+      currentValue.includes(dayId) ? currentValue : [...currentValue, dayId],
+    );
+  }
+
   function openActivityCreator(day: TripItineraryDay) {
     setPlannerError(null);
+    ensureDayExpanded(day.id);
     setActivityComposerTarget({ dayId: day.id });
     setActivityComposer(createEmptyActivityComposer(day.costCurrency));
   }
 
   function openActivityEditor(day: TripItineraryDay, activity: TripItineraryActivity) {
     setPlannerError(null);
+    ensureDayExpanded(day.id);
     setActivityComposerTarget({
       dayId: day.id,
       activityId: activity.id,
@@ -695,76 +715,110 @@ export function TripDetailPage() {
           </div>
         ) : (
           <div className="space-y-5">
-            {itinerary?.days.map((day, index) => (
-              <div
-                className="rounded-[1.85rem] border border-[var(--color-border)] bg-white/75 p-5 shadow-sm"
-                key={day.id}
-              >
-                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="rounded-full bg-[rgba(84,107,65,0.12)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-forest)]">
-                        {t('trips.planner.stopLabel', { index: index + 1 })}
-                      </span>
-                      <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1 text-sm text-[var(--color-ink-soft)]">
-                        {formatTripDate(day.date, language)}
-                      </span>
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="text-2xl font-semibold text-[var(--color-ink)]">
-                        {day.title}
-                      </h3>
-                      <div className="flex flex-wrap gap-2 text-sm text-[var(--color-ink-soft)]">
-                        {formatTimeRange(day.startsAt, day.endsAt) ? (
-                          <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
-                            {formatTimeRange(day.startsAt, day.endsAt)}
-                          </span>
-                        ) : null}
-                        {day.location ? (
-                          <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
-                            {day.location}
-                          </span>
-                        ) : null}
-                        <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
-                          {formatTripBudget(day.costAmount, day.costCurrency, language)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+            {itinerary?.days.map((day, index) => {
+              const isDayExpanded =
+                expandedDayIds.includes(day.id) ||
+                activityComposerTarget?.dayId === day.id;
 
-                  <div className="flex flex-wrap gap-3">
-                    <Button
-                      onClick={() => openActivityCreator(day)}
+              return (
+                <div
+                  className="rounded-[1.85rem] border border-[var(--color-border)] bg-white/75 p-5 shadow-sm"
+                  key={day.id}
+                >
+                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                    <button
+                      aria-controls={`planner-day-children-${day.id}`}
+                      aria-expanded={isDayExpanded}
+                      className="-m-2 flex-1 rounded-[1.4rem] p-2 text-left transition hover:bg-[var(--color-surface-strong)]"
+                      onClick={() => toggleDayExpansion(day.id)}
                       type="button"
-                      variant="secondary"
                     >
-                      <span className="inline-flex items-center gap-2">
-                        <Plus className="h-4 w-4" />
-                        {t('trips.planner.actions.addActivity')}
-                      </span>
-                    </Button>
-                    <Button
-                      onClick={() => openDayEditor(day)}
-                      type="button"
-                      variant="secondary"
-                    >
-                      <span className="inline-flex items-center gap-2">
-                        <PencilLine className="h-4 w-4" />
-                        {t('trips.actions.edit')}
-                      </span>
-                    </Button>
-                    <Button
-                      onClick={() => void handleDeleteDay(day)}
-                      type="button"
-                      variant="secondary"
-                    >
-                      <span className="inline-flex items-center gap-2">
-                        <Trash2 className="h-4 w-4" />
-                        {t('trips.planner.actions.deleteStop')}
-                      </span>
-                    </Button>
+                      <div className="space-y-3">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="rounded-full bg-[rgba(84,107,65,0.12)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-forest)]">
+                            {t('trips.planner.stopLabel', { index: index + 1 })}
+                          </span>
+                          <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1 text-sm text-[var(--color-ink-soft)]">
+                            {formatTripDate(day.date, language)}
+                          </span>
+                        </div>
+                        <div className="space-y-2">
+                          <h3 className="text-2xl font-semibold text-[var(--color-ink)]">
+                            {day.title}
+                          </h3>
+                          <div className="flex flex-wrap gap-2 text-sm text-[var(--color-ink-soft)]">
+                            {formatTimeRange(day.startsAt, day.endsAt) ? (
+                              <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                                {formatTimeRange(day.startsAt, day.endsAt)}
+                              </span>
+                            ) : null}
+                            {day.location ? (
+                              <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                                {day.location}
+                              </span>
+                            ) : null}
+                            <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                              {formatTripBudget(
+                                day.costAmount,
+                                day.costCurrency,
+                                language,
+                              )}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-3 pt-1 text-sm">
+                          <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1 text-[var(--color-ink-soft)]">
+                            {t('trips.planner.childCount', {
+                              count: day.activities.length,
+                            })}
+                          </span>
+                          <span className="inline-flex items-center gap-2 font-semibold text-[var(--color-forest)]">
+                            {isDayExpanded ? (
+                              <ChevronDown className="h-4 w-4" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4" />
+                            )}
+                            {isDayExpanded
+                              ? t('trips.planner.actions.hideChildren')
+                              : t('trips.planner.actions.showChildren')}
+                          </span>
+                        </div>
+                      </div>
+                    </button>
+
+                    <div className="flex flex-wrap gap-3">
+                      <Button
+                        onClick={() => openActivityCreator(day)}
+                        type="button"
+                        variant="secondary"
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <Plus className="h-4 w-4" />
+                          {t('trips.planner.actions.addActivity')}
+                        </span>
+                      </Button>
+                      <Button
+                        onClick={() => openDayEditor(day)}
+                        type="button"
+                        variant="secondary"
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <PencilLine className="h-4 w-4" />
+                          {t('trips.actions.edit')}
+                        </span>
+                      </Button>
+                      <Button
+                        onClick={() => void handleDeleteDay(day)}
+                        type="button"
+                        variant="secondary"
+                      >
+                        <span className="inline-flex items-center gap-2">
+                          <Trash2 className="h-4 w-4" />
+                          {t('trips.planner.actions.deleteStop')}
+                        </span>
+                      </Button>
+                    </div>
                   </div>
-                </div>
 
                 {day.notes ? (
                   <p className="mt-4 text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -799,88 +853,95 @@ export function TripDetailPage() {
                   </div>
                 ) : null}
 
-                <div className="mt-6 space-y-4">
-                  {day.activities.length === 0 ? (
-                    <div className="rounded-[1.5rem] bg-[var(--color-surface-strong)] px-4 py-4 text-sm text-[var(--color-ink-soft)]">
-                      {t('trips.planner.emptyDay')}
-                    </div>
-                  ) : (
-                    day.activities.map((activity) => (
-                      <div
-                        className="rounded-[1.5rem] border border-[var(--color-border)] bg-white p-4"
-                        key={activity.id}
-                      >
-                        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                          <div className="space-y-2">
-                            <div className="flex flex-wrap items-center gap-2">
-                              <span className="rounded-full bg-[rgba(84,107,65,0.12)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-forest)]">
-                                {t('trips.planner.childLabel')}
-                              </span>
-                            </div>
-                            <h4 className="text-lg font-semibold text-[var(--color-ink)]">
-                              {activity.title}
-                            </h4>
-                            <div className="flex flex-wrap gap-2 text-sm text-[var(--color-ink-soft)]">
-                              {formatTimeRange(activity.startsAt, activity.endsAt) ? (
-                                <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
-                                  {formatTimeRange(activity.startsAt, activity.endsAt)}
-                                </span>
-                              ) : null}
-                              {activity.location ? (
-                                <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
-                                  {activity.location}
-                                </span>
-                              ) : null}
-                              <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
-                                {formatTripBudget(
-                                  activity.costAmount,
-                                  activity.costCurrency,
-                                  language,
-                                )}
-                              </span>
-                            </div>
-                          </div>
-
-                          <div className="flex flex-wrap gap-3">
-                            <Button
-                              onClick={() => openActivityEditor(day, activity)}
-                              type="button"
-                              variant="secondary"
-                            >
-                              <span className="inline-flex items-center gap-2">
-                                <PencilLine className="h-4 w-4" />
-                                {t('trips.actions.edit')}
-                              </span>
-                            </Button>
-                            <Button
-                              onClick={() => void handleDeleteActivity(day, activity)}
-                              type="button"
-                              variant="secondary"
-                            >
-                              <span className="inline-flex items-center gap-2">
-                                <Trash2 className="h-4 w-4" />
-                                {t('trips.planner.actions.deleteActivity')}
-                              </span>
-                            </Button>
-                          </div>
-                        </div>
-
-                        {activity.notes ? (
-                          <p className="mt-3 text-sm leading-7 text-[var(--color-ink-soft)]">
-                            {activity.notes}
-                          </p>
-                        ) : null}
-
-                        <div className="mt-4">
-                          <PlanningImageGallery
-                            altPrefix={activity.title}
-                            imageUrls={activity.imageUrls}
-                          />
-                        </div>
+                {isDayExpanded ? (
+                  <div
+                    className="mt-6 space-y-4"
+                    id={`planner-day-children-${day.id}`}
+                  >
+                    {day.activities.length === 0 ? (
+                      <div className="rounded-[1.5rem] bg-[var(--color-surface-strong)] px-4 py-4 text-sm text-[var(--color-ink-soft)]">
+                        {t('trips.planner.emptyDay')}
                       </div>
-                    ))
-                  )}
-                </div>
+                    ) : (
+                      day.activities.map((activity) => (
+                        <div
+                          className="rounded-[1.5rem] border border-[var(--color-border)] bg-white p-4"
+                          key={activity.id}
+                        >
+                          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                            <div className="space-y-2">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="rounded-full bg-[rgba(84,107,65,0.12)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-forest)]">
+                                  {t('trips.planner.childLabel')}
+                                </span>
+                              </div>
+                              <h4 className="text-lg font-semibold text-[var(--color-ink)]">
+                                {activity.title}
+                              </h4>
+                              <div className="flex flex-wrap gap-2 text-sm text-[var(--color-ink-soft)]">
+                                {formatTimeRange(activity.startsAt, activity.endsAt) ? (
+                                  <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                                    {formatTimeRange(activity.startsAt, activity.endsAt)}
+                                  </span>
+                                ) : null}
+                                {activity.location ? (
+                                  <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                                    {activity.location}
+                                  </span>
+                                ) : null}
+                                <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                                  {formatTripBudget(
+                                    activity.costAmount,
+                                    activity.costCurrency,
+                                    language,
+                                  )}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-wrap gap-3">
+                              <Button
+                                onClick={() => openActivityEditor(day, activity)}
+                                type="button"
+                                variant="secondary"
+                              >
+                                <span className="inline-flex items-center gap-2">
+                                  <PencilLine className="h-4 w-4" />
+                                  {t('trips.actions.edit')}
+                                </span>
+                              </Button>
+                              <Button
+                                onClick={() =>
+                                  void handleDeleteActivity(day, activity)
+                                }
+                                type="button"
+                                variant="secondary"
+                              >
+                                <span className="inline-flex items-center gap-2">
+                                  <Trash2 className="h-4 w-4" />
+                                  {t('trips.planner.actions.deleteActivity')}
+                                </span>
+                              </Button>
+                            </div>
+                          </div>
+
+                          {activity.notes ? (
+                            <p className="mt-3 text-sm leading-7 text-[var(--color-ink-soft)]">
+                              {activity.notes}
+                            </p>
+                          ) : null}
+
+                          <div className="mt-4">
+                            <PlanningImageGallery
+                              altPrefix={activity.title}
+                              imageUrls={activity.imageUrls}
+                            />
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                ) : null}
 
                 {activityComposerTarget?.dayId === day.id ? (
                   <div className="mt-6">
@@ -907,8 +968,9 @@ export function TripDetailPage() {
                     />
                   </div>
                 ) : null}
-              </div>
-            ))}
+                </div>
+              );
+            })}
           </div>
         )}
       </Card>

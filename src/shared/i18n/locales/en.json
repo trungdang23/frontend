@@ -251,6 +251,7 @@
       "budgetEyebrow": "Budget",
       "budgetTitle": "Budget summary",
       "budgetDescription": "Track the total budget, the amount already planned, and the remaining room without leaving the trip detail page.",
+      "childCount": "{{count}} child places",
       "fields": {
         "stopDate": "Planned date",
         "stopTitle": "Major stop name",
@@ -278,6 +279,8 @@
         "addingStop": "Adding major stop...",
         "showStopForm": "Show major stop form",
         "hideStopForm": "Hide major stop form",
+        "showChildren": "Show child places",
+        "hideChildren": "Hide child places",
         "addFirstStop": "Add the first major stop",
         "saveStop": "Save major stop",
         "savingStop": "Saving major stop...",
