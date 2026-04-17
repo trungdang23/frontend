@@ -6,6 +6,8 @@ import {
   TripItinerary,
   TripItineraryActivity,
   TripItineraryDay,
+  UpdateItineraryActivityPayload,
+  UpdateItineraryDayPayload,
 } from '@/features/trips/types/trip-planning';
 
 type RequestOptions = {
@@ -36,6 +38,28 @@ export async function createItineraryDay(
   );
 }
 
+export async function updateItineraryDay(
+  tripId: string,
+  dayId: string,
+  payload: UpdateItineraryDayPayload,
+) {
+  return request<TripItineraryDay, UpdateItineraryDayPayload>(
+    `/trips/${tripId}/itinerary/days/${dayId}`,
+    {
+      method: 'PATCH',
+      auth: true,
+      body: payload,
+    },
+  );
+}
+
+export async function deleteItineraryDay(tripId: string, dayId: string) {
+  await request<void>(`/trips/${tripId}/itinerary/days/${dayId}`, {
+    method: 'DELETE',
+    auth: true,
+  });
+}
+
 export async function createItineraryActivity(
   tripId: string,
   dayId: string,
@@ -47,6 +71,36 @@ export async function createItineraryActivity(
       method: 'POST',
       auth: true,
       body: payload,
+    },
+  );
+}
+
+export async function updateItineraryActivity(
+  tripId: string,
+  dayId: string,
+  activityId: string,
+  payload: UpdateItineraryActivityPayload,
+) {
+  return request<TripItineraryActivity, UpdateItineraryActivityPayload>(
+    `/trips/${tripId}/itinerary/days/${dayId}/activities/${activityId}`,
+    {
+      method: 'PATCH',
+      auth: true,
+      body: payload,
+    },
+  );
+}
+
+export async function deleteItineraryActivity(
+  tripId: string,
+  dayId: string,
+  activityId: string,
+) {
+  await request<void>(
+    `/trips/${tripId}/itinerary/days/${dayId}/activities/${activityId}`,
+    {
+      method: 'DELETE',
+      auth: true,
     },
   );
 }

@@ -241,50 +241,79 @@
     "notesEmpty": "Bạn chưa thêm ghi chú tổng quan cho chuyến đi này.",
     "planner": {
       "eyebrow": "Lịch trình",
-      "title": "Kế hoạch theo ngày",
-      "description": "Tại đây bạn có thể thêm từng ngày và chèn các địa điểm hoặc việc sẽ làm trong chuyến đi này theo dạng danh sách cuộn.",
+      "title": "Planner 2 cấp cho chuyến đi",
+      "description": "Tại đây bạn có thể tạo nhiều địa điểm chính trong cùng một chuyến đi, gắn ngày giờ, chi phí, ghi chú, nhiều ảnh, rồi thêm các địa điểm con hoặc việc sẽ làm ngay bên dưới.",
+      "createStopTitle": "Thêm địa điểm chính",
+      "editStopTitle": "Sửa địa điểm chính",
+      "createActivityTitle": "Thêm địa điểm con",
+      "editActivityTitle": "Sửa địa điểm con",
+      "formDescription": "Mỗi địa điểm chính có thể có ngày, giờ, ghi chú, chi phí và nhiều ảnh URL để hiển thị theo gallery.",
+      "childFormDescription": "Địa điểm con hoặc việc sẽ làm có thể có thời gian, chi phí, ghi chú và nhiều ảnh.",
       "budgetEyebrow": "Ngân sách",
       "budgetTitle": "Tóm tắt ngân sách",
       "budgetDescription": "Theo dõi ngân sách tổng, ngân sách đã lên kế hoạch, và phần còn lại ngay trong cùng một màn hình.",
       "fields": {
-        "dayDate": "Ngày trong lịch trình",
+        "stopDate": "Ngày dự kiến",
+        "stopTitle": "Tên địa điểm chính",
+        "startsAt": "Thời gian bắt đầu",
+        "endsAt": "Thời gian kết thúc",
+        "location": "Địa điểm cụ thể",
+        "notes": "Ghi chú chi tiết",
+        "costAmount": "Chi phí dự kiến",
+        "costCurrency": "Tiền tệ",
+        "imageUrls": "Danh sách URL ảnh",
         "activityTitle": "Tên địa điểm hoặc việc sẽ làm",
-        "activityStartsAt": "Thời gian bắt đầu",
-        "activityLocation": "Địa điểm cụ thể",
-        "activityCostAmount": "Chi phí dự kiến",
-        "activityCostCurrency": "Tiền tệ",
-        "activityNotes": "Ghi chú chi tiết"
+        "dayDate": "Ngày trong lịch trình"
       },
       "placeholders": {
+        "stopTitle": "Ví dụ: Đà Lạt trung tâm",
+        "stopLocation": "Ví dụ: Hồ Xuân Hương, Đà Lạt",
+        "stopNotes": "Ví dụ: Ưu tiên check-in khách sạn trước 14:00, buổi tối đi bộ khu trung tâm.",
         "activityTitle": "Ví dụ: Tham quan chợ đêm Đà Lạt",
         "activityLocation": "Ví dụ: Chợ đêm Đà Lạt",
-        "activityNotes": "Ví dụ: Đi sau 19:00, ưu tiên quán ăn gần cổng chính, dành khoảng 2 giờ."
+        "activityNotes": "Ví dụ: Đi sau 19:00, ưu tiên quán ăn gần cổng chính, dành khoảng 2 giờ.",
+        "imageUrls": "Mỗi dòng là một URL ảnh, ví dụ:\nhttps://images.example.com/1.jpg\nhttps://images.example.com/2.jpg"
       },
       "actions": {
-        "addDay": "Thêm ngày",
-        "addingDay": "Đang thêm ngày...",
+        "addStop": "Thêm địa điểm chính",
+        "addingStop": "Đang thêm địa điểm chính...",
+        "saveStop": "Lưu địa điểm chính",
+        "savingStop": "Đang lưu địa điểm chính...",
         "addActivity": "Thêm địa điểm",
         "addingActivity": "Đang lưu địa điểm...",
-        "saveActivity": "Lưu địa điểm"
+        "saveActivity": "Lưu địa điểm",
+        "savingActivity": "Đang lưu địa điểm...",
+        "deleteStop": "Xoá địa điểm chính",
+        "deleteActivity": "Xoá địa điểm con"
       },
       "validation": {
-        "dayDateRequired": "Bạn cần chọn ngày trước khi thêm vào lịch trình.",
+        "stopDateRequired": "Bạn cần chọn ngày cho địa điểm chính.",
+        "stopTitleRequired": "Bạn cần nhập tên địa điểm chính.",
         "activityTitleRequired": "Bạn cần nhập tên địa điểm hoặc việc sẽ làm."
       },
       "feedback": {
         "loadError": "Không tải được lịch trình của chuyến đi này.",
-        "createDayError": "Không thể thêm ngày vào lịch trình lúc này.",
-        "createActivityError": "Không thể thêm địa điểm vào ngày này lúc này."
+        "createStopError": "Không thể thêm địa điểm chính lúc này.",
+        "updateStopError": "Không thể lưu thay đổi cho địa điểm chính lúc này.",
+        "deleteStopError": "Không thể xoá địa điểm chính lúc này.",
+        "createActivityError": "Không thể thêm địa điểm con lúc này.",
+        "updateActivityError": "Không thể lưu thay đổi cho địa điểm con lúc này.",
+        "deleteActivityError": "Không thể xoá địa điểm con lúc này."
       },
-      "empty": "Chuyến đi này chưa có ngày nào trong lịch trình. Hãy thêm ngày đầu tiên để bắt đầu chia nhỏ các địa điểm và việc sẽ làm.",
-      "emptyDay": "Ngày này chưa có địa điểm hoặc việc nào được thêm vào.",
-      "dayLabel": "Ngày {{index}}",
+      "empty": "Chuyến đi này chưa có địa điểm chính nào. Hãy thêm địa điểm chính đầu tiên để bắt đầu lên planner chi tiết.",
+      "emptyDay": "Địa điểm chính này chưa có địa điểm con hoặc việc sẽ làm nào.",
+      "stopLabel": "Địa điểm chính {{index}}",
+      "childLabel": "Địa điểm con",
+      "confirmations": {
+        "deleteStop": "Bạn có chắc muốn xoá địa điểm chính \"{{title}}\" không?",
+        "deleteActivity": "Bạn có chắc muốn xoá địa điểm con \"{{title}}\" không?"
+      },
       "metrics": {
         "totalBudget": "Ngân sách tổng",
         "plannedBudget": "Đã lên kế hoạch",
         "remainingBudget": "Còn lại",
         "totalNodes": "Mật độ kế hoạch",
-        "totalNodesValue": "{{days}} ngày / {{activities}} địa điểm"
+        "totalNodesValue": "{{days}} địa điểm chính / {{activities}} địa điểm con"
       }
     },
     "delete": {

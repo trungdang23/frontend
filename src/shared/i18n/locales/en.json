@@ -241,50 +241,79 @@
     "notesEmpty": "This trip does not have summary notes yet.",
     "planner": {
       "eyebrow": "Planner",
-      "title": "Day-by-day plan",
-      "description": "Use this section to add days and then attach the places or tasks you want to do inside each day as a scrolling outline.",
+      "title": "Two-level trip planner",
+      "description": "Use this section to add multiple major stops inside one trip, attach dates, time, cost, notes, multiple image URLs, and then add child places or tasks underneath each stop.",
+      "createStopTitle": "Add major stop",
+      "editStopTitle": "Edit major stop",
+      "createActivityTitle": "Add child place",
+      "editActivityTitle": "Edit child place",
+      "formDescription": "Each major stop can include date, time, notes, cost, and multiple image URLs rendered as a gallery.",
+      "childFormDescription": "Child places or tasks can also include time, cost, notes, and multiple images.",
       "budgetEyebrow": "Budget",
       "budgetTitle": "Budget summary",
       "budgetDescription": "Track the total budget, the amount already planned, and the remaining room without leaving the trip detail page.",
       "fields": {
-        "dayDate": "Planner day",
+        "stopDate": "Planned date",
+        "stopTitle": "Major stop name",
+        "startsAt": "Start time",
+        "endsAt": "End time",
+        "location": "Specific location",
+        "notes": "Detailed notes",
+        "costAmount": "Planned cost",
+        "costCurrency": "Currency",
+        "imageUrls": "Image URL list",
         "activityTitle": "Place or activity name",
-        "activityStartsAt": "Start time",
-        "activityLocation": "Specific location",
-        "activityCostAmount": "Planned cost",
-        "activityCostCurrency": "Currency",
-        "activityNotes": "Detailed notes"
+        "dayDate": "Planner day"
       },
       "placeholders": {
+        "stopTitle": "Example: Central Da Lat",
+        "stopLocation": "Example: Xuan Huong Lake, Da Lat",
+        "stopNotes": "Example: Prioritize hotel check-in before 14:00, then keep the evening for a central walking route.",
         "activityTitle": "Example: Visit Da Lat night market",
         "activityLocation": "Example: Da Lat night market",
-        "activityNotes": "Example: Go after 19:00, prefer food stalls near the main gate, allow around 2 hours."
+        "activityNotes": "Example: Go after 19:00, prefer food stalls near the main gate, allow around 2 hours.",
+        "imageUrls": "One image URL per line, for example:\nhttps://images.example.com/1.jpg\nhttps://images.example.com/2.jpg"
       },
       "actions": {
-        "addDay": "Add day",
-        "addingDay": "Adding day...",
+        "addStop": "Add major stop",
+        "addingStop": "Adding major stop...",
+        "saveStop": "Save major stop",
+        "savingStop": "Saving major stop...",
         "addActivity": "Add place",
         "addingActivity": "Saving place...",
-        "saveActivity": "Save place"
+        "saveActivity": "Save place",
+        "savingActivity": "Saving place...",
+        "deleteStop": "Delete major stop",
+        "deleteActivity": "Delete child place"
       },
       "validation": {
-        "dayDateRequired": "Choose a date before adding it to the planner.",
+        "stopDateRequired": "Choose a date for the major stop.",
+        "stopTitleRequired": "Enter the major stop name first.",
         "activityTitleRequired": "Enter the place or activity name first."
       },
       "feedback": {
         "loadError": "We couldn't load the planner for this trip.",
-        "createDayError": "Unable to add this day to the planner right now.",
-        "createActivityError": "Unable to add this place to the selected day right now."
+        "createStopError": "Unable to add this major stop right now.",
+        "updateStopError": "Unable to save changes for this major stop right now.",
+        "deleteStopError": "Unable to delete this major stop right now.",
+        "createActivityError": "Unable to add this child place right now.",
+        "updateActivityError": "Unable to save changes for this child place right now.",
+        "deleteActivityError": "Unable to delete this child place right now."
       },
-      "empty": "This trip does not have any planner days yet. Add the first day to start breaking the trip into places and tasks.",
-      "emptyDay": "This day does not have any places or activities yet.",
-      "dayLabel": "Day {{index}}",
+      "empty": "This trip does not have any major stops yet. Add the first stop to start shaping the plan in detail.",
+      "emptyDay": "This major stop does not have any child places or tasks yet.",
+      "stopLabel": "Major stop {{index}}",
+      "childLabel": "Child place",
+      "confirmations": {
+        "deleteStop": "Delete the major stop \"{{title}}\"?",
+        "deleteActivity": "Delete the child place \"{{title}}\"?"
+      },
       "metrics": {
         "totalBudget": "Total budget",
         "plannedBudget": "Planned",
         "remainingBudget": "Remaining",
         "totalNodes": "Plan density",
-        "totalNodesValue": "{{days}} days / {{activities}} places"
+        "totalNodesValue": "{{days}} major stops / {{activities}} child places"
       }
     },
     "delete": {

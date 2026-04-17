@@ -1,34 +1,67 @@
-import { useState } from 'react';
+import { FormEvent, ReactNode, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { PencilLine, Plus, Trash2 } from 'lucide-react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { deleteTrip, getTripDetail } from '@/features/trips/api/trips-api';
 import {
   createItineraryActivity,
   createItineraryDay,
+  deleteItineraryActivity,
+  deleteItineraryDay,
   getTripBudgetSummary,
   getTripItinerary,
+  updateItineraryActivity,
+  updateItineraryDay,
 } from '@/features/trips/api/trip-planning-api';
+import { PlanningImageGallery } from '@/features/trips/components/planning-image-gallery';
 import { TripCoverImage } from '@/features/trips/components/trip-cover-image';
 import { TripDeleteButton } from '@/features/trips/components/trip-delete-button';
-import { formatTripBudget, formatTripDate, formatTripDateRange } from '@/features/trips/lib/trip-presenters';
-import { useI18n } from '@/shared/i18n/use-i18n';
+import {
+  TripItineraryActivity,
+  TripItineraryDay,
+} from '@/features/trips/types/trip-planning';
+import {
+  formatTripBudget,
+  formatTripDate,
+  formatTripDateRange,
+} from '@/features/trips/lib/trip-presenters';
 import { ApiError } from '@/shared/api/api-error';
+import { useI18n } from '@/shared/i18n/use-i18n';
 import { Button } from '@/shared/ui/button';
+import { getButtonClasses } from '@/shared/ui/button-styles';
 import { Card } from '@/shared/ui/card';
 import { EmptyState } from '@/shared/ui/empty-state';
-import { getButtonClasses } from '@/shared/ui/button-styles';
 import { Input } from '@/shared/ui/input';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { StatusBanner } from '@/shared/ui/status-banner';
 import { Textarea } from '@/shared/ui/textarea';
 
-type ActivityComposerState = {
+type DayComposerState = {
+  date: string;
   title: string;
   startsAt: string;
+  endsAt: string;
   location: string;
   notes: string;
   costAmount: string;
   costCurrency: string;
+  imageUrlsText: string;
+};
+
+type ActivityComposerState = {
+  title: string;
+  startsAt: string;
+  endsAt: string;
+  location: string;
+  notes: string;
+  costAmount: string;
+  costCurrency: string;
+  imageUrlsText: string;
+};
+
+type ActivityComposerTarget = {
+  activityId?: string;
+  dayId: string;
 };
 
 type TripRouteState = {
@@ -44,13 +77,19 @@ export function TripDetailPage() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [plannerError, setPlannerError] = useState<string | null>(null);
-  const [dayDate, setDayDate] = useState('');
-  const [activeComposerDayId, setActiveComposerDayId] = useState<string | null>(
-    null,
+  const [createDayComposer, setCreateDayComposer] = useState<DayComposerState>(
+    createEmptyDayComposer('VND'),
   );
-  const [activityComposerByDayId, setActivityComposerByDayId] = useState<
-    Record<string, ActivityComposerState>
-  >({});
+  const [editingDayId, setEditingDayId] = useState<string | null>(null);
+  const [editingDayComposer, setEditingDayComposer] = useState<DayComposerState>(
+    createEmptyDayComposer('VND'),
+  );
+  const [activityComposerTarget, setActivityComposerTarget] =
+    useState<ActivityComposerTarget | null>(null);
+  const [activityComposer, setActivityComposer] = useState<ActivityComposerState>(
+    createEmptyActivityComposer('VND'),
+  );
+
   const noticeKey = (location.state as TripRouteState | null)?.noticeKey;
   const tripQuery = useQuery({
     queryKey: ['trips', 'detail', tripId],
@@ -67,42 +106,116 @@ export function TripDetailPage() {
     queryFn: ({ signal }) => getTripBudgetSummary(tripId as string, { signal }),
     enabled: Boolean(tripId),
   });
+
   const createDayMutation = useMutation({
-    mutationFn: (payload: { date: string }) =>
-      createItineraryDay(tripId as string, payload),
+    mutationFn: (payload: {
+      costAmount?: number;
+      costCurrency?: string;
+      date: string;
+      endsAt?: string;
+      imageUrls?: string[];
+      location?: string;
+      notes?: string;
+      startsAt?: string;
+      title: string;
+    }) => createItineraryDay(tripId as string, payload),
     onSuccess: async () => {
-      setDayDate('');
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['trips', 'itinerary', tripId] }),
-        queryClient.invalidateQueries({ queryKey: ['trips', 'budget-summary', tripId] }),
-      ]);
+      setCreateDayComposer(
+        createEmptyDayComposer(tripQuery.data?.budgetCurrency || 'VND'),
+      );
+      await invalidatePlannerQueries(queryClient, tripId as string);
+    },
+  });
+  const updateDayMutation = useMutation({
+    mutationFn: (payload: {
+      dayId: string;
+      form: DayComposerState;
+    }) =>
+      updateItineraryDay(tripId as string, payload.dayId, {
+        date: payload.form.date.trim(),
+        title: payload.form.title.trim(),
+        startsAt: toOptionalString(payload.form.startsAt),
+        endsAt: toOptionalString(payload.form.endsAt),
+        location: toOptionalString(payload.form.location),
+        notes: toOptionalString(payload.form.notes),
+        costAmount: toOptionalNumber(payload.form.costAmount),
+        costCurrency: toOptionalString(payload.form.costCurrency),
+        imageUrls: parseImageUrls(payload.form.imageUrlsText),
+      }),
+    onSuccess: async () => {
+      setEditingDayId(null);
+      setEditingDayComposer(
+        createEmptyDayComposer(tripQuery.data?.budgetCurrency || 'VND'),
+      );
+      await invalidatePlannerQueries(queryClient, tripId as string);
+    },
+  });
+  const deleteDayMutation = useMutation({
+    mutationFn: (dayId: string) => deleteItineraryDay(tripId as string, dayId),
+    onSuccess: async () => {
+      setEditingDayId(null);
+      setActivityComposerTarget(null);
+      await invalidatePlannerQueries(queryClient, tripId as string);
     },
   });
   const createActivityMutation = useMutation({
-    mutationFn: (payload: { dayId: string; form: ActivityComposerState }) =>
+    mutationFn: (payload: {
+      dayId: string;
+      form: ActivityComposerState;
+    }) =>
       createItineraryActivity(tripId as string, payload.dayId, {
         title: payload.form.title.trim(),
-        startsAt: payload.form.startsAt.trim() || undefined,
-        location: payload.form.location.trim() || undefined,
-        notes: payload.form.notes.trim() || undefined,
-        costAmount:
-          payload.form.costAmount.trim().length > 0
-            ? Number(payload.form.costAmount)
-            : undefined,
-        costCurrency: payload.form.costCurrency.trim() || undefined,
+        startsAt: toOptionalString(payload.form.startsAt),
+        endsAt: toOptionalString(payload.form.endsAt),
+        location: toOptionalString(payload.form.location),
+        notes: toOptionalString(payload.form.notes),
+        costAmount: toOptionalNumber(payload.form.costAmount),
+        costCurrency: toOptionalString(payload.form.costCurrency),
+        imageUrls: parseImageUrls(payload.form.imageUrlsText),
       }),
-    onSuccess: async (_, variables) => {
-      setActivityComposerByDayId((currentState) => ({
-        ...currentState,
-        [variables.dayId]: createEmptyActivityComposer(
-          tripQuery.data?.budgetCurrency || 'VND',
-        ),
-      }));
-      setActiveComposerDayId(null);
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ['trips', 'itinerary', tripId] }),
-        queryClient.invalidateQueries({ queryKey: ['trips', 'budget-summary', tripId] }),
-      ]);
+    onSuccess: async () => {
+      setActivityComposerTarget(null);
+      setActivityComposer(
+        createEmptyActivityComposer(tripQuery.data?.budgetCurrency || 'VND'),
+      );
+      await invalidatePlannerQueries(queryClient, tripId as string);
+    },
+  });
+  const updateActivityMutation = useMutation({
+    mutationFn: (payload: {
+      activityId: string;
+      dayId: string;
+      form: ActivityComposerState;
+    }) =>
+      updateItineraryActivity(
+        tripId as string,
+        payload.dayId,
+        payload.activityId,
+        {
+          title: payload.form.title.trim(),
+          startsAt: toOptionalString(payload.form.startsAt),
+          endsAt: toOptionalString(payload.form.endsAt),
+          location: toOptionalString(payload.form.location),
+          notes: toOptionalString(payload.form.notes),
+          costAmount: toOptionalNumber(payload.form.costAmount),
+          costCurrency: toOptionalString(payload.form.costCurrency),
+          imageUrls: parseImageUrls(payload.form.imageUrlsText),
+        },
+      ),
+    onSuccess: async () => {
+      setActivityComposerTarget(null);
+      setActivityComposer(
+        createEmptyActivityComposer(tripQuery.data?.budgetCurrency || 'VND'),
+      );
+      await invalidatePlannerQueries(queryClient, tripId as string);
+    },
+  });
+  const deleteActivityMutation = useMutation({
+    mutationFn: (payload: { activityId: string; dayId: string }) =>
+      deleteItineraryActivity(tripId as string, payload.dayId, payload.activityId),
+    onSuccess: async () => {
+      setActivityComposerTarget(null);
+      await invalidatePlannerQueries(queryClient, tripId as string);
     },
   });
 
@@ -122,50 +235,100 @@ export function TripDetailPage() {
       });
     } catch (error) {
       setDeleteError(
-        error instanceof ApiError && error.message ? error.message : t('trips.feedback.deleteError'),
+        error instanceof ApiError && error.message
+          ? error.message
+          : t('trips.feedback.deleteError'),
       );
       setIsDeleting(false);
     }
   }
 
-  async function handleCreateDay(event: React.FormEvent<HTMLFormElement>) {
+  async function handleCreateDay(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (!tripId) {
       return;
     }
 
-    const normalizedDate = dayDate.trim();
+    if (createDayComposer.date.trim().length === 0) {
+      setPlannerError(t('trips.planner.validation.stopDateRequired'));
+      return;
+    }
 
-    if (normalizedDate.length === 0) {
-      setPlannerError(t('trips.planner.validation.dayDateRequired'));
+    if (createDayComposer.title.trim().length === 0) {
+      setPlannerError(t('trips.planner.validation.stopTitleRequired'));
       return;
     }
 
     setPlannerError(null);
 
     try {
-      await createDayMutation.mutateAsync({ date: normalizedDate });
+      await createDayMutation.mutateAsync({
+        date: createDayComposer.date.trim(),
+        title: createDayComposer.title.trim(),
+        startsAt: toOptionalString(createDayComposer.startsAt) ?? undefined,
+        endsAt: toOptionalString(createDayComposer.endsAt) ?? undefined,
+        location: toOptionalString(createDayComposer.location) ?? undefined,
+        notes: toOptionalString(createDayComposer.notes) ?? undefined,
+        costAmount: toOptionalNumber(createDayComposer.costAmount),
+        costCurrency:
+          toOptionalString(createDayComposer.costCurrency) ?? undefined,
+        imageUrls: parseImageUrls(createDayComposer.imageUrlsText),
+      });
     } catch (error) {
-      setPlannerError(
-        error instanceof ApiError && error.message
-          ? error.message
-          : t('trips.planner.feedback.createDayError'),
-      );
+      setPlannerError(getPlannerErrorMessage(error, t('trips.planner.feedback.createStopError')));
     }
   }
 
-  async function handleCreateActivity(
-    event: React.FormEvent<HTMLFormElement>,
+  async function handleUpdateDay(
+    event: FormEvent<HTMLFormElement>,
     dayId: string,
   ) {
     event.preventDefault();
 
-    const form = activityComposerByDayId[dayId] ?? createEmptyActivityComposer(
-      tripQuery.data?.budgetCurrency || 'VND',
-    );
+    if (editingDayComposer.date.trim().length === 0) {
+      setPlannerError(t('trips.planner.validation.stopDateRequired'));
+      return;
+    }
 
-    if (form.title.trim().length === 0) {
+    if (editingDayComposer.title.trim().length === 0) {
+      setPlannerError(t('trips.planner.validation.stopTitleRequired'));
+      return;
+    }
+
+    setPlannerError(null);
+
+    try {
+      await updateDayMutation.mutateAsync({
+        dayId,
+        form: editingDayComposer,
+      });
+    } catch (error) {
+      setPlannerError(getPlannerErrorMessage(error, t('trips.planner.feedback.updateStopError')));
+    }
+  }
+
+  async function handleDeleteDay(day: TripItineraryDay) {
+    if (!window.confirm(t('trips.planner.confirmations.deleteStop', { title: day.title }))) {
+      return;
+    }
+
+    setPlannerError(null);
+
+    try {
+      await deleteDayMutation.mutateAsync(day.id);
+    } catch (error) {
+      setPlannerError(getPlannerErrorMessage(error, t('trips.planner.feedback.deleteStopError')));
+    }
+  }
+
+  async function handleActivitySubmit(
+    event: FormEvent<HTMLFormElement>,
+    dayId: string,
+  ) {
+    event.preventDefault();
+
+    if (activityComposer.title.trim().length === 0) {
       setPlannerError(t('trips.planner.validation.activityTitleRequired'));
       return;
     }
@@ -173,41 +336,75 @@ export function TripDetailPage() {
     setPlannerError(null);
 
     try {
-      await createActivityMutation.mutateAsync({
-        dayId,
-        form,
-      });
+      if (activityComposerTarget?.activityId) {
+        await updateActivityMutation.mutateAsync({
+          dayId,
+          activityId: activityComposerTarget.activityId,
+          form: activityComposer,
+        });
+      } else {
+        await createActivityMutation.mutateAsync({
+          dayId,
+          form: activityComposer,
+        });
+      }
     } catch (error) {
       setPlannerError(
-        error instanceof ApiError && error.message
-          ? error.message
-          : t('trips.planner.feedback.createActivityError'),
+        getPlannerErrorMessage(
+          error,
+          activityComposerTarget?.activityId
+            ? t('trips.planner.feedback.updateActivityError')
+            : t('trips.planner.feedback.createActivityError'),
+        ),
       );
     }
   }
 
-  function openActivityComposer(dayId: string, currency: string) {
-    setActiveComposerDayId(dayId);
-    setActivityComposerByDayId((currentState) => ({
-      ...currentState,
-      [dayId]:
-        currentState[dayId] ?? createEmptyActivityComposer(currency),
-    }));
+  async function handleDeleteActivity(
+    day: TripItineraryDay,
+    activity: TripItineraryActivity,
+  ) {
+    if (
+      !window.confirm(
+        t('trips.planner.confirmations.deleteActivity', { title: activity.title }),
+      )
+    ) {
+      return;
+    }
+
+    setPlannerError(null);
+
+    try {
+      await deleteActivityMutation.mutateAsync({
+        dayId: day.id,
+        activityId: activity.id,
+      });
+    } catch (error) {
+      setPlannerError(
+        getPlannerErrorMessage(error, t('trips.planner.feedback.deleteActivityError')),
+      );
+    }
   }
 
-  function updateActivityComposer(
-    dayId: string,
-    field: keyof ActivityComposerState,
-    value: string,
-  ) {
-    setActivityComposerByDayId((currentState) => ({
-      ...currentState,
-      [dayId]: {
-        ...(currentState[dayId] ??
-          createEmptyActivityComposer(tripQuery.data?.budgetCurrency || 'VND')),
-        [field]: value,
-      },
-    }));
+  function openDayEditor(day: TripItineraryDay) {
+    setPlannerError(null);
+    setEditingDayId(day.id);
+    setEditingDayComposer(createDayComposerFromDay(day));
+  }
+
+  function openActivityCreator(day: TripItineraryDay) {
+    setPlannerError(null);
+    setActivityComposerTarget({ dayId: day.id });
+    setActivityComposer(createEmptyActivityComposer(day.costCurrency));
+  }
+
+  function openActivityEditor(day: TripItineraryDay, activity: TripItineraryActivity) {
+    setPlannerError(null);
+    setActivityComposerTarget({
+      dayId: day.id,
+      activityId: activity.id,
+    });
+    setActivityComposer(createActivityComposerFromActivity(activity));
   }
 
   if (!tripId) {
@@ -243,7 +440,11 @@ export function TripDetailPage() {
     );
   }
 
-  if (tripQuery.isError && tripQuery.error instanceof ApiError && tripQuery.error.status === 404) {
+  if (
+    tripQuery.isError &&
+    tripQuery.error instanceof ApiError &&
+    tripQuery.error.status === 404
+  ) {
     return (
       <EmptyState
         action={
@@ -258,130 +459,96 @@ export function TripDetailPage() {
     );
   }
 
-  if (tripQuery.isError) {
+  if (tripQuery.isError || !tripQuery.data) {
     return (
       <EmptyState
         action={
-          <button className={getButtonClasses()} onClick={() => void tripQuery.refetch()} type="button">
-            {t('trips.actions.retry')}
-          </button>
+          <Link className={getButtonClasses()} to="/app/trips">
+            {t('trips.actions.backToList')}
+          </Link>
         }
-        description={
-          tripQuery.error instanceof ApiError && tripQuery.error.message
-            ? tripQuery.error.message
-            : t('trips.loadErrorDescription')
-        }
+        description={t('trips.feedback.loadDetailError')}
         eyebrow={t('trips.detailEyebrow')}
-        title={t('trips.loadErrorTitle')}
+        title={t('trips.feedback.loadDetailTitle')}
       />
     );
   }
 
   const trip = tripQuery.data;
-
-  if (!trip) {
-    return null;
-  }
-
   const itinerary = itineraryQuery.data;
   const budgetSummary = budgetSummaryQuery.data;
 
   return (
     <div className="space-y-5">
       <Card className="group overflow-hidden p-0">
-        <div className="relative min-h-[320px]">
+        <div className="relative overflow-hidden">
           <TripCoverImage
             alt={trip.name}
             className="absolute inset-0"
             imgClassName="h-full w-full object-cover motion-safe:transition motion-safe:duration-700 motion-safe:group-hover:scale-105"
             src={trip.coverImageUrl}
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,24,18,0.18),rgba(12,24,18,0.82))]" />
-          <div className="relative flex min-h-[320px] flex-col justify-between gap-6 p-6 text-white sm:p-8 lg:p-10">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,24,18,0.22),rgba(12,24,18,0.82))]" />
+          <div className="relative grid gap-6 p-6 text-white sm:p-8 xl:grid-cols-[minmax(0,1fr)_20rem]">
+            <div className="space-y-4">
+              <p className="eyebrow-text text-white/72">{t('trips.detailEyebrow')}</p>
               <div className="space-y-3">
-                <p className="eyebrow-text text-white/78">{t('trips.detailEyebrow')}</p>
-                <div className="space-y-3">
-                  <div className="inline-flex w-fit rounded-full bg-white/16 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-white backdrop-blur-sm">
-                    {trip.destination}
-                  </div>
-                  <h1 className="headline text-4xl text-white sm:text-5xl">{trip.name}</h1>
-                  <p className="max-w-3xl text-sm leading-7 text-white/82">
-                    {trip.summaryNotes || t('trips.detailDescription')}
-                  </p>
-                </div>
+                <h1 className="headline text-4xl text-white sm:text-5xl">{trip.name}</h1>
+                <p className="max-w-3xl text-sm leading-7 text-white/82 sm:text-base">
+                  {trip.summaryNotes || t('trips.notesEmpty')}
+                </p>
               </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Link className={getButtonClasses('secondary')} to="/app/trips">
-                  {t('trips.actions.backToList')}
-                </Link>
+              <div className="flex flex-wrap gap-3 text-sm text-white/82">
+                <span className="rounded-full bg-white/14 px-3 py-1">
+                  {trip.destination}
+                </span>
+                <span className="rounded-full bg-white/14 px-3 py-1">
+                  {formatTripDateRange(trip.startDate, trip.endDate, language)}
+                </span>
+                <span className="rounded-full bg-white/14 px-3 py-1">
+                  {trip.timezone}
+                </span>
+              </div>
+            </div>
+
+            <div className="rounded-[1.75rem] border border-white/14 bg-white/10 p-5 backdrop-blur-md">
+              <p className="eyebrow-text-xs text-white/70">{t('trips.fields.budget')}</p>
+              <p className="mt-2 text-xl font-semibold text-white">
+                {formatTripBudget(trip.budgetAmount, trip.budgetCurrency, language)}
+              </p>
+              <div className="mt-6 flex flex-col gap-3">
                 <Link className={getButtonClasses()} to={`/app/trips/${trip.id}/edit`}>
                   {t('trips.actions.edit')}
                 </Link>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-3 text-sm text-white/84">
-              <div className="rounded-full bg-white/12 px-4 py-2 backdrop-blur-sm">
-                {formatTripDateRange(trip.startDate, trip.endDate, language)}
-              </div>
-              <div className="rounded-full bg-white/12 px-4 py-2 backdrop-blur-sm">{trip.timezone}</div>
-              <div className="rounded-full bg-white/12 px-4 py-2 backdrop-blur-sm">
-                {formatTripBudget(trip.budgetAmount, trip.budgetCurrency, language)}
+                <Link className={getButtonClasses('ghost')} to="/app/trips">
+                  {t('trips.actions.backToList')}
+                </Link>
               </div>
             </div>
           </div>
         </div>
-
-        {noticeKey || deleteError ? (
-          <div className="space-y-3 px-6 pb-6 sm:px-8 sm:pb-8">
-            {noticeKey ? <StatusBanner tone="success">{t(noticeKey)}</StatusBanner> : null}
-            {deleteError ? <StatusBanner tone="danger">{deleteError}</StatusBanner> : null}
-          </div>
-        ) : null}
       </Card>
 
-      <Card className="grid gap-4 md:grid-cols-2">
-        <div className="rounded-[1.5rem] bg-white/70 p-5">
-          <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.destination')}</p>
-          <p className="mt-2 text-lg font-semibold text-[var(--color-ink)]">{trip.destination}</p>
-        </div>
+      {noticeKey ? <StatusBanner tone="success">{t(noticeKey)}</StatusBanner> : null}
+      {deleteError ? <StatusBanner tone="danger">{deleteError}</StatusBanner> : null}
 
-        <div className="rounded-[1.5rem] bg-white/70 p-5">
-          <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.dateRange')}</p>
-          <p className="mt-2 text-lg font-semibold text-[var(--color-ink)]">
-            {formatTripDateRange(trip.startDate, trip.endDate, language)}
-          </p>
-        </div>
-
-        <div className="rounded-[1.5rem] bg-white/70 p-5">
-          <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.timezone')}</p>
-          <p className="mt-2 text-lg font-semibold text-[var(--color-ink)]">{trip.timezone}</p>
-        </div>
-
-        <div className="rounded-[1.5rem] bg-white/70 p-5">
-          <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.budget')}</p>
-          <p className="mt-2 text-lg font-semibold text-[var(--color-ink)]">
-            {formatTripBudget(trip.budgetAmount, trip.budgetCurrency, language)}
-          </p>
-        </div>
-
-        <div className="rounded-[1.5rem] bg-white/70 p-5 md:col-span-2">
-          <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.summaryNotes')}</p>
-          <p className="mt-2 text-sm leading-7 text-[var(--color-ink-soft)]">
-            {trip.summaryNotes || t('trips.notesEmpty')}
-          </p>
-        </div>
-
-        <div className="rounded-[1.5rem] bg-white/70 p-5">
-          <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.createdAt')}</p>
-          <p className="mt-2 text-sm font-medium text-[var(--color-ink)]">{formatDate(trip.createdAt)}</p>
-        </div>
-
-        <div className="rounded-[1.5rem] bg-white/70 p-5">
-          <p className="eyebrow-text-xs text-[var(--color-forest)]">{t('trips.fields.updatedAt')}</p>
-          <p className="mt-2 text-sm font-medium text-[var(--color-ink)]">{formatDate(trip.updatedAt)}</p>
-        </div>
+      <Card className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <SummaryMetric
+          label={t('trips.fields.destination')}
+          value={trip.destination}
+        />
+        <SummaryMetric
+          label={t('trips.fields.timezone')}
+          value={trip.timezone}
+        />
+        <SummaryMetric
+          label={t('trips.fields.createdAt')}
+          value={formatDate(trip.createdAt)}
+        />
+        <SummaryMetric
+          label={t('trips.fields.updatedAt')}
+          value={formatDate(trip.updatedAt)}
+        />
       </Card>
 
       <Card className="space-y-5">
@@ -400,7 +567,7 @@ export function TripDetailPage() {
         </div>
 
         {budgetSummaryQuery.isLoading ? (
-          <div className="grid gap-4 md:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <Skeleton className="h-28 w-full" />
             <Skeleton className="h-28 w-full" />
             <Skeleton className="h-28 w-full" />
@@ -461,33 +628,25 @@ export function TripDetailPage() {
 
         {plannerError ? <StatusBanner tone="danger">{plannerError}</StatusBanner> : null}
 
-        <form className="grid gap-4 rounded-[1.75rem] border border-[var(--color-border)] bg-white/60 p-5 md:grid-cols-[1fr_auto]" onSubmit={handleCreateDay}>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="planner-day-date">
-              {t('trips.planner.fields.dayDate')}
-            </label>
-            <Input
-              id="planner-day-date"
-              min={trip.startDate}
-              max={trip.endDate}
-              onChange={(event) => setDayDate(event.target.value)}
-              type="date"
-              value={dayDate}
-            />
-          </div>
-          <div className="flex items-end">
-            <Button disabled={createDayMutation.isPending} type="submit">
-              {createDayMutation.isPending
-                ? t('trips.planner.actions.addingDay')
-                : t('trips.planner.actions.addDay')}
-            </Button>
-          </div>
-        </form>
+        <PlannerDayForm
+          maxDate={trip.endDate}
+          minDate={trip.startDate}
+          mode="create"
+          onChange={setCreateDayComposer}
+          onSubmit={(event) => void handleCreateDay(event)}
+          submitLabel={
+            createDayMutation.isPending
+              ? t('trips.planner.actions.addingStop')
+              : t('trips.planner.actions.addStop')
+          }
+          title={t('trips.planner.createStopTitle')}
+          value={createDayComposer}
+        />
 
         {itineraryQuery.isLoading ? (
           <div className="space-y-4">
-            <Skeleton className="h-36 w-full" />
-            <Skeleton className="h-36 w-full" />
+            <Skeleton className="h-44 w-full" />
+            <Skeleton className="h-44 w-full" />
           </div>
         ) : itineraryQuery.isError ? (
           <StatusBanner tone="danger">
@@ -501,196 +660,220 @@ export function TripDetailPage() {
           </div>
         ) : (
           <div className="space-y-5">
-            {itinerary?.days.map((day, index) => {
-              const activityComposer =
-                activityComposerByDayId[day.id] ??
-                createEmptyActivityComposer(trip.budgetCurrency);
-
-              return (
-                <div
-                  className="rounded-[1.75rem] border border-[var(--color-border)] bg-white/72 p-5 sm:p-6"
-                  key={day.id}
-                >
-                  <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                    <div className="space-y-2">
-                      <p className="eyebrow-text-xs text-[var(--color-forest)]">
-                        {t('trips.planner.dayLabel', { index: index + 1 })}
-                      </p>
-                      <h3 className="text-2xl font-semibold text-[var(--color-ink)]">
+            {itinerary?.days.map((day, index) => (
+              <div
+                className="rounded-[1.85rem] border border-[var(--color-border)] bg-white/75 p-5 shadow-sm"
+                key={day.id}
+              >
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                  <div className="space-y-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-[rgba(84,107,65,0.12)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[var(--color-forest)]">
+                        {t('trips.planner.stopLabel', { index: index + 1 })}
+                      </span>
+                      <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1 text-sm text-[var(--color-ink-soft)]">
                         {formatTripDate(day.date, language)}
-                      </h3>
+                      </span>
                     </div>
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-semibold text-[var(--color-ink)]">
+                        {day.title}
+                      </h3>
+                      <div className="flex flex-wrap gap-2 text-sm text-[var(--color-ink-soft)]">
+                        {formatTimeRange(day.startsAt, day.endsAt) ? (
+                          <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                            {formatTimeRange(day.startsAt, day.endsAt)}
+                          </span>
+                        ) : null}
+                        {day.location ? (
+                          <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                            {day.location}
+                          </span>
+                        ) : null}
+                        <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                          {formatTripBudget(day.costAmount, day.costCurrency, language)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
                     <Button
-                      onClick={() => openActivityComposer(day.id, trip.budgetCurrency)}
+                      onClick={() => openActivityCreator(day)}
                       type="button"
                       variant="secondary"
                     >
-                      {t('trips.planner.actions.addActivity')}
+                      <span className="inline-flex items-center gap-2">
+                        <Plus className="h-4 w-4" />
+                        {t('trips.planner.actions.addActivity')}
+                      </span>
+                    </Button>
+                    <Button
+                      onClick={() => openDayEditor(day)}
+                      type="button"
+                      variant="secondary"
+                    >
+                      <span className="inline-flex items-center gap-2">
+                        <PencilLine className="h-4 w-4" />
+                        {t('trips.actions.edit')}
+                      </span>
+                    </Button>
+                    <Button
+                      onClick={() => void handleDeleteDay(day)}
+                      type="button"
+                      variant="secondary"
+                    >
+                      <span className="inline-flex items-center gap-2">
+                        <Trash2 className="h-4 w-4" />
+                        {t('trips.planner.actions.deleteStop')}
+                      </span>
                     </Button>
                   </div>
+                </div>
 
-                  <div className="mt-5 space-y-4">
-                    {day.activities.length === 0 ? (
-                      <div className="rounded-[1.5rem] bg-[var(--color-surface-strong)] px-4 py-4 text-sm text-[var(--color-ink-soft)]">
-                        {t('trips.planner.emptyDay')}
-                      </div>
-                    ) : (
-                      day.activities.map((activity) => (
-                        <div
-                          className="rounded-[1.5rem] bg-[var(--color-surface-strong)] p-4"
-                          key={activity.id}
-                        >
-                          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-                            <div className="space-y-2">
-                              <h4 className="text-lg font-semibold text-[var(--color-ink)]">
-                                {activity.title}
-                              </h4>
-                              <div className="flex flex-wrap gap-2 text-sm text-[var(--color-ink-soft)]">
-                                {activity.startsAt ? (
-                                  <span className="rounded-full bg-white px-3 py-1">
-                                    {activity.startsAt}
-                                  </span>
-                                ) : null}
-                                {activity.location ? (
-                                  <span className="rounded-full bg-white px-3 py-1">
-                                    {activity.location}
-                                  </span>
-                                ) : null}
-                                <span className="rounded-full bg-white px-3 py-1">
-                                  {formatTripBudget(
-                                    activity.costAmount,
-                                    activity.costCurrency,
-                                    language,
-                                  )}
+                {day.notes ? (
+                  <p className="mt-4 text-sm leading-7 text-[var(--color-ink-soft)]">
+                    {day.notes}
+                  </p>
+                ) : null}
+
+                <div className="mt-5">
+                  <PlanningImageGallery
+                    altPrefix={day.title}
+                    imageUrls={day.imageUrls}
+                  />
+                </div>
+
+                {editingDayId === day.id ? (
+                  <div className="mt-6">
+                    <PlannerDayForm
+                      maxDate={trip.endDate}
+                      minDate={trip.startDate}
+                      mode="edit"
+                      onCancel={() => setEditingDayId(null)}
+                      onChange={setEditingDayComposer}
+                      onSubmit={(event) => void handleUpdateDay(event, day.id)}
+                      submitLabel={
+                        updateDayMutation.isPending
+                          ? t('trips.planner.actions.savingStop')
+                          : t('trips.planner.actions.saveStop')
+                      }
+                      title={t('trips.planner.editStopTitle')}
+                      value={editingDayComposer}
+                    />
+                  </div>
+                ) : null}
+
+                <div className="mt-6 space-y-4">
+                  {day.activities.length === 0 ? (
+                    <div className="rounded-[1.5rem] bg-[var(--color-surface-strong)] px-4 py-4 text-sm text-[var(--color-ink-soft)]">
+                      {t('trips.planner.emptyDay')}
+                    </div>
+                  ) : (
+                    day.activities.map((activity) => (
+                      <div
+                        className="rounded-[1.5rem] border border-[var(--color-border)] bg-white p-4"
+                        key={activity.id}
+                      >
+                        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                          <div className="space-y-2">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="rounded-full bg-[rgba(84,107,65,0.12)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-forest)]">
+                                {t('trips.planner.childLabel')}
+                              </span>
+                            </div>
+                            <h4 className="text-lg font-semibold text-[var(--color-ink)]">
+                              {activity.title}
+                            </h4>
+                            <div className="flex flex-wrap gap-2 text-sm text-[var(--color-ink-soft)]">
+                              {formatTimeRange(activity.startsAt, activity.endsAt) ? (
+                                <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                                  {formatTimeRange(activity.startsAt, activity.endsAt)}
                                 </span>
-                              </div>
+                              ) : null}
+                              {activity.location ? (
+                                <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                                  {activity.location}
+                                </span>
+                              ) : null}
+                              <span className="rounded-full bg-[var(--color-surface-strong)] px-3 py-1">
+                                {formatTripBudget(
+                                  activity.costAmount,
+                                  activity.costCurrency,
+                                  language,
+                                )}
+                              </span>
                             </div>
                           </div>
-                          {activity.notes ? (
-                            <p className="mt-3 text-sm leading-7 text-[var(--color-ink-soft)]">
-                              {activity.notes}
-                            </p>
-                          ) : null}
-                        </div>
-                      ))
-                    )}
 
-                    {activeComposerDayId === day.id ? (
-                      <form
-                        className="grid gap-4 rounded-[1.5rem] border border-[var(--color-border)] bg-white p-4 md:grid-cols-2"
-                        onSubmit={(event) => void handleCreateActivity(event, day.id)}
-                      >
-                        <div className="space-y-2 md:col-span-2">
-                          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor={`activity-title-${day.id}`}>
-                            {t('trips.planner.fields.activityTitle')}
-                          </label>
-                          <Input
-                            id={`activity-title-${day.id}`}
-                            onChange={(event) =>
-                              updateActivityComposer(day.id, 'title', event.target.value)
-                            }
-                            placeholder={t('trips.planner.placeholders.activityTitle')}
-                            type="text"
-                            value={activityComposer.title}
+                          <div className="flex flex-wrap gap-3">
+                            <Button
+                              onClick={() => openActivityEditor(day, activity)}
+                              type="button"
+                              variant="secondary"
+                            >
+                              <span className="inline-flex items-center gap-2">
+                                <PencilLine className="h-4 w-4" />
+                                {t('trips.actions.edit')}
+                              </span>
+                            </Button>
+                            <Button
+                              onClick={() => void handleDeleteActivity(day, activity)}
+                              type="button"
+                              variant="secondary"
+                            >
+                              <span className="inline-flex items-center gap-2">
+                                <Trash2 className="h-4 w-4" />
+                                {t('trips.planner.actions.deleteActivity')}
+                              </span>
+                            </Button>
+                          </div>
+                        </div>
+
+                        {activity.notes ? (
+                          <p className="mt-3 text-sm leading-7 text-[var(--color-ink-soft)]">
+                            {activity.notes}
+                          </p>
+                        ) : null}
+
+                        <div className="mt-4">
+                          <PlanningImageGallery
+                            altPrefix={activity.title}
+                            imageUrls={activity.imageUrls}
                           />
                         </div>
-
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor={`activity-time-${day.id}`}>
-                            {t('trips.planner.fields.activityStartsAt')}
-                          </label>
-                          <Input
-                            id={`activity-time-${day.id}`}
-                            onChange={(event) =>
-                              updateActivityComposer(day.id, 'startsAt', event.target.value)
-                            }
-                            type="time"
-                            value={activityComposer.startsAt}
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor={`activity-location-${day.id}`}>
-                            {t('trips.planner.fields.activityLocation')}
-                          </label>
-                          <Input
-                            id={`activity-location-${day.id}`}
-                            onChange={(event) =>
-                              updateActivityComposer(day.id, 'location', event.target.value)
-                            }
-                            placeholder={t('trips.planner.placeholders.activityLocation')}
-                            type="text"
-                            value={activityComposer.location}
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor={`activity-cost-${day.id}`}>
-                            {t('trips.planner.fields.activityCostAmount')}
-                          </label>
-                          <Input
-                            id={`activity-cost-${day.id}`}
-                            min="0"
-                            onChange={(event) =>
-                              updateActivityComposer(day.id, 'costAmount', event.target.value)
-                            }
-                            step="1000"
-                            type="number"
-                            value={activityComposer.costAmount}
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor={`activity-currency-${day.id}`}>
-                            {t('trips.planner.fields.activityCostCurrency')}
-                          </label>
-                          <Input
-                            className="uppercase"
-                            id={`activity-currency-${day.id}`}
-                            maxLength={3}
-                            onChange={(event) =>
-                              updateActivityComposer(day.id, 'costCurrency', event.target.value)
-                            }
-                            type="text"
-                            value={activityComposer.costCurrency}
-                          />
-                        </div>
-
-                        <div className="space-y-2 md:col-span-2">
-                          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor={`activity-notes-${day.id}`}>
-                            {t('trips.planner.fields.activityNotes')}
-                          </label>
-                          <Textarea
-                            id={`activity-notes-${day.id}`}
-                            onChange={(event) =>
-                              updateActivityComposer(day.id, 'notes', event.target.value)
-                            }
-                            placeholder={t('trips.planner.placeholders.activityNotes')}
-                            rows={4}
-                            value={activityComposer.notes}
-                          />
-                        </div>
-
-                        <div className="flex flex-col gap-3 md:col-span-2 sm:flex-row">
-                          <Button disabled={createActivityMutation.isPending} type="submit">
-                            {createActivityMutation.isPending
-                              ? t('trips.planner.actions.addingActivity')
-                              : t('trips.planner.actions.saveActivity')}
-                          </Button>
-                          <Button
-                            onClick={() => setActiveComposerDayId(null)}
-                            type="button"
-                            variant="secondary"
-                          >
-                            {t('trips.actions.cancel')}
-                          </Button>
-                        </div>
-                      </form>
-                    ) : null}
-                  </div>
+                      </div>
+                    ))
+                  )}
                 </div>
-              );
-            })}
+
+                {activityComposerTarget?.dayId === day.id ? (
+                  <div className="mt-6">
+                    <PlannerActivityForm
+                      mode={activityComposerTarget.activityId ? 'edit' : 'create'}
+                      onCancel={() => setActivityComposerTarget(null)}
+                      onChange={setActivityComposer}
+                      onSubmit={(event) => void handleActivitySubmit(event, day.id)}
+                      submitLabel={
+                        activityComposerTarget.activityId
+                          ? updateActivityMutation.isPending
+                            ? t('trips.planner.actions.savingActivity')
+                            : t('trips.planner.actions.saveActivity')
+                          : createActivityMutation.isPending
+                            ? t('trips.planner.actions.addingActivity')
+                            : t('trips.planner.actions.addActivity')
+                      }
+                      title={
+                        activityComposerTarget.activityId
+                          ? t('trips.planner.editActivityTitle')
+                          : t('trips.planner.createActivityTitle')
+                      }
+                      value={activityComposer}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            ))}
           </div>
         )}
       </Card>
@@ -704,15 +887,424 @@ export function TripDetailPage() {
   );
 }
 
-function createEmptyActivityComposer(currency: string): ActivityComposerState {
+function SummaryMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-[1.5rem] bg-white/70 p-5">
+      <p className="eyebrow-text-xs text-[var(--color-forest)]">{label}</p>
+      <p className="mt-2 text-base font-medium text-[var(--color-ink)]">{value}</p>
+    </div>
+  );
+}
+
+function PlannerDayForm({
+  maxDate,
+  minDate,
+  mode,
+  onCancel,
+  onChange,
+  onSubmit,
+  submitLabel,
+  title,
+  value,
+}: {
+  maxDate: string;
+  minDate: string;
+  mode: 'create' | 'edit';
+  onCancel?: () => void;
+  onChange: (value: DayComposerState) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  submitLabel: string;
+  title: string;
+  value: DayComposerState;
+}) {
+  const { t } = useI18n();
+
+  return (
+    <form
+      className="grid gap-4 rounded-[1.85rem] border border-[var(--color-border)] bg-white/65 p-5 md:grid-cols-2"
+      onSubmit={onSubmit}
+    >
+      <div className="space-y-1 md:col-span-2">
+        <h3 className="text-lg font-semibold text-[var(--color-ink)]">{title}</h3>
+        <p className="text-sm leading-7 text-[var(--color-ink-soft)]">
+          {t('trips.planner.formDescription')}
+        </p>
+      </div>
+
+      <Field label={t('trips.planner.fields.stopDate')} htmlFor={`planner-stop-date-${mode}`}>
+        <Input
+          id={`planner-stop-date-${mode}`}
+          max={maxDate}
+          min={minDate}
+          onChange={(event) => onChange({ ...value, date: event.target.value })}
+          type="date"
+          value={value.date}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.stopTitle')} htmlFor={`planner-stop-title-${mode}`}>
+        <Input
+          id={`planner-stop-title-${mode}`}
+          onChange={(event) => onChange({ ...value, title: event.target.value })}
+          placeholder={t('trips.planner.placeholders.stopTitle')}
+          type="text"
+          value={value.title}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.startsAt')} htmlFor={`planner-stop-starts-at-${mode}`}>
+        <Input
+          id={`planner-stop-starts-at-${mode}`}
+          onChange={(event) => onChange({ ...value, startsAt: event.target.value })}
+          type="time"
+          value={value.startsAt}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.endsAt')} htmlFor={`planner-stop-ends-at-${mode}`}>
+        <Input
+          id={`planner-stop-ends-at-${mode}`}
+          onChange={(event) => onChange({ ...value, endsAt: event.target.value })}
+          type="time"
+          value={value.endsAt}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.location')} htmlFor={`planner-stop-location-${mode}`}>
+        <Input
+          id={`planner-stop-location-${mode}`}
+          onChange={(event) => onChange({ ...value, location: event.target.value })}
+          placeholder={t('trips.planner.placeholders.stopLocation')}
+          type="text"
+          value={value.location}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.costAmount')} htmlFor={`planner-stop-cost-${mode}`}>
+        <Input
+          id={`planner-stop-cost-${mode}`}
+          min="0"
+          onChange={(event) => onChange({ ...value, costAmount: event.target.value })}
+          step="1000"
+          type="number"
+          value={value.costAmount}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.costCurrency')} htmlFor={`planner-stop-currency-${mode}`}>
+        <Input
+          className="uppercase"
+          id={`planner-stop-currency-${mode}`}
+          maxLength={3}
+          onChange={(event) => onChange({ ...value, costCurrency: event.target.value })}
+          type="text"
+          value={value.costCurrency}
+        />
+      </Field>
+
+      <Field
+        className="md:col-span-2"
+        label={t('trips.planner.fields.notes')}
+        htmlFor={`planner-stop-notes-${mode}`}
+      >
+        <Textarea
+          id={`planner-stop-notes-${mode}`}
+          onChange={(event) => onChange({ ...value, notes: event.target.value })}
+          placeholder={t('trips.planner.placeholders.stopNotes')}
+          rows={4}
+          value={value.notes}
+        />
+      </Field>
+
+      <Field
+        className="md:col-span-2"
+        label={t('trips.planner.fields.imageUrls')}
+        htmlFor={`planner-stop-images-${mode}`}
+      >
+        <Textarea
+          id={`planner-stop-images-${mode}`}
+          onChange={(event) => onChange({ ...value, imageUrlsText: event.target.value })}
+          placeholder={t('trips.planner.placeholders.imageUrls')}
+          rows={4}
+          value={value.imageUrlsText}
+        />
+      </Field>
+
+      <div className="flex flex-col gap-3 md:col-span-2 sm:flex-row">
+        <Button type="submit">{submitLabel}</Button>
+        {onCancel ? (
+          <Button onClick={onCancel} type="button" variant="secondary">
+            {t('trips.actions.cancel')}
+          </Button>
+        ) : null}
+      </div>
+    </form>
+  );
+}
+
+function PlannerActivityForm({
+  mode,
+  onCancel,
+  onChange,
+  onSubmit,
+  submitLabel,
+  title,
+  value,
+}: {
+  mode: 'create' | 'edit';
+  onCancel: () => void;
+  onChange: (value: ActivityComposerState) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  submitLabel: string;
+  title: string;
+  value: ActivityComposerState;
+}) {
+  const { t } = useI18n();
+
+  return (
+    <form
+      className="grid gap-4 rounded-[1.7rem] border border-[var(--color-border)] bg-white p-5 md:grid-cols-2"
+      onSubmit={onSubmit}
+    >
+      <div className="space-y-1 md:col-span-2">
+        <h4 className="text-lg font-semibold text-[var(--color-ink)]">{title}</h4>
+        <p className="text-sm leading-7 text-[var(--color-ink-soft)]">
+          {t('trips.planner.childFormDescription')}
+        </p>
+      </div>
+
+      <Field
+        className="md:col-span-2"
+        label={t('trips.planner.fields.activityTitle')}
+        htmlFor={`planner-activity-title-${mode}`}
+      >
+        <Input
+          id={`planner-activity-title-${mode}`}
+          onChange={(event) => onChange({ ...value, title: event.target.value })}
+          placeholder={t('trips.planner.placeholders.activityTitle')}
+          type="text"
+          value={value.title}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.startsAt')} htmlFor={`planner-activity-starts-at-${mode}`}>
+        <Input
+          id={`planner-activity-starts-at-${mode}`}
+          onChange={(event) => onChange({ ...value, startsAt: event.target.value })}
+          type="time"
+          value={value.startsAt}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.endsAt')} htmlFor={`planner-activity-ends-at-${mode}`}>
+        <Input
+          id={`planner-activity-ends-at-${mode}`}
+          onChange={(event) => onChange({ ...value, endsAt: event.target.value })}
+          type="time"
+          value={value.endsAt}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.location')} htmlFor={`planner-activity-location-${mode}`}>
+        <Input
+          id={`planner-activity-location-${mode}`}
+          onChange={(event) => onChange({ ...value, location: event.target.value })}
+          placeholder={t('trips.planner.placeholders.activityLocation')}
+          type="text"
+          value={value.location}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.costAmount')} htmlFor={`planner-activity-cost-${mode}`}>
+        <Input
+          id={`planner-activity-cost-${mode}`}
+          min="0"
+          onChange={(event) => onChange({ ...value, costAmount: event.target.value })}
+          step="1000"
+          type="number"
+          value={value.costAmount}
+        />
+      </Field>
+
+      <Field label={t('trips.planner.fields.costCurrency')} htmlFor={`planner-activity-currency-${mode}`}>
+        <Input
+          className="uppercase"
+          id={`planner-activity-currency-${mode}`}
+          maxLength={3}
+          onChange={(event) => onChange({ ...value, costCurrency: event.target.value })}
+          type="text"
+          value={value.costCurrency}
+        />
+      </Field>
+
+      <Field
+        className="md:col-span-2"
+        label={t('trips.planner.fields.notes')}
+        htmlFor={`planner-activity-notes-${mode}`}
+      >
+        <Textarea
+          id={`planner-activity-notes-${mode}`}
+          onChange={(event) => onChange({ ...value, notes: event.target.value })}
+          placeholder={t('trips.planner.placeholders.activityNotes')}
+          rows={4}
+          value={value.notes}
+        />
+      </Field>
+
+      <Field
+        className="md:col-span-2"
+        label={t('trips.planner.fields.imageUrls')}
+        htmlFor={`planner-activity-images-${mode}`}
+      >
+        <Textarea
+          id={`planner-activity-images-${mode}`}
+          onChange={(event) => onChange({ ...value, imageUrlsText: event.target.value })}
+          placeholder={t('trips.planner.placeholders.imageUrls')}
+          rows={4}
+          value={value.imageUrlsText}
+        />
+      </Field>
+
+      <div className="flex flex-col gap-3 md:col-span-2 sm:flex-row">
+        <Button type="submit">{submitLabel}</Button>
+        <Button onClick={onCancel} type="button" variant="secondary">
+          {t('trips.actions.cancel')}
+        </Button>
+      </div>
+    </form>
+  );
+}
+
+function Field({
+  children,
+  className = '',
+  htmlFor,
+  label,
+}: {
+  children: ReactNode;
+  className?: string;
+  htmlFor: string;
+  label: string;
+}) {
+  return (
+    <div className={`space-y-2 ${className}`.trim()}>
+      <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor={htmlFor}>
+        {label}
+      </label>
+      {children}
+    </div>
+  );
+}
+
+function createEmptyDayComposer(currency: string): DayComposerState {
   return {
+    date: '',
     title: '',
     startsAt: '',
+    endsAt: '',
     location: '',
     notes: '',
     costAmount: '',
     costCurrency: currency,
+    imageUrlsText: '',
   };
+}
+
+function createEmptyActivityComposer(currency: string): ActivityComposerState {
+  return {
+    title: '',
+    startsAt: '',
+    endsAt: '',
+    location: '',
+    notes: '',
+    costAmount: '',
+    costCurrency: currency,
+    imageUrlsText: '',
+  };
+}
+
+function createDayComposerFromDay(day: TripItineraryDay): DayComposerState {
+  return {
+    date: day.date,
+    title: day.title,
+    startsAt: day.startsAt ?? '',
+    endsAt: day.endsAt ?? '',
+    location: day.location ?? '',
+    notes: day.notes ?? '',
+    costAmount: day.costAmount > 0 ? String(day.costAmount) : '',
+    costCurrency: day.costCurrency,
+    imageUrlsText: day.imageUrls.join('\n'),
+  };
+}
+
+function createActivityComposerFromActivity(
+  activity: TripItineraryActivity,
+): ActivityComposerState {
+  return {
+    title: activity.title,
+    startsAt: activity.startsAt ?? '',
+    endsAt: activity.endsAt ?? '',
+    location: activity.location ?? '',
+    notes: activity.notes ?? '',
+    costAmount: activity.costAmount > 0 ? String(activity.costAmount) : '',
+    costCurrency: activity.costCurrency,
+    imageUrlsText: activity.imageUrls.join('\n'),
+  };
+}
+
+function getPlannerErrorMessage(error: unknown, fallbackMessage: string): string {
+  return error instanceof ApiError && error.message ? error.message : fallbackMessage;
+}
+
+async function invalidatePlannerQueries(
+  queryClient: ReturnType<typeof useQueryClient>,
+  tripId: string,
+) {
+  await Promise.all([
+    queryClient.invalidateQueries({ queryKey: ['trips', 'itinerary', tripId] }),
+    queryClient.invalidateQueries({ queryKey: ['trips', 'budget-summary', tripId] }),
+  ]);
+}
+
+function parseImageUrls(value: string): string[] {
+  return value
+    .split('\n')
+    .map((imageUrl) => imageUrl.trim())
+    .filter(Boolean);
+}
+
+function toOptionalString(value: string): string | undefined {
+  const normalizedValue = value.trim();
+  return normalizedValue.length > 0 ? normalizedValue : undefined;
+}
+
+function toOptionalNumber(value: string): number | undefined {
+  const normalizedValue = value.trim();
+
+  if (normalizedValue.length === 0) {
+    return undefined;
+  }
+
+  return Number(normalizedValue);
+}
+
+function formatTimeRange(
+  startsAt: string | null,
+  endsAt: string | null,
+): string | null {
+  if (startsAt && endsAt) {
+    return `${startsAt} - ${endsAt}`;
+  }
+
+  if (startsAt) {
+    return startsAt;
+  }
+
+  if (endsAt) {
+    return endsAt;
+  }
+
+  return null;
 }
 
 function PlanningMetricCard({
