@@ -24,6 +24,50 @@ function Test-CloudflaredTunnelProcess {
     return $false
 }
 
+function Get-CloudflaredTunnelInfo {
+    if (-not (Test-Path $cloudflaredExe)) {
+        return @{
+            ExitCode = 1
+            Output = ''
+        }
+    }
+
+    $output = & $cloudflaredExe tunnel info $cloudflaredTunnelName 2>&1 | Out-String
+
+    return @{
+        ExitCode = $LASTEXITCODE
+        Output = $output.Trim()
+    }
+}
+
+function Test-CloudflaredTunnelActiveConnection {
+    $info = Get-CloudflaredTunnelInfo
+
+    if ($info.ExitCode -ne 0) {
+        return $false
+    }
+
+    if (-not $info.Output) {
+        return $false
+    }
+
+    return -not $info.Output.Contains('does not have any active connection')
+}
+
+function Stop-CloudflaredTunnelProcess {
+    $processes = Get-CimInstance Win32_Process -Filter "Name = 'cloudflared.exe'" -ErrorAction SilentlyContinue
+
+    if (-not $processes) {
+        return
+    }
+
+    foreach ($process in $processes) {
+        if ($process.CommandLine -and $process.CommandLine.Contains($cloudflaredTunnelName)) {
+            Stop-Process -Id $process.ProcessId -Force -ErrorAction SilentlyContinue
+        }
+    }
+}
+
 function Restart-FrontendRuntime {
     $command = "cd $deployDirWsl && bash ./scripts/restart-production.sh"
     wsl -d $wslDistro bash -lc $command
@@ -38,8 +82,13 @@ function Start-CloudflaredTunnelIfNeeded {
         throw "cloudflared config was not found at $cloudflaredConfig"
     }
 
-    if (Test-CloudflaredTunnelProcess) {
+    if (Test-CloudflaredTunnelActiveConnection) {
         return
+    }
+
+    if (Test-CloudflaredTunnelProcess) {
+        Stop-CloudflaredTunnelProcess
+        Start-Sleep -Seconds 1
     }
 
     $stdoutLog = 'C:\Users\dangv\.cloudflared\cloudflared.out.log'

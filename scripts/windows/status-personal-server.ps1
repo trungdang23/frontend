@@ -1,15 +1,33 @@
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
+$cloudflaredExe = 'C:\Cloudflared\bin\cloudflared.exe'
 $cloudflaredConfig = 'C:\Users\dangv\.cloudflared\config.yml'
 $wslDistro = 'Ubuntu-20.04'
 $deployDirWsl = '/home/trungdang/apps/journey-frontend'
 $healthUrl = 'https://buicojourney.com/health'
 $frontendHostname = 'buicojourney.com'
 $deploySshHostname = 'ssh.buicojourney.com'
+$cloudflaredTunnelName = 'journey-backend'
 
 function Write-Section([string]$title) {
     Write-Host ('=' * 8 + " $title " + '=' * 8)
+}
+
+function Get-CloudflaredTunnelInfo {
+    if (-not (Test-Path $cloudflaredExe)) {
+        return @{
+            ExitCode = 1
+            Output = "cloudflared was not found at $cloudflaredExe"
+        }
+    }
+
+    $output = & $cloudflaredExe tunnel info $cloudflaredTunnelName 2>&1 | Out-String
+
+    return @{
+        ExitCode = $LASTEXITCODE
+        Output = $output.Trim()
+    }
 }
 
 Write-Section 'Frontend (WSL)'
@@ -35,6 +53,16 @@ if ($processes) {
     }
 } else {
     Write-Host 'cloudflared process not running.'
+}
+
+$tunnelInfo = Get-CloudflaredTunnelInfo
+if ($tunnelInfo.ExitCode -ne 0) {
+    Write-Host 'Tunnel info is unavailable.'
+    Write-Host $tunnelInfo.Output
+} elseif ($tunnelInfo.Output.Contains('does not have any active connection')) {
+    Write-Host 'journey-backend tunnel has no active connection.'
+} else {
+    Write-Host 'journey-backend tunnel has an active connection.'
 }
 
 Write-Section 'Tunnel Routes'

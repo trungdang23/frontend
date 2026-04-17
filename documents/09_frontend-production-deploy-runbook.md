@@ -190,6 +190,17 @@ Khắc phục:
   - `bash ./scripts/check-production-health.sh`
   - `curl -I https://buicojourney.com/health`
 
+### Public domain trả `1033` hoặc `The origin has been unregistered from Argo Tunnel`
+
+Nguyên nhân hay gặp:
+
+- `cloudflared` process trên Windows còn tồn tại nhưng tunnel `journey-backend` không còn active connection với Cloudflare
+
+Khắc phục:
+
+- chạy `pnpm status` trong `backend/` để kiểm tra trạng thái tunnel thật
+- nếu tunnel không có active connection, chạy lại `pnpm up` trong `backend/` để recycle `cloudflared`
+
 ## Kết luận vận hành
 
 - Frontend deploy không còn phụ thuộc vào SSH/Cloudflare Access.
