@@ -26,7 +26,7 @@
 | 03 | Xây dựng landing và public surface | Completed |
 | 04 | Xây dựng dashboard, profile, và empty states có dữ liệu thật | Completed |
 | 05 | Xây dựng `trips` workspace | Completed |
-| 06 | Xây dựng `itineraries` và `budgets` workspace | Todo |
+| 06 | Xây dựng `planning`, media, `itineraries`, và `budgets` workspace | Todo |
 | 07 | Xây dựng `community` experience | Blocked by BE Phase 06 |
 | 08 | Hardening, test, accessibility, và deploy | Todo |
 
@@ -112,15 +112,23 @@ Status: `Completed`
 - [x] Tạo mutation feedback rõ ràng cho create/update/delete
 - [x] Chốt verify tối thiểu cho Phase 05: lint, test, build
 
-## Phase 06 - Xây dựng `itineraries` và `budgets` workspace
+## Phase 06 - Xây dựng `planning`, media, `itineraries`, và `budgets` workspace
 
 Status: `Todo`
 
-- [ ] Tạo timeline/day planner UI
-- [ ] Tạo budget summary UI
-- [ ] Kết nối API itinerary và budget
-- [ ] Tạo validation và inline feedback cho activity form
-- [ ] Tạo chart hoặc progress UI cho ngân sách
+- [ ] Mở rộng `Trip` UI với `coverImageUrl`
+- [ ] Mở rộng `Trip` UI với `summaryNotes`
+- [ ] Tạo trip cards có media placeholder hoặc ảnh thật từ DB
+- [ ] Chuyển `/app/trips/:tripId` từ metadata detail sang planning workspace
+- [ ] Tạo planner list hoặc outline UI dạng cuộn
+- [ ] Tạo planner node card với thời gian, chi phí, ghi chú, và ảnh
+- [ ] Tạo modal hoặc drawer để add/edit/delete planning node
+- [ ] Thêm motion cho trip cards, planning header, planner list, và node cards
+- [ ] Thêm expand/collapse animation cho planner sections hoặc node groups
+- [ ] Thêm enter/exit animation cho add/delete planning node
+- [ ] Kết nối contract planning mới của backend khi sẵn
+- [ ] Kết nối budget summary từ planner hoặc itinerary bridge
+- [ ] Giữ route đơn giản, không mở route sâu cho từng node trừ khi có lý do mạnh
 
 ## Phase 07 - Xây dựng `community` experience
 
@@ -141,6 +149,7 @@ Status: `Todo`
 - [ ] Thêm route-level integration tests
 - [ ] Thêm smoke e2e cho login -> dashboard
 - [ ] Kiểm tra accessibility các flow chính
+- [ ] Kiểm tra `prefers-reduced-motion` cho motion chính
 - [ ] Kiểm tra responsive trên mobile và desktop
 - [x] Chốt env runtime cho frontend
 - [x] Chốt deploy target

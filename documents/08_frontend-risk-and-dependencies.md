@@ -36,6 +36,8 @@
 
 - `UI_demo.txt` có nhiều trạng thái timeline/budget hấp dẫn để làm sớm.
 - Nếu dựng full UI `itineraries` hoặc `budgets` vượt ra ngoài contract Phase 05 hiện có, khả năng rework cao.
+- Nếu tiếp tục vá planner vào `trip detail` cũ mà không chốt contract `planning` riêng, khả năng UI bị chắp vá cao.
+- Nếu thêm animation rời rạc mà không có motion system chung, UI rất dễ trở nên lòe loẹt và không nhất quán.
 
 ### 3. Community section dễ bị hiểu nhầm là production-ready
 
@@ -81,9 +83,12 @@
 4. Chạy post-deploy verification trên domain thật
 5. Nối frontend phase 06 cho `itineraries` và `budgets` theo contract thật
 6. Chỉ mở `community` sau khi backend phase 06 sẵn
+7. Chốt planner expansion theo contract additive riêng trước khi làm UI hierarchy lớn
 
 ## Điều không nên làm tiếp theo
 
 - Không nên dựng `itineraries` hoặc `budgets` production bằng mock rồi quên thay.
 - Không nên làm community interactive trước khi có backend thật.
+- Không nên mở route sâu cho planner nếu list-based workspace vẫn đáp ứng được nhu cầu chính.
+- Không nên thêm hiệu ứng nặng trên quá nhiều card hoặc list item cùng lúc vì protected app sẽ dễ bị ì.
 - Không nên vừa scaffold vừa đổi stack giữa chừng.

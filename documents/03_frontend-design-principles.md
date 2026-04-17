@@ -72,6 +72,105 @@
 - Ưu tiên reveal nhẹ, hover rõ, transition có nhịp.
 - Tránh micro-interaction dày đặc khiến app nặng và rối.
 
+## Motion system định hướng
+
+### 1. Motion phải có vai trò rõ ràng
+
+- hướng mắt người dùng tới vùng nội dung mới
+- giúp phân biệt `enter`, `exit`, `expand`, `collapse`, `save success`
+- làm giao diện bớt tĩnh mà không biến app thành một màn hình phô diễn hiệu ứng
+
+### 2. Ưu tiên motion theo lớp
+
+Frontend nên có tối thiểu 4 lớp motion:
+
+- `page-enter motion`
+- `card/list motion`
+- `overlay motion`
+- `feedback motion`
+
+### 3. Page-enter motion
+
+Nên có:
+
+- fade + translate nhẹ khi vào screen mới
+- stagger nhẹ cho section chính
+- hero image hoặc cover image có scale-in rất nhỏ
+
+Không nên:
+
+- animate toàn bộ màn hình quá dài
+- chặn thao tác chỉ để chờ animation
+
+### 4. Card và list motion
+
+Nên có:
+
+- hover lift nhẹ cho trip card
+- shadow shift nhẹ khi hover
+- image zoom rất nhỏ khi hover card có ảnh
+- stagger khi list planner hoặc trip list xuất hiện lần đầu
+- smooth expand/collapse cho section planner
+
+Không nên:
+
+- bounce liên tục
+- hover effect quá mạnh làm lệch layout
+
+### 5. Overlay motion
+
+Modal, drawer, side panel nên có:
+
+- opacity fade cho backdrop
+- slide hoặc scale có kiểm soát cho panel
+- thời lượng ngắn và nhất quán
+
+### 6. Feedback motion
+
+Nên có:
+
+- skeleton shimmer
+- success state chuyển mượt
+- optimistic insert/remove trong planner list
+- smooth layout transition khi thêm/xóa node
+
+### 7. Motion cho planner mới
+
+Planner là khu vực nên có motion rõ nhất trong protected app:
+
+- node mới chèn vào list phải có enter animation
+- node bị xóa phải có exit animation
+- expand/collapse node con phải có height + opacity transition
+- reorder về sau nên có drag ghost và layout shift mượt
+
+### 8. Motion và hiệu năng
+
+- ưu tiên `transform` và `opacity`
+- tránh animate `height` trên khối lớn trừ expand/collapse có giới hạn
+- tránh blur nặng và shadow đậm trên quá nhiều item cùng lúc
+- list dài cần cẩn thận với stagger để không làm app chậm
+
+### 9. Motion và accessibility
+
+- tôn trọng `prefers-reduced-motion`
+- khi reduced motion bật:
+  - bỏ stagger dài
+  - bỏ parallax
+  - giữ transition chức năng ở mức tối thiểu
+
+### 10. Tính cách motion mong muốn
+
+- mềm
+- có nhịp
+- tự nhiên
+- thiên cảm giác travel journal hiện đại
+
+Không nên:
+
+- flashy
+- game-like
+- techno quá mạnh
+
 ## Accessibility
 
 - Focus ring phải luôn nhìn thấy được.

@@ -37,7 +37,7 @@
 | `/community/:postId` | Post detail | No | static trước, API sau | P2 |
 | `/app/trips` | Trips list | Yes | `GET /trips` | P1 |
 | `/app/trips/new` | Create trip | Yes | `POST /trips` | P1 |
-| `/app/trips/:tripId` | Trip detail | Yes | `GET /trips/:tripId` | P1 |
+| `/app/trips/:tripId` | Trip planning workspace | Yes | `GET /trips/:tripId` + planning API mới | P1 |
 | `/app/trips/:tripId/edit` | Trip edit | Yes | `GET /trips/:tripId` + `PATCH /trips/:tripId` | P1 |
 
 ## Mapping từ `UI_demo.txt`
@@ -69,7 +69,7 @@
 7. `Landing production`
 8. `Community teaser`
 9. `Trips workspace`
-10. `Itineraries + budgets` workspace
+10. `Planning + media + itineraries + budgets` workspace
 
 ## Scope đề xuất cho phase FE đầu tiên
 
@@ -92,9 +92,11 @@
 - edit trip
 - delete trip
 
-### P2 - Chờ backend `itineraries`, `budgets`, và `community`
+### P2 - Chờ backend planning expansion, `budgets`, và `community`
 
-- timeline/day planner
+- media-first trip detail
+- planning outline/list
+- node editor modal hoặc drawer
 - budget summary
 - community feed thật
 - post detail thật
@@ -105,3 +107,4 @@
 - Không mở `itineraries` hoặc `budgets` production bằng mock rồi quên thay.
 - Không để login/register nằm chung một screen state-machine nếu đã có route thật.
 - Không để route protected phụ thuộc hoàn toàn vào client memory mà thiếu session boot strategy.
+- Không biến planner thành hệ route sâu nếu cùng một màn list có thể giải quyết tốt hơn.

@@ -14,6 +14,7 @@
 - Keyboard navigation dùng được
 - Focus states nhìn thấy được
 - Copy không còn ở trạng thái placeholder ngẫu nhiên
+- Motion chính của screen đã được chốt hoặc cố ý để `none`, không để UI rơi vào trạng thái tĩnh một cách vô tình
 
 ## Một feature API-driven được xem là xong khi
 
@@ -37,6 +38,7 @@
 - Không buộc screen khác copy-paste style riêng
 - Có biến thể tối thiểu cần thiết
 - Dùng lại được ở ít nhất hai ngữ cảnh hợp lý hoặc là primitive rõ ràng
+- Nếu component có motion, motion phải có variant rõ và không phá `prefers-reduced-motion`
 
 ## Một phase được xem là xong khi
 
@@ -45,6 +47,7 @@
 - Các kiểm tra tối thiểu của package đã pass
 - Tài liệu kế hoạch hoặc README đã được cập nhật nếu cần
 - Không còn blocker ẩn bị đẩy sang phase sau mà không ghi chú
+- Motion của phase đã nhất quán ở các màn chính, không chỉ xuất hiện rời rạc ở một vài chỗ
 
 ## Checklist verify tối thiểu sau khi scaffold frontend
 

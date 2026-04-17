@@ -211,6 +211,17 @@ Shape `Trip` hiện backend trả:
 }
 ```
 
+Hướng mở rộng tiếp theo cho `Trip` nên là additive:
+
+```json
+{
+  "summaryNotes": "string | null",
+  "coverImageUrl": "string | null"
+}
+```
+
+Frontend nên chuẩn bị type và rendering để đọc hai field này trước khi có upload thực tế.
+
 List response trả `data: Trip[]` kèm:
 
 ```json
@@ -310,6 +321,45 @@ Shape `itinerary` response hiện backend trả:
 ```
 
 Frontend Phase 06 nên bám đúng contract này trước khi mở rộng chart, drag/drop, hay inline planner phức tạp.
+
+## Planning contract mục tiêu cho nhánh mở rộng tiếp theo
+
+Khi backend mở module `planning`, frontend nên ưu tiên contract additive riêng thay vì vá tiếp toàn bộ UI vào `itinerary` cũ.
+
+Endpoint mục tiêu:
+
+- `GET /trips/:tripId/planning`
+- `POST /trips/:tripId/planning/nodes`
+- `PATCH /trips/:tripId/planning/nodes/:nodeId`
+- `DELETE /trips/:tripId/planning/nodes/:nodeId`
+
+Shape `PlanNode` mục tiêu:
+
+```json
+{
+  "id": "string",
+  "tripId": "string",
+  "parentId": "string | null",
+  "type": "day | location | activity | note | section",
+  "title": "string",
+  "notes": "string | null",
+  "locationLabel": "string | null",
+  "startAt": "string | null",
+  "endAt": "string | null",
+  "costAmount": 0,
+  "costCurrency": "VND",
+  "coverImageUrl": "string | null",
+  "sortOrder": 0,
+  "depth": 0,
+  "children": []
+}
+```
+
+Frontend nên chuẩn bị planner UI theo contract này để:
+
+- hiển thị list cuộn có phân cấp
+- không cần route sâu cho từng node
+- dễ thêm AI suggestion panel về sau
 
 ## Cách xử lý các phần chưa có backend
 
