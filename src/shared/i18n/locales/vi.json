@@ -239,6 +239,54 @@
       "coverAltFallback": "Ảnh bìa xem trước của chuyến đi"
     },
     "notesEmpty": "Bạn chưa thêm ghi chú tổng quan cho chuyến đi này.",
+    "planner": {
+      "eyebrow": "Lịch trình",
+      "title": "Kế hoạch theo ngày",
+      "description": "Tại đây bạn có thể thêm từng ngày và chèn các địa điểm hoặc việc sẽ làm trong chuyến đi này theo dạng danh sách cuộn.",
+      "budgetEyebrow": "Ngân sách",
+      "budgetTitle": "Tóm tắt ngân sách",
+      "budgetDescription": "Theo dõi ngân sách tổng, ngân sách đã lên kế hoạch, và phần còn lại ngay trong cùng một màn hình.",
+      "fields": {
+        "dayDate": "Ngày trong lịch trình",
+        "activityTitle": "Tên địa điểm hoặc việc sẽ làm",
+        "activityStartsAt": "Thời gian bắt đầu",
+        "activityLocation": "Địa điểm cụ thể",
+        "activityCostAmount": "Chi phí dự kiến",
+        "activityCostCurrency": "Tiền tệ",
+        "activityNotes": "Ghi chú chi tiết"
+      },
+      "placeholders": {
+        "activityTitle": "Ví dụ: Tham quan chợ đêm Đà Lạt",
+        "activityLocation": "Ví dụ: Chợ đêm Đà Lạt",
+        "activityNotes": "Ví dụ: Đi sau 19:00, ưu tiên quán ăn gần cổng chính, dành khoảng 2 giờ."
+      },
+      "actions": {
+        "addDay": "Thêm ngày",
+        "addingDay": "Đang thêm ngày...",
+        "addActivity": "Thêm địa điểm",
+        "addingActivity": "Đang lưu địa điểm...",
+        "saveActivity": "Lưu địa điểm"
+      },
+      "validation": {
+        "dayDateRequired": "Bạn cần chọn ngày trước khi thêm vào lịch trình.",
+        "activityTitleRequired": "Bạn cần nhập tên địa điểm hoặc việc sẽ làm."
+      },
+      "feedback": {
+        "loadError": "Không tải được lịch trình của chuyến đi này.",
+        "createDayError": "Không thể thêm ngày vào lịch trình lúc này.",
+        "createActivityError": "Không thể thêm địa điểm vào ngày này lúc này."
+      },
+      "empty": "Chuyến đi này chưa có ngày nào trong lịch trình. Hãy thêm ngày đầu tiên để bắt đầu chia nhỏ các địa điểm và việc sẽ làm.",
+      "emptyDay": "Ngày này chưa có địa điểm hoặc việc nào được thêm vào.",
+      "dayLabel": "Ngày {{index}}",
+      "metrics": {
+        "totalBudget": "Ngân sách tổng",
+        "plannedBudget": "Đã lên kế hoạch",
+        "remainingBudget": "Còn lại",
+        "totalNodes": "Mật độ kế hoạch",
+        "totalNodesValue": "{{days}} ngày / {{activities}} địa điểm"
+      }
+    },
     "delete": {
       "confirmTitle": "Xoá chuyến đi này?",
       "confirmDescription": "Chuyến đi \"{{name}}\" sẽ bị xoá khỏi tài khoản của bạn.",
