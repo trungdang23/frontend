@@ -82,6 +82,7 @@
       "sessionExpired": "Your session has expired. Please log in again.",
       "sessionRestoreFailed": "We couldn't restore your session. Please try again.",
       "loggedOut": "You have logged out of Journey.",
+      "loggedOutLocal": "You have logged out of Journey. The server could not be reached, so the session was only cleared on this device.",
       "booting": "Journey is restoring your session..."
     }
   },

@@ -82,6 +82,7 @@
       "sessionExpired": "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
       "sessionRestoreFailed": "Không thể khôi phục phiên đăng nhập. Vui lòng thử lại.",
       "loggedOut": "Bạn đã đăng xuất khỏi Journey.",
+      "loggedOutLocal": "Bạn đã đăng xuất khỏi Journey. Kết nối máy chủ bị gián đoạn nên phiên chỉ được xoá ở thiết bị hiện tại.",
       "booting": "Journey đang khôi phục phiên đăng nhập..."
     }
   },

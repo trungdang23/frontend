@@ -6,28 +6,35 @@ import {
   useMemo,
   useRef,
   useState,
-} from 'react';
+} from "react";
 import {
   AuthSession,
   getCurrentUser,
   login as loginRequest,
+  logout as logoutRequest,
   refreshTokens,
   register as registerRequest,
-} from '@/features/auth/api/auth-api';
+} from "@/features/auth/api/auth-api";
 import {
   AuthNoticeTone,
   AuthStatus,
   StoredSession,
-} from '@/features/auth/session/session-types';
-import { AuthContext, AuthContextValue } from '@/features/auth/session/auth-context-value';
+} from "@/features/auth/session/session-types";
+import {
+  AuthContext,
+  AuthContextValue,
+} from "@/features/auth/session/auth-context-value";
 import {
   clearStoredSession,
   readStoredSession,
   writeStoredSession,
-} from '@/features/auth/session/session-storage';
-import { useI18n } from '@/shared/i18n/use-i18n';
-import { configureHttpClient, resetHttpClientConfig } from '@/shared/api/http-client';
-import { User } from '@/shared/types/user';
+} from "@/features/auth/session/session-storage";
+import { useI18n } from "@/shared/i18n/use-i18n";
+import {
+  configureHttpClient,
+  resetHttpClientConfig,
+} from "@/shared/api/http-client";
+import { User } from "@/shared/types/user";
 
 function createStoredSession(session: AuthSession): StoredSession {
   return {
@@ -38,20 +45,20 @@ function createStoredSession(session: AuthSession): StoredSession {
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const { t } = useI18n();
-  const [status, setStatus] = useState<AuthStatus>('booting');
+  const [status, setStatus] = useState<AuthStatus>("booting");
   const [user, setUser] = useState<User | null>(null);
   const [noticeKey, setNoticeKey] = useState<string | null>(null);
-  const [noticeTone, setNoticeTone] = useState<AuthNoticeTone>('info');
+  const [noticeTone, setNoticeTone] = useState<AuthNoticeTone>("info");
   const sessionRef = useRef<StoredSession | null>(null);
   const refreshPromiseRef = useRef<Promise<string | null> | null>(null);
 
   const setGuestState = useCallback(
-    (nextNoticeKey?: string, nextTone: AuthNoticeTone = 'info') => {
+    (nextNoticeKey?: string, nextTone: AuthNoticeTone = "info") => {
       sessionRef.current = null;
       clearStoredSession();
       startTransition(() => {
         setUser(null);
-        setStatus('guest');
+        setStatus("guest");
         setNoticeKey(nextNoticeKey || null);
         setNoticeTone(nextTone);
       });
@@ -64,9 +71,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
     writeStoredSession(session);
     startTransition(() => {
       setUser(session.user);
-      setStatus('authenticated');
+      setStatus("authenticated");
       setNoticeKey(null);
-      setNoticeTone('info');
+      setNoticeTone("info");
     });
   }, []);
 
@@ -95,7 +102,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         syncAuthenticatedSession(nextSession);
         return tokens.accessToken;
       } catch {
-        setGuestState('auth.notices.sessionExpired', 'danger');
+        setGuestState("auth.notices.sessionExpired", "danger");
         return null;
       } finally {
         refreshPromiseRef.current = null;
@@ -108,7 +115,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     configureHttpClient({
       getAccessToken: () => sessionRef.current?.tokens.accessToken || null,
-      onUnauthorized: () => setGuestState('auth.notices.sessionExpired', 'danger'),
+      onUnauthorized: () =>
+        setGuestState("auth.notices.sessionExpired", "danger"),
       refreshSession,
     });
 
@@ -125,7 +133,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
       if (!storedSession) {
         if (isMounted) {
-          setStatus('guest');
+          setStatus("guest");
         }
         return;
       }
@@ -149,7 +157,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
         if (!nextAccessToken) {
           if (isMounted) {
-            setGuestState('auth.notices.sessionExpired', 'danger');
+            setGuestState("auth.notices.sessionExpired", "danger");
           }
           return;
         }
@@ -167,7 +175,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           });
         } catch {
           if (isMounted) {
-            setGuestState('auth.notices.sessionRestoreFailed', 'danger');
+            setGuestState("auth.notices.sessionRestoreFailed", "danger");
           }
         }
       }
@@ -180,26 +188,47 @@ export function AuthProvider({ children }: PropsWithChildren) {
     };
   }, [refreshSession, setGuestState, syncAuthenticatedSession]);
 
-  const login = useCallback(async (payload: { email: string; password: string }) => {
-    const session = await loginRequest(payload);
-    syncAuthenticatedSession(createStoredSession(session));
-  }, [syncAuthenticatedSession]);
+  const login = useCallback(
+    async (payload: { email: string; password: string }) => {
+      const session = await loginRequest(payload);
+      syncAuthenticatedSession(createStoredSession(session));
+    },
+    [syncAuthenticatedSession],
+  );
 
   const register = useCallback(
-    async (payload: { displayName: string; email: string; password: string }) => {
+    async (payload: {
+      displayName: string;
+      email: string;
+      password: string;
+    }) => {
       const session = await registerRequest(payload);
       syncAuthenticatedSession(createStoredSession(session));
     },
     [syncAuthenticatedSession],
   );
 
-  const logout = useCallback(() => {
-    setGuestState('auth.notices.loggedOut', 'success');
+  const logout = useCallback(async () => {
+    const activeSession = sessionRef.current;
+
+    if (!activeSession?.tokens.refreshToken) {
+      setGuestState("auth.notices.loggedOut", "success");
+      return;
+    }
+
+    try {
+      await logoutRequest({
+        refreshToken: activeSession.tokens.refreshToken,
+      });
+      setGuestState("auth.notices.loggedOut", "success");
+    } catch {
+      setGuestState("auth.notices.loggedOutLocal", "success");
+    }
   }, [setGuestState]);
 
   const clearNotice = useCallback(() => {
     setNoticeKey(null);
-    setNoticeTone('info');
+    setNoticeTone("info");
   }, []);
 
   const notice = noticeKey ? t(noticeKey) : null;

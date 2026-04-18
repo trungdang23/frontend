@@ -1,8 +1,8 @@
-import { request } from '@/shared/api/http-client';
-import { User } from '@/shared/types/user';
+import { request } from "@/shared/api/http-client";
+import { User } from "@/shared/types/user";
 
 export type AuthTokens = {
-  tokenType: 'Bearer';
+  tokenType: "Bearer";
   accessToken: string;
   accessTokenExpiresIn: number;
   refreshToken: string;
@@ -19,28 +19,35 @@ export async function register(payload: {
   email: string;
   password: string;
 }) {
-  return request<AuthSession, typeof payload>('/auth/register', {
-    method: 'POST',
+  return request<AuthSession, typeof payload>("/auth/register", {
+    method: "POST",
     body: payload,
   });
 }
 
 export async function login(payload: { email: string; password: string }) {
-  return request<AuthSession, typeof payload>('/auth/login', {
-    method: 'POST',
+  return request<AuthSession, typeof payload>("/auth/login", {
+    method: "POST",
     body: payload,
   });
 }
 
 export async function getCurrentUser() {
-  return request<{ user: User }>('/auth/me', {
+  return request<{ user: User }>("/auth/me", {
     auth: true,
   });
 }
 
 export async function refreshTokens(payload: { refreshToken: string }) {
-  return request<{ tokens: AuthTokens }, typeof payload>('/auth/refresh', {
-    method: 'POST',
+  return request<{ tokens: AuthTokens }, typeof payload>("/auth/refresh", {
+    method: "POST",
+    body: payload,
+  });
+}
+
+export async function logout(payload: { refreshToken: string }) {
+  return request<{ loggedOut: true }, typeof payload>("/auth/logout", {
+    method: "POST",
     body: payload,
   });
 }

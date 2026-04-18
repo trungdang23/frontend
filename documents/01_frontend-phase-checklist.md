@@ -46,20 +46,20 @@
 - [ ] Chưa có UI cho `visibility`
 - [ ] Chưa có planner tree recursive theo `PlanNode`
 - [ ] Chưa có data-driven community
-- [ ] Chưa có logout flow aligned hoàn toàn với backend target
+- [x] Đã có logout flow aligned hoàn toàn với backend target
 
 ## Tổng quan phase
 
-| Phase | Mục tiêu                                          | Status      |
-| ----- | ------------------------------------------------- | ----------- |
-| 00    | Re-baseline tài liệu và contract theo DRD mới     | Completed   |
-| 01    | Foundation app, routing, shared architecture      | Completed   |
-| 02    | Auth và session aligned với DRD                   | In Progress |
-| 03    | Trips metadata aligned với DRD                    | Todo        |
-| 04    | Planner workspace trên `PlanNode`                 | Todo        |
-| 05    | Public trip sharing                               | Todo        |
-| 06    | Community minimal                                 | Todo        |
-| 07    | Hardening, test, accessibility, release readiness | Todo        |
+| Phase | Mục tiêu                                          | Status    |
+| ----- | ------------------------------------------------- | --------- |
+| 00    | Re-baseline tài liệu và contract theo DRD mới     | Completed |
+| 01    | Foundation app, routing, shared architecture      | Completed |
+| 02    | Auth và session aligned với DRD                   | Completed |
+| 03    | Trips metadata aligned với DRD                    | Todo      |
+| 04    | Planner workspace trên `PlanNode`                 | Todo      |
+| 05    | Public trip sharing                               | Todo      |
+| 06    | Community minimal                                 | Todo      |
+| 07    | Hardening, test, accessibility, release readiness | Todo      |
 
 ## Phase 00 - Re-baseline tài liệu và contract theo DRD mới
 
@@ -84,7 +84,7 @@ Status: `Completed`
 
 ## Phase 02 - Auth và session aligned với DRD
 
-Status: `In Progress`
+Status: `Completed`
 
 - [x] `login`
 - [x] `register`
@@ -93,10 +93,10 @@ Status: `In Progress`
 - [x] Session persistence qua `localStorage`
 - [x] Protected app shell
 - [x] Redirect vào `/app`
-- [ ] Logout flow dùng `POST /auth/logout`
-- [ ] Xử lý expired session thống nhất trên toàn app
-- [ ] Chuẩn hoá toast/banner cho auth errors
-- [ ] Route-level verify cho login -> app -> reload -> refresh -> logout
+- [x] Logout flow dùng `POST /auth/logout`
+- [x] Xử lý expired session thống nhất trên toàn app
+- [x] Chuẩn hoá toast/banner cho auth errors
+- [x] Route-level verify cho login -> app -> reload -> refresh -> logout
 
 ## Phase 03 - Trips metadata aligned với DRD
 
@@ -187,8 +187,8 @@ Status: `Todo`
 
 ### Slice FE-A
 
-- [ ] Auth logout + session hardening
-- [ ] Route-level auth verify
+- [x] Auth logout + session hardening
+- [x] Route-level auth verify
 
 ### Slice FE-B
 

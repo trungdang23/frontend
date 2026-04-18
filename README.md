@@ -10,7 +10,7 @@ Frontend package cho sản phẩm `journey`.
   - auth routes `login/register`
   - protected app shell
   - dashboard và profile summary từ `GET /auth/me`
-  - session boot với `login/register/me/refresh`
+  - session boot với `login/register/me/refresh/logout`
   - trips workspace thật với `list/create/detail/edit/delete`
   - community teaser và post placeholder có chủ đích
 - Các tài liệu trong `documents/` vẫn là nguồn tham chiếu chính để giữ roadmap không trượt khỏi scope.

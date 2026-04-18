@@ -35,8 +35,8 @@
 
 - Public:
   - `/`
-  - `/login`
-  - `/register`
+  - `/auth/login`
+  - `/auth/register`
   - `/community`
 - Protected:
   - `/app`
@@ -107,7 +107,7 @@
   - dashboard
   - profile
   - trips workspace
-  - itinerary/budget workspace
+  - planner workspace
 - Cross-cutting:
   - app shell
   - auth session
