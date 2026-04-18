@@ -17,7 +17,41 @@
   - auth flow thật với backend
   - protected app shell
   - dashboard và profile mức nền
-  - trips, itineraries, budgets, community theo tiến độ backend
+  - trips, planner, public trip sharing, community theo tiến độ backend
+
+## Snapshot trải nghiệm mục tiêu
+
+### Product priority
+
+- planner là trung tâm
+- social là lớp hỗ trợ
+- MVP không làm:
+  - upload media thật
+  - AI planner
+  - realtime collaboration
+  - follow/reaction/notification phức tạp
+
+### Target route map
+
+- Public:
+  - `/`
+  - `/login`
+  - `/register`
+  - `/community`
+- Protected:
+  - `/app`
+  - `/app/trips`
+  - `/app/trips/new`
+  - `/app/trips/:tripId`
+  - `/app/trips/:tripId/edit`
+
+### Target workspace behavior
+
+- `/app/trips/:tripId` là planning workspace chính
+- planner target là `PlanNode` tree
+- inline editing là primary mode
+- loading dùng skeleton
+- error dùng toast/banner + retry
 
 ## Nguyên tắc nền cho frontend
 

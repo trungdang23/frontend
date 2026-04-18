@@ -2,571 +2,345 @@
 
 ## Mục tiêu
 
-Tài liệu này chốt hướng mở rộng frontend cho phần `planning` theo yêu cầu mới:
+Tài liệu này chốt hướng triển khai frontend để bám DRD và user stories mới, với nguyên tắc:
 
-- giao diện có nhiều hình ảnh hơn
-- hiển thị ảnh bằng `image URL` lấy từ database
-- một trip có nhiều phần kế hoạch, nhiều địa điểm, nhiều hoạt động
-- có ghi chú, thời gian, chi phí ở nhiều cấp
-- planner nên xem theo danh sách cuộn, không ép click sâu nhiều lần
-- chuẩn bị UI seam cho AI sau này
+- `/app/trips/:tripId` là planning workspace chính
+- planner target là `PlanNode` tree, không còn coi itinerary 2 cấp là target cuối
+- inline editing là primary editing mode
+- UI ưu tiên list-first, không mở route sâu
 
-## Trạng thái frontend hiện tại
+## Trạng thái source hiện tại
 
-Frontend hiện đã có:
+Frontend hiện đã có baseline tốt ở các phần:
 
-- landing
-- login/register
-- protected app shell
-- dashboard
-- profile
-- trips list có cover image và summary notes
-- trip create/edit với metadata tối giản
-- trip detail đã chuyển thành planning workspace 2 cấp
+- auth flow
+- protected shell
+- trips list/create/detail/edit/delete
+- planning workspace 2 cấp dựa trên itinerary bridge
 
-Trạng thái UI hiện tại của `trips`:
+Phần chưa aligned với DRD mới:
 
-- form tạo/chỉnh sửa chuyến đi chỉ còn `name`, `date range`, `budget`, `summaryNotes`, `coverImageUrl`
-- `destination` và `timezone` không còn xuất hiện trong UI chính
-- `Trip detail` có hero ảnh, overview, budget summary, và planner list
-- form tạo địa điểm chính được ẩn mặc định, chỉ mở khi bấm CTA
-- mỗi địa điểm chính và địa điểm con đều có thời gian, chi phí, ghi chú, và nhiều `imageUrl`
+- trip form chưa có `budgetMode/manualBudget/visibility`
+- planner chưa dùng `PlanNode`
+- chưa có recursive tree
+- chưa có public trip read
+- community còn là teaser
 
-Điểm còn thiếu:
+## Quyết định UX chính
 
-- planner vẫn là bridge 2 cấp dựa trên `itinerary`
-- chưa có recursive planning thật
-- chưa có modal/drawer editor riêng
-- motion mới ở mức nhẹ, chưa có bộ animation đầy đủ cho planner
+## 1. Route chính không đổi
 
-## Hướng UX tổng thể
-
-## 1. Tăng vai trò của hình ảnh
-
-Ngắn hạn, ảnh nên xuất hiện ở:
-
-- trip card trong `/app/trips`
-- header/hero của `/app/trips/:tripId`
-- card của từng planner node
-
-Nguyên tắc:
-
-- ảnh là optional
-- nếu có `imageUrl` thì render ảnh
-- nếu không có thì render media placeholder
-
-## 2. `Trip detail` đã trở thành planning workspace
-
-Route giữ nguyên:
-
-- `/app/trips/:tripId`
-
-Vai trò của route này đã đổi từ:
-
-- `detail metadata`
-
-sang:
-
-- `planning workspace`
-
-## 3. Không mở route sâu cho từng node làm mặc định
-
-Không nên đẩy UI sang dạng:
-
-- `/app/trips/:tripId/day/:dayId`
-- `/app/trips/:tripId/node/:nodeId`
-- `/app/trips/:tripId/node/:nodeId/edit`
-
-Hướng phù hợp hơn:
-
-- planner nằm trên một màn chính
-- chỉnh sửa bằng modal, drawer, side panel, hoặc inline editor
-
-## 4. UI phải ưu tiên list-first
-
-Planner nên được nhìn như:
-
-- một outline
-- một timeline list
-- một danh sách có phân cấp
-
-không phải một hệ route sâu hoặc tab lồng nhau.
-
-## 5. UI không được quá tĩnh
-
-Planner mới không nên chỉ là các khối text đứng yên.
-
-UI cần có motion đủ rõ để tạo cảm giác:
-
-- đang xây kế hoạch
-- đang mở rộng ý tưởng
-- đang thêm bớt phần tử sống động
-
-Nhưng motion phải phục vụ thao tác, không chỉ để trang trí.
-
-## Route strategy
-
-## Giữ nguyên route hiện tại
+Giữ:
 
 - `/app/trips`
 - `/app/trips/new`
 - `/app/trips/:tripId`
 - `/app/trips/:tripId/edit`
 
-## Thay đổi ý nghĩa route
+Lý do:
 
-### `/app/trips`
+- route map hiện tại đã hợp lý
+- không cần thêm route sâu cho node
+- thay đổi nằm ở data contract và component structure, không nằm ở route explosion
 
-Từ:
+## 2. `/app/trips/:tripId` là planner workspace, không quay lại thành metadata detail
 
-- danh sách trip text-heavy
+Trang này phải chứa:
 
-Sang:
+- trip header
+- trip overview
+- budget summary
+- full planner tree
 
-- danh sách card giàu hình ảnh hơn
+## 3. Editing ưu tiên inline
 
-### `/app/trips/new`
+MVP planner mới dùng:
 
-Giữ vai trò:
+- inline create
+- inline edit
+- inline delete confirmation nhẹ
 
-- tạo trip metadata cơ bản
+Drawer hoặc modal chỉ là phase sau nếu flow inline không đủ.
 
-Không nên nhét full planner vào ngay màn create.
+## 4. Planner ưu tiên nhìn được nhiều thông tin trên một màn
 
-### `/app/trips/:tripId`
+Node card nên hiển thị:
 
-Đã là:
-
-- planning workspace chính
-- media-first detail screen
-- list-first planner với major stop và child activity
-
-### `/app/trips/:tripId/edit`
-
-Giữ vai trò:
-
-- chỉnh metadata cấp trip
-
-Không dùng route này để chỉnh planner node.
+- title
+- type
+- thời gian
+- chi phí
+- notes preview
+- image preview
+- quick actions
 
 ## Screen architecture mục tiêu
 
 ## 1. Trips list
 
-Mỗi trip card nên có:
+Mỗi card nên có:
 
-- cover image
 - tên trip
 - date range
-- budget summary
-- summary notes preview
+- budget mode
+- visibility
+- manual budget preview nếu có
 - quick actions
 
-Nếu chưa có ảnh:
-
-- placeholder visual vẫn phải đủ đẹp
+Nếu có cover image sau này thì coi là bổ trợ, không phải dependency chính của DRD mới.
 
 ## 2. Trip create/edit
 
-Metadata cấp trip nên gồm:
+Field tối thiểu:
 
-- name
-- startDate
-- endDate
-- budgetAmount
-- budgetCurrency
-- summaryNotes
-- coverImageUrl
+- `name`
+- `startDate`
+- `endDate`
+- `budgetMode`
+- `manualBudgetAmount`
+- `manualBudgetCurrency`
+- `visibility`
 
-`destination` và `timezone` vẫn có thể tồn tại ở response để giữ compatibility, nhưng không nên quay lại thành field bắt buộc của primary form.
+Rule:
+
+- `manualBudget*` chỉ hiện khi `budgetMode = manual`
 
 ## 3. Trip planning workspace
 
-Trang `/app/trips/:tripId` nên có 3 vùng chính:
+Ba vùng chính:
 
 ### Header
 
-- cover image lớn
 - title
-- summary notes
-- action back/edit/delete
-
-### Overview + budget
-
 - date range
+- visibility badge
+- actions: back, edit, delete, share nếu public
+
+### Budget summary
+
+- budget mode
 - total budget
-- total planned
+- planned budget
 - remaining budget
-- total major stops
-- total child activities
 
-### Planner list
+### Planner tree
 
-- danh sách node cuộn dọc
-- CTA mở form tạo địa điểm chính
-- form tạo địa điểm chính mặc định đóng
-- node cha/con thể hiện bằng indentation, border, badge type, và grouped card layout
+- full tree list
+- add root node CTA
+- empty state nếu chưa có node
+- child indentation
+- inline actions trên mỗi node
 
-## Planner node card
+## Planner interaction model
 
-Mỗi node card nên hiển thị:
+## Read
 
-- title
-- type badge
-- thời gian
-- chi phí
-- notes preview
-- image preview
-- quick action buttons
+- load full tree một lần
+- không paginate
+- expand/collapse theo node nếu cần
 
-Quick actions nên gồm:
+## Write
 
-- thêm node con
-- sửa node
-- xoá node
+- add root node
+- add child node
+- edit node
+- delete node
 
-## Motion strategy cho planner mới
+## Không làm sớm
 
-## 1. Mức motion mong muốn
+- drag-and-drop reorder nhiều tầng
+- route `/node/:id`
+- side-by-side detail inspector phức tạp
 
-Planner nên có motion ở mức `medium`:
+## State rules theo DRD
 
-- rõ hơn UI hiện tại
-- sinh động hơn dashboard tĩnh
-- nhưng vẫn gọn, sạch, usable
+- loading:
+  - dùng skeleton
+- error:
+  - dùng toast hoặc banner
+  - có retry cho read request
+- mutation:
+  - disable action khi đang submit
+  - invalidate query sau success
 
-## 2. Những hiệu ứng nên có
+## Query strategy
 
-### Trip list
-
-- card fade-in + translate nhẹ khi list xuất hiện
-- hover lift nhẹ
-- cover image zoom rất nhỏ khi hover
-
-### Trip planning header
-
-- cover image reveal nhẹ khi vào trang
-- summary strip stagger ngắn
-
-### Planner list
-
-- node card enter animation khi load lần đầu
-- stagger nhẹ cho nhóm node đầu tiên
-- smooth layout transition khi thêm/xóa node
-
-### Planner section
-
-- expand/collapse animation cho node cha có children
-- opacity + height transition ngắn
-
-### Overlay
-
-- drawer/modal slide-fade
-- backdrop fade
-
-### Feedback
-
-- shimmer cho skeleton
-- success state nhẹ khi lưu xong
-- optimistic insert/remove nếu mutation đủ ổn định
-
-## 3. Những hiệu ứng chưa nên làm sớm
-
-- parallax mạnh
-- canvas background animation
-- animation loop liên tục trong protected workspace
-- motion quá nhiều trên mọi card cùng lúc
-- drag-and-drop animation phức tạp trước khi node CRUD ổn định
-
-## 4. Reduced motion
-
-Planner mới phải hỗ trợ:
-
-- tắt stagger dài
-- bỏ zoom trang trí
-- giữ transition chức năng ở mức tối thiểu
-
-## 5. Component motion roadmap
-
-### Phase FE-1
-
-- trip card hover
-- trip cover reveal
-
-### Phase FE-2
-
-- page-enter cho planning workspace
-- summary strip stagger
-
-### Phase FE-3
-
-- node enter/exit
-- modal/drawer motion
-- expand/collapse
-
-### Phase FE-4
-
-- layout transition khi reorder hoặc regroup
-- motion polish cho image strip
-
-## Editing strategy
-
-## Giai đoạn hiện tại
-
-Chỉnh node bằng:
-
-- inline editor có điều kiện trong cùng màn list
-
-Lý do:
-
-- tránh route sâu
-- tránh modal quá nhiều khi flow còn đang thay đổi
-- giữ người dùng ở ngay trong danh sách địa điểm
-
-## Giai đoạn sau
-
-Có thể thêm:
-
-- modal hoặc drawer editor riêng
-- drag-and-drop reorder
-- expand/collapse nâng cao
-
-## Data flow mục tiêu ở frontend
-
-## Metadata trip
-
-Frontend vẫn dùng:
-
-- `GET /trips`
-- `GET /trips/:tripId`
-- `POST /trips`
-- `PATCH /trips/:tripId`
-
-nhưng response mở rộng thêm:
-
-- `summaryNotes`
-- `coverImageUrl`
-- `destination` nullable
-- `timezone` nullable
-
-Primary UI hiện tại không yêu cầu user nhập `destination` và `timezone`.
-
-## Planning data
-
-Hiện tại frontend đang dùng itinerary bridge:
-
-- `GET /trips/:tripId/itinerary`
-- `POST /trips/:tripId/itinerary/days`
-- `PATCH /trips/:tripId/itinerary/days/:dayId`
-- `DELETE /trips/:tripId/itinerary/days/:dayId`
-- `POST /trips/:tripId/itinerary/days/:dayId/activities`
-- `PATCH /trips/:tripId/itinerary/days/:dayId/activities/:activityId`
-- `DELETE /trips/:tripId/itinerary/days/:dayId/activities/:activityId`
-- `GET /trips/:tripId/budget-summary`
-
-Frontend sẽ dùng thêm planning API mới khi backend sẵn:
-
-- `GET /trips/:tripId/planning`
-- `POST /trips/:tripId/planning/nodes`
-- `PATCH /trips/:tripId/planning/nodes/:nodeId`
-- `DELETE /trips/:tripId/planning/nodes/:nodeId`
-
-Nếu phase ảnh nhiều ảnh được mở:
-
-- `POST /trips/:tripId/planning/nodes/:nodeId/images`
-- `PATCH /trips/:tripId/planning/nodes/:nodeId/images/:imageId`
-- `DELETE /trips/:tripId/planning/nodes/:nodeId/images/:imageId`
-
-## Cấu trúc code đề xuất
-
-Không nên tạo một feature song song mới quá sớm nếu phạm vi vẫn gắn chặt vào trip detail.
-
-Khuyến nghị:
-
-```text
-features/trips/
-  api/
-  components/
-  routes/
-  planning/
-    api/
-    components/
-    types/
-    lib/
-```
-
-Lý do:
-
-- giữ ownership của planner nằm trong `trips`
-- tránh sinh parallel feature dư thừa
-- dễ refactor sau này nếu planner lớn lên
+- `listTrips`: stale `30s`
+- `tripDetail`: stale `30s`
+- `planner`: stale `0s`
+- `profile`: stale `5m`
 
 ## Component roadmap
 
-## Phase FE-1: media-first cards
+## FE Slice 1 - Trip contract alignment
 
-Component cần có:
+Component cần sửa:
 
-- `TripCardMedia`
-- `TripCover`
-- `TripMediaPlaceholder`
-
-## Phase FE-2: planning workspace shell
-
-Component cần có:
-
-- `TripPlanningHeader`
-- `TripPlanningSummary`
-- `TripPlanningList`
-- `TripPlanningEmptyState`
-
-## Phase FE-3: node UI
-
-Component cần có:
-
-- `PlanNodeCard`
-- `PlanNodeBadge`
-- `PlanNodeMeta`
-- `PlanNodeActions`
-- `PlanNodeInlineEditor`
-- `PlanNodeEditorModal` hoặc `PlanNodeEditorDrawer` ở phase sau
-
-## Phase FE-4: image patterns
-
-Component cần có:
-
-- `RemoteImage`
-- `ImageFallback`
-- `NodeImageStrip`
-- `PlanningImageGallery`
-
-## UX principles cho planner mới
-
-1. Nhìn được nhiều thông tin trên một màn hình.
-2. Không bắt người dùng click sâu mới thấy nội dung.
-3. Ảnh là bổ trợ ngữ cảnh, không che mất nội dung kế hoạch.
-4. Notes phải đọc nhanh được ở list, không chôn hoàn toàn vào detail.
-5. Mobile vẫn xem được planner theo list dọc.
-
-## Rủi ro chính
-
-## 1. Route cũ nói là detail nhưng UX mới là workspace
-
-Cần chấp nhận đổi vai trò của `/app/trips/:tripId` rõ ràng, nếu không UI sẽ nửa vời.
-
-## 2. Planner tree rất dễ thành UI rối
-
-Cần tránh:
-
-- nested accordion quá nhiều
-- route sâu
-- quá nhiều modal lồng nhau
-
-## 3. Contract FE/BE dễ lệch
-
-Vì planner là nhánh mới, phải chốt contract BE trước khi build UI lớn.
-
-## 4. Ảnh chưa có upload
-
-Giai đoạn này UI chỉ đọc `imageUrl`.
-
-Cần đảm bảo:
-
-- placeholder đẹp
-- lỗi load ảnh không làm vỡ layout
-
-## Phase roadmap
-
-## FE Phase A: trip media
-
-Status: `Completed`
-
-Mục tiêu:
-
-- list/detail nhìn giàu hình ảnh hơn ngay
+- `TripForm`
+- `TripsPage`
+- `TripDetailPage`
+- `TripEditPage`
 
 Việc cần làm:
 
-- mở rộng type `Trip`
-- hiển thị `coverImageUrl`
-- hiển thị `summaryNotes`
-- thêm placeholder media card
-- thêm hover motion và image reveal cho trip cards
+- thêm budget mode UI
+- thêm manual budget conditional UI
+- thêm visibility UI
+- cập nhật validation và error copy
 
-## FE Phase B: workspace shell
+## FE Slice 2 - Planner API layer alignment
 
-Status: `Completed`
+File/slice cần có:
 
-Mục tiêu:
-
-- đổi `trip detail` thành planner shell
-
-Việc cần làm:
-
-- header mới
-- overview + budget section gần hero
-- empty state cho planner
-- giữ action edit metadata riêng
-- thêm page-enter motion và summary stagger
-
-## FE Phase C: planning node CRUD
-
-Status: `In Progress`
-
-Mục tiêu:
-
-- add/edit/delete node
+```text
+features/trips/planning/
+  api/
+  components/
+  types/
+  lib/
+```
 
 Việc cần làm:
 
-- query planning data
-- inline editor cho major stop và child activity
-- mutate node
-- render hierarchy theo list
-- animate add/remove/update node
-- animate expand/collapse node groups
+- tạo `PlanNode` types
+- tạo planner API client
+- tách khỏi itinerary API cũ
 
-## FE Phase D: image URL display at node level
+## FE Slice 3 - Planner tree render
 
-Status: `In Progress`
+Component cần có:
 
-Mục tiêu:
-
-- node có ảnh preview
+- `PlannerTree`
+- `PlannerNodeRow`
+- `PlannerNodeMeta`
+- `PlannerNodeActions`
+- `PlannerEmptyState`
 
 Việc cần làm:
 
-- node cover image
-- fallback image
-- multiple image URL gallery
-- layout ổn định khi có/không có ảnh
-- polish image motion ở mức nhẹ, không gây xao nhãng
+- render recursive tree
+- indent theo `depth`
+- render node type badge
+- render notes/time/cost/image
 
-## FE Phase E: future AI entrypoint
+## FE Slice 4 - Inline node CRUD
 
-Chưa build AI, nhưng nên chừa:
+Component cần có:
 
-- CTA `Gợi ý kế hoạch`
-- CTA `Tìm hiểu địa điểm`
-- panel `Gợi ý tham khảo`
+- `PlannerNodeCreateInline`
+- `PlannerNodeEditInline`
+- `PlannerDeleteConfirm`
 
-Panel AI phải tách khỏi planner chính.
+Việc cần làm:
 
-## Open questions cần chốt trước khi code
+- add root node
+- add child node
+- edit node
+- delete node
+- invalidation/retry
 
-1. User-facing label có giữ là `Chuyến đi` hay đổi sang `Kế hoạch`?
-2. Planner có cần nhiều tầng recursive thật hay giới hạn mềm 2-3 tầng?
-3. Có bắt buộc phải có `day` ở level đầu không, hay cho phép trực tiếp nhiều địa điểm chính như hiện tại?
-4. Khi chuyển sang `planning` module mới, có giữ inline editor hay chuyển hẳn sang modal/drawer?
-5. Ở cấp `Trip` có cần gallery nhiều ảnh hay chỉ cần `coverImageUrl` là đủ?
+## FE Slice 5 - Public trip read
 
-## Định nghĩa hoàn thành
+Việc cần làm:
 
-Nhánh mở rộng frontend được xem là đi đúng hướng khi:
+- public trip route hoặc public mode
+- guest-safe actions
+- private denied state
+- share CTA
 
-- trip list có card hình ảnh
-- trip detail đã là planning workspace thật
-- planner xem được theo danh sách cuộn
-- node hiển thị được thời gian, chi phí, ghi chú, ảnh
-- edit node không cần route sâu
-- UI giữ được sự rõ ràng trên desktop và mobile
+## FE Slice 6 - Community minimal
+
+Việc cần làm:
+
+- `CommunityPage`
+- `CommunityPostPage`
+- create post flow
+- optional comment block nếu backend mở comments
+
+## Editing strategy
+
+## Giai đoạn 1
+
+- inline editor ngay trong planner list
+
+## Giai đoạn 2
+
+- có thể thêm drawer editor cho node dài
+
+## Giai đoạn 3
+
+- chỉ cân nhắc reorder nâng cao sau khi CRUD ổn định
+
+## Motion strategy
+
+Motion vẫn nên có nhưng ở mức hỗ trợ:
+
+- page enter nhẹ
+- skeleton shimmer
+- expand/collapse ngắn
+- không làm motion nặng khi planner tree còn đang migrate
+
+## Migration strategy từ source hiện tại
+
+## Bước 1
+
+Giữ UI itinerary hiện tại chạy được trong lúc backend chưa sẵn planner APIs mới.
+
+## Bước 2
+
+Ngay khi backend chốt `GET /trips/:id/planner` và node CRUD:
+
+- FE tạo planner API layer mới
+- FE chuyển workspace sang contract mới
+
+## Bước 3
+
+Khi workspace mới ổn:
+
+- itinerary-specific UI chỉ giữ làm fallback ngắn hạn
+- không mở thêm feature mới trên itinerary UI
+
+## Acceptance mapping theo user stories
+
+## US-4 đến US-8: Trip management
+
+FE phải hỗ trợ:
+
+- create trip
+- list trips
+- view trip
+- edit trip
+- delete trip
+
+## US-9 đến US-12: Planning core
+
+FE phải hỗ trợ:
+
+- load planner full tree
+- add node
+- edit node
+- delete node
+
+## US-13: Budget
+
+FE phải hiển thị:
+
+- total budget
+- mode auto/manual
+
+## US-14 đến US-15: Community
+
+FE phải hỗ trợ:
+
+- create post từ trip hoặc tự do
+- xem post public
+
+## Definition of done cho planner FE
+
+Planner FE chỉ được coi là aligned khi:
+
+- đang dùng planner APIs trên `PlanNode`
+- route `/app/trips/:tripId` không còn phụ thuộc flow chính vào itinerary bridge
+- loading/error/empty states đã đủ
+- mobile vẫn xem và thao tác được
+- node CRUD chạy end-to-end

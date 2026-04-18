@@ -2,18 +2,19 @@
 
 ## Mục tiêu
 
-- Chốt cách frontend bám vào backend hiện tại.
-- Tránh sai contract ở auth ngay từ phase scaffold.
-- Chỉ ra rõ phần nào dùng API thật ngay và phần nào chưa nên gọi.
+- Chốt cách frontend bám vào backend theo DRD và user stories mới
+- Tách rõ:
+  - target contract cần build
+  - current-source fallback đang tồn tại
 
 ## Backend base hiện tại
 
 - Base URL production: `https://api.buicojourney.com/api/v1`
-- Frontend env đề xuất sau khi scaffold:
-  - `VITE_API_BASE_URL=https://api.buicojourney.com/api/v1`
-- Với deploy thật, giá trị `VITE_API_BASE_URL` phải được cấp từ GitHub `Variables`, không hardcode trong source.
+- Frontend env:
+  - `VITE_API_BASE_URL`
+  - `VITE_APP_ENV`
 
-## Response envelope hiện tại
+## Response envelope
 
 ### Success
 
@@ -30,16 +31,24 @@
 {
   "success": false,
   "error": {
-    "code": "UNAUTHORIZED",
-    "message": "Invalid email or password.",
-    "details": "Invalid email or password.",
-    "path": "/api/v1/auth/login",
-    "timestamp": "2026-04-14T00:00:00.000Z"
+    "code": "STRING",
+    "message": "STRING"
   }
 }
 ```
 
-## Auth contract hiện đã sẵn
+## Session strategy theo DRD
+
+- access token TTL ngắn
+- refresh token TTL dài hơn
+- FE lưu token ở `localStorage`
+- app boot:
+  - đọc session local
+  - gọi `GET /auth/me`
+  - nếu access fail thì gọi `POST /auth/refresh`
+  - nếu refresh fail thì clear session và về `login`
+
+## Auth contract target
 
 ### `POST /auth/register`
 
@@ -50,27 +59,6 @@ Request:
   "email": "user@example.com",
   "password": "password123",
   "displayName": "User Name"
-}
-```
-
-Response data:
-
-```json
-{
-  "user": {
-    "id": "string",
-    "email": "user@example.com",
-    "displayName": "User Name",
-    "createdAt": "date",
-    "updatedAt": "date"
-  },
-  "tokens": {
-    "tokenType": "Bearer",
-    "accessToken": "string",
-    "accessTokenExpiresIn": 900,
-    "refreshToken": "string",
-    "refreshTokenExpiresIn": 604800
-  }
 }
 ```
 
@@ -85,29 +73,11 @@ Request:
 }
 ```
 
-Response data:
-
-- cùng shape với `register`
-
 ### `GET /auth/me`
 
 Headers:
 
 - `Authorization: Bearer <access_token>`
-
-Response data:
-
-```json
-{
-  "user": {
-    "id": "string",
-    "email": "user@example.com",
-    "displayName": "User Name",
-    "createdAt": "date",
-    "updatedAt": "date"
-  }
-}
-```
 
 ### `POST /auth/refresh`
 
@@ -119,135 +89,173 @@ Request:
 }
 ```
 
-Response data:
+### `POST /auth/logout`
+
+Request khuyến nghị:
 
 ```json
 {
-  "tokens": {
-    "tokenType": "Bearer",
-    "accessToken": "string",
-    "accessTokenExpiresIn": 900,
-    "refreshToken": "string",
-    "refreshTokenExpiresIn": 604800
-  }
+  "refreshToken": "string"
 }
 ```
 
-## Lưu ý quan trọng cho frontend
+Nếu backend chốt logout stateless, frontend vẫn phải:
 
-- `register` nhận `displayName`, không phải `fullName`
-- `me` trả `data.user`
-- `refresh` trả `data.tokens`
-- Backend đã có CORS cho `https://buicojourney.com`
+- clear local session
+- redirect `login`
 
-## Session strategy đề xuất cho phase đầu
+## Trip contract target
 
-### Mục tiêu
+### Endpoints
 
-- Giữ auth UX ổn định khi refresh trang.
-- Không làm FE phức tạp quá sớm.
-
-### Đề xuất
-
-- Lưu session object vào `localStorage` trong phase đầu:
-  - `accessToken`
-  - `refreshToken`
-  - thông tin user tối thiểu
-- Khi app boot:
-  - đọc session local
-  - nếu có access token thì gọi `GET /auth/me`
-  - nếu access token lỗi nhưng còn refresh token thì thử `POST /auth/refresh` một lần
-  - nếu refresh fail thì clear session và điều hướng về `login`
-
-### Rủi ro cần ghi nhận
-
-- Đây không phải cách hardening tốt nhất về lâu dài.
-- Sau khi backend hỗ trợ cookie-based refresh token, nên chuyển `refreshToken` sang `httpOnly cookie`.
-
-## Request pipeline đề xuất
-
-1. HTTP client đọc `accessToken` hiện tại.
-2. Protected request tự gắn header `Authorization`.
-3. Nếu nhận `401` ở protected request:
-   - thử refresh đúng 1 lần
-   - cập nhật session
-   - retry request cũ đúng 1 lần
-4. Nếu vẫn fail:
-   - clear session
-   - redirect `login`
-   - hiển thị thông báo session hết hạn
-
-## Những phần chưa nên nối API thật ngay
-
-- community feed thật
-- post detail thật
-- follow/like/comment
-
-## Trips contract hiện đã sẵn
-
-Frontend có thể nối API thật cho `trips` với các endpoint:
-
-- `GET /trips?page=0&size=20&sort=startDate,asc`
-- `GET /trips/:tripId`
+- `GET /trips?page=&size=`
 - `POST /trips`
-- `PATCH /trips/:tripId`
-- `DELETE /trips/:tripId`
+- `GET /trips/:id`
+- `PATCH /trips/:id`
+- `DELETE /trips/:id`
 
-Shape `Trip` hiện backend trả:
+### Shape mục tiêu của `Trip`
 
 ```json
 {
   "id": "string",
   "userId": "string",
   "name": "string",
-  "destination": "string | null",
-  "summaryNotes": "string | null",
-  "coverImageUrl": "string | null",
   "startDate": "string",
   "endDate": "string",
-  "timezone": "string | null",
-  "budgetAmount": 1000000,
-  "budgetCurrency": "VND",
+  "budgetMode": "auto | manual",
+  "manualBudgetAmount": 1000000,
+  "manualBudgetCurrency": "VND",
+  "visibility": "private | public",
   "createdAt": "date",
   "updatedAt": "date"
 }
 ```
 
-UI hiện tại chỉ yêu cầu gửi các field metadata tối thiểu:
+### FE form mapping
+
+- luôn có:
+  - `name`
+  - `startDate`
+  - `endDate`
+  - `budgetMode`
+  - `visibility`
+- chỉ hiện khi `budgetMode = manual`:
+  - `manualBudgetAmount`
+  - `manualBudgetCurrency`
+
+## Planner contract target
+
+### Endpoints
+
+- `GET /trips/:id/planner`
+- `POST /nodes`
+- `PATCH /nodes/:id`
+- `DELETE /nodes/:id`
+
+### Shape mục tiêu của `PlanNode`
 
 ```json
 {
-  "name": "string",
-  "startDate": "string",
-  "endDate": "string",
-  "budgetAmount": 1000000,
-  "budgetCurrency": "VND",
-  "summaryNotes": "string | null",
-  "coverImageUrl": "string | null"
+  "id": "string",
+  "tripId": "string",
+  "parentId": "string | null",
+  "type": "section | day | location | activity | note",
+  "title": "string",
+  "notes": "string | null",
+  "startAt": "string | null",
+  "endAt": "string | null",
+  "costAmount": 100000,
+  "costCurrency": "VND",
+  "imageUrl": "string | null",
+  "sortOrder": 0,
+  "depth": 0,
+  "createdAt": "date",
+  "updatedAt": "date"
 }
 ```
 
-`destination` và `timezone` vẫn được backend giữ lại dưới dạng nullable để tương thích ngược, nhưng không còn là field bắt buộc trong form tạo/chỉnh sửa chuyến đi của frontend.
-
-List response trả `data: Trip[]` kèm:
+### Response khuyến nghị cho `GET /trips/:id/planner`
 
 ```json
 {
-  "meta": {
-    "page": 0,
-    "size": 20,
-    "sort": "startDate,asc",
-    "totalElements": 1,
-    "totalPages": 1
+  "success": true,
+  "data": {
+    "trip": {},
+    "nodes": []
   }
 }
 ```
 
-Frontend nên dùng contract này để mở Phase 05 thay vì giữ placeholder.
+FE kỳ vọng:
 
-## Itinerary và budget contract hiện đã sẵn
+- full tree
+- không paginate
+- đủ field để render list/tree
 
-Frontend có thể mở Phase 06 bằng API thật với các endpoint:
+## Budget contract target
+
+Budget summary nên bám logic:
+
+- `auto -> sum(node.costAmount)`
+- `manual -> manualBudget`
+
+FE cần tối thiểu:
+
+- total budget
+- planned budget
+- remaining budget
+- raw per-currency nếu mixed currency
+
+## Public trip contract target
+
+FE cần public read path cho:
+
+- trip public detail
+- planner public read
+
+Khuyến nghị backend trả cùng shape với private read, chỉ khác permission.
+
+## Post contract target
+
+### Endpoints
+
+- `POST /posts`
+- `GET /posts`
+- khuyến nghị thêm `GET /posts/:postId`
+
+### Shape mục tiêu
+
+```json
+{
+  "id": "string",
+  "userId": "string",
+  "tripId": "string | null",
+  "title": "string",
+  "content": "string",
+  "coverImageUrl": "string | null",
+  "visibility": "public",
+  "createdAt": "date",
+  "updatedAt": "date"
+}
+```
+
+## TanStack Query strategy
+
+- `listTrips`: stale `30s`
+- `tripDetail`: stale `30s`
+- `planner`: stale `0s`
+- `profile`: stale `5m`
+
+Mutation rules:
+
+- trip create/update/delete phải invalidate `listTrips` và `tripDetail` liên quan
+- node create/update/delete phải invalidate `planner`
+- post create phải invalidate `posts`
+
+## Current-source fallback cần ghi nhớ
+
+Source hiện tại vẫn có itinerary bridge:
 
 - `GET /trips/:tripId/itinerary`
 - `POST /trips/:tripId/itinerary/days`
@@ -258,148 +266,25 @@ Frontend có thể mở Phase 06 bằng API thật với các endpoint:
 - `DELETE /trips/:tripId/itinerary/days/:dayId/activities/:activityId`
 - `GET /trips/:tripId/budget-summary`
 
-Shape `itinerary` response hiện backend trả:
+Nguyên tắc dùng fallback:
 
-```json
-{
-  "tripId": "string",
-  "startDate": "2026-07-12",
-  "endDate": "2026-07-15",
-  "days": [
-    {
-      "id": "string",
-      "tripId": "string",
-      "date": "2026-07-12",
-      "title": "Đà Nẵng",
-      "startsAt": "08:00",
-      "endsAt": "21:00",
-      "location": "Đà Nẵng",
-      "notes": "string",
-      "costAmount": 800000,
-      "costCurrency": "VND",
-      "position": 1,
-      "imageUrls": ["https://images.unsplash.com/..."],
-      "activities": [
-        {
-          "id": "string",
-          "itineraryDayId": "string",
-          "title": "Lantern Walk",
-          "startsAt": "18:30",
-          "endsAt": "20:30",
-          "location": "Hoi An Old Town",
-          "notes": "string",
-          "costAmount": 250000,
-          "costCurrency": "VND",
-          "position": 1,
-          "imageUrls": ["https://images.unsplash.com/..."],
-          "createdAt": "date",
-          "updatedAt": "date"
-        }
-      ],
-      "createdAt": "date",
-      "updatedAt": "date"
-    }
-  ]
-}
-```
+- chỉ dùng để giữ app hiện tại chạy
+- không mở rộng UI mới dựa dài hạn trên itinerary bridge
+- khi planner API mới sẵn, route `/app/trips/:tripId` phải chuyển sang contract mới
 
-`POST /trips/:tripId/itinerary/days` hiện nhận:
+## Error handling rules ở frontend
 
-```json
-{
-  "date": "2026-07-12",
-  "title": "Đà Nẵng",
-  "startsAt": "08:00",
-  "endsAt": "21:00",
-  "location": "Đà Nẵng",
-  "notes": "Nhóm địa điểm chính trong ngày 1",
-  "costAmount": 800000,
-  "costCurrency": "VND",
-  "imageUrls": ["https://images.unsplash.com/..."]
-}
-```
+- protected request `401`:
+  - refresh đúng 1 lần
+  - retry đúng 1 lần
+  - nếu vẫn fail thì clear session và về `login`
+- planner/trips/posts:
+  - show banner hoặc toast
+  - có retry nếu là read request
+- không leak raw response ra UI
 
-`POST /trips/:tripId/itinerary/days/:dayId/activities` hiện nhận:
+## Điều không nên làm
 
-```json
-{
-  "title": "Lantern Walk",
-  "startsAt": "18:30",
-  "endsAt": "20:30",
-  "location": "Hoi An Old Town",
-  "notes": "Bring camera",
-  "costAmount": 250000,
-  "costCurrency": "VND",
-  "imageUrls": ["https://images.unsplash.com/..."]
-}
-```
-
-`PATCH /trips/:tripId/itinerary/days/:dayId` cho phép update từng phần của địa điểm chính với cùng nhóm field như create day.
-
-`PATCH /trips/:tripId/itinerary/days/:dayId/activities/:activityId` cho phép update từng phần của activity với cùng shape field như create.
-
-Các endpoint `DELETE` cho day và activity dùng để hỗ trợ planner list hiện tại mà không cần route sâu.
-
-`GET /trips/:tripId/budget-summary` hiện trả:
-
-```json
-{
-  "tripId": "string",
-  "currency": "VND",
-  "totalBudgetAmount": 2000000,
-  "totalPlannedAmount": 250000,
-  "remainingAmount": 1750000,
-  "totalDays": 1,
-  "totalActivities": 1,
-  "isOverBudget": false
-}
-```
-
-Frontend Phase 06 hiện đang dùng contract này làm bridge để render planner 2 cấp theo kiểu list-first. Đây chưa phải `planning` module recursive cuối cùng, nhưng đủ để triển khai nhiều địa điểm chính, địa điểm con, nhiều ảnh URL, ghi chú, chi phí, và ngân sách ngay trên `/app/trips/:tripId`.
-
-## Planning contract mục tiêu cho nhánh mở rộng tiếp theo
-
-Khi backend mở module `planning`, frontend nên ưu tiên contract additive riêng thay vì vá tiếp toàn bộ UI vào `itinerary` cũ.
-
-Endpoint mục tiêu:
-
-- `GET /trips/:tripId/planning`
-- `POST /trips/:tripId/planning/nodes`
-- `PATCH /trips/:tripId/planning/nodes/:nodeId`
-- `DELETE /trips/:tripId/planning/nodes/:nodeId`
-
-Shape `PlanNode` mục tiêu:
-
-```json
-{
-  "id": "string",
-  "tripId": "string",
-  "parentId": "string | null",
-  "type": "day | location | activity | note | section",
-  "title": "string",
-  "notes": "string | null",
-  "locationLabel": "string | null",
-  "startAt": "string | null",
-  "endAt": "string | null",
-  "costAmount": 0,
-  "costCurrency": "VND",
-  "coverImageUrl": "string | null",
-  "sortOrder": 0,
-  "depth": 0,
-  "children": []
-}
-```
-
-Frontend nên chuẩn bị planner UI theo contract này để:
-
-- hiển thị list cuộn có phân cấp
-- không cần route sâu cho từng node
-- dễ thêm AI suggestion panel về sau
-
-## Cách xử lý các phần chưa có backend
-
-- Với public/community section:
-  - cho phép dùng placeholder content có chủ đích
-- Với protected/trips section:
-  - ưu tiên empty state hoặc feature-flag placeholder
-- Không dùng local fake data để giả vờ như đã production-ready
+- Không dựng planner tree production bằng mock data mà không ghi rõ
+- Không tiếp tục mở rộng feature mới trên itinerary bridge nếu backend đã sẵn `PlanNode`
+- Không hardcode `VITE_API_BASE_URL` trong source production

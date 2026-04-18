@@ -2,63 +2,67 @@
 
 ## Mục tiêu
 
-- Chốt tiêu chuẩn hoàn thành cho screen, feature, và phase frontend.
-- Đảm bảo khi bắt đầu code, team có chung cách hiểu về "xong".
+- Chốt tiêu chuẩn hoàn thành cho frontend theo DRD và user stories mới
 
 ## Một screen được xem là xong khi
 
 - Có route hoặc entrypoint rõ ràng
-- Có state `loading`, `error`, và `empty` nếu màn hình có dữ liệu động
-- Responsive dùng được trên mobile và desktop
+- Có state `loading`, `error`, và `empty` nếu màn có dữ liệu động
 - Primary action rõ ràng
 - Keyboard navigation dùng được
-- Focus states nhìn thấy được
-- Copy không còn ở trạng thái placeholder ngẫu nhiên
-- Motion chính của screen đã được chốt hoặc cố ý để `none`, không để UI rơi vào trạng thái tĩnh một cách vô tình
+- Responsive dùng được trên mobile và desktop
+- Copy không còn placeholder ngẫu nhiên
 
 ## Một feature API-driven được xem là xong khi
 
-- Đã dùng contract backend thật hoặc mock có chủ đích được ghi rõ
+- Đã dùng contract backend thật
+- Nếu còn dùng bridge tạm, tài liệu phải ghi rõ đó là bridge
 - Có xử lý lỗi API nhất quán
-- Có retry/refresh behavior phù hợp nếu phụ thuộc auth
-- Không leak raw API response trực tiếp ra khắp component tree
-- Query/mutation invalidation hoạt động đúng
+- Có invalidation hoặc refresh behavior đúng
+- Không leak raw response ra khắp tree component
 
 ## Một feature auth được xem là xong khi
 
-- Login thành công và vào protected area đúng
-- Register thành công theo đúng contract hiện tại
-- Reload trang vẫn boot lại session hợp lệ
-- Session hết hạn thì refresh hoặc logout đúng kỳ vọng
-- Unauthorized state không làm app rơi vào vòng lặp vô hạn
+- login thành công
+- register thành công
+- reload vẫn boot lại session
+- refresh hoạt động đúng
+- logout clear session đúng
+- unauthorized không tạo loop
 
-## Một shared component được xem là xong khi
+## Một feature trip được xem là xong khi
 
-- Có API props đủ rõ
-- Không buộc screen khác copy-paste style riêng
-- Có biến thể tối thiểu cần thiết
-- Dùng lại được ở ít nhất hai ngữ cảnh hợp lý hoặc là primitive rõ ràng
-- Nếu component có motion, motion phải có variant rõ và không phá `prefers-reduced-motion`
+- form create/edit bám đúng field theo DRD
+- validation bám đúng rule theo DRD
+- list/detail phản ánh đúng contract backend
+
+## Một feature planner được xem là xong khi
+
+- dùng planner APIs trên `PlanNode`
+- render full tree
+- add/edit/delete node chạy end-to-end
+- không cần route sâu cho node
+- loading dùng skeleton
+- error có toast/banner + retry
 
 ## Một phase được xem là xong khi
 
-- Checklist phase đã được tick theo artifact thực tế
-- Các screen chính của phase đã chạy được
-- Các kiểm tra tối thiểu của package đã pass
-- Tài liệu kế hoạch hoặc README đã được cập nhật nếu cần
-- Không còn blocker ẩn bị đẩy sang phase sau mà không ghi chú
-- Motion của phase đã nhất quán ở các màn chính, không chỉ xuất hiện rời rạc ở một vài chỗ
+- Checklist phase đã tick theo artifact thật
+- Các flow chính của phase đã chạy end-to-end
+- Các verify tối thiểu của package đã pass
+- Tài liệu integration/plan/checklist đã cập nhật
+- Deferred items đã được ghi rõ
 
-## Checklist verify tối thiểu sau khi scaffold frontend
+## Checklist verify tối thiểu
 
 - lint
-- unit/component tests liên quan
+- tests liên quan
 - build
-- smoke e2e cho flow trọng yếu nếu đã có
+- smoke flow chính nếu phase đã có UI thật
 
 ## Điều không được coi là done
 
-- Chỉ dựng UI tĩnh không có luồng thật nhưng báo là hoàn thành
-- Chỉ chạy local happy path mà không có empty/error state
-- Có route nhưng chưa có auth guard hoặc session handling cần thiết
-- Dùng mock data cho feature production mà không ghi rõ
+- Chỉ có UI đẹp nhưng chưa nối contract thật
+- Chỉ có placeholder nhưng không ghi rõ
+- Vẫn bám itinerary bridge cho flow chính nhưng gọi đó là planner aligned với DRD
+- Có motion nhưng thiếu loading/error/empty states

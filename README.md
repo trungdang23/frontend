@@ -15,6 +15,48 @@ Frontend package cho sản phẩm `journey`.
   - community teaser và post placeholder có chủ đích
 - Các tài liệu trong `documents/` vẫn là nguồn tham chiếu chính để giữ roadmap không trượt khỏi scope.
 
+## Target Implementation Snapshot
+
+Frontend package này giữ source of truth triển khai cho giao diện Journey.
+
+### Trải nghiệm mục tiêu
+
+- auth thật với session boot/refresh/logout
+- trips CRUD
+- `/app/trips/:tripId` là planning workspace chính
+- planner target là `PlanNode` tree
+- trip có `budgetMode`, `manualBudget`, `visibility`
+- có public trip read cho guest
+- community mở ở mức `posts` trước, rồi mới cân nhắc `comments`
+
+### Contract FE cần bám
+
+- Auth:
+  - `login`
+  - `register`
+  - `me`
+  - `refresh`
+  - `logout`
+- Trips:
+  - create/list/detail/update/delete
+  - `budgetMode`
+  - `manualBudget`
+  - `visibility`
+- Planner:
+  - `GET /trips/:id/planner`
+  - `POST /nodes`
+  - `PATCH /nodes/:id`
+  - `DELETE /nodes/:id`
+- Posts:
+  - `POST /posts`
+  - `GET /posts`
+
+### Trạng thái migration hiện tại
+
+- App hiện còn dùng itinerary bridge cho planning workspace.
+- Đây chỉ là fallback để app đang chạy tiếp tục usable.
+- Khi backend mở planner APIs mới, route `/app/trips/:tripId` phải chuyển sang `PlanNode` flow.
+
 ## Chạy package
 
 ```bash

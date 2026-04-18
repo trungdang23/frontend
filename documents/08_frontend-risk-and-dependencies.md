@@ -2,93 +2,118 @@
 
 ## Mục tiêu
 
-- Chỉ ra rõ các dependency giữa frontend plan với backend reality.
-- Giảm khả năng scaffold FE rồi mới phát hiện thiếu contract hoặc lệch scope.
+- Chỉ ra dependency thật giữa frontend roadmap và backend roadmap mới
+- Tránh việc FE build theo DRD nhưng BE vẫn đang ở source bridge cũ
 
 ## Dependency chính từ backend
 
-### Đã sẵn và dùng được ngay
+### Đã có baseline
 
 - auth register
 - auth login
 - auth me
 - auth refresh
-- trips CRUD
-- itinerary APIs
-- budget APIs
-- CORS production cho frontend domain
+- trips CRUD baseline
+- itinerary bridge baseline
+- budget summary baseline
 
-### Chưa sẵn cho production FE
+### Còn thiếu để aligned với DRD
 
-- community feed APIs
-- post detail APIs
-- like/comment/follow APIs
+- auth logout
+- trip `visibility`
+- trip `budgetMode/manualBudget`
+- planner APIs trên `PlanNode`
+- public trip read
+- posts APIs
+- comments APIs nếu mở trong MVP social
 
-## Rủi ro kiến trúc hiện tại
+## Rủi ro chính
 
-### 1. Session storage phase đầu chưa phải hardening tối ưu
+## 1. DRD mới và source hiện tại đang lệch nhau
 
-- Backend hiện trả token qua response body.
-- FE phase đầu khó tránh việc lưu session client-side.
-- Đây là điểm cần revisit sau khi backend hỗ trợ cookie-based refresh token.
+- DRD muốn `PlanNode`
+- source hiện tại vẫn là itinerary 2 cấp
 
-### 2. Itinerary và budget UI rất dễ vượt scope trước backend
+Nếu FE tiếp tục mở rộng UI sâu trên itinerary bridge, rework sẽ cao.
 
-- `UI_demo.txt` có nhiều trạng thái timeline/budget hấp dẫn để làm sớm.
-- Nếu dựng full UI `itineraries` hoặc `budgets` vượt ra ngoài contract Phase 05 hiện có, khả năng rework cao.
-- Nếu tiếp tục vá planner vào `trip detail` cũ mà không chốt contract `planning` riêng, khả năng UI bị chắp vá cao.
-- Nếu thêm animation rời rạc mà không có motion system chung, UI rất dễ trở nên lòe loẹt và không nhất quán.
+## 2. Planner tree rất dễ bị build quá tay
 
-### 3. Community section dễ bị hiểu nhầm là production-ready
+Các phần chưa nên làm sớm:
 
-- Demo hiện có nhiều content card bắt mắt.
-- Nếu không gắn label rõ, team có thể tưởng community feed thật đã sẵn.
+- drag-and-drop nhiều tầng
+- route sâu cho từng node
+- animation nặng
+- modal lồng modal
 
-### 4. Design system có nguy cơ trượt thành nhiều biến thể ad-hoc
+FE phải ưu tiên:
 
-- Reference demo giàu visual và nhiều one-off styling.
-- Nếu không token hóa sớm, app sẽ khó mở rộng khi nhiều feature xuất hiện.
+- render tree ổn định
+- inline CRUD
+- empty/loading/error states
 
-### 5. Frontend deploy rất dễ lệch API base URL nếu để env trong source
+## 3. `budgetMode/manualBudget` có thể làm trip form vỡ nếu không chốt contract trước
 
-- Với Vite, build-time env đi vào bundle ngay lúc build.
-- Nếu giữ URL thật trong source hoặc file env commit vào repo, preview và production rất dễ trỏ nhầm.
-- Vì vậy build-time env cho deploy phải lấy từ GitHub `Variables`.
+Trước khi sửa form, FE cần chốt:
 
-### 6. Root domain frontend cần route ổn định qua Cloudflare Tunnel
+- field names
+- validation rules
+- response mapping
 
-- Nếu tunnel config không có `buicojourney.com` và `www.buicojourney.com`, deploy thành công vẫn không có traffic public.
-- Sau reboot máy, chỉ cần tunnel hostname và runtime scripts giữ nguyên là frontend vẫn có thể lên lại mà không đổi keys.
+## 4. Public trip và community rất dễ bị trộn scope
 
-## Risk giảm thiểu bằng planning hiện tại
+Hai lớp này khác nhau:
 
-- Chốt route map trước khi scaffold
-- Chốt stack trước khi scaffold
-- Chốt feature ordering theo readiness của backend
-- Chốt design principles trước khi viết shared UI
-- Chốt auth/session strategy trước khi viết protected shell
+- public trip = share planner
+- post = social content
 
-## Các quyết định nên giữ rõ trong tài liệu
+Nếu không tách rõ, FE sẽ build một màn nửa trip detail nửa post detail.
 
-- Phase nào dùng API thật
-- Phase nào chỉ dùng placeholder có chủ đích
-- Phase nào bị block bởi backend
-- Screen nào là P0, P1, P2
+## 5. Session localStorage vẫn là tradeoff có chủ đích
 
-## Khuyến nghị thứ tự làm từ trạng thái hiện tại
+- Đây là hướng bám DRD hiện tại
+- Không phải security-optimal dài hạn
+- Khi backend đổi sang cookie-based refresh, FE phải revisit toàn bộ session pipeline
 
-1. Giữ ổn định auth flow thật
-2. Giữ ổn định protected shell
-3. Hoàn tất hardening cho dashboard/profile/trips
-4. Chạy post-deploy verification trên domain thật
-5. Nối frontend phase 06 cho `itineraries` và `budgets` theo contract thật
-6. Chỉ mở `community` sau khi backend phase 06 sẵn
-7. Chốt planner expansion theo contract additive riêng trước khi làm UI hierarchy lớn
+## 6. Community UI dễ bị hiểu nhầm là production-ready quá sớm
 
-## Điều không nên làm tiếp theo
+Nếu backend mới chỉ có feed/list cơ bản:
 
-- Không nên dựng `itineraries` hoặc `budgets` production bằng mock rồi quên thay.
-- Không nên làm community interactive trước khi có backend thật.
-- Không nên mở route sâu cho planner nếu list-based workspace vẫn đáp ứng được nhu cầu chính.
-- Không nên thêm hiệu ứng nặng trên quá nhiều card hoặc list item cùng lúc vì protected app sẽ dễ bị ì.
-- Không nên vừa scaffold vừa đổi stack giữa chừng.
+- phải gắn scope rõ
+- không thêm like/follow/reaction giả lập
+
+## 7. Motion dễ làm che mất tiến độ
+
+Motion cần đi sau:
+
+- contract ổn
+- state management ổn
+- layout ổn
+
+Không được để motion trở thành blocker cho planner CRUD.
+
+## Dependency order khuyến nghị
+
+1. BE chốt trip contract mới
+2. FE cập nhật trip form/list/detail
+3. BE mở planner APIs trên `PlanNode`
+4. FE chuyển workspace sang planner APIs
+5. BE mở public trip read
+6. FE mở share/public trip UI
+7. BE mở posts
+8. FE mở community data-driven
+
+## Stop conditions nên ghi rõ
+
+- Nếu BE chưa chốt planner response shape:
+  - FE chưa build tree renderer production
+- Nếu BE chưa chốt trip budget fields:
+  - FE chưa merge form `manualBudget`
+- Nếu BE chưa có public trip read:
+  - FE không nên giả public page bằng mock
+
+## Những việc không nên làm tiếp theo
+
+- Không mở rộng itinerary UI như thể đó là target lâu dài
+- Không build community interactive trước khi có API thật
+- Không giữ placeholder mà không ghi rõ là placeholder
+- Không để route `/app/trips/:tripId` vừa là metadata detail vừa là planner tree vừa là post view

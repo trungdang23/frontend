@@ -1,170 +1,227 @@
 # Frontend Phase Checklist
 
+## Scope
+
+- Checklist này bám theo DRD và user stories mới tại ngày `2026-04-18`
+- `Status` phản ánh mức độ aligned với target product contract, không chỉ phản ánh app hiện tại đã có màn hình gì
+
 ## Quy ước trạng thái
 
-- `[x]` hoàn thành
+- `[x]` hoàn thành và aligned với target
+- `[~]` đã có baseline hoặc workaround, nhưng chưa aligned hoàn toàn
 - `[ ]` chưa hoàn thành
-- `Status` của phase được cập nhật thủ công theo tiến độ thực tế
 
-## Giả định hiện tại
+## Target UX contract cần đạt
 
-- [x] Đã có concept UI tham chiếu trong `UI_demo.txt`
-- [x] Đã có backend production cho auth
-- [x] Đã có CORS cho frontend domain
-- [x] Đã có planning docs nền cho frontend
-- [x] Đã scaffold source frontend thực tế
-- [x] Đã chốt domain deploy frontend
-- [x] Đã có CI riêng cho frontend
+- Auth:
+  - `login`
+  - `register`
+  - session boot
+  - refresh
+  - logout
+- Trips:
+  - create/list/detail/edit/delete
+  - `budgetMode`
+  - `manualBudget`
+  - `visibility`
+- Planner:
+  - route `/app/trips/:tripId`
+  - render full `PlanNode` tree
+  - inline editing là primary mode
+  - loading dùng skeleton
+  - error dùng toast/banner + retry
+- Public:
+  - guest xem trip public
+- Community:
+  - create post
+  - list public posts
+  - post detail nếu backend mở
+
+## Khoảng cách chính của source hiện tại
+
+- [x] Có auth baseline thật
+- [x] Có trips list/create/detail/edit/delete
+- [~] `/app/trips/:tripId` đã là planner workspace, nhưng còn dùng itinerary bridge 2 cấp
+- [ ] Chưa có UI cho `budgetMode/manualBudget`
+- [ ] Chưa có UI cho `visibility`
+- [ ] Chưa có planner tree recursive theo `PlanNode`
+- [ ] Chưa có data-driven community
+- [ ] Chưa có logout flow aligned hoàn toàn với backend target
 
 ## Tổng quan phase
 
-| Phase | Mục tiêu | Status |
-| --- | --- | --- |
-| 00 | Chốt planning và baseline frontend | Completed |
-| 01 | Chốt stack và scaffold app frontend | Completed |
-| 02 | Xây dựng auth flow và protected app shell | Completed |
-| 03 | Xây dựng landing và public surface | Completed |
-| 04 | Xây dựng dashboard, profile, và empty states có dữ liệu thật | Completed |
-| 05 | Xây dựng `trips` workspace | Completed |
-| 06 | Xây dựng `planning`, media, `itineraries`, và `budgets` workspace | In Progress |
-| 07 | Xây dựng `community` experience | Blocked by BE Phase 06 |
-| 08 | Hardening, test, accessibility, và deploy | Todo |
+| Phase | Mục tiêu                                          | Status      |
+| ----- | ------------------------------------------------- | ----------- |
+| 00    | Re-baseline tài liệu và contract theo DRD mới     | Completed   |
+| 01    | Foundation app, routing, shared architecture      | Completed   |
+| 02    | Auth và session aligned với DRD                   | In Progress |
+| 03    | Trips metadata aligned với DRD                    | Todo        |
+| 04    | Planner workspace trên `PlanNode`                 | Todo        |
+| 05    | Public trip sharing                               | Todo        |
+| 06    | Community minimal                                 | Todo        |
+| 07    | Hardening, test, accessibility, release readiness | Todo        |
 
-## Phase 00 - Chốt planning và baseline frontend
-
-Status: `Completed`
-
-- [x] Tạo package README cho frontend
-- [x] Tạo foundation document
-- [x] Tạo phase checklist
-- [x] Tạo stack decision document
-- [x] Tạo design principles document
-- [x] Tạo route và screen plan
-- [x] Tạo API integration plan
-- [x] Tạo app architecture plan
-- [x] Tạo definition of done
-- [x] Tạo risk và dependency notes
-
-## Phase 01 - Chốt stack và scaffold app frontend
+## Phase 00 - Re-baseline tài liệu và contract theo DRD mới
 
 Status: `Completed`
 
-- [x] Chốt framework và toolchain scaffold
-- [x] Khởi tạo project frontend trong `frontend/`
-- [x] Tạo cấu trúc thư mục theo `app/features/shared`
-- [x] Tạo app router và route groups public/protected
-- [x] Tạo HTTP client nền
-- [x] Tạo config env nền
-- [x] Tạo shared response/error handling strategy
-- [x] Tạo token và design variable nền
-- [x] Tạo lint, format, test, build scripts
-- [x] Tạo `frontend/README.md` mô tả cách chạy package sau khi scaffold
+- [x] Chốt route chính `/app/trips/:tripId` là planning workspace
+- [x] Ghi rõ source hiện tại còn dùng itinerary bridge
+- [x] Ghi rõ target planner model là `PlanNode`
+- [x] Ghi rõ community hiện chưa production-ready
 
-## Phase 02 - Xây dựng auth flow và protected app shell
+## Phase 01 - Foundation app, routing, shared architecture
 
 Status: `Completed`
 
-- [x] Tạo route `login`
-- [x] Tạo route `register`
-- [x] Kết nối `POST /auth/login`
-- [x] Kết nối `POST /auth/register`
-- [x] Kết nối `GET /auth/me`
-- [x] Kết nối `POST /auth/refresh`
-- [x] Tạo session persistence strategy
-- [x] Tạo protected route guard
-- [x] Tạo app shell cho khu vực đăng nhập
-- [x] Tạo logout flow rõ ràng
+- [x] Scaffold app `React + Vite + TypeScript`
+- [x] Chia `app/features/shared`
+- [x] Có router public/protected
+- [x] Có HTTP client nền
+- [x] Có env config nền
+- [x] Có build/lint/test scripts
+- [x] Có README package
 
-## Phase 03 - Xây dựng landing và public surface
-
-Status: `Completed`
-
-- [x] Tạo landing page production thay vì demo state-machine
-- [x] Chốt hero, CTA, và section hierarchy
-- [x] Tạo public navigation
-- [x] Tạo mobile navigation pattern
-- [x] Tạo community teaser hoặc read-only blocks nếu cần
-- [x] Tạo loading skeleton cho public image-heavy sections nếu public surface chuyển sang dữ liệu động
-- [x] Chốt copy baseline tiếng Việt
-
-## Phase 04 - Xây dựng dashboard, profile, và empty states có dữ liệu thật
-
-Status: `Completed`
-
-- [x] Tạo dashboard route trong protected area
-- [x] Tạo empty state khi chưa có chuyến đi
-- [x] Tạo profile summary từ `GET /auth/me`
-- [x] Tạo session boot flow khi refresh trình duyệt
-- [x] Tạo unauthorized và expired-session handling
-- [x] Tạo toast hoặc banner feedback cho auth actions
-
-## Phase 05 - Xây dựng `trips` workspace
-
-Status: `Completed`
-
-- [x] Tạo backlog thực thi chi tiết cho `trips` workspace trong `documents/10_frontend-trips-execution-backlog.md`
-- [x] Thay placeholder routes bằng page thật cho `trips`, `trips/new`, `trips/:tripId`, `trips/:tripId/edit`
-- [x] Thêm route index `/app/trips` và nối lại protected navigation tới khu vực này
-- [x] Tạo API layer `features/trips/api` cho create/list/detail/update/delete
-- [x] Tạo types và mapper cho `Trip`, `TripListMeta`, `TripSort`
-- [x] Tạo form tạo/chỉnh sửa chuyến đi với validation phía client
-- [x] Tạo loading, empty, error, not-found state cho list/detail/edit
-- [x] Tạo mutation feedback rõ ràng cho create/update/delete
-- [x] Chốt verify tối thiểu cho Phase 05: lint, test, build
-
-## Phase 06 - Xây dựng `planning`, media, `itineraries`, và `budgets` workspace
+## Phase 02 - Auth và session aligned với DRD
 
 Status: `In Progress`
 
-- [x] Mở rộng `Trip` UI với `coverImageUrl`
-- [x] Mở rộng `Trip` UI với `summaryNotes`
-- [x] Tạo trip cards có media placeholder hoặc ảnh thật từ DB
-- [x] Chuyển `/app/trips/:tripId` từ metadata detail sang planning workspace
-- [x] Tạo planner list hoặc outline UI dạng cuộn
-- [x] Tạo planner node card với thời gian, chi phí, ghi chú, và ảnh
-- [x] Ẩn form tạo địa điểm chính mặc định và chỉ mở khi người dùng bấm CTA
-- [x] Loại bỏ `destination` và `timezone` khỏi form tạo/chỉnh sửa `Trip`
-- [x] Gộp overview và budget lên đầu workspace, đồng thời bỏ `createdAt`, `updatedAt`, và `timezone` khỏi UI detail chính
-- [x] Kết nối budget summary từ planner hoặc itinerary bridge
-- [x] Giữ route đơn giản, không mở route sâu cho từng node trừ khi có lý do mạnh
-- [ ] Tạo modal hoặc drawer để add/edit/delete planning node
-- [ ] Thêm motion cho trip cards, planning header, planner list, và node cards
-- [ ] Thêm expand/collapse animation cho planner sections hoặc node groups
-- [ ] Thêm enter/exit animation cho add/delete planning node
-- [ ] Kết nối contract planning mới của backend khi sẵn
+- [x] `login`
+- [x] `register`
+- [x] `GET /auth/me`
+- [x] `refresh`
+- [x] Session persistence qua `localStorage`
+- [x] Protected app shell
+- [x] Redirect vào `/app`
+- [ ] Logout flow dùng `POST /auth/logout`
+- [ ] Xử lý expired session thống nhất trên toàn app
+- [ ] Chuẩn hoá toast/banner cho auth errors
+- [ ] Route-level verify cho login -> app -> reload -> refresh -> logout
 
-## Phase 07 - Xây dựng `community` experience
-
-Status: `Blocked by BE Phase 06`
-
-- [ ] Tạo community feed route
-- [ ] Tạo post detail route
-- [ ] Kết nối like/comment/follow nếu backend đã sẵn
-- [ ] Tạo author profile entrypoints
-- [ ] Tạo moderation-safe empty/error state
-
-## Phase 08 - Hardening, test, accessibility, và deploy
+## Phase 03 - Trips metadata aligned với DRD
 
 Status: `Todo`
 
-- [x] Thêm GitHub Actions CI riêng cho frontend
-- [ ] Thêm unit/component test cho auth và shared UI quan trọng
-- [ ] Thêm route-level integration tests
-- [ ] Thêm smoke e2e cho login -> dashboard
-- [ ] Kiểm tra accessibility các flow chính
-- [ ] Kiểm tra `prefers-reduced-motion` cho motion chính
-- [ ] Kiểm tra responsive trên mobile và desktop
-- [x] Chốt env runtime cho frontend
-- [x] Chốt deploy target
-- [ ] Chạy post-deploy verification
+- [x] Routes `trips`, `new`, `detail`, `edit` đã có baseline
+- [ ] Create/edit form thêm `budgetMode`
+- [ ] Form conditionally hiện `manualBudget` khi `budgetMode = manual`
+- [ ] Thêm `visibility`
+- [ ] Rà lại validation:
+  - `name` required
+  - `startDate <= endDate`
+  - `manualBudget >= 0`
+- [ ] Detail/list hiển thị đúng metadata mới
+- [ ] Chốt copy và empty states cho trip private/public
+- [ ] Query invalidation đúng sau create/update/delete
 
-## Immediate Todo Sau Planning
+## Phase 04 - Planner workspace trên `PlanNode`
 
-- [x] Review và chốt stack đề xuất
-- [x] Review và chốt route map phase 1
-- [x] Chốt session strategy cho auth phase đầu
-- [x] Bắt đầu scaffold `frontend/`
-- [x] Chốt domain deploy frontend
-- [ ] Test login/register/me/refresh qua domain frontend thật
-- [x] Quyết định mức polish tiếp theo cho landing/public section trước khi mở phase 08
-- [ ] Chốt ưu tiên hardening tiếp theo trong phase 08
+Status: `Todo`
+
+- [~] Route `/app/trips/:tripId` đã tồn tại và đang làm workspace
+- [ ] Tạo types cho `PlanNode`
+- [ ] Tạo API layer mới cho:
+  - `GET /trips/:tripId/planner`
+  - `POST /nodes`
+  - `PATCH /nodes/:id`
+  - `DELETE /nodes/:id`
+- [ ] Chuyển main workspace từ itinerary bridge sang planner APIs
+- [ ] Render full tree, không paginate
+- [ ] Inline create/edit/delete node
+- [ ] Không mở route sâu cho từng node
+- [ ] Empty state cho trip chưa có node
+- [ ] Loading dùng skeleton
+- [ ] Error dùng toast/banner + retry
+- [ ] Delete confirmation đủ rõ
+- [ ] Query strategy bằng `TanStack Query`
+- [ ] Cache defaults theo DRD:
+  - `listTrips` stale `30s`
+  - `tripDetail` stale `30s`
+  - `planner` stale `0s`
+  - `profile` stale `5m`
+- [ ] Không build reorder phức tạp trước khi node CRUD ổn định
+
+## Phase 05 - Public trip sharing
+
+Status: `Todo`
+
+- [ ] Có entrypoint xem trip public cho guest
+- [ ] Có share CTA cho trip public
+- [ ] Xử lý rõ các state:
+  - public available
+  - private denied
+  - not found
+- [ ] Guest chỉ xem, không thấy action mutate
+
+## Phase 06 - Community minimal
+
+Status: `Todo`
+
+- [ ] Tạo community feed route
+- [ ] Tạo post detail route
+- [ ] Tạo create post flow
+- [ ] Hỗ trợ create post from trip nếu backend mở
+- [ ] Nếu comments được backend mở:
+  - render list comments
+  - create comment
+- [ ] Nếu comments chưa có:
+  - giữ UI ở trạng thái deferred rõ ràng, không giả production-ready
+
+## Phase 07 - Hardening, test, accessibility, release readiness
+
+Status: `Todo`
+
+- [ ] Unit/component tests cho auth, trips, planner
+- [ ] Route-level integration tests
+- [ ] Smoke e2e cho:
+  - login
+  - create trip
+  - add node
+  - public trip read
+- [ ] Rà responsive mobile/desktop
+- [ ] Rà accessibility keyboard/focus
+- [ ] Rà `prefers-reduced-motion`
+- [ ] Post-deploy verification qua domain thật
+
+## Slice giao việc theo FE
+
+### Slice FE-A
+
+- [ ] Auth logout + session hardening
+- [ ] Route-level auth verify
+
+### Slice FE-B
+
+- [ ] Trip form aligned với `budgetMode/manualBudget/visibility`
+- [ ] Trip list/detail aligned với contract mới
+
+### Slice FE-C
+
+- [ ] Planner API layer mới
+- [ ] `PlanNode` types
+- [ ] planner tree render
+
+### Slice FE-D
+
+- [ ] Inline node CRUD
+- [ ] loading/error/empty states
+- [ ] query invalidation và retry
+
+### Slice FE-E
+
+- [ ] Public trip read UI
+- [ ] share state handling
+
+### Slice FE-F
+
+- [ ] Community feed
+- [ ] post detail
+- [ ] create post
+- [ ] optional comments
+
+## Immediate next checks
+
+- [ ] Chốt shape response planner với backend
+- [ ] Chốt shape trip mới với backend
+- [ ] Chốt visibility UX
+- [ ] Chốt rollout: khi nào FE ngừng gọi itinerary endpoints
