@@ -1,3 +1,6 @@
+export type TripBudgetMode = "auto" | "manual";
+export type TripVisibility = "private" | "public";
+
 export type Trip = {
   id: string;
   userId: string;
@@ -8,13 +11,17 @@ export type Trip = {
   startDate: string;
   endDate: string;
   timezone: string | null;
+  budgetMode: TripBudgetMode;
+  manualBudgetAmount: number | null;
+  manualBudgetCurrency: string | null;
+  visibility: TripVisibility;
   budgetAmount: number;
   budgetCurrency: string;
   createdAt: string;
   updatedAt: string;
 };
 
-export type TripSort = 'startDate,asc' | 'startDate,desc';
+export type TripSort = "startDate,asc" | "startDate,desc";
 
 export type TripListMeta = {
   page: number;
@@ -43,6 +50,8 @@ export type TripUpsertPayload = {
   startDate: string;
   endDate: string;
   timezone?: string | null;
-  budgetAmount: number;
-  budgetCurrency: string;
+  budgetMode: TripBudgetMode;
+  manualBudgetAmount: number | null;
+  manualBudgetCurrency: string | null;
+  visibility: TripVisibility;
 };

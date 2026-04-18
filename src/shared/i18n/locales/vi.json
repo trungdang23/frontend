@@ -190,15 +190,17 @@
       "dateRange": "Khoảng ngày",
       "timezone": "Múi giờ",
       "budget": "Ngân sách",
-      "budgetAmount": "Số tiền ngân sách",
-      "budgetCurrency": "Tiền tệ",
+      "budgetMode": "Chế độ ngân sách",
+      "manualBudgetAmount": "Ngân sách thủ công",
+      "manualBudgetCurrency": "Tiền tệ ngân sách thủ công",
+      "visibility": "Mức hiển thị",
       "createdAt": "Ngày tạo",
       "updatedAt": "Cập nhật lần cuối"
     },
     "placeholders": {
       "summaryNotes": "Ví dụ: 3 ngày thư thả, ưu tiên quán cafe, có một buổi săn ảnh hoàng hôn.",
       "coverImageUrl": "https://example.com/trip-cover.jpg",
-      "budgetCurrency": "VND"
+      "manualBudgetCurrency": "VND"
     },
     "validation": {
       "nameRequired": "Tên chuyến đi là bắt buộc.",
@@ -207,10 +209,10 @@
       "startDateRequired": "Ngày bắt đầu là bắt buộc.",
       "endDateRequired": "Ngày kết thúc là bắt buộc.",
       "dateRangeInvalid": "Ngày kết thúc không được sớm hơn ngày bắt đầu.",
-      "budgetAmountRequired": "Ngân sách là bắt buộc.",
-      "budgetAmountPositive": "Ngân sách phải lớn hơn 0.",
-      "budgetCurrencyRequired": "Tiền tệ là bắt buộc.",
-      "budgetCurrencyLength": "Tiền tệ cần đúng 3 ký tự."
+      "manualBudgetAmountRequired": "Ngân sách thủ công là bắt buộc khi chọn chế độ thủ công.",
+      "manualBudgetAmountPositive": "Ngân sách thủ công phải lớn hơn hoặc bằng 0.",
+      "manualBudgetCurrencyRequired": "Tiền tệ là bắt buộc khi chọn ngân sách thủ công.",
+      "manualBudgetCurrencyLength": "Tiền tệ cần đúng 3 ký tự."
     },
     "actions": {
       "viewList": "Xem danh sách chuyến đi",
@@ -237,6 +239,16 @@
     "preview": {
       "titleFallback": "Tên chuyến đi sẽ hiện ở đây",
       "coverAltFallback": "Ảnh bìa xem trước của chuyến đi"
+    },
+    "visibility": {
+      "private": "Riêng tư",
+      "public": "Công khai"
+    },
+    "budget": {
+      "modeAuto": "Tự động",
+      "modeManual": "Thủ công",
+      "autoLabel": "Tự động tính từ planner",
+      "autoDescription": "Chế độ tự động sẽ để planner tính ngân sách ở phase sau. Ở giai đoạn hiện tại, bạn chưa cần nhập ngân sách thủ công."
     },
     "notesEmpty": "Bạn chưa thêm ghi chú tổng quan cho chuyến đi này.",
     "planner": {

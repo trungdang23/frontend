@@ -1,19 +1,23 @@
-import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { useForm, useWatch } from 'react-hook-form';
-import { TripCoverImage } from '@/features/trips/components/trip-cover-image';
-import { TripFormValues, createTripFormSchema, mapTripFormValuesToPayload } from '@/features/trips/lib/trip-form-validators';
-import { TripUpsertPayload } from '@/features/trips/types/trip';
-import { useI18n } from '@/shared/i18n/use-i18n';
-import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
-import { StatusBanner } from '@/shared/ui/status-banner';
-import { Textarea } from '@/shared/ui/textarea';
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { useForm, useWatch } from "react-hook-form";
+import { TripCoverImage } from "@/features/trips/components/trip-cover-image";
+import {
+  TripFormValues,
+  createTripFormSchema,
+  mapTripFormValuesToPayload,
+} from "@/features/trips/lib/trip-form-validators";
+import { TripUpsertPayload } from "@/features/trips/types/trip";
+import { useI18n } from "@/shared/i18n/use-i18n";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { StatusBanner } from "@/shared/ui/status-banner";
+import { Textarea } from "@/shared/ui/textarea";
 
 type TripFormProps = {
   cancelTo: string;
   initialValues: TripFormValues;
-  mode: 'create' | 'edit';
+  mode: "create" | "edit";
   onSubmit: (payload: TripUpsertPayload) => Promise<void>;
   submitError?: string | null;
 };
@@ -38,8 +42,10 @@ export function TripForm({
     defaultValues: initialValues,
   });
 
-  const previewName = useWatch({ control, name: 'name' })?.trim() ?? '';
-  const previewCoverImageUrl = useWatch({ control, name: 'coverImageUrl' }) ?? '';
+  const previewName = useWatch({ control, name: "name" })?.trim() ?? "";
+  const previewCoverImageUrl =
+    useWatch({ control, name: "coverImageUrl" }) ?? "";
+  const budgetMode = useWatch({ control, name: "budgetMode" });
 
   useEffect(() => {
     reset(initialValues);
@@ -53,13 +59,15 @@ export function TripForm({
         const field = issue.path[0];
 
         if (
-          field === 'name' ||
-          field === 'summaryNotes' ||
-          field === 'coverImageUrl' ||
-          field === 'startDate' ||
-          field === 'endDate' ||
-          field === 'budgetAmount' ||
-          field === 'budgetCurrency'
+          field === "name" ||
+          field === "summaryNotes" ||
+          field === "coverImageUrl" ||
+          field === "startDate" ||
+          field === "endDate" ||
+          field === "budgetMode" ||
+          field === "manualBudgetAmount" ||
+          field === "manualBudgetCurrency" ||
+          field === "visibility"
         ) {
           setError(field, { message: issue.message });
         }
@@ -73,35 +81,49 @@ export function TripForm({
 
   return (
     <form className="space-y-6" onSubmit={submitHandler}>
-      {submitError ? <StatusBanner tone="danger">{submitError}</StatusBanner> : null}
+      {submitError ? (
+        <StatusBanner tone="danger">{submitError}</StatusBanner>
+      ) : null}
 
       <div className="grid gap-5 md:grid-cols-2">
         <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-name">
-            {t('trips.fields.name')}
+          <label
+            className="text-sm font-medium text-[var(--color-ink)]"
+            htmlFor="trip-name"
+          >
+            {t("trips.fields.name")}
           </label>
           <Input
             hasError={Boolean(errors.name)}
             id="trip-name"
             type="text"
-            {...register('name')}
+            {...register("name")}
           />
-          {errors.name ? <p className="text-sm text-[var(--color-danger)]">{errors.name.message}</p> : null}
+          {errors.name ? (
+            <p className="text-sm text-[var(--color-danger)]">
+              {errors.name.message}
+            </p>
+          ) : null}
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-cover-image-url">
-            {t('trips.fields.coverImageUrl')}
+          <label
+            className="text-sm font-medium text-[var(--color-ink)]"
+            htmlFor="trip-cover-image-url"
+          >
+            {t("trips.fields.coverImageUrl")}
           </label>
           <Input
             hasError={Boolean(errors.coverImageUrl)}
             id="trip-cover-image-url"
-            placeholder={t('trips.placeholders.coverImageUrl')}
+            placeholder={t("trips.placeholders.coverImageUrl")}
             type="url"
-            {...register('coverImageUrl')}
+            {...register("coverImageUrl")}
           />
           {errors.coverImageUrl ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.coverImageUrl.message}</p>
+            <p className="text-sm text-[var(--color-danger)]">
+              {errors.coverImageUrl.message}
+            </p>
           ) : null}
         </div>
 
@@ -109,7 +131,7 @@ export function TripForm({
           <div className="overflow-hidden rounded-[1.75rem] border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)]">
             <div className="relative h-52">
               <TripCoverImage
-                alt={previewName || t('trips.preview.coverAltFallback')}
+                alt={previewName || t("trips.preview.coverAltFallback")}
                 className="absolute inset-0"
                 imgClassName="h-full w-full object-cover"
                 src={previewCoverImageUrl}
@@ -118,7 +140,7 @@ export function TripForm({
               <div className="relative flex h-full items-end p-5 sm:p-6">
                 <div className="space-y-2">
                   <p className="text-2xl font-semibold text-white">
-                    {previewName || t('trips.preview.titleFallback')}
+                    {previewName || t("trips.preview.titleFallback")}
                   </p>
                 </div>
               </div>
@@ -127,84 +149,161 @@ export function TripForm({
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-start-date">
-            {t('trips.fields.startDate')}
+          <label
+            className="text-sm font-medium text-[var(--color-ink)]"
+            htmlFor="trip-start-date"
+          >
+            {t("trips.fields.startDate")}
           </label>
           <Input
             hasError={Boolean(errors.startDate)}
             id="trip-start-date"
             type="date"
-            {...register('startDate')}
+            {...register("startDate")}
           />
           {errors.startDate ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.startDate.message}</p>
+            <p className="text-sm text-[var(--color-danger)]">
+              {errors.startDate.message}
+            </p>
           ) : null}
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-end-date">
-            {t('trips.fields.endDate')}
+          <label
+            className="text-sm font-medium text-[var(--color-ink)]"
+            htmlFor="trip-end-date"
+          >
+            {t("trips.fields.endDate")}
           </label>
           <Input
             hasError={Boolean(errors.endDate)}
             id="trip-end-date"
             type="date"
-            {...register('endDate')}
+            {...register("endDate")}
           />
           {errors.endDate ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.endDate.message}</p>
+            <p className="text-sm text-[var(--color-danger)]">
+              {errors.endDate.message}
+            </p>
           ) : null}
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-budget-amount">
-            {t('trips.fields.budgetAmount')}
+          <label
+            className="text-sm font-medium text-[var(--color-ink)]"
+            htmlFor="trip-visibility"
+          >
+            {t("trips.fields.visibility")}
           </label>
-          <Input
-            hasError={Boolean(errors.budgetAmount)}
-            id="trip-budget-amount"
-            min="0"
-            step="1000"
-            type="number"
-            {...register('budgetAmount')}
-          />
-          {errors.budgetAmount ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.budgetAmount.message}</p>
+          <select
+            className="w-full rounded-2xl border border-[var(--color-border-strong)] bg-white/80 px-4 py-3 text-sm text-[var(--color-ink)] shadow-sm outline-none transition focus:border-[var(--color-forest)] focus:ring-4 focus:ring-[rgba(84,107,65,0.12)]"
+            id="trip-visibility"
+            {...register("visibility")}
+          >
+            <option value="private">{t("trips.visibility.private")}</option>
+            <option value="public">{t("trips.visibility.public")}</option>
+          </select>
+          {errors.visibility ? (
+            <p className="text-sm text-[var(--color-danger)]">
+              {errors.visibility.message}
+            </p>
           ) : null}
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-budget-currency">
-            {t('trips.fields.budgetCurrency')}
+          <label
+            className="text-sm font-medium text-[var(--color-ink)]"
+            htmlFor="trip-budget-mode"
+          >
+            {t("trips.fields.budgetMode")}
           </label>
-          <Input
-            autoCapitalize="characters"
-            className="uppercase"
-            hasError={Boolean(errors.budgetCurrency)}
-            id="trip-budget-currency"
-            maxLength={3}
-            placeholder={t('trips.placeholders.budgetCurrency')}
-            type="text"
-            {...register('budgetCurrency')}
-          />
-          {errors.budgetCurrency ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.budgetCurrency.message}</p>
+          <select
+            className="w-full rounded-2xl border border-[var(--color-border-strong)] bg-white/80 px-4 py-3 text-sm text-[var(--color-ink)] shadow-sm outline-none transition focus:border-[var(--color-forest)] focus:ring-4 focus:ring-[rgba(84,107,65,0.12)]"
+            id="trip-budget-mode"
+            {...register("budgetMode")}
+          >
+            <option value="manual">{t("trips.budget.modeManual")}</option>
+            <option value="auto">{t("trips.budget.modeAuto")}</option>
+          </select>
+          {errors.budgetMode ? (
+            <p className="text-sm text-[var(--color-danger)]">
+              {errors.budgetMode.message}
+            </p>
           ) : null}
         </div>
+
+        {budgetMode === "manual" ? (
+          <>
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium text-[var(--color-ink)]"
+                htmlFor="trip-manual-budget-amount"
+              >
+                {t("trips.fields.manualBudgetAmount")}
+              </label>
+              <Input
+                hasError={Boolean(errors.manualBudgetAmount)}
+                id="trip-manual-budget-amount"
+                min="0"
+                step="1000"
+                type="number"
+                {...register("manualBudgetAmount")}
+              />
+              {errors.manualBudgetAmount ? (
+                <p className="text-sm text-[var(--color-danger)]">
+                  {errors.manualBudgetAmount.message}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="space-y-2">
+              <label
+                className="text-sm font-medium text-[var(--color-ink)]"
+                htmlFor="trip-manual-budget-currency"
+              >
+                {t("trips.fields.manualBudgetCurrency")}
+              </label>
+              <Input
+                autoCapitalize="characters"
+                className="uppercase"
+                hasError={Boolean(errors.manualBudgetCurrency)}
+                id="trip-manual-budget-currency"
+                maxLength={3}
+                placeholder={t("trips.placeholders.manualBudgetCurrency")}
+                type="text"
+                {...register("manualBudgetCurrency")}
+              />
+              {errors.manualBudgetCurrency ? (
+                <p className="text-sm text-[var(--color-danger)]">
+                  {errors.manualBudgetCurrency.message}
+                </p>
+              ) : null}
+            </div>
+          </>
+        ) : (
+          <div className="rounded-[1.5rem] border border-dashed border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-4 py-4 text-sm leading-7 text-[var(--color-ink-soft)] md:col-span-2">
+            {t("trips.budget.autoDescription")}
+          </div>
+        )}
 
         <div className="space-y-2 md:col-span-2">
-          <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="trip-summary-notes">
-            {t('trips.fields.summaryNotes')}
+          <label
+            className="text-sm font-medium text-[var(--color-ink)]"
+            htmlFor="trip-summary-notes"
+          >
+            {t("trips.fields.summaryNotes")}
           </label>
           <Textarea
             hasError={Boolean(errors.summaryNotes)}
             id="trip-summary-notes"
-            placeholder={t('trips.placeholders.summaryNotes')}
+            placeholder={t("trips.placeholders.summaryNotes")}
             rows={5}
-            {...register('summaryNotes')}
+            {...register("summaryNotes")}
           />
           {errors.summaryNotes ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.summaryNotes.message}</p>
+            <p className="text-sm text-[var(--color-danger)]">
+              {errors.summaryNotes.message}
+            </p>
           ) : null}
         </div>
       </div>
@@ -212,18 +311,18 @@ export function TripForm({
       <div className="flex flex-col gap-3 sm:flex-row">
         <Button type="submit">
           {isSubmitting
-            ? mode === 'create'
-              ? t('trips.actions.creating')
-              : t('trips.actions.saving')
-            : mode === 'create'
-              ? t('trips.actions.create')
-              : t('trips.actions.save')}
+            ? mode === "create"
+              ? t("trips.actions.creating")
+              : t("trips.actions.saving")
+            : mode === "create"
+              ? t("trips.actions.create")
+              : t("trips.actions.save")}
         </Button>
         <Link
           className="inline-flex items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
           to={cancelTo}
         >
-          {t('trips.actions.cancel')}
+          {t("trips.actions.cancel")}
         </Link>
       </div>
     </form>

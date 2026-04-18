@@ -42,8 +42,8 @@
 - [x] Có auth baseline thật
 - [x] Có trips list/create/detail/edit/delete
 - [~] `/app/trips/:tripId` đã là planner workspace, nhưng còn dùng itinerary bridge 2 cấp
-- [ ] Chưa có UI cho `budgetMode/manualBudget`
-- [ ] Chưa có UI cho `visibility`
+- [x] Đã có UI cho `budgetMode/manualBudget`
+- [x] Đã có UI cho `visibility`
 - [ ] Chưa có planner tree recursive theo `PlanNode`
 - [ ] Chưa có data-driven community
 - [x] Đã có logout flow aligned hoàn toàn với backend target
@@ -55,7 +55,7 @@
 | 00    | Re-baseline tài liệu và contract theo DRD mới     | Completed |
 | 01    | Foundation app, routing, shared architecture      | Completed |
 | 02    | Auth và session aligned với DRD                   | Completed |
-| 03    | Trips metadata aligned với DRD                    | Todo      |
+| 03    | Trips metadata aligned với DRD                    | Completed |
 | 04    | Planner workspace trên `PlanNode`                 | Todo      |
 | 05    | Public trip sharing                               | Todo      |
 | 06    | Community minimal                                 | Todo      |
@@ -100,19 +100,19 @@ Status: `Completed`
 
 ## Phase 03 - Trips metadata aligned với DRD
 
-Status: `Todo`
+Status: `Completed`
 
 - [x] Routes `trips`, `new`, `detail`, `edit` đã có baseline
-- [ ] Create/edit form thêm `budgetMode`
-- [ ] Form conditionally hiện `manualBudget` khi `budgetMode = manual`
-- [ ] Thêm `visibility`
-- [ ] Rà lại validation:
+- [x] Create/edit form thêm `budgetMode`
+- [x] Form conditionally hiện `manualBudget` khi `budgetMode = manual`
+- [x] Thêm `visibility`
+- [x] Rà lại validation:
   - `name` required
   - `startDate <= endDate`
   - `manualBudget >= 0`
-- [ ] Detail/list hiển thị đúng metadata mới
-- [ ] Chốt copy và empty states cho trip private/public
-- [ ] Query invalidation đúng sau create/update/delete
+- [x] Detail/list hiển thị đúng metadata mới
+- [x] Chốt copy và empty states cho trip private/public
+- [x] Query invalidation đúng sau create/update/delete
 
 ## Phase 04 - Planner workspace trên `PlanNode`
 
@@ -192,8 +192,8 @@ Status: `Todo`
 
 ### Slice FE-B
 
-- [ ] Trip form aligned với `budgetMode/manualBudget/visibility`
-- [ ] Trip list/detail aligned với contract mới
+- [x] Trip form aligned với `budgetMode/manualBudget/visibility`
+- [x] Trip list/detail aligned với contract mới
 
 ### Slice FE-C
 
@@ -222,6 +222,6 @@ Status: `Todo`
 ## Immediate next checks
 
 - [ ] Chốt shape response planner với backend
-- [ ] Chốt shape trip mới với backend
+- [x] Chốt shape trip mới với backend
 - [ ] Chốt visibility UX
 - [ ] Chốt rollout: khi nào FE ngừng gọi itinerary endpoints
