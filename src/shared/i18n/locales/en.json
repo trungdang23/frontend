@@ -253,85 +253,77 @@
     "notesEmpty": "This trip does not have summary notes yet.",
     "planner": {
       "eyebrow": "Planner",
-      "title": "Two-level trip planner",
-      "description": "Use this section to add multiple major stops inside one trip, attach dates, time, cost, notes, multiple image URLs, and then add child places or tasks underneath each stop.",
-      "createStopTitle": "Add major stop",
-      "editStopTitle": "Edit major stop",
-      "createActivityTitle": "Add child place",
-      "editActivityTitle": "Edit child place",
-      "formDescription": "Each major stop can include date, time, notes, cost, and multiple image URLs rendered as a gallery.",
-      "childFormDescription": "Child places or tasks can also include time, cost, notes, and multiple images.",
+      "title": "Planner tree workspace",
+      "description": "Build the whole trip as a tree of sections, days, locations, activities, and notes without leaving this route.",
+      "createRootTitle": "Add root node",
+      "createChildTitle": "Add child node",
+      "editNodeTitle": "Edit planner node",
+      "editDescription": "Update the node title, type, schedule, cost, notes, and image without leaving the tree.",
+      "formDescription": "Each node can keep a schedule, cost, notes, and one representative image for quick scanning.",
       "budgetEyebrow": "Budget",
       "budgetTitle": "Budget summary",
-      "budgetDescription": "Track the total budget, the amount already planned, and the remaining room without leaving the trip detail page.",
-      "childCount": "{{count}} child places",
+      "budgetDescription": "Track the current trip budget summary while the new planner tree rolls out. Budget calculation will move fully onto planner nodes in the next phase.",
+      "scheduleEmpty": "No schedule yet",
+      "costEmpty": "No cost yet",
+      "notesEmpty": "This node does not have notes yet.",
+      "emptyTitle": "There are no planner nodes yet",
+      "empty": "Add the first root node to start shaping the trip as a full planning tree.",
       "fields": {
-        "stopDate": "Planned date",
-        "stopTitle": "Major stop name",
-        "startsAt": "Start time",
-        "endsAt": "End time",
-        "location": "Specific location",
-        "notes": "Detailed notes",
+        "nodeType": "Node type",
+        "title": "Node title",
+        "startAt": "Start time",
+        "endAt": "End time",
+        "notes": "Notes",
         "costAmount": "Planned cost",
         "costCurrency": "Currency",
-        "imageUrls": "Image URL list",
-        "activityTitle": "Place or activity name",
-        "dayDate": "Planner day"
+        "imageUrl": "Image URL"
       },
       "placeholders": {
-        "stopTitle": "Example: Central Da Lat",
-        "stopLocation": "Example: Xuan Huong Lake, Da Lat",
-        "stopNotes": "Example: Prioritize hotel check-in before 14:00, then keep the evening for a central walking route.",
-        "activityTitle": "Example: Visit Da Lat night market",
-        "activityLocation": "Example: Da Lat night market",
-        "activityNotes": "Example: Go after 19:00, prefer food stalls near the main gate, allow around 2 hours.",
-        "imageUrls": "One image URL per line, for example:\nhttps://images.example.com/1.jpg\nhttps://images.example.com/2.jpg"
+        "title": "Example: Arrival day in Da Lat",
+        "notes": "Example: Keep the first evening light and walkable near the hotel before committing to longer moves.",
+        "imageUrl": "https://images.example.com/arrival-day.jpg"
       },
       "actions": {
-        "addStop": "Add major stop",
-        "addingStop": "Adding major stop...",
-        "showStopForm": "Show major stop form",
-        "hideStopForm": "Hide major stop form",
-        "showChildren": "Show child places",
-        "hideChildren": "Hide child places",
-        "addFirstStop": "Add the first major stop",
-        "saveStop": "Save major stop",
-        "savingStop": "Saving major stop...",
-        "addActivity": "Add place",
-        "addingActivity": "Saving place...",
-        "saveActivity": "Save place",
-        "savingActivity": "Saving place...",
-        "deleteStop": "Delete major stop",
-        "deleteActivity": "Delete child place"
+        "addRoot": "Add root node",
+        "hideRootForm": "Hide root form",
+        "addFirstRoot": "Add the first root node",
+        "addChild": "Add child node",
+        "addNode": "Save node",
+        "saveNode": "Save changes",
+        "savingNode": "Saving node...",
+        "collapseChildren": "Collapse children",
+        "expandChildren": "Expand children",
+        "deleteNode": "Delete node"
       },
       "validation": {
-        "stopDateRequired": "Choose a date for the major stop.",
-        "stopTitleRequired": "Enter the major stop name first.",
-        "activityTitleRequired": "Enter the place or activity name first."
+        "titleRequired": "Enter the node title first.",
+        "dateTimeRangeInvalid": "End time cannot be earlier than start time.",
+        "costPairRequired": "Cost amount and currency must either both be filled or both be empty.",
+        "costAmountInvalid": "Planned cost must be greater than or equal to 0."
       },
       "feedback": {
         "loadError": "We couldn't load the planner for this trip.",
-        "createStopError": "Unable to add this major stop right now.",
-        "updateStopError": "Unable to save changes for this major stop right now.",
-        "deleteStopError": "Unable to delete this major stop right now.",
-        "createActivityError": "Unable to add this child place right now.",
-        "updateActivityError": "Unable to save changes for this child place right now.",
-        "deleteActivityError": "Unable to delete this child place right now."
+        "budgetLoadError": "We couldn't load the current budget summary for this trip.",
+        "createNodeError": "Unable to create this planner node right now.",
+        "updateNodeError": "Unable to save this planner node right now.",
+        "deleteNodeError": "Unable to delete this planner node right now."
       },
-      "empty": "This trip does not have any major stops yet. Add the first stop to start shaping the plan in detail.",
-      "emptyDay": "This major stop does not have any child places or tasks yet.",
-      "stopLabel": "Major stop {{index}}",
-      "childLabel": "Child place",
       "confirmations": {
-        "deleteStop": "Delete the major stop \"{{title}}\"?",
-        "deleteActivity": "Delete the child place \"{{title}}\"?"
+        "deleteNode": "Delete the node \"{{title}}\" and all of its child nodes?"
       },
       "metrics": {
         "totalBudget": "Total budget",
         "plannedBudget": "Planned",
         "remainingBudget": "Remaining",
-        "totalNodes": "Plan density",
-        "totalNodesValue": "{{days}} major stops / {{activities}} child places"
+        "totalNodes": "Planner density",
+        "totalNodesValue": "{{roots}} root nodes / {{children}} child nodes"
+      },
+      "types": {
+        "section": "Section",
+        "day": "Day",
+        "location": "Location",
+        "activity": "Activity",
+        "note": "Note"
       }
     },
     "delete": {

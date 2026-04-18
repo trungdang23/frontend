@@ -5,8 +5,8 @@ import { LanguageProvider } from '@/shared/i18n/language-provider';
 
 export function AppProviders({ children }: PropsWithChildren) {
   const [queryClient] = useState(
-    () =>
-      new QueryClient({
+    () => {
+      const client = new QueryClient({
         defaultOptions: {
           queries: {
             retry: false,
@@ -16,7 +16,23 @@ export function AppProviders({ children }: PropsWithChildren) {
             retry: false,
           },
         },
-      }),
+      });
+
+      client.setQueryDefaults(['trips', 'list'], {
+        staleTime: 30_000,
+      });
+      client.setQueryDefaults(['trips', 'detail'], {
+        staleTime: 30_000,
+      });
+      client.setQueryDefaults(['trips', 'planner'], {
+        staleTime: 0,
+      });
+      client.setQueryDefaults(['auth', 'me'], {
+        staleTime: 300_000,
+      });
+
+      return client;
+    },
   );
 
   return (
