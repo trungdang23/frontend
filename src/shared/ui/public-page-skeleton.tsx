@@ -2,7 +2,7 @@ import { PageSection } from '@/shared/ui/page-section';
 import { Skeleton } from '@/shared/ui/skeleton';
 
 type PublicPageSkeletonProps = {
-  variant?: 'landing' | 'community' | 'post';
+  variant?: 'landing' | 'community' | 'post' | 'trip';
 };
 
 export function PublicPageSkeleton({ variant = 'landing' }: PublicPageSkeletonProps) {
@@ -24,6 +24,7 @@ export function PublicPageSkeleton({ variant = 'landing' }: PublicPageSkeletonPr
         {variant === 'landing' ? <LandingSkeletonBody /> : null}
         {variant === 'community' ? <CommunitySkeletonBody /> : null}
         {variant === 'post' ? <PostSkeletonBody /> : null}
+        {variant === 'trip' ? <TripSkeletonBody /> : null}
       </PageSection>
     </div>
   );
@@ -93,6 +94,41 @@ function PostSkeletonBody() {
         <Skeleton className="h-7 w-full max-w-3xl rounded-full" />
         <Skeleton className="h-7 w-[92%] max-w-3xl rounded-full" />
         <Skeleton className="h-7 w-[80%] max-w-2xl rounded-full" />
+      </div>
+    </div>
+  );
+}
+
+function TripSkeletonBody() {
+  return (
+    <div className="space-y-8">
+      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="glass-panel rounded-[var(--radius-xl)] p-8">
+          <div className="space-y-4">
+            <Skeleton className="h-4 w-40 rounded-full" />
+            <Skeleton className="h-14 w-full max-w-2xl rounded-[2rem]" />
+            <Skeleton className="h-7 w-full max-w-3xl rounded-full" />
+            <Skeleton className="h-7 w-[84%] max-w-3xl rounded-full" />
+            <div className="flex flex-wrap gap-3">
+              <Skeleton className="h-10 w-28 rounded-full" />
+              <Skeleton className="h-10 w-32 rounded-full" />
+            </div>
+          </div>
+        </div>
+        <Skeleton className="h-[26rem] w-full rounded-[var(--radius-xl)]" />
+      </div>
+
+      <div className="grid gap-5 md:grid-cols-3">
+        <Skeleton className="h-32 w-full rounded-[var(--radius-xl)]" />
+        <Skeleton className="h-32 w-full rounded-[var(--radius-xl)]" />
+        <Skeleton className="h-32 w-full rounded-[var(--radius-xl)]" />
+      </div>
+
+      <div className="space-y-4">
+        <Skeleton className="h-4 w-24 rounded-full" />
+        <Skeleton className="h-10 w-72 rounded-[2rem]" />
+        <Skeleton className="h-28 w-full rounded-[var(--radius-xl)]" />
+        <Skeleton className="h-28 w-full rounded-[var(--radius-xl)]" />
       </div>
     </div>
   );

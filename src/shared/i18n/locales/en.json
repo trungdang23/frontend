@@ -236,6 +236,15 @@
       "updateError": "Unable to save changes right now. Please try again.",
       "deleteError": "Unable to delete the trip right now. Please try again."
     },
+    "share": {
+      "eyebrow": "Public sharing",
+      "title": "This trip is ready to open as a public link",
+      "description": "Anyone with the link can view the read-only public route with the current trip frame and planner tree.",
+      "copyAction": "Copy link",
+      "openAction": "Open public route",
+      "copySuccess": "The public share link was copied.",
+      "copyError": "We couldn't copy the link right now. You can still open the public route directly."
+    },
     "preview": {
       "titleFallback": "Trip title preview",
       "coverAltFallback": "Trip cover preview"
@@ -324,6 +333,31 @@
         "location": "Location",
         "activity": "Activity",
         "note": "Note"
+      }
+    },
+    "publicPage": {
+      "eyebrow": "Public trip",
+      "loadErrorTitle": "We couldn't load this public trip",
+      "loadErrorDescription": "Please try again in a few minutes or reload this route to continue.",
+      "notFoundTitle": "This public trip could not be found",
+      "notFoundDescription": "The link may no longer be valid or the trip may have been deleted.",
+      "privateTitle": "This trip is currently private",
+      "privateDescription": "The owner has not opened this route for public viewing yet. Log in if you think you should have access.",
+      "readOnlyNotice": "The public planner is read-only. Editing stays inside the owner's protected workspace.",
+      "plannerEyebrow": "Public planner",
+      "plannerTitle": "The shared planner tree",
+      "plannerDescription": "You can view the full planner tree as sections, days, locations, activities, and notes without logging in.",
+      "plannerLoadError": "We couldn't load the public planner for this trip.",
+      "plannerEmptyTitle": "There are no public planner nodes yet",
+      "plannerEmptyDescription": "The owner has opened the public route but has not added planner nodes to share yet.",
+      "nodeDepth": "Layer {{depth}}",
+      "metrics": {
+        "plannerDensity": "Planner density"
+      },
+      "actions": {
+        "backHome": "Back to home",
+        "login": "Log in",
+        "startPlanning": "Create your trip"
       }
     },
     "delete": {

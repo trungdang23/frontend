@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { TripForm } from "@/features/trips/components/trip-form";
 import { TripListItem } from "@/features/trips/components/trip-list-item";
+import { TripShareCard } from "@/features/trips/components/trip-share-card";
 import { TripFormValues } from "@/features/trips/lib/trip-form-validators";
 import { Trip } from "@/features/trips/types/trip";
 import { LanguageProvider } from "@/shared/i18n/language-provider";
@@ -161,6 +162,35 @@ describe("Trip metadata phase 03", () => {
     expect(screen.getByText("Công khai")).toBeInTheDocument();
     expect(screen.getByText("Thủ công")).toBeInTheDocument();
     expect(screen.getByText(/3\.500\.000/)).toBeInTheDocument();
+  });
+
+  it("copies the public trip link from the share card", async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+
+    Object.defineProperty(window.navigator, "clipboard", {
+      configurable: true,
+      value: {
+        writeText,
+      },
+    });
+
+    renderWithProviders(<TripShareCard trip={createTrip()} />);
+
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: /sao chép link/i,
+      }),
+    );
+
+    await waitFor(() => {
+      expect(writeText).toHaveBeenCalledWith(
+        expect.stringContaining("/trips/trip-01"),
+      );
+    });
+
+    expect(
+      screen.getByText("Link chia sẻ công khai đã được sao chép."),
+    ).toBeInTheDocument();
   });
 
   it("shows a validation error when manual mode is missing the budget amount", async () => {

@@ -16,14 +16,14 @@ Frontend hiện đã có baseline tốt ở các phần:
 - auth flow
 - protected shell
 - trips list/create/detail/edit/delete
-- planning workspace 2 cấp dựa trên itinerary bridge
+- trip metadata với `budgetMode/manualBudget/visibility`
+- planning workspace trên `PlanNode` với recursive tree và inline CRUD
 
 Phần chưa aligned với DRD mới:
 
-- trip form chưa có `budgetMode/manualBudget/visibility`
-- planner chưa dùng `PlanNode`
-- chưa có recursive tree
 - chưa có public trip read
+- chưa có share CTA thực tế cho trip public
+- budget summary vẫn đang bám contract backend bridge hiện tại
 - community còn là teaser
 
 ## Quyết định UX chính

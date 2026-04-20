@@ -13,16 +13,17 @@
 - auth login
 - auth me
 - auth refresh
+- auth logout
 - trips CRUD baseline
-- itinerary bridge baseline
+- trip `visibility`
+- trip `budgetMode/manualBudget`
+- planner APIs trên `PlanNode`
+- planner workspace đã cutover sang `PlanNode`
 - budget summary baseline
 
 ### Còn thiếu để aligned với DRD
 
-- auth logout
-- trip `visibility`
-- trip `budgetMode/manualBudget`
-- planner APIs trên `PlanNode`
+- budget summary cutover khỏi itinerary bridge
 - public trip read
 - posts APIs
 - comments APIs nếu mở trong MVP social
@@ -32,9 +33,9 @@
 ## 1. DRD mới và source hiện tại đang lệch nhau
 
 - DRD muốn `PlanNode`
-- source hiện tại vẫn là itinerary 2 cấp
+- source planner chính đã dùng `PlanNode`, nhưng một số docs cũ vẫn còn mô tả itinerary bridge như flow chính
 
-Nếu FE tiếp tục mở rộng UI sâu trên itinerary bridge, rework sẽ cao.
+Nếu docs không được re-baseline, thứ tự ưu tiên rất dễ bị kéo lệch sang backlog cũ thay vì gap thật còn lại là `budget/public/community`.
 
 ## 2. Planner tree rất dễ bị build quá tay
 
@@ -97,10 +98,11 @@ Không được để motion trở thành blocker cho planner CRUD.
 2. FE cập nhật trip form/list/detail
 3. BE mở planner APIs trên `PlanNode`
 4. FE chuyển workspace sang planner APIs
-5. BE mở public trip read
-6. FE mở share/public trip UI
-7. BE mở posts
-8. FE mở community data-driven
+5. BE chuyển budget summary sang `PlanNode`
+6. BE mở public trip read
+7. FE mở share/public trip UI
+8. BE mở posts
+9. FE mở community data-driven
 
 ## Stop conditions nên ghi rõ
 
@@ -110,6 +112,8 @@ Không được để motion trở thành blocker cho planner CRUD.
   - FE chưa merge form `manualBudget`
 - Nếu BE chưa có public trip read:
   - FE không nên giả public page bằng mock
+- Nếu BE chưa cutover budget summary khỏi itinerary bridge:
+  - FE không nên coi budget widget hiện tại là aligned hoàn toàn với DRD
 
 ## Những việc không nên làm tiếp theo
 

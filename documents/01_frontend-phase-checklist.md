@@ -2,7 +2,7 @@
 
 ## Scope
 
-- Checklist này bám theo DRD và user stories mới tại ngày `2026-04-18`
+- Checklist này bám theo DRD và user stories mới tại ngày `2026-04-20`
 - `Status` phản ánh mức độ aligned với target product contract, không chỉ phản ánh app hiện tại đã có màn hình gì
 
 ## Quy ước trạng thái
@@ -41,10 +41,12 @@
 
 - [x] Có auth baseline thật
 - [x] Có trips list/create/detail/edit/delete
-- [~] `/app/trips/:tripId` đã là planner workspace, nhưng còn dùng itinerary bridge 2 cấp
+- [x] `/app/trips/:tripId` đã là planner workspace trên `PlanNode`
 - [x] Đã có UI cho `budgetMode/manualBudget`
 - [x] Đã có UI cho `visibility`
-- [ ] Chưa có planner tree recursive theo `PlanNode`
+- [x] Đã có planner tree recursive theo `PlanNode`
+- [~] Budget summary vẫn đang đọc contract backend bridge hiện tại
+- [x] Đã có public trip read
 - [ ] Chưa có data-driven community
 - [x] Đã có logout flow aligned hoàn toàn với backend target
 
@@ -56,8 +58,8 @@
 | 01    | Foundation app, routing, shared architecture      | Completed |
 | 02    | Auth và session aligned với DRD                   | Completed |
 | 03    | Trips metadata aligned với DRD                    | Completed |
-| 04    | Planner workspace trên `PlanNode`                 | Todo      |
-| 05    | Public trip sharing                               | Todo      |
+| 04    | Planner workspace trên `PlanNode`                 | Completed |
+| 05    | Public trip sharing                               | Completed |
 | 06    | Community minimal                                 | Todo      |
 | 07    | Hardening, test, accessibility, release readiness | Todo      |
 
@@ -66,7 +68,7 @@
 Status: `Completed`
 
 - [x] Chốt route chính `/app/trips/:tripId` là planning workspace
-- [x] Ghi rõ source hiện tại còn dùng itinerary bridge
+- [x] Ghi rõ source hiện tại có legacy itinerary/budget bridge ngoài flow planner chính
 - [x] Ghi rõ target planner model là `PlanNode`
 - [x] Ghi rõ community hiện chưa production-ready
 
@@ -116,42 +118,45 @@ Status: `Completed`
 
 ## Phase 04 - Planner workspace trên `PlanNode`
 
-Status: `Todo`
+Status: `Completed`
 
-- [~] Route `/app/trips/:tripId` đã tồn tại và đang làm workspace
-- [ ] Tạo types cho `PlanNode`
-- [ ] Tạo API layer mới cho:
+- [x] Route `/app/trips/:tripId` đã tồn tại và đang làm planner workspace chính
+- [x] Tạo types cho `PlanNode`
+- [x] Tạo API layer mới cho:
   - `GET /trips/:tripId/planner`
   - `POST /nodes`
   - `PATCH /nodes/:id`
   - `DELETE /nodes/:id`
-- [ ] Chuyển main workspace từ itinerary bridge sang planner APIs
-- [ ] Render full tree, không paginate
-- [ ] Inline create/edit/delete node
-- [ ] Không mở route sâu cho từng node
-- [ ] Empty state cho trip chưa có node
-- [ ] Loading dùng skeleton
-- [ ] Error dùng toast/banner + retry
-- [ ] Delete confirmation đủ rõ
-- [ ] Query strategy bằng `TanStack Query`
-- [ ] Cache defaults theo DRD:
+- [x] Chuyển main workspace từ itinerary bridge sang planner APIs
+- [x] Render full tree, không paginate
+- [x] Inline create/edit/delete node
+- [x] Không mở route sâu cho từng node
+- [x] Empty state cho trip chưa có node
+- [x] Loading dùng skeleton
+- [x] Error dùng toast/banner + retry
+- [x] Delete confirmation đủ rõ
+- [x] Query strategy bằng `TanStack Query`
+- [x] Cache defaults theo DRD:
   - `listTrips` stale `30s`
   - `tripDetail` stale `30s`
   - `planner` stale `0s`
   - `profile` stale `5m`
-- [ ] Không build reorder phức tạp trước khi node CRUD ổn định
+- [x] Không build reorder phức tạp trước khi node CRUD ổn định
+- [x] Có test planner component/workspace baseline trong `src/tests/trip-planner.test.tsx`
+- [~] Budget summary vẫn giữ endpoint hiện tại và được track ở backend `Phase 05`
 
 ## Phase 05 - Public trip sharing
 
-Status: `Todo`
+Status: `Completed`
 
-- [ ] Có entrypoint xem trip public cho guest
-- [ ] Có share CTA cho trip public
-- [ ] Xử lý rõ các state:
+- [x] Chi tiết backlog tại `16_frontend-phase-05-public-trip-sharing-backlog.md`
+- [x] Có entrypoint xem trip public cho guest
+- [x] Có share CTA cho trip public
+- [x] Xử lý rõ các state:
   - public available
   - private denied
   - not found
-- [ ] Guest chỉ xem, không thấy action mutate
+- [x] Guest chỉ xem, không thấy action mutate
 
 ## Phase 06 - Community minimal
 
@@ -197,20 +202,20 @@ Status: `Todo`
 
 ### Slice FE-C
 
-- [ ] Planner API layer mới
-- [ ] `PlanNode` types
-- [ ] planner tree render
+- [x] Planner API layer mới
+- [x] `PlanNode` types
+- [x] planner tree render
 
 ### Slice FE-D
 
-- [ ] Inline node CRUD
-- [ ] loading/error/empty states
-- [ ] query invalidation và retry
+- [x] Inline node CRUD
+- [x] loading/error/empty states
+- [x] query invalidation và retry
 
 ### Slice FE-E
 
-- [ ] Public trip read UI
-- [ ] share state handling
+- [x] Public trip read UI
+- [x] share state handling
 
 ### Slice FE-F
 
@@ -221,7 +226,7 @@ Status: `Todo`
 
 ## Immediate next checks
 
-- [ ] Chốt shape response planner với backend
+- [x] Chốt shape response planner với backend
 - [x] Chốt shape trip mới với backend
-- [ ] Chốt visibility UX
-- [ ] Chốt rollout: khi nào FE ngừng gọi itinerary endpoints
+- [x] Chốt visibility UX
+- [~] Workspace đã ngừng gọi itinerary endpoints cho flow planner chính; bridge còn lại nằm ở budget summary và legacy support

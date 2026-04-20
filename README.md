@@ -13,6 +13,7 @@ Frontend package cho sản phẩm `journey`.
   - session boot với `login/register/me/refresh/logout`
   - trips workspace thật với `list/create/detail/edit/delete`
   - trip metadata aligned với `budgetMode/manualBudget/visibility`
+  - planner workspace thật trên `PlanNode` với recursive tree và inline node CRUD
   - community teaser và post placeholder có chủ đích
 - Các tài liệu trong `documents/` vẫn là nguồn tham chiếu chính để giữ roadmap không trượt khỏi scope.
 
@@ -54,9 +55,9 @@ Frontend package này giữ source of truth triển khai cho giao diện Journey
 
 ### Trạng thái migration hiện tại
 
-- App hiện còn dùng itinerary bridge cho planning workspace.
-- Đây chỉ là fallback để app đang chạy tiếp tục usable.
-- Khi backend mở planner APIs mới, route `/app/trips/:tripId` phải chuyển sang `PlanNode` flow.
+- Route `/app/trips/:tripId` đã cutover sang planner APIs trên `PlanNode`.
+- Source vẫn còn giữ `trip-planning-api.ts` cho itinerary/budget bridge hiện tại, nhưng bridge này không còn là data source chính của planner workspace.
+- Budget summary hiện vẫn đọc contract backend hiện tại và sẽ chỉ được cutover tiếp khi backend hoàn tất `Phase 05` budget migration.
 
 ## Chạy package
 
@@ -102,6 +103,8 @@ Khi frontend được start từ self-hosted GitHub Actions runner, `scripts/sta
 - `documents/08_frontend-risk-and-dependencies.md`
 - `documents/09_frontend-production-deploy-runbook.md`
 - `documents/10_frontend-trips-execution-backlog.md`
+- `documents/11_frontend-planning-expansion-plan.md`
+- `documents/16_frontend-phase-05-public-trip-sharing-backlog.md`
 
 ## Giả định nền cho kế hoạch hiện tại
 
@@ -143,7 +146,6 @@ src/
 
 ## Bước tiếp theo hợp lý
 
-1. Chạy post-deploy verification cho `login/register/me/refresh` và `trips` CRUD trên `https://buicojourney.com`.
-2. Hoàn tất các mục hardening còn lại của Phase 08: test auth/shared UI, route-level integration, smoke e2e, responsive, accessibility.
-3. Nối frontend Phase 06 cho `itineraries` và `budgets` theo contract backend thật.
-4. Chỉ mở `community` theo hướng API-driven khi backend Phase 06 sẵn contract.
+1. Chuyển budget summary sang contract `PlanNode`-based khi backend `Phase 05` hoàn tất.
+2. Hoàn tất hardening còn lại: test auth/shared UI, route-level integration, smoke e2e, responsive, accessibility.
+3. Chỉ mở `community` theo hướng API-driven khi backend `posts` APIs sẵn contract.

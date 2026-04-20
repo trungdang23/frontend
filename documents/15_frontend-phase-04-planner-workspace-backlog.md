@@ -23,9 +23,13 @@ Phase này chưa xử lý:
 
 ## Trạng thái
 
-- Status: `Todo`
-- Date: `2026-04-18`
+- Status: `Implemented in source`
+- Date: `2026-04-20`
 - Owner area: `frontend/src/features/trips`
+- Ghi chú re-baseline:
+  - tài liệu này giữ backlog lịch sử của phase planner
+  - source hiện tại đã có planner workspace trên `PlanNode`
+  - các phần chưa làm tiếp đã được tách sang `Phase 05` public trip sharing và `Phase 07` hardening
 - Dependency chặn:
   - backend `Phase 04` phải chốt planner response shape
   - backend `Phase 04` phải chốt node CRUD contract và delete semantics

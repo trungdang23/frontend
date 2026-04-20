@@ -6,6 +6,7 @@ import { deleteTrip, getTripDetail } from '@/features/trips/api/trips-api';
 import { getTripBudgetSummary } from '@/features/trips/api/trip-planning-api';
 import { TripCoverImage } from '@/features/trips/components/trip-cover-image';
 import { TripDeleteButton } from '@/features/trips/components/trip-delete-button';
+import { TripShareCard } from '@/features/trips/components/trip-share-card';
 import { PlannerWorkspace } from '@/features/trips/planning/components/planner-workspace';
 import {
   createPlanNode,
@@ -263,6 +264,8 @@ export function TripDetailPage() {
                 />
               </dl>
             </div>
+
+            <TripShareCard trip={trip} />
 
             <div className="flex flex-wrap gap-3">
               <Link

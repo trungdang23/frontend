@@ -255,7 +255,7 @@ Mutation rules:
 
 ## Current-source fallback cần ghi nhớ
 
-Source hiện tại vẫn có itinerary bridge:
+Source hiện tại vẫn còn itinerary/budget bridge trong codebase:
 
 - `GET /trips/:tripId/itinerary`
 - `POST /trips/:tripId/itinerary/days`
@@ -268,9 +268,10 @@ Source hiện tại vẫn có itinerary bridge:
 
 Nguyên tắc dùng fallback:
 
-- chỉ dùng để giữ app hiện tại chạy
+- planner workspace chính đã cutover sang `PlanNode` APIs
+- chỉ dùng bridge còn lại để giữ compatibility cho budget summary hiện tại, rollback ngắn hạn, hoặc migration support
 - không mở rộng UI mới dựa dài hạn trên itinerary bridge
-- khi planner API mới sẵn, route `/app/trips/:tripId` phải chuyển sang contract mới
+- không quay lại dùng itinerary bridge cho flow planner chính của `/app/trips/:tripId`
 
 ## Error handling rules ở frontend
 

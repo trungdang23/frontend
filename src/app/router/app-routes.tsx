@@ -24,7 +24,14 @@ const CommunityPostPage = lazy(async () => ({
   default: (await import('@/features/community/routes/community-post-page')).CommunityPostPage,
 }));
 
-function withPublicFallback(node: ReactNode, variant: 'landing' | 'community' | 'post') {
+const PublicTripPage = lazy(async () => ({
+  default: (await import('@/features/trips/public/routes/public-trip-page')).PublicTripPage,
+}));
+
+function withPublicFallback(
+  node: ReactNode,
+  variant: 'landing' | 'community' | 'post' | 'trip',
+) {
   return <Suspense fallback={<PublicPageSkeleton variant={variant} />}>{node}</Suspense>;
 }
 
@@ -59,6 +66,10 @@ export const appRoutes = [
         element: withPublicFallback(<CommunityPostPage />, 'post'),
       },
     ],
+  },
+  {
+    path: '/trips/:tripId',
+    element: withPublicFallback(<PublicTripPage />, 'trip'),
   },
   {
     path: '/app',
