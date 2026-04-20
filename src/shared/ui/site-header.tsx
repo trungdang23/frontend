@@ -11,6 +11,7 @@ export function SiteHeader() {
   const { t } = useI18n();
   const navItems = [
     { label: t('common.navigation.explore'), to: '/' },
+    { label: t('common.navigation.publicTrips'), to: '/trips' },
     { label: t('common.navigation.community'), to: '/community' },
     { label: t('common.navigation.login'), to: '/auth/login' },
   ];

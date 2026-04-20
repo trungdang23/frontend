@@ -151,6 +151,7 @@ Status: `Completed`
 
 - [x] Chi tiết backlog tại `16_frontend-phase-05-public-trip-sharing-backlog.md`
 - [x] Có entrypoint xem trip public cho guest
+- [x] Có public trip list để guest chọn trip mà không cần biết `id`
 - [x] Có share CTA cho trip public
 - [x] Xử lý rõ các state:
   - public available
@@ -216,6 +217,7 @@ Status: `Todo`
 
 - [x] Public trip read UI
 - [x] share state handling
+- [x] Public trip list UI
 
 ### Slice FE-F
 

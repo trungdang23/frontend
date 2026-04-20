@@ -1,10 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { appRoutes } from '@/app/router/app-routes';
-import { AuthProvider } from '@/features/auth/session/auth-context';
+import { PublicTripPage } from '@/features/trips/public/routes/public-trip-page';
 import { LanguageProvider } from '@/shared/i18n/language-provider';
 
 type MockResponseOptions = {
@@ -32,16 +31,14 @@ function renderWithProviders(initialEntries: string[]) {
     },
   });
 
-  const router = createMemoryRouter(appRoutes, {
-    initialEntries,
-  });
-
   render(
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
-        <AuthProvider>
-          <RouterProvider router={router} />
-        </AuthProvider>
+        <MemoryRouter initialEntries={initialEntries}>
+          <Routes>
+            <Route path="/trips/:tripId" element={<PublicTripPage />} />
+          </Routes>
+        </MemoryRouter>
       </LanguageProvider>
     </QueryClientProvider>,
   );

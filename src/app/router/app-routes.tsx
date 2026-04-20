@@ -28,6 +28,10 @@ const PublicTripPage = lazy(async () => ({
   default: (await import('@/features/trips/public/routes/public-trip-page')).PublicTripPage,
 }));
 
+const PublicTripsPage = lazy(async () => ({
+  default: (await import('@/features/trips/public/routes/public-trips-page')).PublicTripsPage,
+}));
+
 function withPublicFallback(
   node: ReactNode,
   variant: 'landing' | 'community' | 'post' | 'trip',
@@ -68,8 +72,17 @@ export const appRoutes = [
     ],
   },
   {
-    path: '/trips/:tripId',
-    element: withPublicFallback(<PublicTripPage />, 'trip'),
+    path: '/trips',
+    children: [
+      {
+        index: true,
+        element: withPublicFallback(<PublicTripsPage />, 'trip'),
+      },
+      {
+        path: ':tripId',
+        element: withPublicFallback(<PublicTripPage />, 'trip'),
+      },
+    ],
   },
   {
     path: '/app',

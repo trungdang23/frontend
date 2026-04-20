@@ -6,6 +6,7 @@
 
 Phase này tập trung vào:
 
+- public trip list route cho guest
 - public trip route cho guest
 - public planner read-only UI
 - share CTA trên owner workspace
@@ -172,9 +173,11 @@ Nếu `navigator.clipboard` không sẵn, phase này có thể fallback sang err
 
 ### Việc cần làm
 
+- [x] Thêm route public `/trips`
 - [x] Thêm route public `/trips/:tripId`
 - [x] Lazy-load page public như các public route khác
 - [x] Tạo API client cho:
+  - `listPublicTrips`
   - `getPublicTripDetail`
   - `getPublicTripPlanner`
 - [x] Tạo query keys riêng cho public trip
@@ -248,6 +251,7 @@ Nếu `navigator.clipboard` không sẵn, phase này có thể fallback sang err
 
 ### Component / route tests
 
+- [x] route public list render được public trips
 - [x] route public render được trip public
 - [x] route public render được planner read-only
 - [x] `403` hiển thị private denied state
@@ -300,6 +304,7 @@ Nếu `navigator.clipboard` không sẵn, phase này có thể fallback sang err
 Phase này chỉ được gọi là done khi:
 
 - guest mở được `/trips/:tripId` cho trip public
+- guest mở được `/trips` để chọn public trip mà không cần biết `id`
 - guest thấy planner tree ở chế độ read-only
 - guest thấy state `private denied` rõ ràng cho trip private
 - guest thấy state `not found` rõ ràng cho trip không tồn tại

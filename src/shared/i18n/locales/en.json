@@ -9,6 +9,7 @@
     },
     "navigation": {
       "explore": "Explore",
+      "publicTrips": "Public trips",
       "community": "Community",
       "login": "Log in",
       "getStarted": "Get started",
@@ -358,6 +359,22 @@
         "backHome": "Back to home",
         "login": "Log in",
         "startPlanning": "Create your trip"
+      }
+    },
+    "publicList": {
+      "eyebrow": "Explore public trips",
+      "title": "Trips that are currently being shared",
+      "description": "Open public trips directly and view the planner tree in read-only mode without needing to know a trip id first.",
+      "summary": "There are currently {{count}} public trips available.",
+      "cardEyebrow": "Public trip",
+      "loadErrorTitle": "We couldn't load public trips right now",
+      "loadErrorDescription": "Please try again in a few minutes or reload this route to keep exploring.",
+      "emptyTitle": "There are no public trips yet",
+      "emptyDescription": "Once users enable public sharing, their trips will appear here so guests can open them directly.",
+      "actions": {
+        "viewTrip": "Open trip",
+        "startPlanning": "Create your trip",
+        "backHome": "Back to home"
       }
     },
     "delete": {

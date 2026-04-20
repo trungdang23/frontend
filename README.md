@@ -28,7 +28,7 @@ Frontend package này giữ source of truth triển khai cho giao diện Journey
 - `/app/trips/:tripId` là planning workspace chính
 - planner target là `PlanNode` tree
 - trip có `budgetMode`, `manualBudget`, `visibility`
-- có public trip read cho guest
+- có public trip list + read cho guest
 - community mở ở mức `posts` trước, rồi mới cân nhắc `comments`
 
 ### Contract FE cần bám

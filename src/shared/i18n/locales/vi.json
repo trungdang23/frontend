@@ -9,6 +9,7 @@
     },
     "navigation": {
       "explore": "Khám phá",
+      "publicTrips": "Chuyến đi public",
       "community": "Cộng đồng",
       "login": "Đăng nhập",
       "getStarted": "Bắt đầu",
@@ -358,6 +359,22 @@
         "backHome": "Quay lại trang chủ",
         "login": "Đăng nhập",
         "startPlanning": "Tạo chuyến đi của bạn"
+      }
+    },
+    "publicList": {
+      "eyebrow": "Khám phá chuyến đi public",
+      "title": "Danh sách các chuyến đi đang được chia sẻ",
+      "description": "Mở trực tiếp các trip đã bật public để xem planner tree ở chế độ read-only mà không cần biết trước trip id.",
+      "summary": "Hiện có {{count}} chuyến đi public đang mở.",
+      "cardEyebrow": "Chuyến đi công khai",
+      "loadErrorTitle": "Chưa tải được danh sách chuyến đi public",
+      "loadErrorDescription": "Hãy thử lại sau ít phút hoặc tải lại route này để tiếp tục khám phá.",
+      "emptyTitle": "Chưa có chuyến đi public nào",
+      "emptyDescription": "Khi người dùng bật chia sẻ công khai, các chuyến đi sẽ xuất hiện tại đây để khách có thể mở xem.",
+      "actions": {
+        "viewTrip": "Mở chuyến đi",
+        "startPlanning": "Tạo chuyến đi của bạn",
+        "backHome": "Quay lại trang chủ"
       }
     },
     "delete": {
