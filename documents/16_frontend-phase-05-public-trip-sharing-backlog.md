@@ -30,9 +30,10 @@ Phase này chưa xử lý:
 - Trạng thái source hiện tại:
   - owner workspace đã nằm ở `/app/trips/:tripId`
   - planner owner đã dùng `PlanNode` APIs mới
-  - chưa có route public cho trip
-  - chưa có share CTA thực tế từ trip detail
-  - `/community` vẫn là teaser độc lập, chưa phải nơi hiển thị trip public
+  - đã có route public `/trips` và `/trips/:tripId`
+  - đã có share CTA thực tế từ trip detail khi trip ở trạng thái `public`
+  - public trip page đã read-only và tách scope rõ khỏi `community`
+  - app shell authenticated vẫn giữ quick links sang các route public để owner không bị kẹt trong khu riêng
 - Dependency chặn:
   - backend `Phase 06` phải chốt public trip detail/planner contract
   - backend phải giữ rõ semantics `403 private denied` và `404 not found`
@@ -93,6 +94,7 @@ Phase này nên có:
 
 - CTA copy public link khi `trip.visibility = public`
 - trạng thái giải thích ngắn khi trip còn `private`
+- owner đã đăng nhập vẫn có thể quay lại public trip route từ app shell mà không cần logout
 
 Không cần làm sớm:
 

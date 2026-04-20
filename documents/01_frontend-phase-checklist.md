@@ -47,7 +47,8 @@
 - [x] Đã có planner tree recursive theo `PlanNode`
 - [~] Budget summary vẫn đang đọc contract backend bridge hiện tại
 - [x] Đã có public trip read
-- [ ] Chưa có data-driven community
+- [x] Đã có data-driven community
+- [x] Người dùng đã đăng nhập vẫn có đường quay lại `Khám phá`, `Chuyến đi public`, và `Cộng đồng`
 - [x] Đã có logout flow aligned hoàn toàn với backend target
 
 ## Tổng quan phase
@@ -60,7 +61,7 @@
 | 03    | Trips metadata aligned với DRD                    | Completed |
 | 04    | Planner workspace trên `PlanNode`                 | Completed |
 | 05    | Public trip sharing                               | Completed |
-| 06    | Community minimal                                 | Todo      |
+| 06    | Community minimal                                 | Completed |
 | 07    | Hardening, test, accessibility, release readiness | Todo      |
 
 ## Phase 00 - Re-baseline tài liệu và contract theo DRD mới
@@ -95,6 +96,7 @@ Status: `Completed`
 - [x] Session persistence qua `localStorage`
 - [x] Protected app shell
 - [x] Redirect vào `/app`
+- [x] Sau khi đăng nhập, app shell vẫn giữ entrypoint rõ ràng sang các route public quan trọng
 - [x] Logout flow dùng `POST /auth/logout`
 - [x] Xử lý expired session thống nhất trên toàn app
 - [x] Chuẩn hoá toast/banner cho auth errors
@@ -153,6 +155,7 @@ Status: `Completed`
 - [x] Có entrypoint xem trip public cho guest
 - [x] Có public trip list để guest chọn trip mà không cần biết `id`
 - [x] Có share CTA cho trip public
+- [x] Owner đã đăng nhập vẫn có quick links quay lại public trip/community/explore từ app shell
 - [x] Xử lý rõ các state:
   - public available
   - private denied
@@ -168,6 +171,7 @@ Status: `Completed`
 - [x] Tạo post detail route
 - [x] Tạo create post flow
 - [x] Hỗ trợ create post from trip nếu backend mở
+- [x] Community route vẫn dễ quay lại ngay cả khi người dùng đang ở protected shell
 - [ ] Nếu comments được backend mở:
   - render list comments
   - create comment

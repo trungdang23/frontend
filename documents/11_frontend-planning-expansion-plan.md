@@ -18,13 +18,14 @@ Frontend hiện đã có baseline tốt ở các phần:
 - trips list/create/detail/edit/delete
 - trip metadata với `budgetMode/manualBudget/visibility`
 - planning workspace trên `PlanNode` với recursive tree và inline CRUD
+- public trip list + public trip read
+- share CTA trên owner workspace
+- community feed/detail/create post đã data-driven
 
 Phần chưa aligned với DRD mới:
 
-- chưa có public trip read
-- chưa có share CTA thực tế cho trip public
 - budget summary vẫn đang bám contract backend bridge hiện tại
-- community còn là teaser
+- social layer mới dừng ở `posts`, chưa mở `comments`
 
 ## Quyết định UX chính
 
@@ -42,6 +43,16 @@ Lý do:
 - route map hiện tại đã hợp lý
 - không cần thêm route sâu cho node
 - thay đổi nằm ở data contract và component structure, không nằm ở route explosion
+
+Public surfaces vẫn giữ:
+
+- `/`
+- `/trips`
+- `/trips/:tripId`
+- `/community`
+- `/community/:postId`
+
+Ngay cả khi người dùng đã đăng nhập, app shell vẫn nên giữ đường quay lại các route public này để tránh navigation dead-end giữa khu riêng và khu public.
 
 ## 2. `/app/trips/:tripId` là planner workspace, không quay lại thành metadata detail
 

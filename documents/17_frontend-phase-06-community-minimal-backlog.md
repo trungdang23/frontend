@@ -34,6 +34,7 @@ Phase này chưa xử lý:
   - đã có API layer cho posts
   - đã có create post flow trong app shell
   - public trip sharing đã được nối sang create post qua `tripId`
+  - authenticated users vẫn có quick links từ app shell để quay lại `Khám phá`, `Chuyến đi public`, và `Cộng đồng`
 - Dependency chặn:
   - backend `Phase 07` phải mở `POST /posts`, `GET /posts`, `GET /posts/:postId`
   - backend phải chốt semantics cho `tripId` linked post
@@ -55,6 +56,7 @@ Lý do:
 - feed community là entrypoint public tự nhiên
 - không kéo guest vào protected shell
 - bám đúng navigation hiện tại ở `SiteHeader`
+- khi user đã đăng nhập, app shell vẫn nên giữ đường quay lại route public này để community không biến thành flow chỉ dành cho guest
 
 ## 2. Create post nên sống trong protected shell
 

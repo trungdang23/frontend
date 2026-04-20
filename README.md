@@ -14,7 +14,9 @@ Frontend package cho sản phẩm `journey`.
   - trips workspace thật với `list/create/detail/edit/delete`
   - trip metadata aligned với `budgetMode/manualBudget/visibility`
   - planner workspace thật trên `PlanNode` với recursive tree và inline node CRUD
-  - community teaser và post placeholder có chủ đích
+  - public trip list + public trip detail/planner read cho guest
+  - community feed/detail/create post đã dùng API thật
+  - authenticated app shell vẫn giữ quick links sang `Khám phá`, `Chuyến đi public`, và `Cộng đồng`
 - Các tài liệu trong `documents/` vẫn là nguồn tham chiếu chính để giữ roadmap không trượt khỏi scope.
 
 ## Target Implementation Snapshot
@@ -53,12 +55,14 @@ Frontend package này giữ source of truth triển khai cho giao diện Journey
 - Posts:
   - `POST /posts`
   - `GET /posts`
+  - `GET /posts/:postId`
 
 ### Trạng thái migration hiện tại
 
 - Route `/app/trips/:tripId` đã cutover sang planner APIs trên `PlanNode`.
 - Source vẫn còn giữ `trip-planning-api.ts` cho itinerary/budget bridge hiện tại, nhưng bridge này không còn là data source chính của planner workspace.
 - Budget summary hiện vẫn đọc contract backend hiện tại và sẽ chỉ được cutover tiếp khi backend hoàn tất `Phase 05` budget migration.
+- Các route public `/, /trips, /community` vẫn giữ nguyên semantics public; khi người dùng đã đăng nhập, app shell vẫn phải cho phép quay lại các route này mà không tạo cảm giác bị kẹt trong khu riêng.
 
 ## Chạy package
 
@@ -127,7 +131,15 @@ Khi frontend được start từ self-hosted GitHub Actions runner, `scripts/sta
   - `POST /trips/:tripId/itinerary/days/:dayId/activities`
   - `PATCH /trips/:tripId/itinerary/days/:dayId/activities/:activityId`
   - `GET /trips/:tripId/budget-summary`
-- Các phase `trips`, `itineraries`, `budgets`, và `community` của backend vẫn là dependency cho các phase frontend tương ứng.
+- Backend production hiện cũng đã sẵn public trip read với:
+  - `GET /public/trips`
+  - `GET /public/trips/:tripId`
+  - `GET /public/trips/:tripId/planner`
+- Backend production hiện cũng đã sẵn community posts với:
+  - `POST /posts`
+  - `GET /posts`
+  - `GET /posts/:postId`
+- Dependency mở còn lại chủ yếu nằm ở budget migration/hardening và các phase sau như `comments`.
 
 ## Mục tiêu của bộ planning này
 
@@ -149,4 +161,4 @@ src/
 
 1. Chuyển budget summary sang contract `PlanNode`-based khi backend `Phase 05` hoàn tất.
 2. Hoàn tất hardening còn lại: test auth/shared UI, route-level integration, smoke e2e, responsive, accessibility.
-3. Chỉ mở `community` theo hướng API-driven khi backend `posts` APIs sẵn contract.
+3. Chỉ cân nhắc mở `comments` hoặc social interactions sau khi hardening và budget migration ổn định.

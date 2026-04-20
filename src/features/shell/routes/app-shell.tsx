@@ -9,7 +9,12 @@ import { LanguageSwitcher } from '@/shared/ui/language-switcher';
 export function AppShell() {
   const auth = useAuth();
   const { t } = useI18n();
-  const navItems = [
+  const publicNavItems = [
+    { label: t('common.navigation.explore'), to: '/' },
+    { label: t('common.navigation.publicTrips'), to: '/trips' },
+    { label: t('common.navigation.community'), to: '/community' },
+  ];
+  const workspaceNavItems = [
     { label: t('common.navigation.dashboard'), to: '/app', icon: House },
     {
       label: t('common.navigation.writeStory'),
@@ -23,21 +28,50 @@ export function AppShell() {
   return (
     <div className="min-h-screen">
       <header className="page-shell pt-5">
-        <div className="glass-panel flex flex-col gap-4 rounded-[var(--radius-xl)] px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="headline text-3xl text-[var(--color-forest)]">{t('shell.title')}</p>
-            <p className="text-sm text-[var(--color-ink-soft)]">
-              {t('shell.description', { name: auth.user?.displayName || t('common.userFallback') })}
-            </p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <LanguageSwitcher />
-            <Button onClick={auth.logout} variant="secondary">
-              <span className="inline-flex items-center gap-2">
-                <LogOut className="h-4 w-4" />
-                {t('common.actions.logout')}
-              </span>
-            </Button>
+        <div className="glass-panel flex flex-col gap-4 rounded-[var(--radius-xl)] px-5 py-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-4">
+              <div>
+                <p className="headline text-3xl text-[var(--color-forest)]">
+                  {t('shell.title')}
+                </p>
+                <p className="text-sm text-[var(--color-ink-soft)]">
+                  {t('shell.description', {
+                    name: auth.user?.displayName || t('common.userFallback'),
+                  })}
+                </p>
+              </div>
+
+              <nav className="flex flex-wrap gap-2">
+                {publicNavItems.map((item) => (
+                  <NavLink
+                    className={({ isActive }) =>
+                      cn(
+                        'inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium transition',
+                        isActive
+                          ? 'border-[rgba(84,107,65,0.28)] bg-[rgba(84,107,65,0.1)] text-[var(--color-forest)]'
+                          : 'border-[var(--color-border)] text-[var(--color-ink-soft)] hover:bg-white/60 hover:text-[var(--color-forest)]',
+                      )
+                    }
+                    end={item.to === '/'}
+                    key={item.to}
+                    to={item.to}
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+              </nav>
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <LanguageSwitcher />
+              <Button onClick={auth.logout} variant="secondary">
+                <span className="inline-flex items-center gap-2">
+                  <LogOut className="h-4 w-4" />
+                  {t('common.actions.logout')}
+                </span>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -45,7 +79,7 @@ export function AppShell() {
       <div className="page-shell grid gap-8 py-8 lg:grid-cols-[240px_1fr]">
         <aside className="glass-panel rounded-[var(--radius-xl)] p-4">
           <nav className="flex flex-col gap-2">
-            {navItems.map((item) => {
+            {workspaceNavItems.map((item) => {
               const Icon = item.icon;
 
               return (
