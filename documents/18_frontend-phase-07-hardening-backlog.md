@@ -150,11 +150,11 @@ Khóa các flow quan trọng ở mức component/router integration, chưa cần
 ### Việc cần làm
 
 - [ ] Test guest mở public trip list/detail
-- [ ] Test guest mở community feed/detail
-- [ ] Test direct visit `/app/trips/:tripId` khi chưa auth sẽ về login
-- [ ] Test login xong tiếp tục được flow đang dở nếu có `location.state.from`
+- [x] Test guest mở community feed/detail
+- [x] Test direct visit `/app/trips/:tripId` khi chưa auth sẽ về login
+- [x] Test login xong tiếp tục được flow đang dở nếu có `location.state.from`
 - [ ] Test session boot không flash sai shell hoặc route sai
-- [ ] Test create post flow từ protected shell không làm mất đường quay lại public community
+- [x] Test create post flow từ protected shell không làm mất đường quay lại public community
 
 ### File dự kiến
 
