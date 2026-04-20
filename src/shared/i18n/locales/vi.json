@@ -318,7 +318,7 @@
       "formDescription": "Mỗi node có thể lưu lịch thời gian, chi phí, ghi chú và một ảnh đại diện để quét nhanh toàn cây.",
       "budgetEyebrow": "Ngân sách",
       "budgetTitle": "Tóm tắt ngân sách",
-      "budgetDescription": "Theo dõi tóm tắt ngân sách hiện tại trong lúc planner tree mới được rollout. Logic ngân sách sẽ được chuyển hẳn sang planner node ở phase kế tiếp.",
+      "budgetDescription": "Theo dõi tóm tắt ngân sách đang được tính trực tiếp từ planner node hiện tại để thấy phần đã lên kế hoạch và phần còn lại của chuyến đi.",
       "scheduleEmpty": "Chưa có lịch thời gian",
       "costEmpty": "Chưa có chi phí",
       "notesEmpty": "Node này chưa có ghi chú.",

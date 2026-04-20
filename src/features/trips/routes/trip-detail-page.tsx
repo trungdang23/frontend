@@ -49,6 +49,8 @@ export function TripDetailPage() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const noticeKey = (location.state as TripRouteState | null)?.noticeKey;
+  const budgetSummaryQueryKey = ['trips', 'budget-summary', tripId] as const;
+  const plannerDetailQueryKey = plannerQueryKeys.detail(tripId as string);
 
   const tripQuery = useQuery({
     queryKey: ['trips', 'detail', tripId],
@@ -72,26 +74,32 @@ export function TripDetailPage() {
   const createNodeMutation = useMutation({
     mutationFn: (payload: PlanNodeMutationPayload) => createPlanNode(payload),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: plannerQueryKeys.detail(tripId as string),
-      });
+      await invalidatePlannerBudgetQueries(
+        queryClient,
+        plannerDetailQueryKey,
+        budgetSummaryQueryKey,
+      );
     },
   });
   const updateNodeMutation = useMutation({
     mutationFn: (payload: { nodeId: string; values: PlanNodeUpdatePayload }) =>
       updatePlanNode(payload.nodeId, payload.values),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: plannerQueryKeys.detail(tripId as string),
-      });
+      await invalidatePlannerBudgetQueries(
+        queryClient,
+        plannerDetailQueryKey,
+        budgetSummaryQueryKey,
+      );
     },
   });
   const deleteNodeMutation = useMutation({
     mutationFn: (nodeId: string) => deletePlanNode(nodeId),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: plannerQueryKeys.detail(tripId as string),
-      });
+      await invalidatePlannerBudgetQueries(
+        queryClient,
+        plannerDetailQueryKey,
+        budgetSummaryQueryKey,
+      );
     },
   });
 
@@ -111,10 +119,10 @@ export function TripDetailPage() {
           queryKey: ['trips', 'detail', tripId],
         }),
         queryClient.invalidateQueries({
-          queryKey: plannerQueryKeys.detail(tripId),
+          queryKey: plannerDetailQueryKey,
         }),
         queryClient.invalidateQueries({
-          queryKey: ['trips', 'budget-summary', tripId],
+          queryKey: budgetSummaryQueryKey,
         }),
       ]);
       navigate('/app/trips', {
@@ -494,6 +502,21 @@ function OverviewMetric({
       <p className="mt-3 text-lg font-semibold text-[var(--color-ink)]">{value}</p>
     </div>
   );
+}
+
+async function invalidatePlannerBudgetQueries(
+  queryClient: ReturnType<typeof useQueryClient>,
+  plannerDetailQueryKey: ReturnType<typeof plannerQueryKeys.detail>,
+  budgetSummaryQueryKey: readonly ['trips', 'budget-summary', string | undefined],
+) {
+  await Promise.all([
+    queryClient.invalidateQueries({
+      queryKey: plannerDetailQueryKey,
+    }),
+    queryClient.invalidateQueries({
+      queryKey: budgetSummaryQueryKey,
+    }),
+  ]);
 }
 
 function TripDetailSkeleton() {

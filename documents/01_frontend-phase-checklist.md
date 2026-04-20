@@ -45,7 +45,7 @@
 - [x] Đã có UI cho `budgetMode/manualBudget`
 - [x] Đã có UI cho `visibility`
 - [x] Đã có planner tree recursive theo `PlanNode`
-- [~] Budget summary vẫn đang đọc contract backend bridge hiện tại
+- [~] Budget summary đã đọc summary `PlanNode`-based qua endpoint hiện tại; phần còn lại là hardening refetch và runtime verify
 - [x] Đã có public trip read
 - [x] Đã có data-driven community
 - [x] Người dùng đã đăng nhập vẫn có đường quay lại `Khám phá`, `Chuyến đi public`, và `Cộng đồng`
@@ -237,4 +237,4 @@ Status: `Todo`
 - [x] Chốt shape response planner với backend
 - [x] Chốt shape trip mới với backend
 - [x] Chốt visibility UX
-- [~] Workspace đã ngừng gọi itinerary endpoints cho flow planner chính; bridge còn lại nằm ở budget summary và legacy support
+- [~] Workspace owner flow đã aligned với planner-first contract; phần legacy còn lại chủ yếu nằm ở itinerary support và runtime verify mixed-currency

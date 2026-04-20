@@ -60,8 +60,8 @@ Frontend package này giữ source of truth triển khai cho giao diện Journey
 ### Trạng thái migration hiện tại
 
 - Route `/app/trips/:tripId` đã cutover sang planner APIs trên `PlanNode`.
-- Source vẫn còn giữ `trip-planning-api.ts` cho itinerary/budget bridge hiện tại, nhưng bridge này không còn là data source chính của planner workspace.
-- Budget summary hiện vẫn đọc contract backend hiện tại và sẽ chỉ được cutover tiếp khi backend hoàn tất `Phase 05` budget migration.
+- Source vẫn còn giữ `trip-planning-api.ts` cho legacy itinerary endpoints và route naming cũ, nhưng planner workspace và budget summary owner flow đã đọc contract `PlanNode`-based từ backend.
+- Hardening còn lại quanh budget hiện tập trung vào việc giữ summary refetch đúng sau planner mutation và runtime verify mixed-currency trên deploy thật.
 - Các route public `/, /trips, /community` vẫn giữ nguyên semantics public; khi người dùng đã đăng nhập, app shell vẫn phải cho phép quay lại các route này mà không tạo cảm giác bị kẹt trong khu riêng.
 
 ## Chạy package
@@ -141,7 +141,7 @@ Khi frontend được start từ self-hosted GitHub Actions runner, `scripts/sta
   - `POST /posts`
   - `GET /posts`
   - `GET /posts/:postId`
-- Dependency mở còn lại chủ yếu nằm ở budget migration/hardening và các phase sau như `comments`.
+- Dependency mở còn lại chủ yếu nằm ở budget hardening/runtime verification và các phase sau như `comments`.
 
 ## Mục tiêu của bộ planning này
 
@@ -161,6 +161,6 @@ src/
 
 ## Bước tiếp theo hợp lý
 
-1. Chuyển budget summary sang contract `PlanNode`-based khi backend `Phase 05` hoàn tất.
-2. Hoàn tất hardening còn lại: test auth/shared UI, route-level integration, smoke e2e, responsive, accessibility.
-3. Chỉ cân nhắc mở `comments` hoặc social interactions sau khi hardening và budget migration ổn định.
+1. Hoàn tất hardening còn lại: test auth/shared UI, route-level integration, smoke e2e, responsive, accessibility.
+2. Chốt runtime verification cho budget summary mixed-currency trên deploy thật.
+3. Chỉ cân nhắc mở `comments` hoặc social interactions sau khi hardening và budget runtime verification ổn định.

@@ -318,7 +318,7 @@
       "formDescription": "Each node can keep a schedule, cost, notes, and one representative image for quick scanning.",
       "budgetEyebrow": "Budget",
       "budgetTitle": "Budget summary",
-      "budgetDescription": "Track the current trip budget summary while the new planner tree rolls out. Budget calculation will move fully onto planner nodes in the next phase.",
+      "budgetDescription": "Track the budget summary calculated directly from the current planner nodes so planned and remaining budget stay visible in the same workspace.",
       "scheduleEmpty": "No schedule yet",
       "costEmpty": "No cost yet",
       "notesEmpty": "This node does not have notes yet.",

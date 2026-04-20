@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
   MemoryRouter,
@@ -492,5 +492,210 @@ describe('App routing integration', () => {
     expect(
       screen.getByText('Ba ngày nhẹ hơn ở Hoi An'),
     ).toBeInTheDocument();
+  });
+
+  it('refreshes the budget summary after creating a planner node from the trip detail route', async () => {
+    const tripId = 'trip-owner-budget-1';
+    const tripDetail = {
+      id: tripId,
+      userId: 'user-routing-01',
+      name: 'Hue Planner Workspace',
+      destination: null,
+      summaryNotes: 'Budget summary should stay in sync with planner mutations.',
+      coverImageUrl: null,
+      startDate: '2026-09-01',
+      endDate: '2026-09-04',
+      timezone: null,
+      budgetAmount: 4200000,
+      budgetCurrency: 'VND',
+      budgetMode: 'manual',
+      manualBudgetAmount: 4200000,
+      manualBudgetCurrency: 'VND',
+      visibility: 'private',
+      createdAt: '2026-04-20T00:00:00.000Z',
+      updatedAt: '2026-04-20T00:00:00.000Z',
+    };
+    const rootNode = {
+      id: 'node-root',
+      tripId,
+      parentId: null,
+      type: 'day',
+      title: 'Ngày 1 ở Huế',
+      notes: 'Giữ planner mỏng trước khi mở rộng thêm.',
+      startAt: '2026-09-01T08:00:00.000Z',
+      endAt: '2026-09-01T20:00:00.000Z',
+      costAmount: 600000,
+      costCurrency: 'VND',
+      imageUrl: null,
+      sortOrder: 0,
+      depth: 0,
+      createdAt: '2026-04-20T00:00:00.000Z',
+      updatedAt: '2026-04-20T00:00:00.000Z',
+    };
+    const createdChildNode = {
+      id: 'node-child',
+      tripId,
+      parentId: 'node-root',
+      type: 'activity',
+      title: 'Bữa tối sông Hương',
+      notes: 'Khoá regression cho budget refetch.',
+      startAt: '2026-09-01T19:00:00.000Z',
+      endAt: '2026-09-01T21:00:00.000Z',
+      costAmount: 200000,
+      costCurrency: 'VND',
+      imageUrl: null,
+      sortOrder: 0,
+      depth: 1,
+      createdAt: '2026-04-20T00:00:00.000Z',
+      updatedAt: '2026-04-20T00:00:00.000Z',
+    };
+
+    let plannerRequestCount = 0;
+    let budgetSummaryRequestCount = 0;
+
+    fetchMock.mockImplementation(async (input, init) => {
+      const url = typeof input === 'string' ? input : input.toString();
+      const method = init?.method ?? 'GET';
+
+      if (url.endsWith(`/trips/${tripId}`) && method === 'GET') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: tripDetail,
+          },
+        });
+      }
+
+      if (url.endsWith(`/trips/${tripId}/budget-summary`) && method === 'GET') {
+        budgetSummaryRequestCount += 1;
+
+        return createMockResponse({
+          body: {
+            success: true,
+            data:
+              budgetSummaryRequestCount === 1
+                ? {
+                    tripId,
+                    currency: 'VND',
+                    totalBudgetAmount: 4200000,
+                    totalPlannedAmount: 600000,
+                    remainingAmount: 3600000,
+                    totalDays: 1,
+                    totalActivities: 0,
+                    isOverBudget: false,
+                    hasMixedCurrencies: false,
+                    totalsByCurrency: [
+                      {
+                        currency: 'VND',
+                        plannedAmount: 600000,
+                        nodeCount: 1,
+                      },
+                    ],
+                  }
+                : {
+                    tripId,
+                    currency: 'VND',
+                    totalBudgetAmount: 4200000,
+                    totalPlannedAmount: 800000,
+                    remainingAmount: 3400000,
+                    totalDays: 1,
+                    totalActivities: 1,
+                    isOverBudget: false,
+                    hasMixedCurrencies: false,
+                    totalsByCurrency: [
+                      {
+                        currency: 'VND',
+                        plannedAmount: 800000,
+                        nodeCount: 2,
+                      },
+                    ],
+                  },
+          },
+        });
+      }
+
+      if (url.endsWith(`/trips/${tripId}/planner`) && method === 'GET') {
+        plannerRequestCount += 1;
+
+        return createMockResponse({
+          body: {
+            success: true,
+            data: {
+              trip: tripDetail,
+              nodes:
+                plannerRequestCount === 1
+                  ? [rootNode]
+                  : [rootNode, createdChildNode],
+            },
+          },
+        });
+      }
+
+      if (url.endsWith('/nodes') && method === 'POST') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: createdChildNode,
+          },
+        });
+      }
+
+      throw new Error(`Unexpected request: ${method} ${url}`);
+    });
+
+    renderAppWithProviders({
+      initialEntries: [`/app/trips/${tripId}`],
+      initialStatus: 'authenticated',
+    });
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 1,
+        name: /hue planner workspace/i,
+      }),
+    ).toBeInTheDocument();
+    expect(await screen.findByText('Ngày 1 ở Huế')).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(budgetSummaryRequestCount).toBe(1);
+      expect(plannerRequestCount).toBe(1);
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: /thêm node con/i }),
+    );
+    await userEvent.type(
+      screen.getByLabelText('Tên node'),
+      createdChildNode.title,
+    );
+    await userEvent.selectOptions(screen.getByLabelText('Loại node'), 'activity');
+    await userEvent.type(
+      screen.getByLabelText('Thời gian bắt đầu'),
+      '2026-09-01T19:00',
+    );
+    await userEvent.type(
+      screen.getByLabelText('Thời gian kết thúc'),
+      '2026-09-01T21:00',
+    );
+    await userEvent.type(
+      screen.getByLabelText('Chi phí dự kiến'),
+      '200000',
+    );
+    await userEvent.clear(screen.getByLabelText('Tiền tệ'));
+    await userEvent.type(screen.getByLabelText('Tiền tệ'), 'VND');
+    await userEvent.type(
+      screen.getByLabelText('Ghi chú'),
+      createdChildNode.notes,
+    );
+    await userEvent.click(screen.getByRole('button', { name: /lưu node/i }));
+
+    expect(await screen.findByText(createdChildNode.title)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(budgetSummaryRequestCount).toBe(2);
+      expect(plannerRequestCount).toBe(2);
+    });
+
+    expect(await screen.findByText(/800\.000/)).toBeInTheDocument();
   });
 });
