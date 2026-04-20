@@ -33,3 +33,8 @@
 - Run the smallest relevant frontend checks after changes, such as lint, unit tests, or build validation once scripts exist.
 - If visual behavior changes, describe the impacted screen or flow in the final handoff.
 - If the frontend package is not scaffolded yet, state that verification is limited to file review.
+
+## Frontend Publishing
+
+- After finishing frontend changes and relevant verification, commit the frontend repo and push to `origin/main` automatically unless the user explicitly says not to push.
+- If the frontend worktree has unrelated changes or failed verification that make a direct push unsafe, stop and explain the blocker instead of guessing.
