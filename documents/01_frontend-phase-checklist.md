@@ -182,6 +182,7 @@ Status: `Completed`
 
 Status: `Todo`
 
+- [ ] Chi tiết backlog tại `18_frontend-phase-07-hardening-backlog.md`
 - [ ] Unit/component tests cho auth, trips, planner
 - [ ] Route-level integration tests
 - [ ] Smoke e2e cho:

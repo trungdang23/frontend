@@ -44,7 +44,7 @@ function renderAppShell() {
 }
 
 describe('App shell public navigation', () => {
-  it('keeps public explore and community links visible for authenticated users', async () => {
+  it('keeps public quick links visible for authenticated users', () => {
     renderAppShell();
 
     expect(
@@ -56,11 +56,29 @@ describe('App shell public navigation', () => {
     expect(
       screen.getByRole('link', { name: /cộng đồng|community/i }),
     ).toBeInTheDocument();
-
-    await userEvent.click(
-      screen.getByRole('link', { name: /cộng đồng|community/i }),
-    );
-
-    expect(screen.getByText('Community page')).toBeInTheDocument();
   });
+
+  it.each([
+    {
+      linkName: /khám phá|explore/i,
+      pageText: 'Explore page',
+    },
+    {
+      linkName: /chuyến đi public|public trips/i,
+      pageText: 'Public trips page',
+    },
+    {
+      linkName: /cộng đồng|community/i,
+      pageText: 'Community page',
+    },
+  ])(
+    'navigates authenticated users from app shell to $pageText',
+    async ({ linkName, pageText }) => {
+      renderAppShell();
+
+      await userEvent.click(screen.getByRole('link', { name: linkName }));
+
+      expect(screen.getByText(pageText)).toBeInTheDocument();
+    },
+  );
 });

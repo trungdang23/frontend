@@ -1,0 +1,321 @@
+# Frontend Phase 07 Hardening Backlog
+
+## Mục tiêu
+
+Đóng `Phase 07` của frontend để các flow đã có trở nên ổn định hơn trước khi mở thêm feature mới như `comments`, social interactions sâu hơn, hoặc cleanup lớn quanh planner/budget.
+
+Phase này tập trung vào:
+
+- hardening navigation giữa public và protected flows
+- route-level integration tests cho auth/session/navigation
+- smoke verify cho trips/planner/public/community flows
+- rà responsive trên các màn hình chính
+- rà accessibility ở mức release-ready
+- chốt checklist verify sau deploy
+
+Phase này chưa xử lý:
+
+- `comments`
+- likes, reactions, bookmark
+- drag-and-drop reorder cho planner
+- redesign lớn cho visual system
+- đổi contract budget phía frontend trước khi backend chốt migration
+- cleanup legacy itinerary bridge ở mức feature
+
+## Trạng thái
+
+- Status: `In progress`
+- Date: `2026-04-20`
+- Owner area:
+  - `frontend/src`
+  - `frontend/src/tests`
+  - `frontend/documents`
+- Trạng thái source hiện tại:
+  - auth/session thật đã có
+  - owner workspace thật đã có
+  - public trip read đã có
+  - community feed/detail/create post đã có
+  - bug navigation sau login vừa cho thấy app shell/public shell vẫn là vùng cần hardening thêm
+- Dependency chặn:
+  - nếu muốn browser e2e thật, cần chốt tool/harness trước khi thêm dev dependency mới
+  - budget summary full cutover vẫn phụ thuộc backend `Phase 05`
+- Dependency mở ra sau khi xong:
+  - `Phase 08 FE`
+  - social expansion như `comments`
+  - release confidence cao hơn cho deploy thật
+
+## Quyết định rollout cần chốt
+
+## 1. Ưu tiên regression người dùng thật trước
+
+Phase này không nên mở thêm màn hình hay capability lớn mới.
+
+Ưu tiên đúng là:
+
+- không bị kẹt giữa public shell và protected shell
+- auth/session không drift
+- các route public vẫn truy cập được ngay cả khi user đã đăng nhập
+
+## 2. Route-level tests đi trước browser e2e
+
+Route-level tests hiện là lớp hardening rẻ nhất và sát bug vừa xảy ra nhất.
+
+Chúng phải cover trước:
+
+- login xong vào `/app`
+- từ app shell vẫn vào được `/`, `/trips`, `/community`
+- logout xong quay về flow public/auth đúng
+
+Browser e2e là phase tiếp theo trong cùng backlog, không phải việc đầu tiên.
+
+## 3. Smoke e2e giữ scope rất nhỏ
+
+Nếu mở browser e2e, chỉ nên chọn các flow có giá trị phát hiện regression cao:
+
+- login
+- create trip
+- add planner node
+- open public trip
+- create community post
+
+Không nên mở e2e quá rộng ngay ở phase này.
+
+## 4. Responsive và accessibility chỉ rà trên màn hình trọng yếu
+
+Không cần audit toàn bộ app ở vòng đầu.
+
+Ưu tiên:
+
+- auth pages
+- app shell
+- trip detail/planner workspace
+- public trip pages
+- community feed/detail/create
+
+## 5. Docs và verify phải đi cùng code hardening
+
+Nếu phase này thêm test harness, verify command, hoặc production checklist mới, tài liệu gần nhất phải được cập nhật ngay trong cùng slice.
+
+## Exit criteria cho Phase 07
+
+- route-level tests đã khóa regression auth/public navigation
+- app shell không còn tạo cảm giác bị kẹt trong khu riêng sau login
+- smoke verify đã cover các flow cốt lõi hoặc đã ghi rõ phần deferred
+- các màn hình chính đã được rà mobile + desktop
+- các issue accessibility mức cao đã được xử lý hoặc ghi rõ deferred
+- tài liệu verify/deploy liên quan đã khớp với source
+
+## Slice FE-07A - Auth và public/protected navigation regression
+
+### Mục tiêu
+
+Khóa các bug kiểu:
+
+- đăng nhập xong mất đường vào `Khám phá`
+- đã đăng nhập nhưng khó quay lại `Cộng đồng`
+- redirect sai giữa `GuestRoute` và `ProtectedRoute`
+- logout xong vẫn giữ state cũ gây khó hiểu
+
+### Việc cần làm
+
+- [x] Thêm route-level tests cho:
+  - login -> `/app`
+  - từ app shell mở được `/`
+  - từ app shell mở được `/trips`
+  - từ app shell mở được `/community`
+- [ ] Verify `GuestRoute` không tạo redirect loop
+- [x] Verify `ProtectedRoute` luôn trả về login khi chưa auth
+- [ ] Verify logout trả user về flow hợp lý với notice rõ ràng
+- [x] Verify app shell/public shell không drift semantics navigation
+
+### File dự kiến
+
+- `src/tests/auth-session.test.tsx`
+- `src/tests/app-shell-navigation.test.tsx`
+- có thể thêm:
+  - `src/tests/public-navigation.test.tsx`
+  - `src/tests/protected-routing.test.tsx`
+
+### Acceptance criteria
+
+- bug “login xong không vào lại community/explore được” có test coverage rõ
+- không còn regression navigation cơ bản mà thiếu test chặn
+
+## Slice FE-07B - Route-level integration cho flows cốt lõi
+
+### Mục tiêu
+
+Khóa các flow quan trọng ở mức component/router integration, chưa cần browser thật.
+
+### Việc cần làm
+
+- [ ] Test guest mở public trip list/detail
+- [ ] Test guest mở community feed/detail
+- [ ] Test direct visit `/app/trips/:tripId` khi chưa auth sẽ về login
+- [ ] Test login xong tiếp tục được flow đang dở nếu có `location.state.from`
+- [ ] Test session boot không flash sai shell hoặc route sai
+- [ ] Test create post flow từ protected shell không làm mất đường quay lại public community
+
+### File dự kiến
+
+- `src/tests/public-trips-page.test.tsx`
+- `src/tests/public-trip-page.test.tsx`
+- `src/tests/community-page.test.tsx`
+- `src/tests/community-post-page.test.tsx`
+- `src/tests/community-create-page.test.tsx`
+- có thể thêm:
+  - `src/tests/app-routing.test.tsx`
+
+### Acceptance criteria
+
+- các flow route chính chạy qua được bằng test trong môi trường hiện tại
+- không còn phụ thuộc chỉ vào file review để tin route behavior
+
+## Slice FE-07C - Smoke verification cho trips/planner/public/community
+
+### Mục tiêu
+
+Tạo một lớp verify end-to-end mỏng cho các use case có giá trị business cao nhất.
+
+### Việc cần làm
+
+- [ ] Chốt approach:
+  - dùng test harness hiện có nếu đủ
+  - hoặc tách một decision slice riêng trước khi thêm browser e2e tool
+- [ ] Cover tối thiểu:
+  - login
+  - create trip
+  - add planner root node
+  - mở public trip read-only
+  - create community post
+- [ ] Nếu chưa mở browser e2e trong phase này:
+  - ghi rõ deferred reason
+  - thay bằng smoke route/integration đủ mạnh
+
+### File dự kiến
+
+- nếu chưa thêm harness mới:
+  - `src/tests/*`
+- nếu mở harness mới:
+  - `e2e/*`
+  - `package.json`
+  - `README.md`
+
+### Acceptance criteria
+
+- đã có kế hoạch verify end-to-end thực tế, không bỏ trống phần smoke
+- quyết định về e2e tool không bị treo mơ hồ
+
+## Slice FE-07D - Responsive pass cho màn hình chính
+
+### Mục tiêu
+
+Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
+
+### Việc cần làm
+
+- [ ] Rà login/register trên mobile
+- [ ] Rà app shell với sidebar/nav/quick links trên mobile
+- [ ] Rà trip detail + planner tree trên mobile và desktop hẹp
+- [ ] Rà public trip detail/planner read-only
+- [ ] Rà community feed/detail/create
+- [ ] Chốt các fix layout nhỏ nếu phát hiện:
+  - overflow
+  - CTA khó chạm
+  - text quá dài
+  - spacing collapse
+
+### File dự kiến
+
+- `src/features/auth/**`
+- `src/features/shell/**`
+- `src/features/trips/**`
+- `src/features/community/**`
+- `src/app/styles/**`
+
+### Acceptance criteria
+
+- các màn hình chính dùng được ở mobile/desktop mà không cần workaround rõ ràng
+
+## Slice FE-07E - Accessibility pass
+
+### Mục tiêu
+
+Đưa các flow cốt lõi lên mức an toàn hơn về keyboard, semantics, và feedback.
+
+### Việc cần làm
+
+- [ ] Rà keyboard navigation cho:
+  - app shell nav
+  - quick links public
+  - auth forms
+  - trip form
+  - planner inline actions
+  - community create form
+- [ ] Rà label/role/name cho CTA chính
+- [ ] Rà empty/loading/error states có copy đủ rõ
+- [ ] Rà focus state sau redirect hoặc mutation quan trọng
+- [ ] Rà motion có cần tôn trọng `prefers-reduced-motion` ở các phần đang dùng animation
+
+### File dự kiến
+
+- `src/shared/ui/**`
+- `src/features/auth/**`
+- `src/features/trips/**`
+- `src/features/community/**`
+
+### Acceptance criteria
+
+- không còn issue accessibility mức cao ở các flow chính
+- các action quan trọng đều dùng được bằng keyboard
+
+## Slice FE-07F - Docs, verify command, và post-deploy checklist
+
+### Mục tiêu
+
+Biến hardening thành một phần có thể lặp lại, không phụ thuộc trí nhớ.
+
+### Việc cần làm
+
+- [ ] Cập nhật README nếu phase này thêm verify command mới
+- [ ] Nếu có e2e harness mới, document rõ command chạy local/CI
+- [ ] Ghi checklist verify sau deploy cho:
+  - login
+  - mở `/community`
+  - mở `/trips`
+  - mở public trip detail
+  - logout
+- [ ] Chốt cách báo cáo kết quả hardening trong final handoff
+
+### File dự kiến
+
+- `README.md`
+- `documents/09_frontend-production-deploy-runbook.md`
+- có thể thêm note vào:
+  - `documents/01_frontend-phase-checklist.md`
+
+### Acceptance criteria
+
+- người khác vào repo vẫn biết cách verify phase hardening mà không cần hỏi lại
+
+## Suggested execution order
+
+1. FE-07A: auth/public navigation regression
+2. FE-07B: route-level integration
+3. FE-07D: responsive pass
+4. FE-07E: accessibility pass
+5. FE-07C: smoke e2e hoặc deferred decision
+6. FE-07F: docs + post-deploy checklist
+
+## Ưu tiên nên làm ngay
+
+Nếu chỉ làm đúng một slice tiếp theo, nên làm:
+
+- `FE-07A - Auth và public/protected navigation regression`
+
+Lý do:
+
+- bám trực tiếp bug vừa xảy ra
+- chi phí nhỏ
+- giá trị chống regression cao nhất
+- không đòi quyết định thêm tool mới

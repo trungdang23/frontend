@@ -110,6 +110,8 @@ Khi frontend được start từ self-hosted GitHub Actions runner, `scripts/sta
 - `documents/10_frontend-trips-execution-backlog.md`
 - `documents/11_frontend-planning-expansion-plan.md`
 - `documents/16_frontend-phase-05-public-trip-sharing-backlog.md`
+- `documents/17_frontend-phase-06-community-minimal-backlog.md`
+- `documents/18_frontend-phase-07-hardening-backlog.md`
 
 ## Giả định nền cho kế hoạch hiện tại
 

@@ -68,6 +68,14 @@ function renderWithProviders(initialEntries: string[]) {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/app/trips"
+                element={
+                  <ProtectedRoute>
+                    <TripsProbe />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/auth/login" element={<LoginPage />} />
             </Routes>
           </AuthProvider>
@@ -88,6 +96,10 @@ function ProtectedProbe() {
       </button>
     </div>
   );
+}
+
+function TripsProbe() {
+  return <h1>Trips Workspace</h1>;
 }
 
 describe("Auth session lifecycle", () => {
@@ -171,6 +183,72 @@ describe("Auth session lifecycle", () => {
         refreshTokenExpiresIn: 604800,
       },
     });
+  });
+
+  it("redirects unauthenticated users to login when they open a protected route directly", async () => {
+    readStoredSessionMock.mockReturnValue(null);
+
+    renderWithProviders(["/app/trips"]);
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: /trở lại với hành trình đang dang dở/i,
+      }),
+    ).toBeInTheDocument();
+
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("returns the user to the originally requested protected route after login", async () => {
+    readStoredSessionMock.mockReturnValue(null);
+
+    fetchMock.mockResolvedValueOnce(
+      createMockResponse({
+        body: {
+          success: true,
+          data: {
+            user: {
+              id: "user-05",
+              email: "navigator@example.com",
+              displayName: "Navigator",
+              createdAt: "2026-04-20T00:00:00.000Z",
+              updatedAt: "2026-04-20T00:00:00.000Z",
+            },
+            tokens: {
+              tokenType: "Bearer",
+              accessToken: "access-token-target-route",
+              accessTokenExpiresIn: 900,
+              refreshToken: "refresh-token-target-route-12345678901234567890",
+              refreshTokenExpiresIn: 604800,
+            },
+          },
+        },
+      }),
+    );
+
+    renderWithProviders(["/app/trips"]);
+
+    await userEvent.type(
+      await screen.findByLabelText(/email/i),
+      "navigator@example.com",
+    );
+    await userEvent.type(
+      screen.getByLabelText(/mật khẩu|password/i),
+      "Password123",
+    );
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: /đăng nhập/i,
+      }),
+    );
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Trips Workspace",
+      }),
+    ).toBeInTheDocument();
   });
 
   it("logs the user out through the API and clears the local session", async () => {
