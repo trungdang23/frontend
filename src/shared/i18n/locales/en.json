@@ -284,8 +284,8 @@
     },
     "share": {
       "eyebrow": "Public sharing",
-      "title": "This trip is ready to open as a public link",
-      "description": "Anyone with the link can view the read-only public route with the current trip frame and planner tree.",
+      "title": "This trip is already public",
+      "description": "Use this public trip as the source for a community story without adding extra link-sharing controls inside the personal workspace.",
       "createPostAction": "Create a story from this trip"
     },
     "preview": {

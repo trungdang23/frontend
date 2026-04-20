@@ -284,8 +284,8 @@
     },
     "share": {
       "eyebrow": "Chia sẻ công khai",
-      "title": "Link public của chuyến đi này đã sẵn sàng",
-      "description": "Mọi người có link có thể mở route public read-only để xem khung chuyến đi và planner tree hiện tại.",
+      "title": "Chuyến đi này đang ở trạng thái public",
+      "description": "Bạn có thể dùng chính chuyến đi public này để tạo bài viết cộng đồng mà không cần thêm bước chia sẻ link trong khu vực cá nhân.",
       "createPostAction": "Tạo bài viết từ chuyến đi này"
     },
     "preview": {

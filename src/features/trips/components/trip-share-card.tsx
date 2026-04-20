@@ -15,8 +15,6 @@ export function TripShareCard({ trip }: TripShareCardProps) {
     return null;
   }
 
-  const publicUrl = buildPublicTripUrl(trip.id);
-
   return (
     <div className="space-y-4 rounded-[1.75rem] border border-[rgba(84,107,65,0.16)] bg-[rgba(255,255,255,0.78)] p-5">
       <div className="space-y-2">
@@ -31,12 +29,6 @@ export function TripShareCard({ trip }: TripShareCardProps) {
         </p>
       </div>
 
-      <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/82 px-4 py-3">
-        <p className="break-all text-sm leading-7 text-[var(--color-ink)]">
-          {publicUrl}
-        </p>
-      </div>
-
       <div className="flex flex-wrap gap-3">
         <Link
           className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
@@ -48,12 +40,4 @@ export function TripShareCard({ trip }: TripShareCardProps) {
       </div>
     </div>
   );
-}
-
-function buildPublicTripUrl(tripId: string) {
-  if (typeof window === 'undefined') {
-    return `/trips/${tripId}`;
-  }
-
-  return new URL(`/trips/${tripId}`, window.location.origin).toString();
 }

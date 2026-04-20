@@ -230,7 +230,7 @@ describe("Trip metadata phase 03", () => {
         name: /mở route public/i,
       }),
     ).not.toBeInTheDocument();
-    expect(screen.getByText(/\/trips\/trip-01$/i)).toBeInTheDocument();
+    expect(screen.queryByText(/\/trips\/trip-01$/i)).not.toBeInTheDocument();
     expect(
       screen.getByRole('link', {
         name: /tạo bài viết từ chuyến đi này/i,

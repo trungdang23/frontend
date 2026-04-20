@@ -93,7 +93,6 @@ Lý do:
 Phase này nên có:
 
 - share card chỉ hiện khi `trip.visibility = public`
-- hiển thị rõ public URL để owner biết route đang được chia sẻ
 - CTA tạo bài viết từ chuyến đi public
 - owner đã đăng nhập vẫn có thể quay lại public trip route từ app shell mà không cần logout
 
@@ -219,6 +218,7 @@ Nếu `navigator.clipboard` không sẵn, phase này có thể fallback sang err
 
 - [x] Hiển thị share card public ở owner trip detail khi `visibility = public`
 - [x] Gỡ CTA `copy public link` và `open public route` để giữ owner workspace gọn hơn
+- [x] Gỡ cả ô hiển thị public URL trong owner workspace để share card chỉ còn CTA có ích
 - [~] Thêm explanatory state khi trip còn `private`
 - [x] Không biến share CTA thành blocker cho flow edit/delete hiện có
 - [x] Không hiển thị share CTA sai khi trip chưa public
