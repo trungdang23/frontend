@@ -7,7 +7,9 @@ import { describe, expect, it, vi } from "vitest";
 import { TripForm } from "@/features/trips/components/trip-form";
 import { TripListItem } from "@/features/trips/components/trip-list-item";
 import { TripShareCard } from "@/features/trips/components/trip-share-card";
+import { formatTripBudgetBreakdown } from "@/features/trips/lib/trip-presenters";
 import { TripFormValues } from "@/features/trips/lib/trip-form-validators";
+import { TripBudgetSummary } from "@/features/trips/types/trip-planning";
 import { Trip } from "@/features/trips/types/trip";
 import { LanguageProvider } from "@/shared/i18n/language-provider";
 
@@ -55,6 +57,30 @@ function createTrip(overrides: Partial<Trip> = {}): Trip {
     budgetCurrency: "VND",
     createdAt: "2026-04-18T00:00:00.000Z",
     updatedAt: "2026-04-18T00:00:00.000Z",
+    ...overrides,
+  };
+}
+
+function createBudgetSummary(
+  overrides: Partial<TripBudgetSummary> = {},
+): TripBudgetSummary {
+  return {
+    tripId: "trip-01",
+    currency: "VND",
+    totalBudgetAmount: 3500000,
+    totalPlannedAmount: 1500000,
+    remainingAmount: 2000000,
+    totalDays: 1,
+    totalActivities: 2,
+    isOverBudget: false,
+    hasMixedCurrencies: false,
+    totalsByCurrency: [
+      {
+        currency: "VND",
+        plannedAmount: 1500000,
+        nodeCount: 2,
+      },
+    ],
     ...overrides,
   };
 }
@@ -162,6 +188,33 @@ describe("Trip metadata phase 03", () => {
     expect(screen.getByText("Công khai")).toBeInTheDocument();
     expect(screen.getByText("Thủ công")).toBeInTheDocument();
     expect(screen.getByText(/3\.500\.000/)).toBeInTheDocument();
+  });
+
+  it("formats a mixed-currency budget breakdown from the additive summary contract", () => {
+    const breakdown = formatTripBudgetBreakdown(
+      createBudgetSummary({
+        hasMixedCurrencies: true,
+        totalsByCurrency: [
+          {
+            currency: "VND",
+            plannedAmount: 1500000,
+            nodeCount: 2,
+          },
+          {
+            currency: "USD",
+            plannedAmount: 75,
+            nodeCount: 1,
+          },
+        ],
+      }),
+      "vi",
+    );
+
+    expect(breakdown).toHaveLength(2);
+    expect(breakdown[0]).toContain("VND:");
+    expect(breakdown[0]).toContain("1.500.000");
+    expect(breakdown[1]).toContain("USD:");
+    expect(breakdown[1]).toContain("75");
   });
 
   it("copies the public trip link from the share card", async () => {

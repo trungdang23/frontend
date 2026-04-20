@@ -360,6 +360,7 @@
       "feedback": {
         "loadError": "We couldn't load the planner for this trip.",
         "budgetLoadError": "We couldn't load the current budget summary for this trip.",
+        "mixedCurrencyInfo": "This planner currently has costs in multiple currencies. The top-level totals are showing {{currency}} for compatibility with the current flow; check the breakdown below so the other currencies are not hidden.",
         "createNodeError": "Unable to create this planner node right now.",
         "updateNodeError": "Unable to save this planner node right now.",
         "deleteNodeError": "Unable to delete this planner node right now."
@@ -372,7 +373,8 @@
         "plannedBudget": "Planned",
         "remainingBudget": "Remaining",
         "totalNodes": "Planner density",
-        "totalNodesValue": "{{roots}} root nodes / {{children}} child nodes"
+        "totalNodesValue": "{{roots}} root nodes / {{children}} child nodes",
+        "currencyBreakdown": "Currency breakdown"
       },
       "types": {
         "section": "Section",

@@ -1,4 +1,8 @@
 import { Language } from "@/shared/i18n/language-context";
+import {
+  TripBudgetSummary,
+  TripBudgetSummaryCurrencyTotal,
+} from "@/features/trips/types/trip-planning";
 import { Trip } from "@/features/trips/types/trip";
 
 type Translate = (key: string) => string;
@@ -73,4 +77,24 @@ export function getTripVisibilityLabel(
   return visibility === "public"
     ? t("trips.visibility.public")
     : t("trips.visibility.private");
+}
+
+export function formatTripBudgetBreakdownEntry(
+  total: TripBudgetSummaryCurrencyTotal,
+  language: Language,
+) {
+  return `${total.currency}: ${formatTripBudget(
+    total.plannedAmount,
+    total.currency,
+    language,
+  )}`;
+}
+
+export function formatTripBudgetBreakdown(
+  summary: TripBudgetSummary,
+  language: Language,
+) {
+  return summary.totalsByCurrency.map((total) =>
+    formatTripBudgetBreakdownEntry(total, language),
+  );
 }

@@ -360,6 +360,7 @@
       "feedback": {
         "loadError": "Không tải được lịch trình của chuyến đi này.",
         "budgetLoadError": "Không tải được phần tóm tắt ngân sách hiện tại của chuyến đi này.",
+        "mixedCurrencyInfo": "Planner hiện có chi phí ở nhiều tiền tệ. Các số tổng phía trên đang phản ánh {{currency}} để giữ tương thích với flow hiện tại; hãy xem breakdown bên dưới để không bỏ sót phần còn lại.",
         "createNodeError": "Không thể tạo planner node lúc này.",
         "updateNodeError": "Không thể lưu planner node lúc này.",
         "deleteNodeError": "Không thể xoá planner node lúc này."
@@ -372,7 +373,8 @@
         "plannedBudget": "Đã lên kế hoạch",
         "remainingBudget": "Còn lại",
         "totalNodes": "Mật độ planner",
-        "totalNodesValue": "{{roots}} node gốc / {{children}} node con"
+        "totalNodesValue": "{{roots}} node gốc / {{children}} node con",
+        "currencyBreakdown": "Phân tách theo tiền tệ"
       },
       "types": {
         "section": "Section",

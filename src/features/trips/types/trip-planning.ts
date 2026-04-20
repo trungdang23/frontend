@@ -48,6 +48,14 @@ export type TripBudgetSummary = {
   totalDays: number;
   totalActivities: number;
   isOverBudget: boolean;
+  hasMixedCurrencies: boolean;
+  totalsByCurrency: TripBudgetSummaryCurrencyTotal[];
+};
+
+export type TripBudgetSummaryCurrencyTotal = {
+  currency: string;
+  plannedAmount: number;
+  nodeCount: number;
 };
 
 export type CreateItineraryDayPayload = {

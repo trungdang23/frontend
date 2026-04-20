@@ -21,6 +21,7 @@ import {
   PlannerNodeFormValues,
 } from '@/features/trips/planning/types/plan-node';
 import {
+  formatTripBudgetBreakdown,
   formatTripConfiguredBudget,
   formatTripBudget,
   formatTripDateRange,
@@ -317,6 +318,14 @@ export function TripDetailPage() {
           </StatusBanner>
         ) : null}
 
+        {budgetSummary?.hasMixedCurrencies ? (
+          <StatusBanner tone="info">
+            {t('trips.planner.feedback.mixedCurrencyInfo', {
+              currency: budgetSummary.currency,
+            })}
+          </StatusBanner>
+        ) : null}
+
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <OverviewMetric
             label={t('trips.planner.metrics.totalBudget')}
@@ -354,6 +363,24 @@ export function TripDetailPage() {
             })}
           />
         </div>
+
+        {budgetSummary?.hasMixedCurrencies ? (
+          <div className="space-y-3 rounded-[1.5rem] border border-[var(--color-border)] bg-white/72 p-4">
+            <p className="text-sm font-semibold text-[var(--color-ink)]">
+              {t('trips.planner.metrics.currencyBreakdown')}
+            </p>
+            <ul className="grid gap-2 text-sm text-[var(--color-ink-soft)] sm:grid-cols-2">
+              {formatTripBudgetBreakdown(budgetSummary, language).map((entry) => (
+                <li
+                  className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2"
+                  key={entry}
+                >
+                  {entry}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </Card>
 
       <Card>
