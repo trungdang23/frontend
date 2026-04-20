@@ -117,6 +117,11 @@ Khóa các bug kiểu:
 - redirect sai giữa `GuestRoute` và `ProtectedRoute`
 - logout xong vẫn giữ state cũ gây khó hiểu
 
+### Focus hiện tại
+
+- khóa `GuestRoute` để auth route không tự redirect vào chính nó khi `location.state.from` trỏ về `/auth/*`
+- verify logout từ protected route vẫn đưa user về flow auth/public với notice rõ ràng và không làm mất khả năng quay lại route đang dở sau khi đăng nhập lại
+
 ### Việc cần làm
 
 - [x] Thêm route-level tests cho:
@@ -124,9 +129,9 @@ Khóa các bug kiểu:
   - từ app shell mở được `/`
   - từ app shell mở được `/trips`
   - từ app shell mở được `/community`
-- [ ] Verify `GuestRoute` không tạo redirect loop
+- [x] Verify `GuestRoute` không tạo redirect loop
 - [x] Verify `ProtectedRoute` luôn trả về login khi chưa auth
-- [ ] Verify logout trả user về flow hợp lý với notice rõ ràng
+- [x] Verify logout trả user về flow hợp lý với notice rõ ràng
 - [x] Verify app shell/public shell không drift semantics navigation
 
 ### File dự kiến

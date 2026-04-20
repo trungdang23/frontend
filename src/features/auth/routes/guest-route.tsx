@@ -14,9 +14,16 @@ export function GuestRoute({ children }: GuestRouteProps) {
   }
 
   if (auth.status === 'authenticated') {
-    const next = location.state?.from?.pathname;
-    return <Navigate replace to={next || '/app'} />;
+    return <Navigate replace to={resolveGuestRedirectPath(location.state?.from?.pathname)} />;
   }
 
   return <>{children}</>;
+}
+
+function resolveGuestRedirectPath(nextPathname: unknown) {
+  if (typeof nextPathname !== 'string' || nextPathname.length === 0) {
+    return '/app';
+  }
+
+  return nextPathname.startsWith('/auth') ? '/app' : nextPathname;
 }

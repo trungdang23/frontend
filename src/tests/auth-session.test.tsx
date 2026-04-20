@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { PublicAuthLayout } from "@/app/router/public-auth-layout";
 import { AuthProvider } from "@/features/auth/session/auth-context";
 import { useAuth } from "@/features/auth/session/use-auth";
 import { LoginPage } from "@/features/auth/routes/login-page";
@@ -42,7 +43,9 @@ function createMockResponse({
   } as Response;
 }
 
-function renderWithProviders(initialEntries: string[]) {
+type TestInitialEntry = string | { pathname: string; state?: unknown };
+
+function renderWithProviders(initialEntries: TestInitialEntry[]) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -60,6 +63,9 @@ function renderWithProviders(initialEntries: string[]) {
         <MemoryRouter initialEntries={initialEntries}>
           <AuthProvider>
             <Routes>
+              <Route path="/auth" element={<PublicAuthLayout />}>
+                <Route path="login" element={<LoginPage />} />
+              </Route>
               <Route
                 path="/app"
                 element={
@@ -76,7 +82,6 @@ function renderWithProviders(initialEntries: string[]) {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/auth/login" element={<LoginPage />} />
             </Routes>
           </AuthProvider>
         </MemoryRouter>
@@ -99,7 +104,16 @@ function ProtectedProbe() {
 }
 
 function TripsProbe() {
-  return <h1>Trips Workspace</h1>;
+  const auth = useAuth();
+
+  return (
+    <div>
+      <h1>Trips Workspace</h1>
+      <button type="button" onClick={() => void auth.logout()}>
+        Đăng xuất
+      </button>
+    </div>
+  );
 }
 
 describe("Auth session lifecycle", () => {
@@ -251,6 +265,67 @@ describe("Auth session lifecycle", () => {
     ).toBeInTheDocument();
   });
 
+  it("redirects authenticated users away from auth routes without looping back into /auth", async () => {
+    readStoredSessionMock.mockReturnValue({
+      user: {
+        id: "user-06",
+        email: "already-in@example.com",
+        displayName: "Already In",
+        createdAt: "2026-04-20T00:00:00.000Z",
+        updatedAt: "2026-04-20T00:00:00.000Z",
+      },
+      tokens: {
+        tokenType: "Bearer",
+        accessToken: "access-token-authenticated",
+        accessTokenExpiresIn: 900,
+        refreshToken: "refresh-token-authenticated-12345678901234567890",
+        refreshTokenExpiresIn: 604800,
+      },
+    });
+
+    fetchMock.mockResolvedValueOnce(
+      createMockResponse({
+        body: {
+          success: true,
+          data: {
+            user: {
+              id: "user-06",
+              email: "already-in@example.com",
+              displayName: "Already In",
+              createdAt: "2026-04-20T00:00:00.000Z",
+              updatedAt: "2026-04-20T00:00:00.000Z",
+            },
+          },
+        },
+      }),
+    );
+
+    renderWithProviders([
+      {
+        pathname: "/auth/login",
+        state: {
+          from: {
+            pathname: "/auth/login",
+          },
+        },
+      },
+    ]);
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Protected Workspace",
+      }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole("heading", {
+        level: 1,
+        name: /trở lại với hành trình đang dang dở/i,
+      }),
+    ).not.toBeInTheDocument();
+  });
+
   it("logs the user out through the API and clears the local session", async () => {
     readStoredSessionMock.mockReturnValue({
       user: {
@@ -327,6 +402,121 @@ describe("Auth session lifecycle", () => {
         }),
       }),
     );
+  });
+
+  it("returns users to the auth flow with a notice after logout from a nested protected route", async () => {
+    readStoredSessionMock.mockReturnValue({
+      user: {
+        id: "user-07",
+        email: "reroute@example.com",
+        displayName: "Re Route",
+        createdAt: "2026-04-20T00:00:00.000Z",
+        updatedAt: "2026-04-20T00:00:00.000Z",
+      },
+      tokens: {
+        tokenType: "Bearer",
+        accessToken: "access-token-reroute",
+        accessTokenExpiresIn: 900,
+        refreshToken: "refresh-token-reroute-123456789012345678901234",
+        refreshTokenExpiresIn: 604800,
+      },
+    });
+
+    fetchMock
+      .mockResolvedValueOnce(
+        createMockResponse({
+          body: {
+            success: true,
+            data: {
+              user: {
+                id: "user-07",
+                email: "reroute@example.com",
+                displayName: "Re Route",
+                createdAt: "2026-04-20T00:00:00.000Z",
+                updatedAt: "2026-04-20T00:00:00.000Z",
+              },
+            },
+          },
+        }),
+      )
+      .mockResolvedValueOnce(
+        createMockResponse({
+          body: {
+            success: true,
+            data: {
+              loggedOut: true,
+            },
+          },
+        }),
+      )
+      .mockResolvedValueOnce(
+        createMockResponse({
+          body: {
+            success: true,
+            data: {
+              user: {
+                id: "user-07",
+                email: "reroute@example.com",
+                displayName: "Re Route",
+                createdAt: "2026-04-20T00:00:00.000Z",
+                updatedAt: "2026-04-20T00:00:00.000Z",
+              },
+              tokens: {
+                tokenType: "Bearer",
+                accessToken: "access-token-reroute-next",
+                accessTokenExpiresIn: 900,
+                refreshToken: "refresh-token-reroute-next-1234567890123456",
+                refreshTokenExpiresIn: 604800,
+              },
+            },
+          },
+        }),
+      );
+
+    renderWithProviders(["/app/trips"]);
+
+    const logoutButton = await screen.findByRole("button", {
+      name: /đăng xuất/i,
+    });
+
+    await userEvent.click(logoutButton);
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: /trở lại với hành trình đang dang dở/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Bạn đã đăng xuất khỏi Journey."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", {
+        level: 1,
+        name: "Trips Workspace",
+      }),
+    ).not.toBeInTheDocument();
+
+    await userEvent.type(
+      screen.getByLabelText(/email/i),
+      "reroute@example.com",
+    );
+    await userEvent.type(
+      screen.getByLabelText(/mật khẩu|password/i),
+      "Password123",
+    );
+    await userEvent.click(
+      screen.getByRole("button", {
+        name: /đăng nhập/i,
+      }),
+    );
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Trips Workspace",
+      }),
+    ).toBeInTheDocument();
   });
 
   it("clears the session and redirects to login when refresh fails during boot", async () => {
