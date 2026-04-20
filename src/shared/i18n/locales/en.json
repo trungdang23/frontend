@@ -286,11 +286,7 @@
       "eyebrow": "Public sharing",
       "title": "This trip is ready to open as a public link",
       "description": "Anyone with the link can view the read-only public route with the current trip frame and planner tree.",
-      "copyAction": "Copy link",
-      "createPostAction": "Create a story from this trip",
-      "openAction": "Open public route",
-      "copySuccess": "The public share link was copied.",
-      "copyError": "We couldn't copy the link right now. You can still open the public route directly."
+      "createPostAction": "Create a story from this trip"
     },
     "preview": {
       "titleFallback": "Trip title preview",

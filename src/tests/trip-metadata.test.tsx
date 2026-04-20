@@ -217,33 +217,20 @@ describe("Trip metadata phase 03", () => {
     expect(breakdown[1]).toContain("75");
   });
 
-  it("copies the public trip link from the share card", async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined);
-
-    Object.defineProperty(window.navigator, "clipboard", {
-      configurable: true,
-      value: {
-        writeText,
-      },
-    });
-
+  it("keeps only the create-post CTA in the public share card", async () => {
     renderWithProviders(<TripShareCard trip={createTrip()} />);
 
-    await userEvent.click(
-      screen.getByRole("button", {
+    expect(
+      screen.queryByRole("button", {
         name: /sao chép link/i,
       }),
-    );
-
-    await waitFor(() => {
-      expect(writeText).toHaveBeenCalledWith(
-        expect.stringContaining("/trips/trip-01"),
-      );
-    });
-
+    ).not.toBeInTheDocument();
     expect(
-      screen.getByText("Link chia sẻ công khai đã được sao chép."),
-    ).toBeInTheDocument();
+      screen.queryByRole("link", {
+        name: /mở route public/i,
+      }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText(/\/trips\/trip-01$/i)).toBeInTheDocument();
     expect(
       screen.getByRole('link', {
         name: /tạo bài viết từ chuyến đi này/i,

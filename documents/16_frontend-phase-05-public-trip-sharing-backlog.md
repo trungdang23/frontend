@@ -88,12 +88,13 @@ Lý do:
 - giữ logic formatting ngày/chi phí/type label ở một chỗ
 - cut implementation nhỏ hơn
 
-## 4. Share CTA chỉ active khi trip là `public`
+## 4. Share card chỉ active khi trip là `public`
 
 Phase này nên có:
 
-- CTA copy public link khi `trip.visibility = public`
-- trạng thái giải thích ngắn khi trip còn `private`
+- share card chỉ hiện khi `trip.visibility = public`
+- hiển thị rõ public URL để owner biết route đang được chia sẻ
+- CTA tạo bài viết từ chuyến đi public
 - owner đã đăng nhập vẫn có thể quay lại public trip route từ app shell mà không cần logout
 
 Không cần làm sớm:
@@ -216,11 +217,9 @@ Nếu `navigator.clipboard` không sẵn, phase này có thể fallback sang err
 
 ### Việc cần làm
 
-- [x] Thêm CTA `copy public link` ở owner trip detail khi `visibility = public`
+- [x] Hiển thị share card public ở owner trip detail khi `visibility = public`
+- [x] Gỡ CTA `copy public link` và `open public route` để giữ owner workspace gọn hơn
 - [~] Thêm explanatory state khi trip còn `private`
-- [x] Hiển thị feedback rõ cho:
-  - copy success
-  - copy fail
 - [x] Không biến share CTA thành blocker cho flow edit/delete hiện có
 - [x] Không hiển thị share CTA sai khi trip chưa public
 
@@ -311,6 +310,6 @@ Phase này chỉ được gọi là done khi:
 - guest thấy state `private denied` rõ ràng cho trip private
 - guest thấy state `not found` rõ ràng cho trip không tồn tại
 - owner workspace `/app/trips/:tripId` vẫn giữ nguyên edit flow
-- share CTA copy link chỉ hiện khi trip public
+- share card public chỉ hiện khi trip public
 - public trip flow không kéo `community` vào cùng scope
 - test đã có cho các state chính và không có mutate action nào lọt ra public page

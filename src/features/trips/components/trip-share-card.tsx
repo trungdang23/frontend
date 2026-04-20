@@ -1,11 +1,8 @@
-import { useState } from 'react';
-import { Copy, ExternalLink, PencilLine } from 'lucide-react';
+import { PencilLine } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 import type { Trip } from '@/features/trips/types/trip';
 import { useI18n } from '@/shared/i18n/use-i18n';
-import { Button } from '@/shared/ui/button';
-import { StatusBanner } from '@/shared/ui/status-banner';
 
 type TripShareCardProps = {
   trip: Pick<Trip, 'id' | 'visibility'>;
@@ -13,30 +10,12 @@ type TripShareCardProps = {
 
 export function TripShareCard({ trip }: TripShareCardProps) {
   const { t } = useI18n();
-  const [copyState, setCopyState] = useState<'success' | 'error' | null>(null);
 
   if (trip.visibility !== 'public') {
     return null;
   }
 
   const publicUrl = buildPublicTripUrl(trip.id);
-
-  async function handleCopyLink() {
-    try {
-      if (
-        typeof navigator === 'undefined' ||
-        !navigator.clipboard ||
-        typeof navigator.clipboard.writeText !== 'function'
-      ) {
-        throw new Error('Clipboard API is unavailable.');
-      }
-
-      await navigator.clipboard.writeText(publicUrl);
-      setCopyState('success');
-    } catch {
-      setCopyState('error');
-    }
-  }
 
   return (
     <div className="space-y-4 rounded-[1.75rem] border border-[rgba(84,107,65,0.16)] bg-[rgba(255,255,255,0.78)] p-5">
@@ -52,18 +31,6 @@ export function TripShareCard({ trip }: TripShareCardProps) {
         </p>
       </div>
 
-      {copyState === 'success' ? (
-        <StatusBanner tone="success">
-          {t('trips.share.copySuccess')}
-        </StatusBanner>
-      ) : null}
-
-      {copyState === 'error' ? (
-        <StatusBanner tone="danger">
-          {t('trips.share.copyError')}
-        </StatusBanner>
-      ) : null}
-
       <div className="rounded-[1.5rem] border border-[var(--color-border)] bg-white/82 px-4 py-3">
         <p className="break-all text-sm leading-7 text-[var(--color-ink)]">
           {publicUrl}
@@ -71,10 +38,6 @@ export function TripShareCard({ trip }: TripShareCardProps) {
       </div>
 
       <div className="flex flex-wrap gap-3">
-        <Button onClick={() => void handleCopyLink()} type="button">
-          <Copy className="h-4 w-4" />
-          {t('trips.share.copyAction')}
-        </Button>
         <Link
           className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
           to={`/app/community/new?tripId=${trip.id}`}
@@ -82,15 +45,6 @@ export function TripShareCard({ trip }: TripShareCardProps) {
           <PencilLine className="h-4 w-4" />
           {t('trips.share.createPostAction')}
         </Link>
-        <a
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
-          href={publicUrl}
-          rel="noreferrer"
-          target="_blank"
-        >
-          <ExternalLink className="h-4 w-4" />
-          {t('trips.share.openAction')}
-        </a>
       </div>
     </div>
   );

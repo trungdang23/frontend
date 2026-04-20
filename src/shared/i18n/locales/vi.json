@@ -286,11 +286,7 @@
       "eyebrow": "Chia sẻ công khai",
       "title": "Link public của chuyến đi này đã sẵn sàng",
       "description": "Mọi người có link có thể mở route public read-only để xem khung chuyến đi và planner tree hiện tại.",
-      "copyAction": "Sao chép link",
-      "createPostAction": "Tạo bài viết từ chuyến đi này",
-      "openAction": "Mở route public",
-      "copySuccess": "Link chia sẻ công khai đã được sao chép.",
-      "copyError": "Không thể sao chép link lúc này. Bạn có thể mở route public trực tiếp từ nút bên cạnh."
+      "createPostAction": "Tạo bài viết từ chuyến đi này"
     },
     "preview": {
       "titleFallback": "Tên chuyến đi sẽ hiện ở đây",
