@@ -29,6 +29,7 @@ Frontend package này giữ source of truth triển khai cho giao diện Journey
 - planner target là `PlanNode` tree
 - trip có `budgetMode`, `manualBudget`, `visibility`
 - có public trip list + read cho guest
+- có community feed/detail/create post baseline
 - community mở ở mức `posts` trước, rồi mới cân nhắc `comments`
 
 ### Contract FE cần bám

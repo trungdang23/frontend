@@ -1,50 +1,121 @@
+import type { ReactNode } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+
+import { listPosts } from '@/features/community/api/posts-api';
+import { CommunityPostList } from '@/features/community/components/community-post-list';
+import { communityQueryKeys } from '@/features/community/lib/community-query-keys';
+import { resolveCommunityPostListQuery } from '@/features/community/lib/post-query-params';
+import { ApiError } from '@/shared/api/api-error';
 import { useI18n } from '@/shared/i18n/use-i18n';
-import { SiteHeader } from '@/shared/ui/site-header';
 import { getButtonClasses } from '@/shared/ui/button-styles';
 import { Card } from '@/shared/ui/card';
+import { EmptyState } from '@/shared/ui/empty-state';
 import { PageSection } from '@/shared/ui/page-section';
+import { PublicPageSkeleton } from '@/shared/ui/public-page-skeleton';
+import { SiteHeader } from '@/shared/ui/site-header';
 
 export function CommunityPage() {
   const { t } = useI18n();
-  const featuredPosts = [
-    {
-      id: 'ha-giang-spring-loop',
-      title: t('community.posts.haGiang.title'),
-      summary: t('community.posts.haGiang.summary'),
-    },
-    {
-      id: 'hue-food-notes',
-      title: t('community.posts.hue.title'),
-      summary: t('community.posts.hue.summary'),
-    },
-  ];
+  const postsQuery = useQuery({
+    queryKey: communityQueryKeys.listQuery(resolveCommunityPostListQuery()),
+    queryFn: ({ signal }) => listPosts(undefined, { signal }),
+    staleTime: 30_000,
+  });
+
+  if (postsQuery.isPending) {
+    return <PublicPageSkeleton variant="community" />;
+  }
+
+  if (postsQuery.isError) {
+    return (
+      <CommunityShell>
+        <EmptyState
+          action={
+            <button
+              className={getButtonClasses()}
+              onClick={() => void postsQuery.refetch()}
+              type="button"
+            >
+              {t('trips.actions.retry')}
+            </button>
+          }
+          description={
+            postsQuery.error instanceof ApiError && postsQuery.error.message
+              ? postsQuery.error.message
+              : t('community.loadErrorDescription')
+          }
+          eyebrow={t('community.eyebrow')}
+          title={t('community.loadErrorTitle')}
+        />
+      </CommunityShell>
+    );
+  }
+
+  if (!postsQuery.data) {
+    return null;
+  }
+
+  const { data, meta } = postsQuery.data;
+
+  if (data.length === 0) {
+    return (
+      <CommunityShell>
+        <EmptyState
+          action={
+            <div className="flex flex-wrap gap-3">
+              <Link className={getButtonClasses()} to="/app/community/new">
+                {t('community.actions.startWriting')}
+              </Link>
+              <Link className={getButtonClasses('secondary')} to="/">
+                {t('community.actions.backHome')}
+              </Link>
+            </div>
+          }
+          description={t('community.emptyDescription')}
+          eyebrow={t('community.eyebrow')}
+          title={t('community.emptyTitle')}
+        />
+      </CommunityShell>
+    );
+  }
 
   return (
-    <div className="min-h-screen">
-      <SiteHeader />
-      <PageSection className="pt-12">
+    <CommunityShell>
+      <div className="space-y-5">
         <Card className="space-y-4">
-          <p className="eyebrow-text text-[var(--color-forest)]">{t('community.eyebrow')}</p>
-          <h1 className="headline text-4xl text-[var(--color-ink)]">{t('community.title')}</h1>
-          <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">{t('community.description')}</p>
-        </Card>
-      </PageSection>
-
-      <PageSection className="grid gap-5 lg:grid-cols-2">
-        {featuredPosts.map((post) => (
-          <Card className="space-y-4" key={post.id}>
-            <div className="rounded-[1.5rem] bg-[linear-gradient(135deg,rgba(84,107,65,0.95),rgba(153,173,122,0.75))] p-8 text-white">
-              <p className="eyebrow-text text-white/70">{t('community.sampleStory')}</p>
-              <h2 className="headline mt-3 text-3xl">{post.title}</h2>
-            </div>
-            <p className="text-sm leading-7 text-[var(--color-ink-soft)]">{post.summary}</p>
-            <Link className={getButtonClasses()} to={`/community/${post.id}`}>
-              {t('common.actions.viewStory')}
+          <div className="space-y-2">
+            <p className="eyebrow-text text-[var(--color-forest)]">
+              {t('community.eyebrow')}
+            </p>
+            <h1 className="headline text-4xl text-[var(--color-ink)]">
+              {t('community.title')}
+            </h1>
+            <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
+              {t('community.description')}
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm text-[var(--color-ink-soft)]">
+              {t('community.summary', { count: meta.totalElements })}
+            </p>
+            <Link className={getButtonClasses()} to="/app/community/new">
+              {t('community.actions.startWriting')}
             </Link>
-          </Card>
-        ))}
-      </PageSection>
+          </div>
+        </Card>
+
+        <CommunityPostList posts={data} />
+      </div>
+    </CommunityShell>
+  );
+}
+
+function CommunityShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="min-h-screen pb-12">
+      <SiteHeader />
+      <PageSection className="pt-12">{children}</PageSection>
     </div>
   );
 }

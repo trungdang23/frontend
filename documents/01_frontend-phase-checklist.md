@@ -161,16 +161,17 @@ Status: `Completed`
 
 ## Phase 06 - Community minimal
 
-Status: `Todo`
+Status: `Completed`
 
-- [ ] Tạo community feed route
-- [ ] Tạo post detail route
-- [ ] Tạo create post flow
-- [ ] Hỗ trợ create post from trip nếu backend mở
+- [x] Chi tiết backlog tại `17_frontend-phase-06-community-minimal-backlog.md`
+- [x] Tạo community feed route
+- [x] Tạo post detail route
+- [x] Tạo create post flow
+- [x] Hỗ trợ create post from trip nếu backend mở
 - [ ] Nếu comments được backend mở:
   - render list comments
   - create comment
-- [ ] Nếu comments chưa có:
+- [x] Nếu comments chưa có:
   - giữ UI ở trạng thái deferred rõ ràng, không giả production-ready
 
 ## Phase 07 - Hardening, test, accessibility, release readiness
@@ -221,9 +222,9 @@ Status: `Todo`
 
 ### Slice FE-F
 
-- [ ] Community feed
-- [ ] post detail
-- [ ] create post
+- [x] Community feed
+- [x] post detail
+- [x] create post
 - [ ] optional comments
 
 ## Immediate next checks

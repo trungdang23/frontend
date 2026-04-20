@@ -2,6 +2,7 @@ import { ReactNode, lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
 import { DashboardPage } from '@/features/dashboard/routes/dashboard-page';
 import { ProfilePage } from '@/features/profile/routes/profile-page';
+import { CommunityCreatePage } from '@/features/community/routes/community-create-page';
 import { TripCreatePage } from '@/features/trips/routes/trip-create-page';
 import { TripDetailPage } from '@/features/trips/routes/trip-detail-page';
 import { TripEditPage } from '@/features/trips/routes/trip-edit-page';
@@ -95,6 +96,10 @@ export const appRoutes = [
       {
         path: 'profile',
         element: <ProfilePage />,
+      },
+      {
+        path: 'community/new',
+        element: <CommunityCreatePage />,
       },
       {
         path: 'trips',

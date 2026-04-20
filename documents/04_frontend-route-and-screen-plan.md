@@ -33,8 +33,9 @@
 | `/auth/register` | Register | No | `POST /auth/register` | P0 |
 | `/app` | Dashboard | Yes | `GET /auth/me` + entrypoint tới `trips` | P0 |
 | `/app/profile` | Profile | Yes | `GET /auth/me` | P0 |
-| `/community` | Community teaser/feed | No | static trước, API sau | P2 |
-| `/community/:postId` | Post detail | No | static trước, API sau | P2 |
+| `/community` | Community feed | No | `GET /posts` | P2 |
+| `/community/:postId` | Post detail | No | `GET /posts/:postId` | P2 |
+| `/app/community/new` | Create post | Yes | `POST /posts` | P2 |
 | `/app/trips` | Trips list | Yes | `GET /trips` | P1 |
 | `/app/trips/new` | Create trip | Yes | `POST /trips` | P1 |
 | `/app/trips/:tripId` | Trip planning workspace | Yes | `GET /trips/:tripId` + itinerary/budget bridge hiện tại | P1 |
@@ -56,7 +57,7 @@
 - `view` state nội bộ trong demo phải đổi sang route thật
 - demo auth giả phải bỏ hoàn toàn
 - demo trip data local phải thay bằng API contract hoặc placeholder có chủ đích
-- community feed local phải được đánh dấu là mock/read-only nếu backend chưa sẵn
+- community feed chỉ nên mock khi backend `posts` chưa sẵn
 
 ## Thứ tự dựng screen hợp lý
 
@@ -97,8 +98,7 @@
 - planning recursive nhiều tầng
 - node editor modal hoặc drawer riêng
 - motion polish sâu hơn cho planner
-- community feed thật
-- post detail thật
+- optional comments
 - like/comment/follow
 
 ## Điều cần tránh

@@ -11,6 +11,7 @@
       "explore": "Explore",
       "publicTrips": "Public trips",
       "community": "Community",
+      "writeStory": "Write story",
       "login": "Log in",
       "getStarted": "Get started",
       "dashboard": "Dashboard",
@@ -28,7 +29,7 @@
       "hidePassword": "Hide password",
       "viewCurrentProfile": "View current profile",
       "createFirstTrip": "Create your first trip",
-      "viewStory": "View notes",
+      "viewStory": "View story",
       "backToCommunity": "Back to community",
       "backToDashboard": "Back to dashboard"
     },
@@ -91,7 +92,7 @@
     "eyebrow": "A clear plan for a meaningful trip",
     "title": "Journey helps you gather inspiration, keep your prep on track, and begin each trip with a lighter mind.",
     "description": "The first phase focuses on a strong foundation: real sign-in, a protected personal area, a clear dashboard, a synced profile, and a steady path toward the trips experience later on.",
-    "secondaryCta": "See the community teaser",
+    "secondaryCta": "See the community",
     "phaseEyebrow": "Phase 01-04",
     "phaseTitle": "Build the foundation properly from the start",
     "phaseDescription": "Public and private routes, session restore, a clear session strategy, and core screens that are ready for the next development cycle.",
@@ -110,28 +111,72 @@
       },
       "community": {
         "title": "Expand into community at the right time",
-        "description": "Community stays in teaser mode for now so the interface evolves at the right pace instead of drifting into avoidable rework."
+        "description": "Community now has a real feed and detail flow so public trips can start turning into stories people actually browse."
       }
     }
   },
   "community": {
     "eyebrow": "Community",
-    "title": "A corner for community inspiration",
-    "description": "For now this area is a teaser that keeps the product's sense of inspiration alive. Feed, likes, comments, and full post details will open in a later phase.",
-    "sampleStory": "Featured story",
-    "postPlaceholderEyebrow": "Post detail",
-    "postPlaceholderTitle": "Post: {{postId}}",
-    "postPlaceholderDescription": "The detail route is already in place so real content can connect later without changing the structure. In this phase, the screen stays intentionally simple and avoids fake interactions.",
-    "fallbackPostId": "post",
-    "posts": {
-      "haGiang": {
-        "title": "A slow 4-day loop through Ha Giang",
-        "summary": "A sample story that preserves the visual tone before the full community feed opens."
-      },
-      "hue": {
-        "title": "A weekend food checklist for Hue",
-        "summary": "Read-only preview content that does not pretend to be a complete interactive feed."
-      }
+    "title": "Stories the community is sharing now",
+    "description": "Community now reads real public posts so the product has a layer of published stories beyond read-only public trips.",
+    "summary": "{{count}} public stories are live right now.",
+    "cardEyebrow": "Community story",
+    "detailEyebrow": "Community post",
+    "contentEyebrow": "Story",
+    "linkedTripEyebrow": "Linked trip",
+    "linkedTripDescription": "If you want to go deeper into the actual planner and trip frame, the linked public trip route is still right behind this post.",
+    "emptyTitle": "Community is waiting for its first story",
+    "emptyDescription": "Open the first post so the community gains a concrete point of view from a real trip.",
+    "loadErrorTitle": "We couldn't load the community feed",
+    "loadErrorDescription": "Please try again in a few minutes or reload to see the latest stories.",
+    "notFoundTitle": "This post could not be found",
+    "notFoundDescription": "The link may no longer be valid or the post may have been removed from the community.",
+    "detailLoadErrorTitle": "We couldn't load this story",
+    "detailLoadErrorDescription": "Please try again in a few minutes to reopen the post detail.",
+    "createEyebrow": "Write story",
+    "createTitle": "Share a story from your trip",
+    "createDescription": "Keep the form focused in this phase: a clear title, a solid body of writing, and an optional linked trip when you want readers to continue into the public trip route.",
+    "fields": {
+      "title": "Post title",
+      "content": "Content",
+      "coverImageUrl": "Cover image URL",
+      "linkedTrip": "Link to a public trip"
+    },
+    "placeholders": {
+      "coverImageUrl": "https://example.com/post-cover.jpg",
+      "content": "Example: I kept the pace intentionally slow, chose only a few anchor stops, and left more room to breathe between them."
+    },
+    "validation": {
+      "titleRequired": "Post title is required.",
+      "titleLength": "Post title must be at most 120 characters.",
+      "contentRequired": "Post content is required.",
+      "contentLength": "Post content must be at most 20000 characters.",
+      "coverImageUrlInvalid": "Cover image URL must be a valid http or https URL."
+    },
+    "actions": {
+      "create": "Publish story",
+      "publishing": "Publishing story...",
+      "startWriting": "Write a new story",
+      "viewLinkedTrip": "Open linked trip",
+      "backHome": "Back home"
+    },
+    "feedback": {
+      "createError": "We couldn't publish the story right now. Please try again."
+    },
+    "tripSelector": {
+      "none": "Do not link a trip",
+      "helper": "Only trips that are already public can be attached to a community story.",
+      "empty": "You do not have any public trips to attach yet. You can still publish a standalone story."
+    },
+    "create": {
+      "tripNotFoundWarning": "We couldn't find the requested trip to prefill this story.",
+      "tripNotPublicWarning": "The requested trip is still private. Make it public before attaching it to this story.",
+      "tripsLoadError": "We couldn't load your trips right now. The form still works, but linked-trip selection is temporarily unavailable."
+    },
+    "preview": {
+      "titleFallback": "Your post title preview",
+      "linkedTripActive": "Linked to a public trip",
+      "linkedTripInactive": "Standalone story"
     }
   },
   "dashboard": {
@@ -242,6 +287,7 @@
       "title": "This trip is ready to open as a public link",
       "description": "Anyone with the link can view the read-only public route with the current trip frame and planner tree.",
       "copyAction": "Copy link",
+      "createPostAction": "Create a story from this trip",
       "openAction": "Open public route",
       "copySuccess": "The public share link was copied.",
       "copyError": "We couldn't copy the link right now. You can still open the public route directly."

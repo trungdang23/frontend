@@ -191,6 +191,11 @@ describe("Trip metadata phase 03", () => {
     expect(
       screen.getByText("Link chia sẻ công khai đã được sao chép."),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', {
+        name: /tạo bài viết từ chuyến đi này/i,
+      }),
+    ).toHaveAttribute('href', '/app/community/new?tripId=trip-01');
   });
 
   it("shows a validation error when manual mode is missing the budget amount", async () => {

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Copy, ExternalLink } from 'lucide-react';
+import { Copy, ExternalLink, PencilLine } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 import type { Trip } from '@/features/trips/types/trip';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -74,6 +75,13 @@ export function TripShareCard({ trip }: TripShareCardProps) {
           <Copy className="h-4 w-4" />
           {t('trips.share.copyAction')}
         </Button>
+        <Link
+          className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
+          to={`/app/community/new?tripId=${trip.id}`}
+        >
+          <PencilLine className="h-4 w-4" />
+          {t('trips.share.createPostAction')}
+        </Link>
         <a
           className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
           href={publicUrl}

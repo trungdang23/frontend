@@ -1,37 +1,96 @@
+import { useQuery } from '@tanstack/react-query';
+import type { ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+
+import { getPostDetail } from '@/features/community/api/posts-api';
+import { CommunityPostDetail } from '@/features/community/components/community-post-detail';
+import { communityQueryKeys } from '@/features/community/lib/community-query-keys';
+import { ApiError } from '@/shared/api/api-error';
 import { useI18n } from '@/shared/i18n/use-i18n';
-import { SiteHeader } from '@/shared/ui/site-header';
-import { Card } from '@/shared/ui/card';
+import { getButtonClasses } from '@/shared/ui/button-styles';
+import { EmptyState } from '@/shared/ui/empty-state';
 import { PageSection } from '@/shared/ui/page-section';
+import { PublicPageSkeleton } from '@/shared/ui/public-page-skeleton';
+import { SiteHeader } from '@/shared/ui/site-header';
 
 export function CommunityPostPage() {
   const { postId } = useParams();
   const { t } = useI18n();
+  const postQuery = useQuery({
+    queryKey: communityQueryKeys.detail(postId as string),
+    queryFn: ({ signal }) => getPostDetail(postId as string, { signal }),
+    enabled: Boolean(postId),
+    staleTime: 30_000,
+  });
+
+  if (!postId || postQuery.isPending) {
+    return <PublicPageSkeleton variant="post" />;
+  }
+
+  if (
+    postQuery.isError &&
+    postQuery.error instanceof ApiError &&
+    postQuery.error.status === 404
+  ) {
+    return (
+      <CommunityShell>
+        <EmptyState
+          action={
+            <Link className={getButtonClasses()} to="/community">
+              {t('common.actions.backToCommunity')}
+            </Link>
+          }
+          description={t('community.notFoundDescription')}
+          eyebrow={t('community.detailEyebrow')}
+          title={t('community.notFoundTitle')}
+        />
+      </CommunityShell>
+    );
+  }
+
+  if (postQuery.isError) {
+    return (
+      <CommunityShell>
+        <EmptyState
+          action={
+            <button
+              className={getButtonClasses()}
+              onClick={() => void postQuery.refetch()}
+              type="button"
+            >
+              {t('trips.actions.retry')}
+            </button>
+          }
+          description={
+            postQuery.error instanceof ApiError && postQuery.error.message
+              ? postQuery.error.message
+              : t('community.detailLoadErrorDescription')
+          }
+          eyebrow={t('community.detailEyebrow')}
+          title={t('community.detailLoadErrorTitle')}
+        />
+      </CommunityShell>
+    );
+  }
+
+  const post = postQuery.data;
+
+  if (!post) {
+    return null;
+  }
 
   return (
-    <div className="min-h-screen">
+    <CommunityShell>
+      <CommunityPostDetail post={post} />
+    </CommunityShell>
+  );
+}
+
+function CommunityShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="min-h-screen pb-12">
       <SiteHeader />
-      <PageSection className="pt-12">
-        <Card className="space-y-6">
-          <Link
-            className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-forest)]"
-            to="/community"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            {t('common.actions.backToCommunity')}
-          </Link>
-          <div className="space-y-3">
-            <p className="eyebrow-text text-[var(--color-forest)]">{t('community.postPlaceholderEyebrow')}</p>
-            <h1 className="headline text-4xl text-[var(--color-ink)]">
-              {t('community.postPlaceholderTitle', { postId: postId || t('community.fallbackPostId') })}
-            </h1>
-          </div>
-          <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
-            {t('community.postPlaceholderDescription')}
-          </p>
-        </Card>
-      </PageSection>
+      <PageSection className="pt-12">{children}</PageSection>
     </div>
   );
 }

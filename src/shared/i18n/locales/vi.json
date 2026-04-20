@@ -11,6 +11,7 @@
       "explore": "Khám phá",
       "publicTrips": "Chuyến đi public",
       "community": "Cộng đồng",
+      "writeStory": "Viết bài",
       "login": "Đăng nhập",
       "getStarted": "Bắt đầu",
       "dashboard": "Bảng điều khiển",
@@ -91,7 +92,7 @@
     "eyebrow": "Kế hoạch rõ ràng cho một hành trình đáng nhớ",
     "title": "Journey giúp bạn gom cảm hứng, giữ nhịp chuẩn bị và bắt đầu chuyến đi với tâm thế nhẹ hơn.",
     "description": "Giai đoạn đầu tập trung vào nền tảng vững: đăng nhập thật, khu vực riêng được bảo vệ, bảng điều khiển rõ ràng, hồ sơ đồng bộ và lộ trình sẵn sàng cho phần chuyến đi về sau.",
-    "secondaryCta": "Xem phần cộng đồng",
+    "secondaryCta": "Xem community",
     "phaseEyebrow": "Giai đoạn 01-04",
     "phaseTitle": "Dựng nền thật chắc ngay từ đầu",
     "phaseDescription": "Đường dẫn công khai và riêng tư, khôi phục phiên đăng nhập, chiến lược phiên rõ ràng và các màn hình cốt lõi đã sẵn sàng cho chặng phát triển tiếp theo.",
@@ -110,28 +111,72 @@
       },
       "community": {
         "title": "Mở rộng sang cộng đồng đúng thời điểm",
-        "description": "Khu vực cộng đồng đang được giữ ở dạng xem trước để giao diện phát triển đúng nhịp, tránh phải làm lại không cần thiết."
+        "description": "Community giờ đã có feed và detail thật để các hành trình public bắt đầu chuyển thành những câu chuyện có thể chia sẻ rộng hơn."
       }
     }
   },
   "community": {
     "eyebrow": "Cộng đồng",
-    "title": "Góc cảm hứng cộng đồng",
-    "description": "Hiện tại đây là khu vực xem trước để giữ nhịp cảm hứng của sản phẩm. Bảng tin, lượt thích, bình luận và trang chi tiết đầy đủ sẽ được mở trong giai đoạn tiếp theo.",
-    "sampleStory": "Câu chuyện nổi bật",
-    "postPlaceholderEyebrow": "Chi tiết bài viết",
-    "postPlaceholderTitle": "Bài viết: {{postId}}",
-    "postPlaceholderDescription": "Đường dẫn chi tiết đã sẵn sàng để nối nội dung thật sau này. Ở giai đoạn này, màn hình chỉ đóng vai trò giữ chỗ rõ ràng để tránh cảm giác tính năng đã hoàn chỉnh.",
-    "fallbackPostId": "bài viết",
-    "posts": {
-      "haGiang": {
-        "title": "Một vòng Hà Giang yên chậm trong 4 ngày",
-        "summary": "Bài viết mẫu giúp giữ tinh thần thị giác của sản phẩm trước khi bảng tin thật được mở."
-      },
-      "hue": {
-        "title": "Checklist ăn uống ở Huế cho người đi cuối tuần",
-        "summary": "Nội dung xem trước để bạn hình dung khu vực cộng đồng mà không tạo cảm giác đây đã là bảng tin hoàn chỉnh."
-      }
+    "title": "Những câu chuyện đang được chia sẻ",
+    "description": "Community giờ lấy dữ liệu thật từ các bài viết công khai để mở một lớp cảm hứng khác ngoài public trip read-only.",
+    "summary": "Hiện có {{count}} câu chuyện công khai đang mở.",
+    "cardEyebrow": "Câu chuyện cộng đồng",
+    "detailEyebrow": "Bài viết cộng đồng",
+    "contentEyebrow": "Nội dung",
+    "linkedTripEyebrow": "Chuyến đi được gắn kèm",
+    "linkedTripDescription": "Nếu bạn muốn mở rộng sang planner và khung chuyến đi, route public của trip vẫn nằm ở phía sau bài viết này.",
+    "emptyTitle": "Cộng đồng đang chờ câu chuyện đầu tiên",
+    "emptyDescription": "Hãy mở một bài viết đầu tiên để cộng đồng có thêm một góc nhìn thực tế từ hành trình của bạn.",
+    "loadErrorTitle": "Chưa tải được community feed",
+    "loadErrorDescription": "Hãy thử lại sau ít phút hoặc tải lại để xem các bài viết mới nhất.",
+    "notFoundTitle": "Không tìm thấy bài viết này",
+    "notFoundDescription": "Liên kết có thể không còn hợp lệ hoặc bài viết đã bị gỡ khỏi community.",
+    "detailLoadErrorTitle": "Chưa tải được bài viết này",
+    "detailLoadErrorDescription": "Hãy thử lại sau ít phút để mở lại chi tiết bài viết.",
+    "createEyebrow": "Viết bài",
+    "createTitle": "Chia sẻ một câu chuyện từ hành trình của bạn",
+    "createDescription": "Giữ form thật gọn ở phase này: một tiêu đề rõ, vài đoạn nội dung chắc tay và optional linked trip nếu bạn muốn kéo người đọc sang route public của chuyến đi.",
+    "fields": {
+      "title": "Tiêu đề bài viết",
+      "content": "Nội dung",
+      "coverImageUrl": "Liên kết ảnh bìa",
+      "linkedTrip": "Gắn với chuyến đi public"
+    },
+    "placeholders": {
+      "coverImageUrl": "https://example.com/post-cover.jpg",
+      "content": "Ví dụ: Mình giữ nhịp chậm, chỉ chốt vài điểm chính và để lại nhiều khoảng thở hơn cho hành trình."
+    },
+    "validation": {
+      "titleRequired": "Tiêu đề bài viết là bắt buộc.",
+      "titleLength": "Tiêu đề bài viết không được vượt quá 120 ký tự.",
+      "contentRequired": "Nội dung bài viết là bắt buộc.",
+      "contentLength": "Nội dung bài viết không được vượt quá 20000 ký tự.",
+      "coverImageUrlInvalid": "Liên kết ảnh bìa phải là URL http hoặc https hợp lệ."
+    },
+    "actions": {
+      "create": "Đăng bài viết",
+      "publishing": "Đang đăng bài viết...",
+      "startWriting": "Viết câu chuyện mới",
+      "viewLinkedTrip": "Mở chuyến đi được gắn kèm",
+      "backHome": "Quay lại trang chủ"
+    },
+    "feedback": {
+      "createError": "Không thể đăng bài viết lúc này. Vui lòng thử lại."
+    },
+    "tripSelector": {
+      "none": "Không gắn với chuyến đi nào",
+      "helper": "Chỉ các trip đang public mới có thể được gắn vào bài viết cộng đồng.",
+      "empty": "Bạn chưa có trip public nào để gắn vào bài viết. Bạn vẫn có thể đăng bài độc lập."
+    },
+    "create": {
+      "tripNotFoundWarning": "Không tìm thấy chuyến đi được yêu cầu để prefill bài viết này.",
+      "tripNotPublicWarning": "Chuyến đi được chọn vẫn đang ở chế độ riêng tư. Hãy chuyển trip sang public trước khi gắn vào bài viết.",
+      "tripsLoadError": "Không tải được danh sách trip của bạn lúc này. Form vẫn mở, nhưng bạn chưa thể chọn linked trip."
+    },
+    "preview": {
+      "titleFallback": "Tiêu đề bài viết sẽ hiện ở đây",
+      "linkedTripActive": "Đang nối với một trip public",
+      "linkedTripInactive": "Bài viết độc lập"
     }
   },
   "dashboard": {
@@ -242,6 +287,7 @@
       "title": "Link public của chuyến đi này đã sẵn sàng",
       "description": "Mọi người có link có thể mở route public read-only để xem khung chuyến đi và planner tree hiện tại.",
       "copyAction": "Sao chép link",
+      "createPostAction": "Tạo bài viết từ chuyến đi này",
       "openAction": "Mở route public",
       "copySuccess": "Link chia sẻ công khai đã được sao chép.",
       "copyError": "Không thể sao chép link lúc này. Bạn có thể mở route public trực tiếp từ nút bên cạnh."
