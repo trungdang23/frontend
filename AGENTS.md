@@ -15,6 +15,7 @@
 ## Frontend Rules
 
 - Organize code by feature or route once the app is scaffolded; avoid dumping all UI into a single large file.
+- Before implementing any frontend task, write or update a task-specific backlog/checklist in the nearest relevant frontend document so scope, rollout order, and deferred items are explicit.
 - Reuse shared UI primitives for buttons, inputs, dialogs, cards, and layout patterns before adding one-off variants.
 - Keep display text centralized when the project introduces internationalization.
 - Preserve existing Vietnamese UX terminology unless the task explicitly changes content strategy.
