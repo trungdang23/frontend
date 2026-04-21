@@ -444,6 +444,21 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
   - assistive-tech audit ngoài harness test hiện có
   - chính sách chung cho note/banner ở mọi feature slice sau phase hardening
 
+### Current pass - 2026-04-21 (protected informational note semantics)
+
+- Scope của đợt này:
+  - áp dụng policy `note` cho mixed-currency budget info trong `TripDetailPage`
+  - gắn ghi chú đó với budget summary section qua `aria-describedby` thay vì giữ semantics của live status
+  - thêm route-level regression test để khóa behavior này trong protected workspace
+- File owner của lượt này:
+  - `src/features/trips/routes/trip-detail-page.tsx`
+  - `src/tests/app-routing.test.tsx`
+  - `documents/18_frontend-phase-07-hardening-backlog.md`
+- Deferred rõ trong lượt này:
+  - rà các note/banner tĩnh tương tự ở feature protected khác ngoài trip detail
+  - assistive-tech audit ngoài harness test hiện có
+  - policy component-level chung nếu phase sau xuất hiện nhiều info note mới
+
 ## Slice FE-07F - Docs, verify command, và post-deploy checklist
 
 ### Mục tiêu

@@ -48,6 +48,7 @@ export function TripDetailPage() {
   const { language, t } = useI18n();
   const overviewHeadingId = useId();
   const budgetHeadingId = useId();
+  const budgetInfoNoteId = useId();
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const noticeKey = (location.state as TripRouteState | null)?.noticeKey;
@@ -343,7 +344,7 @@ export function TripDetailPage() {
         ) : null}
 
         {budgetSummary?.hasMixedCurrencies ? (
-          <StatusBanner tone="info">
+          <StatusBanner id={budgetInfoNoteId} mode="note" tone="info">
             {t('trips.planner.feedback.mixedCurrencyInfo', {
               currency: budgetSummary.currency,
             })}
@@ -351,6 +352,7 @@ export function TripDetailPage() {
         ) : null}
 
         <section
+          aria-describedby={budgetSummary?.hasMixedCurrencies ? budgetInfoNoteId : undefined}
           aria-labelledby={budgetHeadingId}
           className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
         >

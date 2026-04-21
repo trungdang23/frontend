@@ -701,6 +701,150 @@ describe('App routing integration', () => {
     expect(await screen.findByText(/800\.000/)).toBeInTheDocument();
   });
 
+  it('treats mixed-currency budget info as a described note in the protected trip detail route', async () => {
+    const tripId = 'trip-owner-mixed-budget-1';
+    const tripDetail = {
+      id: tripId,
+      userId: 'user-routing-01',
+      name: 'Mixed Currency Budget Workspace',
+      destination: null,
+      summaryNotes: 'Khoá semantics cho budget info dạng note.',
+      coverImageUrl: null,
+      startDate: '2026-09-10',
+      endDate: '2026-09-12',
+      timezone: null,
+      budgetAmount: 4200000,
+      budgetCurrency: 'VND',
+      budgetMode: 'manual',
+      manualBudgetAmount: 4200000,
+      manualBudgetCurrency: 'VND',
+      visibility: 'private',
+      createdAt: '2026-04-21T00:00:00.000Z',
+      updatedAt: '2026-04-21T00:00:00.000Z',
+    };
+    const plannerNodes = [
+      {
+        id: 'node-root-vnd',
+        tripId,
+        parentId: null,
+        type: 'day',
+        title: 'Ngày 1 ở Huế',
+        notes: 'Node VND đầu tiên.',
+        startAt: '2026-09-10T08:00:00.000Z',
+        endAt: '2026-09-10T20:00:00.000Z',
+        costAmount: 600000,
+        costCurrency: 'VND',
+        imageUrl: null,
+        sortOrder: 0,
+        depth: 0,
+        createdAt: '2026-04-21T00:00:00.000Z',
+        updatedAt: '2026-04-21T00:00:00.000Z',
+      },
+      {
+        id: 'node-child-usd',
+        tripId,
+        parentId: 'node-root-vnd',
+        type: 'activity',
+        title: 'Vé workshop USD',
+        notes: 'Node USD để bật mixed-currency info.',
+        startAt: '2026-09-10T14:00:00.000Z',
+        endAt: '2026-09-10T16:00:00.000Z',
+        costAmount: 25,
+        costCurrency: 'USD',
+        imageUrl: null,
+        sortOrder: 0,
+        depth: 1,
+        createdAt: '2026-04-21T00:00:00.000Z',
+        updatedAt: '2026-04-21T00:00:00.000Z',
+      },
+    ];
+
+    fetchMock.mockImplementation(async (input, init) => {
+      const url = typeof input === 'string' ? input : input.toString();
+      const method = init?.method ?? 'GET';
+
+      if (url.endsWith(`/trips/${tripId}`) && method === 'GET') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: tripDetail,
+          },
+        });
+      }
+
+      if (url.endsWith(`/trips/${tripId}/budget-summary`) && method === 'GET') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: {
+              tripId,
+              currency: 'VND',
+              totalBudgetAmount: 4200000,
+              totalPlannedAmount: 600625,
+              remainingAmount: 3599375,
+              totalDays: 1,
+              totalActivities: 1,
+              isOverBudget: false,
+              hasMixedCurrencies: true,
+              totalsByCurrency: [
+                {
+                  currency: 'VND',
+                  plannedAmount: 600000,
+                  nodeCount: 1,
+                },
+                {
+                  currency: 'USD',
+                  plannedAmount: 25,
+                  nodeCount: 1,
+                },
+              ],
+            },
+          },
+        });
+      }
+
+      if (url.endsWith(`/trips/${tripId}/planner`) && method === 'GET') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: {
+              trip: tripDetail,
+              nodes: plannerNodes,
+            },
+          },
+        });
+      }
+
+      throw new Error(`Unexpected request: ${method} ${url}`);
+    });
+
+    renderAppWithProviders({
+      initialEntries: [`/app/trips/${tripId}`],
+      initialStatus: 'authenticated',
+    });
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 1,
+        name: /mixed currency budget workspace/i,
+      }),
+    ).toBeInTheDocument();
+
+    const budgetRegion = await screen.findByRole('region', {
+      name: /tóm tắt ngân sách|budget summary/i,
+    });
+    const budgetInfoNote = screen
+      .getByText(/Planner hiện có chi phí ở nhiều tiền tệ\./i)
+      .closest('[role="note"]');
+
+    expect(budgetInfoNote).not.toBeNull();
+    expect(budgetRegion).toHaveAttribute(
+      'aria-describedby',
+      budgetInfoNote?.getAttribute('id') ?? '',
+    );
+    expect(budgetInfoNote).not.toHaveAttribute('aria-live');
+  });
+
   it('creates a trip from the protected route tree and opens its planner workspace', async () => {
     const tripId = 'trip-created-1';
     const createdTrip = {
