@@ -32,6 +32,7 @@ function renderAppShell() {
           <Routes>
             <Route path="/app" element={<AppShell />}>
               <Route index element={<div>Dashboard workspace</div>} />
+              <Route path="profile" element={<div>Profile workspace</div>} />
             </Route>
             <Route path="/" element={<div>Explore page</div>} />
             <Route path="/trips" element={<div>Public trips page</div>} />
@@ -57,6 +58,41 @@ describe('App shell public navigation', () => {
     await user.click(toggle);
 
     expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  });
+
+  it('closes the mobile workspace menu when Escape is pressed', async () => {
+    renderAppShell();
+
+    const user = userEvent.setup();
+    const toggle = screen.getByRole('button', {
+      name: /mở hoặc đóng menu không gian riêng|open or close the workspace menu/i,
+    });
+
+    await user.click(toggle);
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await user.keyboard('{Escape}');
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('closes the mobile workspace menu after navigation inside the app shell', async () => {
+    renderAppShell();
+
+    const user = userEvent.setup();
+    const toggle = screen.getByRole('button', {
+      name: /mở hoặc đóng menu không gian riêng|open or close the workspace menu/i,
+    });
+
+    await user.click(toggle);
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+
+    await user.click(screen.getAllByRole('link', { name: /hồ sơ|profile/i })[0]);
+
+    expect(screen.getByText('Profile workspace')).toBeInTheDocument();
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
   });
 
   it('keeps public quick links visible for authenticated users', () => {

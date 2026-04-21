@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -8,7 +8,7 @@ import { LanguageSwitcher } from '@/shared/ui/language-switcher';
 import { SkipLink } from '@/shared/ui/skip-link';
 
 export function SiteHeader() {
-  const [openPath, setOpenPath] = useState<string | null>(null);
+  const [openLocationKey, setOpenLocationKey] = useState<string | null>(null);
   const location = useLocation();
   const mobileMenuId = useId();
   const { t } = useI18n();
@@ -18,8 +18,27 @@ export function SiteHeader() {
     { label: t('common.navigation.community'), to: '/community' },
     { label: t('common.navigation.login'), to: '/auth/login' },
   ];
+  const currentLocationKey =
+    location.key || `${location.pathname}${location.search}${location.hash}`;
+  const isOpen = openLocationKey === currentLocationKey;
 
-  const isOpen = openPath === location.pathname;
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setOpenLocationKey(null);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
 
   return (
     <>
@@ -61,8 +80,8 @@ export function SiteHeader() {
             aria-expanded={isOpen}
             className="inline-flex h-11 w-11 items-center justify-center rounded-full text-[var(--color-forest)] transition hover:bg-white/60 md:hidden"
             onClick={() =>
-              setOpenPath((currentValue) =>
-                currentValue === location.pathname ? null : location.pathname,
+              setOpenLocationKey((currentValue) =>
+                currentValue === currentLocationKey ? null : currentLocationKey,
               )
             }
             type="button"
@@ -82,7 +101,7 @@ export function SiteHeader() {
                 <NavLink
                   className="rounded-2xl px-4 py-3 text-sm font-medium text-[var(--color-ink-soft)] transition hover:bg-white/60 hover:text-[var(--color-forest)]"
                   key={item.to}
-                  onClick={() => setOpenPath(null)}
+                  onClick={() => setOpenLocationKey(null)}
                   to={item.to}
                 >
                   {item.label}
@@ -90,7 +109,7 @@ export function SiteHeader() {
               ))}
               <Link
                 className="rounded-2xl bg-[var(--color-forest)] px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-[var(--color-forest-deep)]"
-                onClick={() => setOpenPath(null)}
+                onClick={() => setOpenLocationKey(null)}
                 to="/auth/register"
               >
                 {t('common.navigation.getStarted')}

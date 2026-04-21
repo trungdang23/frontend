@@ -221,6 +221,22 @@ Tạo một lớp verify end-to-end mỏng cho các use case có giá trị busi
 
 Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
 
+### Focused sub-slice - 2026-04-21
+
+- Scope của lượt này:
+  - harden mobile navigation cho `public shell` và `app shell`
+  - đảm bảo menu mobile không giữ state mở sai sau khi đổi route
+  - hỗ trợ đóng menu bằng phím `Escape` cho keyboard users
+  - thêm regression tests cho toggle state trong `SiteHeader` và `AppShell`
+- File owner của lượt này:
+  - `src/shared/ui/site-header.tsx`
+  - `src/features/shell/routes/app-shell.tsx`
+  - `src/tests/*`
+- Deferred rõ trong lượt này:
+  - focus trap đầy đủ cho mobile drawer
+  - animation hoặc gesture cho navigation panel
+  - redesign layout lớn cho auth/community/trip cards
+
 ### Current pass - 2026-04-21
 
 - Scope của đợt này:

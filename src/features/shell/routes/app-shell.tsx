@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import {
   BookOpenText,
   House,
@@ -20,7 +20,9 @@ export function AppShell() {
   const auth = useAuth();
   const location = useLocation();
   const workspaceNavId = useId();
-  const [workspaceNavOpenPath, setWorkspaceNavOpenPath] = useState<string | null>(null);
+  const [workspaceNavOpenLocationKey, setWorkspaceNavOpenLocationKey] = useState<
+    string | null
+  >(null);
   const { t } = useI18n();
   const publicNavItems = [
     { label: t('common.navigation.explore'), to: '/' },
@@ -37,8 +39,27 @@ export function AppShell() {
     { label: t('common.navigation.trips'), to: '/app/trips', icon: Map },
     { label: t('common.navigation.profile'), to: '/app/profile', icon: UserRound },
   ];
+  const currentLocationKey =
+    location.key || `${location.pathname}${location.search}${location.hash}`;
+  const isWorkspaceNavOpen = workspaceNavOpenLocationKey === currentLocationKey;
 
-  const isWorkspaceNavOpen = workspaceNavOpenPath === location.pathname;
+  useEffect(() => {
+    if (!isWorkspaceNavOpen) {
+      return;
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setWorkspaceNavOpenLocationKey(null);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isWorkspaceNavOpen]);
 
   return (
     <div className="min-h-screen">
@@ -102,8 +123,8 @@ export function AppShell() {
             aria-expanded={isWorkspaceNavOpen}
             className="flex w-full items-center justify-between gap-3 rounded-[1.25rem] border border-[var(--color-border)] bg-white/72 px-4 py-3 text-left text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
             onClick={() =>
-              setWorkspaceNavOpenPath((currentValue) =>
-                currentValue === location.pathname ? null : location.pathname,
+              setWorkspaceNavOpenLocationKey((currentValue) =>
+                currentValue === currentLocationKey ? null : currentLocationKey,
               )
             }
             type="button"
@@ -121,6 +142,7 @@ export function AppShell() {
               <WorkspaceNavLinks
                 items={workspaceNavItems}
                 label={t('common.navigation.workspaceLabel')}
+                onNavigate={() => setWorkspaceNavOpenLocationKey(null)}
               />
             </div>
           ) : null}
@@ -152,9 +174,11 @@ type WorkspaceNavItem = {
 function WorkspaceNavLinks({
   items,
   label,
+  onNavigate,
 }: {
   items: WorkspaceNavItem[];
   label: string;
+  onNavigate?: () => void;
 }) {
   return (
     <nav aria-label={label} className="flex flex-col gap-2">
@@ -173,6 +197,7 @@ function WorkspaceNavLinks({
             }
             end={item.to === '/app'}
             key={item.to}
+            onClick={onNavigate}
             to={item.to}
           >
             <Icon className="h-4 w-4" />
