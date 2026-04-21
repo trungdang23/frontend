@@ -149,11 +149,140 @@ describe('Public trip page', () => {
         'Planner ở route công khai đang là read-only. Mọi thao tác chỉnh sửa vẫn nằm trong workspace riêng của chủ chuyến đi.',
       ),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole('region', {
-        name: /planner tree đang được chia sẻ|the shared planner tree/i,
-      }),
-    ).toBeInTheDocument();
+    const plannerRegion = screen.getByRole('region', {
+      name: /planner tree đang được chia sẻ|the shared planner tree/i,
+    });
+    const readOnlyBanner = screen
+      .getByText(
+        'Planner ở route công khai đang là read-only. Mọi thao tác chỉnh sửa vẫn nằm trong workspace riêng của chủ chuyến đi.',
+      )
+      .closest('[role="status"]');
+
+    expect(plannerRegion).toBeInTheDocument();
+    expect(readOnlyBanner).not.toBeNull();
+    expect(plannerRegion).toHaveAttribute(
+      'aria-describedby',
+      readOnlyBanner?.getAttribute('id') ?? '',
+    );
+  });
+
+  it('focuses the planner empty-state heading when the public planner has no nodes', async () => {
+    fetchMock
+      .mockResolvedValueOnce(
+        createMockResponse({
+          body: {
+            success: true,
+            data: {
+              id: 'trip-public-empty',
+              userId: 'user-01',
+              name: 'Hoi An Riverside Notes',
+              destination: null,
+              summaryNotes: 'Ba ngày chậm rãi, ưu tiên dạo sông và quán cafe.',
+              coverImageUrl: null,
+              startDate: '2026-07-12',
+              endDate: '2026-07-15',
+              timezone: null,
+              budgetAmount: 3500000,
+              budgetCurrency: 'VND',
+              budgetMode: 'manual',
+              manualBudgetAmount: 3500000,
+              manualBudgetCurrency: 'VND',
+              visibility: 'public',
+              createdAt: '2026-04-18T00:00:00.000Z',
+              updatedAt: '2026-04-18T00:00:00.000Z',
+            },
+          },
+        }),
+      )
+      .mockResolvedValueOnce(
+        createMockResponse({
+          body: {
+            success: true,
+            data: {
+              trip: {
+                id: 'trip-public-empty',
+                userId: 'user-01',
+                name: 'Hoi An Riverside Notes',
+                destination: null,
+                summaryNotes: 'Ba ngày chậm rãi, ưu tiên dạo sông và quán cafe.',
+                coverImageUrl: null,
+                startDate: '2026-07-12',
+                endDate: '2026-07-15',
+                timezone: null,
+                budgetAmount: 3500000,
+                budgetCurrency: 'VND',
+                budgetMode: 'manual',
+                manualBudgetAmount: 3500000,
+                manualBudgetCurrency: 'VND',
+                visibility: 'public',
+                createdAt: '2026-04-18T00:00:00.000Z',
+                updatedAt: '2026-04-18T00:00:00.000Z',
+              },
+              nodes: [],
+            },
+          },
+        }),
+      );
+
+    renderWithProviders(['/trips/trip-public-empty']);
+
+    const heading = await screen.findByRole('heading', {
+      level: 2,
+      name: 'Planner công khai chưa có node nào',
+    });
+
+    expect(heading).toBeInTheDocument();
+    await waitFor(() => expect(heading).toHaveFocus());
+  });
+
+  it('focuses the planner error banner when the public planner query fails', async () => {
+    fetchMock
+      .mockResolvedValueOnce(
+        createMockResponse({
+          body: {
+            success: true,
+            data: {
+              id: 'trip-public-error',
+              userId: 'user-01',
+              name: 'Hoi An Riverside Notes',
+              destination: null,
+              summaryNotes: 'Ba ngày chậm rãi, ưu tiên dạo sông và quán cafe.',
+              coverImageUrl: null,
+              startDate: '2026-07-12',
+              endDate: '2026-07-15',
+              timezone: null,
+              budgetAmount: 3500000,
+              budgetCurrency: 'VND',
+              budgetMode: 'manual',
+              manualBudgetAmount: 3500000,
+              manualBudgetCurrency: 'VND',
+              visibility: 'public',
+              createdAt: '2026-04-18T00:00:00.000Z',
+              updatedAt: '2026-04-18T00:00:00.000Z',
+            },
+          },
+        }),
+      )
+      .mockResolvedValueOnce(
+        createMockResponse({
+          body: {
+            success: false,
+            error: {
+              code: 'INTERNAL_ERROR',
+              message: 'Planner query failed.',
+            },
+          },
+          status: 500,
+        }),
+      );
+
+    renderWithProviders(['/trips/trip-public-error']);
+
+    const plannerError = await screen.findByText('Planner query failed.');
+    const plannerErrorBanner = plannerError.closest('[role="alert"]');
+
+    expect(plannerErrorBanner).not.toBeNull();
+    await waitFor(() => expect(plannerErrorBanner).toHaveFocus());
   });
 
   it('shows the private-trip state for a 403 response', async () => {

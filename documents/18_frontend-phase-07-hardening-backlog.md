@@ -397,6 +397,21 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
   - assistive-tech audit ngoài test harness hiện có
   - live-region riêng cho loading states dài hoặc background refresh
 
+### Current pass - 2026-04-21 (public planner section states)
+
+- Scope của đợt này:
+  - đưa focus vào `PublicTripPlanner` error banner hoặc empty heading khi planner section rơi vào state sâu hơn bên trong route detail
+  - gắn read-only notice với planner section qua semantics thay vì bắt banner giành focus
+  - thêm regression tests cho planner `success`, `empty`, và `load error` trong public trip detail
+- File owner của lượt này:
+  - `src/shared/ui/status-banner.tsx`
+  - `src/features/trips/public/**`
+  - `src/tests/public-trip-page.test.tsx`
+- Deferred rõ trong lượt này:
+  - audit assistive-tech sâu cho planner tree nhiều tầng ở public mode
+  - loading-state announcements riêng cho query chậm hoặc refresh nền
+  - focus policy chung cho mọi info banner không cần tương tác ở route public
+
 ## Slice FE-07F - Docs, verify command, và post-deploy checklist
 
 ### Mục tiêu

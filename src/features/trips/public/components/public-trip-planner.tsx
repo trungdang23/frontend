@@ -38,7 +38,7 @@ export function PublicTripPlanner({
   if (error) {
     return (
       <div className="space-y-4">
-        <StatusBanner tone="danger">
+        <StatusBanner autoFocus tone="danger">
           {error instanceof ApiError && error.message
             ? error.message
             : t('trips.publicPage.plannerLoadError')}
@@ -53,6 +53,7 @@ export function PublicTripPlanner({
   if (tree.length === 0) {
     return (
       <EmptyState
+        autoFocus
         description={t('trips.publicPage.plannerEmptyDescription')}
         eyebrow={t('trips.publicPage.plannerEyebrow')}
         title={t('trips.publicPage.plannerEmptyTitle')}

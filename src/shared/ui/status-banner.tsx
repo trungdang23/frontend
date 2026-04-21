@@ -5,6 +5,7 @@ import { cn } from '@/shared/lib/cn';
 type StatusBannerProps = {
   autoFocus?: boolean;
   children: ReactNode;
+  id?: string;
   tone?: 'danger' | 'info' | 'success';
 };
 
@@ -24,6 +25,7 @@ const toneIcons = {
 export function StatusBanner({
   autoFocus = false,
   children,
+  id,
   tone = 'info',
 }: StatusBannerProps) {
   const Icon = toneIcons[tone];
@@ -48,6 +50,7 @@ export function StatusBanner({
   return (
     <div
       ref={bannerRef}
+      id={id}
       className={cn(
         'flex items-start gap-3 rounded-3xl border px-4 py-3 text-sm leading-6 outline-none focus:outline-2 focus:outline-offset-2 focus:outline-[var(--color-forest)]',
         toneClasses[tone],

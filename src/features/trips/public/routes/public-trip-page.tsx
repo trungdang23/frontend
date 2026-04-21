@@ -30,6 +30,7 @@ export function PublicTripPage() {
   const { tripId } = useParams();
   const { language, t } = useI18n();
   const plannerHeadingId = useId();
+  const plannerReadOnlyNoticeId = useId();
 
   const tripQuery = useQuery({
     queryKey: publicTripQueryKeys.detail(tripId as string),
@@ -239,12 +240,15 @@ export function PublicTripPage() {
           </div>
 
           {plannerQuery.isSuccess ? (
-            <StatusBanner>
+            <StatusBanner id={plannerReadOnlyNoticeId}>
               {t('trips.publicPage.readOnlyNotice')}
             </StatusBanner>
           ) : null}
 
-          <section aria-labelledby={plannerHeadingId}>
+          <section
+            aria-describedby={plannerQuery.isSuccess ? plannerReadOnlyNoticeId : undefined}
+            aria-labelledby={plannerHeadingId}
+          >
             <PublicTripPlanner
               defaultCurrency={defaultCurrency}
               error={plannerQuery.error}
