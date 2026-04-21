@@ -1,20 +1,20 @@
 import { ReactNode, lazy, Suspense } from 'react';
 import { Navigate } from 'react-router-dom';
-import { DashboardPage } from '@/features/dashboard/routes/dashboard-page';
-import { ProfilePage } from '@/features/profile/routes/profile-page';
-import { CommunityCreatePage } from '@/features/community/routes/community-create-page';
-import { TripCreatePage } from '@/features/trips/routes/trip-create-page';
-import { TripDetailPage } from '@/features/trips/routes/trip-detail-page';
-import { TripEditPage } from '@/features/trips/routes/trip-edit-page';
-import { TripsPage } from '@/features/trips/routes/trips-page';
 import { ProtectedLayout } from '@/app/router/protected-layout';
 import { PublicAuthLayout } from '@/app/router/public-auth-layout';
-import { LoginPage } from '@/features/auth/routes/login-page';
-import { RegisterPage } from '@/features/auth/routes/register-page';
+import { WorkspaceRouteSkeleton } from '@/app/router/workspace-route-skeleton';
 import { PublicPageSkeleton } from '@/shared/ui/public-page-skeleton';
 
 const LandingPage = lazy(async () => ({
   default: (await import('@/features/landing/routes/landing-page')).LandingPage,
+}));
+
+const LoginPage = lazy(async () => ({
+  default: (await import('@/features/auth/routes/login-page')).LoginPage,
+}));
+
+const RegisterPage = lazy(async () => ({
+  default: (await import('@/features/auth/routes/register-page')).RegisterPage,
 }));
 
 const CommunityPage = lazy(async () => ({
@@ -33,11 +33,43 @@ const PublicTripsPage = lazy(async () => ({
   default: (await import('@/features/trips/public/routes/public-trips-page')).PublicTripsPage,
 }));
 
+const DashboardPage = lazy(async () => ({
+  default: (await import('@/features/dashboard/routes/dashboard-page')).DashboardPage,
+}));
+
+const ProfilePage = lazy(async () => ({
+  default: (await import('@/features/profile/routes/profile-page')).ProfilePage,
+}));
+
+const CommunityCreatePage = lazy(async () => ({
+  default: (await import('@/features/community/routes/community-create-page')).CommunityCreatePage,
+}));
+
+const TripsPage = lazy(async () => ({
+  default: (await import('@/features/trips/routes/trips-page')).TripsPage,
+}));
+
+const TripCreatePage = lazy(async () => ({
+  default: (await import('@/features/trips/routes/trip-create-page')).TripCreatePage,
+}));
+
+const TripDetailPage = lazy(async () => ({
+  default: (await import('@/features/trips/routes/trip-detail-page')).TripDetailPage,
+}));
+
+const TripEditPage = lazy(async () => ({
+  default: (await import('@/features/trips/routes/trip-edit-page')).TripEditPage,
+}));
+
 function withPublicFallback(
   node: ReactNode,
   variant: 'landing' | 'community' | 'post' | 'trip',
 ) {
   return <Suspense fallback={<PublicPageSkeleton variant={variant} />}>{node}</Suspense>;
+}
+
+function withWorkspaceFallback(node: ReactNode) {
+  return <Suspense fallback={<WorkspaceRouteSkeleton />}>{node}</Suspense>;
 }
 
 export const appRoutes = [
@@ -51,11 +83,11 @@ export const appRoutes = [
     children: [
       {
         path: 'login',
-        element: <LoginPage />,
+        element: withPublicFallback(<LoginPage />, 'landing'),
       },
       {
         path: 'register',
-        element: <RegisterPage />,
+        element: withPublicFallback(<RegisterPage />, 'landing'),
       },
     ],
   },
@@ -91,31 +123,31 @@ export const appRoutes = [
     children: [
       {
         index: true,
-        element: <DashboardPage />,
+        element: withWorkspaceFallback(<DashboardPage />),
       },
       {
         path: 'profile',
-        element: <ProfilePage />,
+        element: withWorkspaceFallback(<ProfilePage />),
       },
       {
         path: 'community/new',
-        element: <CommunityCreatePage />,
+        element: withWorkspaceFallback(<CommunityCreatePage />),
       },
       {
         path: 'trips',
-        element: <TripsPage />,
+        element: withWorkspaceFallback(<TripsPage />),
       },
       {
         path: 'trips/new',
-        element: <TripCreatePage />,
+        element: withWorkspaceFallback(<TripCreatePage />),
       },
       {
         path: 'trips/:tripId',
-        element: <TripDetailPage />,
+        element: withWorkspaceFallback(<TripDetailPage />),
       },
       {
         path: 'trips/:tripId/edit',
-        element: <TripEditPage />,
+        element: withWorkspaceFallback(<TripEditPage />),
       },
     ],
   },

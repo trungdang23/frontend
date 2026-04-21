@@ -459,6 +459,20 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
   - assistive-tech audit ngoài harness test hiện có
   - policy component-level chung nếu phase sau xuất hiện nhiều info note mới
 
+### Current pass - 2026-04-21 (route-level chunk splitting)
+
+- Scope của đợt này:
+  - giảm warning chunk lớn của Vite bằng cách lazy-load các protected routes còn đang import eager
+  - giữ route behavior hiện tại nhưng thêm fallback skeleton nhẹ cho workspace lúc chunk đang được tải
+  - verify lại build output để xem main chunk đã tách xuống dưới ngưỡng warning hay chưa
+- File owner của lượt này:
+  - `src/app/router/app-routes.tsx`
+  - `documents/18_frontend-phase-07-hardening-backlog.md`
+- Deferred rõ trong lượt này:
+  - manual chunk strategy ở mức bundler config nếu route splitting vẫn chưa đủ
+  - lazy-load sâu hơn theo component hoặc feature sub-slice nếu main chunk còn lớn
+  - bundle analysis chi tiết bằng visualizer nếu phase sau cần audit sâu hơn
+
 ## Slice FE-07F - Docs, verify command, và post-deploy checklist
 
 ### Mục tiêu
