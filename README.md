@@ -79,6 +79,50 @@ pnpm build
 npm test -- --run
 ```
 
+## Phase 07 verify routine
+
+### Trước khi push `main`
+
+Chạy bộ verify tối thiểu của package:
+
+```bash
+npm test -- --run
+pnpm lint
+pnpm build
+```
+
+### Smoke route/integration đang được khóa
+
+- login
+- create trip
+- add planner root node
+- public trip read-only
+- create community post
+
+Browser e2e hiện vẫn deferred cho tới khi chốt được harness phù hợp với local/CI runtime cost.
+
+### Sau mỗi deploy production
+
+Theo checklist tại `documents/09_frontend-production-deploy-runbook.md`, tối thiểu phải rà:
+
+- `/`
+- `/auth/login`
+- `/community`
+- `/trips`
+- một public trip detail/planner read-only
+- logout quay về flow public/auth
+
+Nếu deploy vừa đụng tới budget/planner, bổ sung thêm smoke owner flow ở `/app/trips/:tripId`.
+
+## Mẫu handoff ngắn
+
+Khi chốt một hardening slice hoặc một deploy verify, ưu tiên báo theo form ngắn:
+
+- `Scope`: đã sửa hoặc verify phần nào
+- `Local verify`: `npm test -- --run`, `pnpm lint`, `pnpm build`
+- `Post-deploy smoke`: route nào đã rà và kết quả pass/fail
+- `Deferred / residual risk`: phần nào còn để lại cho phase sau hoặc cho lần deploy kế tiếp
+
 ## Smoke verification hiện tại
 
 - Phase hardening hiện đang dùng `Vitest + Testing Library` làm smoke route/integration layer trước khi mở browser e2e riêng.

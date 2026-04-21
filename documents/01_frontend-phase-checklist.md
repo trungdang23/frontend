@@ -180,22 +180,24 @@ Status: `Completed`
 
 ## Phase 07 - Hardening, test, accessibility, release readiness
 
-Status: `Todo`
+Status: `In progress`
 
 - [x] Chi tiết backlog tại `18_frontend-phase-07-hardening-backlog.md`
 - [x] Unit/component tests cho auth, trips, planner
 - [x] Route-level integration tests
-- [~] Smoke route/integration cho:
+- [x] Smoke route/integration cho:
   - login
   - create trip
   - add node
   - public trip read
--  - create community post
--  - browser e2e được defer cho tới khi chốt harness riêng
-- [ ] Rà responsive mobile/desktop
-- [ ] Rà accessibility keyboard/focus
+  - create community post
+- [~] Browser e2e được defer cho tới khi chốt harness riêng
+- [x] Rà responsive mobile/desktop trên auth, app shell, trip/community/public screens
+- [x] Rà accessibility keyboard/focus/semantic states ở các route chính
 - [ ] Rà `prefers-reduced-motion`
-- [ ] Post-deploy verification qua domain thật
+- [x] Docs verify/post-deploy checklist đã được chốt trong README và runbook
+- [~] Post-deploy verification qua domain thật được chuẩn hoá thành checklist lặp lại theo từng deploy production
+- [x] Có mẫu handoff ngắn cho hardening/deploy verify
 
 ## Slice giao việc theo FE
 

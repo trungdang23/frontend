@@ -473,6 +473,22 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
   - lazy-load sâu hơn theo component hoặc feature sub-slice nếu main chunk còn lớn
   - bundle analysis chi tiết bằng visualizer nếu phase sau cần audit sâu hơn
 
+### Current pass - 2026-04-21 (docs verify + handoff checklist)
+
+- Scope của đợt này:
+  - chốt lại README package cho routine verify của Phase 07
+  - làm rõ post-deploy smoke checklist và reporting template trong production runbook
+  - cập nhật phase checklist để phản ánh rõ phần nào của hardening đã xong, phần nào vẫn deferred
+- File owner của lượt này:
+  - `README.md`
+  - `documents/09_frontend-production-deploy-runbook.md`
+  - `documents/01_frontend-phase-checklist.md`
+  - `documents/18_frontend-phase-07-hardening-backlog.md`
+- Deferred rõ trong lượt này:
+  - browser e2e harness nếu phase sau quyết định mở thật
+  - audit `prefers-reduced-motion` sâu hơn ngoài các motion-safe guard hiện có
+  - verify production domain thật theo từng deploy cụ thể vẫn là bước vận hành lặp lại, không phải việc “xong một lần”
+
 ## Slice FE-07F - Docs, verify command, và post-deploy checklist
 
 ### Mục tiêu
@@ -489,7 +505,7 @@ Biến hardening thành một phần có thể lặp lại, không phụ thuộc
   - mở `/trips`
   - mở public trip detail
   - logout
-- [ ] Chốt cách báo cáo kết quả hardening trong final handoff
+- [x] Chốt cách báo cáo kết quả hardening trong final handoff
 
 ### File dự kiến
 

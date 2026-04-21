@@ -120,16 +120,46 @@ Frontend có các script:
 
 ## Post-deploy checklist tối thiểu
 
-Sau mỗi deploy production, ưu tiên verify nhanh:
+Sau mỗi deploy production, ưu tiên verify nhanh theo đúng thứ tự này:
 
-1. mở landing tại `/`
-2. đăng nhập từ `/auth/login`
-3. mở `/community`
-4. mở `/trips`
-5. mở một public trip detail/planner read-only
-6. đăng xuất và xác nhận quay lại flow public/auth
+1. Local runtime health trên máy đích:
+   - `cd /home/trungdang/apps/journey-frontend`
+   - `bash ./scripts/check-production-health.sh`
+   - expected: script pass và app còn bind ở `127.0.0.1:3000`
+2. Public landing tại `/`
+   - expected: load được landing, không `5xx`, không trắng trang
+3. Đăng nhập từ `/auth/login`
+   - expected: vào được app shell và session boot ổn
+4. Mở `/community`
+   - expected: feed load được hoặc hiện empty state hợp lệ, không crash route
+5. Mở `/trips`
+   - expected: public trip list load được
+6. Mở một public trip detail/planner read-only
+   - expected: trip detail mở được, planner section load được, read-only note hiện đúng
+7. Đăng xuất
+   - expected: quay lại flow public/auth với notice hợp lệ
 
 Nếu đang verify phase budget hardening, bổ sung thêm một trip có planner cost để rà lại budget summary owner flow.
+
+## Mẫu báo cáo sau deploy
+
+Khi handoff kết quả deploy hoặc hardening verify, ưu tiên dùng format ngắn này:
+
+- `Scope`: commit hoặc slice vừa deploy
+- `Local verify`: pass/fail cho `bash ./scripts/check-production-health.sh`
+- `Public smoke`: `/`, `/auth/login`, `/community`, `/trips`, public trip detail, logout
+- `Warnings / advisory`: Cloudflare ingress, tunnel, hoặc public-domain advisory warnings nếu có
+- `Deferred / next action`: phần còn cần verify thêm như owner budget flow hoặc manual ingress investigation
+
+Ví dụ:
+
+```text
+Scope: frontend/main @ <commit>
+Local verify: pass
+Public smoke: landing pass, login pass, community pass, trips pass, public trip detail pass, logout pass
+Warnings / advisory: public domain health có warning Cloudflare nhưng local runtime vẫn healthy
+Deferred / next action: verify owner budget summary trên trip mixed-currency ở deploy kế tiếp
+```
 
 ## Kiểm tra sau reboot
 
