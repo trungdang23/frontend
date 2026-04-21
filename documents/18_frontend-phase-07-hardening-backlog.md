@@ -37,6 +37,8 @@ Phase này chưa xử lý:
   - community feed/detail/create post đã có
   - bug navigation sau login vừa cho thấy app shell/public shell vẫn là vùng cần hardening thêm
   - budget summary owner flow đã đọc summary `PlanNode`-based từ backend, nhưng vẫn cần khóa regression refetch sau planner mutation
+  - guest public trip list/detail hiện đã có test coverage ở mức route/integration
+  - session boot cho protected flow hiện đã có regression test riêng để tránh flash sai shell/route
 - Dependency chặn:
   - nếu muốn browser e2e thật, cần chốt tool/harness trước khi thêm dev dependency mới
   - runtime verification cho mixed-currency budget summary trên deploy thật vẫn chưa được chốt
@@ -155,12 +157,12 @@ Khóa các flow quan trọng ở mức component/router integration, chưa cần
 
 ### Việc cần làm
 
-- [ ] Test guest mở public trip list/detail
+- [x] Test guest mở public trip list/detail
 - [x] Test guest mở community feed/detail
 - [x] Test direct visit `/app/trips/:tripId` khi chưa auth sẽ về login
 - [x] Test login xong tiếp tục được flow đang dở nếu có `location.state.from`
 - [x] Test planner mutation ở trip detail sẽ refetch budget summary thay vì chỉ refresh planner tree
-- [ ] Test session boot không flash sai shell hoặc route sai
+- [x] Test session boot không flash sai shell hoặc route sai
 - [x] Test create post flow từ protected shell không làm mất đường quay lại public community
 
 ### File dự kiến

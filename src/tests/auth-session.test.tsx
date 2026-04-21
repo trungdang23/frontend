@@ -326,6 +326,80 @@ describe("Auth session lifecycle", () => {
     ).not.toBeInTheDocument();
   });
 
+  it("keeps a protected route on the booting shell while restoring a stored session", async () => {
+    readStoredSessionMock.mockReturnValue({
+      user: {
+        id: "user-08",
+        email: "booting@example.com",
+        displayName: "Booting User",
+        createdAt: "2026-04-20T00:00:00.000Z",
+        updatedAt: "2026-04-20T00:00:00.000Z",
+      },
+      tokens: {
+        tokenType: "Bearer",
+        accessToken: "access-token-booting",
+        accessTokenExpiresIn: 900,
+        refreshToken: "refresh-token-booting-12345678901234567890",
+        refreshTokenExpiresIn: 604800,
+      },
+    });
+
+    let resolveCurrentUserResponse:
+      | ((response: Response) => void)
+      | undefined;
+
+    fetchMock.mockReturnValueOnce(
+      new Promise<Response>((resolve) => {
+        resolveCurrentUserResponse = resolve;
+      }),
+    );
+
+    renderWithProviders(["/app/trips"]);
+
+    expect(
+      await screen.findByText("Journey đang khôi phục phiên đăng nhập..."),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", {
+        level: 1,
+        name: /trở lại với hành trình đang dang dở/i,
+      }),
+    ).not.toBeInTheDocument();
+
+    resolveCurrentUserResponse?.(
+      createMockResponse({
+        body: {
+          success: true,
+          data: {
+            user: {
+              id: "user-08",
+              email: "booting@example.com",
+              displayName: "Booting User",
+              createdAt: "2026-04-20T00:00:00.000Z",
+              updatedAt: "2026-04-20T00:00:00.000Z",
+            },
+          },
+        },
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", {
+          level: 1,
+          name: "Trips Workspace",
+        }),
+      ).toBeInTheDocument();
+    });
+
+    expect(
+      screen.queryByRole("heading", {
+        level: 1,
+        name: /trở lại với hành trình đang dang dở/i,
+      }),
+    ).not.toBeInTheDocument();
+  });
+
   it("logs the user out through the API and clears the local session", async () => {
     readStoredSessionMock.mockReturnValue({
       user: {

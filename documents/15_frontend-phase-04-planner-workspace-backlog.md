@@ -181,15 +181,15 @@ Create/update payload cần bám các field:
 
 ### Việc cần làm
 
-- [ ] Tạo `PlanNode` types
-- [ ] Tạo `TripPlannerResult`
-- [ ] Tạo planner API client mới cho:
+- [x] Tạo `PlanNode` types
+- [x] Tạo `TripPlannerResult`
+- [x] Tạo planner API client mới cho:
   - `GET /trips/:tripId/planner`
   - `POST /nodes`
   - `PATCH /nodes/:id`
   - `DELETE /nodes/:id`
-- [ ] Chuẩn hoá mapper response/error cho planner APIs
-- [ ] Giữ tách biệt rõ với itinerary bridge types cũ
+- [x] Chuẩn hoá mapper response/error cho planner APIs
+- [x] Giữ tách biệt rõ với itinerary bridge types cũ
 
 ### File dự kiến
 
@@ -201,14 +201,14 @@ Create/update payload cần bám các field:
 
 ### Việc cần làm
 
-- [ ] Tạo helper build tree từ flat nodes
-- [ ] Tạo helper sort node ổn định theo `parentId + sortOrder`
-- [ ] Tạo presenter cho:
+- [x] Tạo helper build tree từ flat nodes
+- [x] Tạo helper sort node ổn định theo `parentId + sortOrder`
+- [x] Tạo presenter cho:
   - node type label
   - time range
   - cost preview
   - empty child state
-- [ ] Chốt rule hiển thị cho node không có thời gian/chi phí/ảnh
+- [x] Chốt rule hiển thị cho node không có thời gian/chi phí/ảnh
 
 ### File dự kiến
 
@@ -220,11 +220,11 @@ Create/update payload cần bám các field:
 
 ### Việc cần làm
 
-- [ ] Tách phần planner workspace khỏi implementation itinerary cũ trong `TripDetailPage`
-- [ ] Giữ trip header và metadata summary đúng contract hiện tại
-- [ ] Giữ budget summary từ endpoint hiện tại cho đến `Phase 05`
-- [ ] Gắn planner query mới vào route hiện tại
-- [ ] Không còn dependency chính vào:
+- [x] Tách phần planner workspace khỏi implementation itinerary cũ trong `TripDetailPage`
+- [x] Giữ trip header và metadata summary đúng contract hiện tại
+- [x] Giữ budget summary từ endpoint hiện tại cho đến `Phase 05`
+- [x] Gắn planner query mới vào route hiện tại
+- [x] Không còn dependency chính vào:
   - `getTripItinerary`
   - `createItineraryDay`
   - `createItineraryActivity`
@@ -239,13 +239,13 @@ Create/update payload cần bám các field:
 
 ### Việc cần làm
 
-- [ ] Add root node inline
-- [ ] Add child node inline
-- [ ] Edit node inline
-- [ ] Delete node với confirmation rõ ràng
-- [ ] Disable action khi mutation đang chạy
-- [ ] Invalidate planner query sau success
-- [ ] Hiển thị mutation error nhất quán bằng banner/toast
+- [x] Add root node inline
+- [x] Add child node inline
+- [x] Edit node inline
+- [x] Delete node với confirmation rõ ràng
+- [x] Disable action khi mutation đang chạy
+- [x] Invalidate planner query sau success
+- [x] Hiển thị mutation error nhất quán bằng banner/toast
 
 ### File dự kiến
 
@@ -258,12 +258,12 @@ Create/update payload cần bám các field:
 
 ### Việc cần làm
 
-- [ ] Skeleton cho trip planner load ban đầu
-- [ ] Error banner + retry cho planner read
-- [ ] Empty state cho trip chưa có node
-- [ ] Expand/collapse state cho tree dài
-- [ ] Giữ layout usable trên mobile
-- [ ] Không để action mutate lẫn với action điều hướng
+- [x] Skeleton cho trip planner load ban đầu
+- [x] Error banner + retry cho planner read
+- [x] Empty state cho trip chưa có node
+- [x] Expand/collapse state cho tree dài
+- [x] Giữ layout usable trên mobile ở mức MVP của phase planner
+- [x] Không để action mutate lẫn với action điều hướng
 
 ### File dự kiến
 
@@ -275,11 +275,11 @@ Create/update payload cần bám các field:
 
 ### Việc cần làm
 
-- [ ] Thêm copy cho node types
-- [ ] Thêm copy cho create/edit/delete planner actions
-- [ ] Thêm copy cho planner empty/loading/error states
-- [ ] Cập nhật test cho planner workspace sau cutover
-- [ ] Ghi rõ bridge retirement note:
+- [x] Thêm copy cho node types
+- [x] Thêm copy cho create/edit/delete planner actions
+- [x] Thêm copy cho planner empty/loading/error states
+- [x] Cập nhật test cho planner workspace sau cutover
+- [x] Ghi rõ bridge retirement note:
   - itinerary UI không còn là flow chính
   - chỉ giữ tạm cho rollback ngắn hạn nếu cần
 
