@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -172,17 +172,18 @@ describe('Public trip page', () => {
 
     renderWithProviders(['/trips/trip-private']);
 
-    expect(
-      await screen.findByRole('heading', {
-        level: 2,
-        name: 'Chuyến đi này đang ở chế độ riêng tư',
-      }),
-    ).toBeInTheDocument();
+    const heading = await screen.findByRole('heading', {
+      level: 2,
+      name: 'Chuyến đi này đang ở chế độ riêng tư',
+    });
+
+    expect(heading).toBeInTheDocument();
     expect(
       screen.getByText(
         'Chủ sở hữu chưa mở quyền xem công khai cho route này. Hãy đăng nhập nếu bạn nghĩ mình cần quyền truy cập.',
       ),
     ).toBeInTheDocument();
+    await waitFor(() => expect(heading).toHaveFocus());
   });
 
   it('shows the not-found state for a 404 response', async () => {

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -124,5 +124,29 @@ describe('Public trips page', () => {
     expect(await screen.findByText('Hoi An Slow Days')).toBeInTheDocument();
     expect(screen.getByText('Da Lat Coffee Run')).toBeInTheDocument();
     expect(screen.getByText('Hiện có 2 chuyến đi public đang mở.')).toBeInTheDocument();
+  });
+
+  it('moves focus to the load-error heading when the public trip list fails', async () => {
+    fetchMock.mockResolvedValueOnce(
+      createMockResponse({
+        body: {
+          success: false,
+          error: {
+            code: 'INTERNAL_ERROR',
+            message: 'Public trip list is unavailable.',
+          },
+        },
+        status: 500,
+      }),
+    );
+
+    renderWithProviders(['/trips']);
+
+    const heading = await screen.findByRole('heading', {
+      level: 2,
+      name: 'Chưa tải được danh sách chuyến đi public',
+    });
+
+    await waitFor(() => expect(heading).toHaveFocus());
   });
 });

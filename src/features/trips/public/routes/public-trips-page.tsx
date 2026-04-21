@@ -44,6 +44,7 @@ export function PublicTripsPage() {
               ? tripsQuery.error.message
               : t('trips.publicList.loadErrorDescription')
           }
+          autoFocus
           eyebrow={t('trips.publicList.eyebrow')}
           title={t('trips.publicList.loadErrorTitle')}
         />
@@ -71,6 +72,7 @@ export function PublicTripsPage() {
               </Link>
             </div>
           }
+          autoFocus
           description={t('trips.publicList.emptyDescription')}
           eyebrow={t('trips.publicList.eyebrow')}
           title={t('trips.publicList.emptyTitle')}

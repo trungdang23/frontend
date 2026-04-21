@@ -47,6 +47,7 @@ export function CommunityPostPage() {
               {t('common.actions.backToCommunity')}
             </Link>
           }
+          autoFocus
           description={t('community.notFoundDescription')}
           eyebrow={t('community.detailEyebrow')}
           title={t('community.notFoundTitle')}
@@ -73,6 +74,7 @@ export function CommunityPostPage() {
               ? postQuery.error.message
               : t('community.detailLoadErrorDescription')
           }
+          autoFocus
           eyebrow={t('community.detailEyebrow')}
           title={t('community.detailLoadErrorTitle')}
         />

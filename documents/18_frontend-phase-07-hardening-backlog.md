@@ -381,6 +381,22 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
   - toast system hoặc announcement region riêng cho toàn app
   - audit assistive-tech ngoài môi trường test hiện có
 
+### Current pass - 2026-04-21 (public empty + error states)
+
+- Scope của đợt này:
+  - đưa focus vào heading của `EmptyState` khi route public rơi vào `empty`, `not found`, hoặc `load error`
+  - áp dụng cho các màn `public trips`, `public trip detail`, `community feed`, và `community post detail`
+  - thêm regression tests để khóa keyboard focus ở các public read-only states quan trọng
+- File owner của lượt này:
+  - `src/shared/ui/empty-state.tsx`
+  - `src/features/trips/public/**`
+  - `src/features/community/routes/**`
+  - `src/tests/*`
+- Deferred rõ trong lượt này:
+  - focus behavior cho mọi section-level state nằm sâu bên trong route public
+  - assistive-tech audit ngoài test harness hiện có
+  - live-region riêng cho loading states dài hoặc background refresh
+
 ## Slice FE-07F - Docs, verify command, và post-deploy checklist
 
 ### Mục tiêu

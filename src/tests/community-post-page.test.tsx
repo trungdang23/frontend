@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -123,16 +123,17 @@ describe('Community post page', () => {
 
     renderWithProviders(['/community/post-missing']);
 
-    expect(
-      await screen.findByRole('heading', {
-        level: 2,
-        name: 'Không tìm thấy bài viết này',
-      }),
-    ).toBeInTheDocument();
+    const heading = await screen.findByRole('heading', {
+      level: 2,
+      name: 'Không tìm thấy bài viết này',
+    });
+
+    expect(heading).toBeInTheDocument();
     expect(
       screen.getByText(
         'Liên kết có thể không còn hợp lệ hoặc bài viết đã bị gỡ khỏi community.',
       ),
     ).toBeInTheDocument();
+    await waitFor(() => expect(heading).toHaveFocus());
   });
 });

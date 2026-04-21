@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -136,16 +136,17 @@ describe('Community page', () => {
 
     renderWithProviders(['/community']);
 
-    expect(
-      await screen.findByRole('heading', {
-        level: 2,
-        name: 'Cộng đồng đang chờ câu chuyện đầu tiên',
-      }),
-    ).toBeInTheDocument();
+    const heading = await screen.findByRole('heading', {
+      level: 2,
+      name: 'Cộng đồng đang chờ câu chuyện đầu tiên',
+    });
+
+    expect(heading).toBeInTheDocument();
     expect(
       screen.getByText(
         'Hãy mở một bài viết đầu tiên để cộng đồng có thêm một góc nhìn thực tế từ hành trình của bạn.',
       ),
     ).toBeInTheDocument();
+    await waitFor(() => expect(heading).toHaveFocus());
   });
 });

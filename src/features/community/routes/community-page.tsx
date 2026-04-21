@@ -45,6 +45,7 @@ export function CommunityPage() {
               ? postsQuery.error.message
               : t('community.loadErrorDescription')
           }
+          autoFocus
           eyebrow={t('community.eyebrow')}
           title={t('community.loadErrorTitle')}
         />
@@ -72,6 +73,7 @@ export function CommunityPage() {
               </Link>
             </div>
           }
+          autoFocus
           description={t('community.emptyDescription')}
           eyebrow={t('community.eyebrow')}
           title={t('community.emptyTitle')}

@@ -61,6 +61,7 @@ export function PublicTripPage() {
               {t('trips.publicPage.actions.backHome')}
             </Link>
           }
+          autoFocus
           description={t('trips.publicPage.notFoundDescription')}
           eyebrow={t('trips.publicPage.eyebrow')}
           title={t('trips.publicPage.notFoundTitle')}
@@ -87,6 +88,7 @@ export function PublicTripPage() {
               </Link>
             </div>
           }
+          autoFocus
           description={t('trips.publicPage.privateDescription')}
           eyebrow={t('trips.publicPage.eyebrow')}
           title={t('trips.publicPage.privateTitle')}
@@ -113,6 +115,7 @@ export function PublicTripPage() {
               ? tripQuery.error.message
               : t('trips.publicPage.loadErrorDescription')
           }
+          autoFocus
           eyebrow={t('trips.publicPage.eyebrow')}
           title={t('trips.publicPage.loadErrorTitle')}
         />
