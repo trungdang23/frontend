@@ -107,7 +107,7 @@ export function CommunityPage() {
           </div>
         </Card>
 
-        <CommunityPostList posts={data} />
+        <CommunityPostList label={t('community.title')} posts={data} />
       </div>
     </CommunityShell>
   );

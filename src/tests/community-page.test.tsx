@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -106,6 +106,13 @@ describe('Community page', () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText('Ba ngày nhẹ hơn ở Hoi An'),
+    ).toBeInTheDocument();
+    const list = screen.getByRole('list', {
+      name: /những câu chuyện đang được chia sẻ/i,
+    });
+    expect(within(list).getAllByRole('listitem')).toHaveLength(1);
+    expect(
+      within(list).getByRole('article', { name: 'Ba ngày nhẹ hơn ở Hoi An' }),
     ).toBeInTheDocument();
     expect(
       screen.getByText('Hiện có 1 câu chuyện công khai đang mở.'),

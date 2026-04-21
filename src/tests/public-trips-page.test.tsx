@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -121,7 +121,16 @@ describe('Public trips page', () => {
         name: /danh sách các chuyến đi đang được chia sẻ/i,
       }),
     ).toBeInTheDocument();
-    expect(await screen.findByText('Hoi An Slow Days')).toBeInTheDocument();
+    const list = screen.getByRole('list', {
+      name: /danh sách các chuyến đi đang được chia sẻ/i,
+    });
+    expect(within(list).getAllByRole('listitem')).toHaveLength(2);
+    expect(
+      within(list).getByRole('article', { name: 'Hoi An Slow Days' }),
+    ).toBeInTheDocument();
+    expect(
+      within(list).getByRole('article', { name: 'Da Lat Coffee Run' }),
+    ).toBeInTheDocument();
     expect(screen.getByText('Da Lat Coffee Run')).toBeInTheDocument();
     expect(screen.getByText('Hiện có 2 chuyến đi public đang mở.')).toBeInTheDocument();
   });

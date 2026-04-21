@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { Link } from 'react-router-dom';
 
 import { TripCoverImage } from '@/features/trips/components/trip-cover-image';
@@ -20,9 +21,14 @@ export function CommunityPostCard({ post }: CommunityPostCardProps) {
   const { language, t } = useI18n();
   const authorName = getCommunityPostAuthorName(post, t);
   const publishedAt = formatCommunityPostDate(post.createdAt, language);
+  const titleId = useId();
 
   return (
-    <Card className="group overflow-hidden p-0 motion-safe:transition motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-[0_28px_80px_rgba(12,24,18,0.18)]">
+    <Card
+      aria-labelledby={titleId}
+      className="group overflow-hidden p-0 motion-safe:transition motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-[0_28px_80px_rgba(12,24,18,0.18)]"
+      role="article"
+    >
       <Link aria-label={post.title} className="block" to={`/community/${post.id}`}>
         <div className="relative h-64">
           <TripCoverImage
@@ -36,7 +42,9 @@ export function CommunityPostCard({ post }: CommunityPostCardProps) {
             <p className="text-sm font-medium uppercase tracking-[0.22em] text-white/72">
               {t('community.cardEyebrow')}
             </p>
-            <h2 className="text-2xl font-semibold leading-tight sm:text-3xl">{post.title}</h2>
+            <h2 className="text-2xl font-semibold leading-tight sm:text-3xl" id={titleId}>
+              {post.title}
+            </h2>
             <p className="text-sm text-white/78">
               {authorName} • {publishedAt}
             </p>

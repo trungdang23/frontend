@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -19,9 +20,14 @@ type PublicTripListItemProps = {
 
 export function PublicTripListItem({ trip }: PublicTripListItemProps) {
   const { language, t } = useI18n();
+  const titleId = useId();
 
   return (
-    <Card className="group overflow-hidden p-0 motion-safe:transition motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-[0_28px_80px_rgba(12,24,18,0.18)]">
+    <Card
+      aria-labelledby={titleId}
+      className="group overflow-hidden p-0 motion-safe:transition motion-safe:duration-300 motion-safe:hover:-translate-y-1 motion-safe:hover:shadow-[0_28px_80px_rgba(12,24,18,0.18)]"
+      role="article"
+    >
       <Link
         aria-label={t('trips.publicList.actions.viewTrip')}
         className="block"
@@ -42,7 +48,7 @@ export function PublicTripListItem({ trip }: PublicTripListItemProps) {
             <p className="mt-2 text-sm font-medium text-white/78">
               {formatTripDateRange(trip.startDate, trip.endDate, language)}
             </p>
-            <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">
+            <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl" id={titleId}>
               {trip.name}
             </h2>
           </div>

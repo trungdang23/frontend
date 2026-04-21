@@ -412,6 +412,23 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
   - loading-state announcements riêng cho query chậm hoặc refresh nền
   - focus policy chung cho mọi info banner không cần tương tác ở route public
 
+### Current pass - 2026-04-21 (public loaded-state list semantics)
+
+- Scope của đợt này:
+  - thêm list semantics rõ ràng cho `public trips` và `community feed`
+  - gắn mỗi card public vào `article` có tên theo heading riêng để screen reader quét nhanh hơn
+  - thêm regression tests khóa `list` và `article` semantics ở loaded states công khai
+- File owner của lượt này:
+  - `src/features/trips/public/components/**`
+  - `src/features/community/components/**`
+  - `src/features/trips/public/routes/public-trips-page.tsx`
+  - `src/features/community/routes/community-page.tsx`
+  - `src/tests/*`
+- Deferred rõ trong lượt này:
+  - pagination/filter semantics nếu phase sau mở public lists phức tạp hơn
+  - audit keyboard shortcut hoặc landmark sâu hơn cho card-level actions
+  - browser assistive-tech pass ngoài harness test hiện có
+
 ## Slice FE-07F - Docs, verify command, và post-deploy checklist
 
 ### Mục tiêu

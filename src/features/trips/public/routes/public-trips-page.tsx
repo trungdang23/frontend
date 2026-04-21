@@ -103,7 +103,7 @@ export function PublicTripsPage() {
           </p>
         </Card>
 
-        <PublicTripList trips={data} />
+        <PublicTripList label={t('trips.publicList.title')} trips={data} />
       </div>
     </PublicTripsShell>
   );
