@@ -257,6 +257,7 @@ describe("Trip metadata phase 03", () => {
     await userEvent.type(screen.getByLabelText("Tên chuyến đi"), "Manual Trip");
     await userEvent.type(screen.getByLabelText("Ngày bắt đầu"), "2026-09-01");
     await userEvent.type(screen.getByLabelText("Ngày kết thúc"), "2026-09-03");
+    const manualBudgetInput = screen.getByLabelText("Ngân sách thủ công");
     await userEvent.click(
       screen.getByRole("button", {
         name: /tạo chuyến đi/i,
@@ -268,6 +269,11 @@ describe("Trip metadata phase 03", () => {
         "Ngân sách thủ công là bắt buộc khi chọn chế độ thủ công.",
       ),
     ).toBeInTheDocument();
+    expect(manualBudgetInput).toHaveAttribute("aria-invalid", "true");
+    expect(manualBudgetInput).toHaveAttribute(
+      "aria-describedby",
+      expect.stringContaining("trip-manual-budget-amount-error"),
+    );
     expect(onSubmit).not.toHaveBeenCalled();
   });
 });

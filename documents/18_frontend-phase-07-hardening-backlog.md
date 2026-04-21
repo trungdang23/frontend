@@ -221,6 +221,22 @@ Tạo một lớp verify end-to-end mỏng cho các use case có giá trị busi
 
 Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
 
+### Current pass - 2026-04-21
+
+- Scope của đợt này:
+  - compact `app shell` trên mobile để quick links và workspace nav không đè trải nghiệm chính
+  - giảm rủi ro overflow ở planner tree và các card detail/public/community trên màn hình hẹp
+  - giữ auth/trip/community forms đọc được và thao tác ổn ở mobile trước khi mở phase mới
+- Artifact đã có trong source:
+  - public/auth/protected shells đã có `skip link` + `main landmark` rõ ràng
+  - `app shell` đã có toggle riêng cho workspace nav trên mobile
+  - planner tree đã bỏ indent kiểu `margin-left` theo depth và chuyển sang nested border/padding ổn định hơn
+  - heading và CTA ở trip/community/public detail + create/edit/list đã được nén lại cho màn hình hẹp
+- Deferred rõ trong đợt này:
+  - visual regression bằng browser e2e thật
+  - audit viewport tự động cho toàn bộ route
+  - redesign lớn cho card density hoặc information hierarchy
+
 ### Việc cần làm
 
 - [ ] Rà login/register trên mobile
@@ -251,6 +267,23 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
 ### Mục tiêu
 
 Đưa các flow cốt lõi lên mức an toàn hơn về keyboard, semantics, và feedback.
+
+### Current pass - 2026-04-21
+
+- Scope của đợt này:
+  - thêm landmark/skip link cho public, auth, và protected shells
+  - siết semantics cho navigation toggle, language toggle, và các vùng menu chính
+  - nối field error với input/select/textarea quan trọng qua `aria-invalid` và `aria-describedby`
+  - bổ sung focus treatment và `prefers-reduced-motion` baseline ở mức shared styles
+- Artifact đã có trong source:
+  - nav toggle và language toggle đã phản ánh state tốt hơn cho keyboard/screen reader
+  - auth/trip/community forms đã nối error text với field trọng yếu qua `aria-describedby`
+  - shared input controls đã tự phản ánh `aria-invalid` khi form báo lỗi
+  - verify đã chạy sạch bằng `npm test -- --run`, `pnpm lint`, và `pnpm build`
+- Deferred rõ trong đợt này:
+  - focus restoration hoàn chỉnh sau mọi redirect hoặc mutation
+  - screen-reader content audit cho toàn bộ copy động
+  - browser assistive-tech pass ngoài môi trường test hiện có
 
 ### Việc cần làm
 

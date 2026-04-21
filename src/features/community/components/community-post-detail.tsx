@@ -38,7 +38,7 @@ export function CommunityPostDetail({ post }: CommunityPostDetailProps) {
               <p className="eyebrow-text text-[var(--color-forest)]">
                 {t('community.detailEyebrow')}
               </p>
-              <h1 className="headline text-4xl text-[var(--color-ink)]">
+              <h1 className="headline text-3xl text-[var(--color-ink)] sm:text-4xl">
                 {post.title}
               </h1>
               <p className="text-sm leading-7 text-[var(--color-ink-soft)]">

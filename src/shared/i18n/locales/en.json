@@ -17,7 +17,11 @@
       "dashboard": "Dashboard",
       "trips": "Trips",
       "profile": "Profile",
-      "toggle": "Open or close navigation"
+      "toggle": "Open or close navigation",
+      "publicLabel": "Primary public navigation",
+      "workspaceLabel": "Workspace navigation",
+      "workspaceToggle": "Open or close the workspace menu",
+      "skipToContent": "Skip navigation and jump to the main content"
     },
     "actions": {
       "login": "Log in",

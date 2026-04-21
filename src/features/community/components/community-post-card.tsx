@@ -36,7 +36,7 @@ export function CommunityPostCard({ post }: CommunityPostCardProps) {
             <p className="text-sm font-medium uppercase tracking-[0.22em] text-white/72">
               {t('community.cardEyebrow')}
             </p>
-            <h2 className="text-3xl font-semibold leading-tight">{post.title}</h2>
+            <h2 className="text-2xl font-semibold leading-tight sm:text-3xl">{post.title}</h2>
             <p className="text-sm text-white/78">
               {authorName} • {publishedAt}
             </p>

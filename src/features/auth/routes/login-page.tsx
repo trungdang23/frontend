@@ -22,6 +22,12 @@ function createLoginSchema(t: (key: string) => string) {
 type LoginSchema = ReturnType<typeof createLoginSchema>;
 type LoginFormValues = z.infer<LoginSchema>;
 
+function getDescribedBy(...ids: Array<string | undefined>) {
+  const describedBy = ids.filter(Boolean).join(' ');
+
+  return describedBy.length > 0 ? describedBy : undefined;
+}
+
 export function LoginPage() {
   const auth = useAuth();
   const location = useLocation();
@@ -42,6 +48,8 @@ export function LoginPage() {
   });
 
   const nextPath = location.state?.from?.pathname || '/app';
+  const emailErrorId = 'login-email-error';
+  const passwordErrorId = 'login-password-error';
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError(null);
@@ -95,13 +103,20 @@ export function LoginPage() {
             {t('common.labels.email')}
           </label>
           <Input
+            aria-describedby={getDescribedBy(
+              errors.email ? emailErrorId : undefined,
+            )}
             hasError={Boolean(errors.email)}
             id="login-email"
             placeholder={t('common.placeholders.email')}
             type="email"
             {...register('email')}
           />
-          {errors.email ? <p className="text-sm text-[var(--color-danger)]">{errors.email.message}</p> : null}
+          {errors.email ? (
+            <p className="text-sm text-[var(--color-danger)]" id={emailErrorId}>
+              {errors.email.message}
+            </p>
+          ) : null}
         </div>
 
         <div className="space-y-2">
@@ -109,13 +124,18 @@ export function LoginPage() {
             {t('common.labels.password')}
           </label>
           <PasswordInput
+            aria-describedby={getDescribedBy(
+              errors.password ? passwordErrorId : undefined,
+            )}
             hasError={Boolean(errors.password)}
             id="login-password"
             placeholder={t('common.placeholders.password')}
             {...register('password')}
           />
           {errors.password ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.password.message}</p>
+            <p className="text-sm text-[var(--color-danger)]" id={passwordErrorId}>
+              {errors.password.message}
+            </p>
           ) : null}
         </div>
 

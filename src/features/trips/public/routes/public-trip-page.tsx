@@ -149,7 +149,7 @@ export function PublicTripPage() {
                 <p className="eyebrow-text text-[var(--color-forest)]">
                   {t('trips.publicPage.eyebrow')}
                 </p>
-                <h1 className="headline text-4xl text-[var(--color-ink)]">
+                <h1 className="headline text-3xl text-[var(--color-ink)] sm:text-4xl">
                   {trip.name}
                 </h1>
                 <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -188,7 +188,7 @@ export function PublicTripPage() {
                 />
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link className={getButtonClasses()} to="/auth/register">
                   <span className="inline-flex items-center gap-2">
                     <Compass className="h-4 w-4" />
@@ -248,7 +248,9 @@ function PublicTripShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen pb-12">
       <SiteHeader />
-      <PageSection className="pt-12">{children}</PageSection>
+      <main id="main-content" tabIndex={-1}>
+        <PageSection className="pt-12">{children}</PageSection>
+      </main>
     </div>
   );
 }

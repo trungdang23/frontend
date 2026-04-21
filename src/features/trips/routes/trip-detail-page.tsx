@@ -229,7 +229,7 @@ export function TripDetailPage() {
               <p className="eyebrow-text text-[var(--color-forest)]">
                 {t('trips.detailEyebrow')}
               </p>
-              <h1 className="headline text-4xl text-[var(--color-ink)]">
+              <h1 className="headline text-3xl text-[var(--color-ink)] sm:text-4xl">
                 {trip.name}
               </h1>
               <p className="max-w-2xl text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -276,7 +276,7 @@ export function TripDetailPage() {
 
             <TripShareCard trip={trip} />
 
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link
                 className={getButtonClasses('secondary')}
                 to="/app/trips"

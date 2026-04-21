@@ -88,7 +88,7 @@ export function CommunityPage() {
             <p className="eyebrow-text text-[var(--color-forest)]">
               {t('community.eyebrow')}
             </p>
-            <h1 className="headline text-4xl text-[var(--color-ink)]">
+            <h1 className="headline text-3xl text-[var(--color-ink)] sm:text-4xl">
               {t('community.title')}
             </h1>
             <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -115,7 +115,9 @@ function CommunityShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen pb-12">
       <SiteHeader />
-      <PageSection className="pt-12">{children}</PageSection>
+      <main id="main-content" tabIndex={-1}>
+        <PageSection className="pt-12">{children}</PageSection>
+      </main>
     </div>
   );
 }

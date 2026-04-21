@@ -44,6 +44,21 @@ function renderAppShell() {
 }
 
 describe('App shell public navigation', () => {
+  it('exposes an accessible workspace menu toggle state', async () => {
+    renderAppShell();
+
+    const user = userEvent.setup();
+    const toggle = screen.getByRole('button', {
+      name: /mở hoặc đóng menu không gian riêng|open or close the workspace menu/i,
+    });
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+
+    await user.click(toggle);
+
+    expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  });
+
   it('keeps public quick links visible for authenticated users', () => {
     renderAppShell();
 

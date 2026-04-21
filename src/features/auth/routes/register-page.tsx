@@ -31,6 +31,12 @@ function createRegisterSchema(t: (key: string) => string) {
 type RegisterSchema = ReturnType<typeof createRegisterSchema>;
 type RegisterFormValues = z.infer<RegisterSchema>;
 
+function getDescribedBy(...ids: Array<string | undefined>) {
+  const describedBy = ids.filter(Boolean).join(' ');
+
+  return describedBy.length > 0 ? describedBy : undefined;
+}
+
 export function RegisterPage() {
   const auth = useAuth();
   const navigate = useNavigate();
@@ -49,6 +55,9 @@ export function RegisterPage() {
       password: '',
     },
   });
+  const displayNameErrorId = 'register-display-name-error';
+  const emailErrorId = 'register-email-error';
+  const passwordErrorId = 'register-password-error';
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError(null);
@@ -101,6 +110,9 @@ export function RegisterPage() {
             {t('common.labels.displayName')}
           </label>
           <Input
+            aria-describedby={getDescribedBy(
+              errors.displayName ? displayNameErrorId : undefined,
+            )}
             hasError={Boolean(errors.displayName)}
             id="register-display-name"
             placeholder={t('common.placeholders.displayName')}
@@ -108,7 +120,9 @@ export function RegisterPage() {
             {...register('displayName')}
           />
           {errors.displayName ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.displayName.message}</p>
+            <p className="text-sm text-[var(--color-danger)]" id={displayNameErrorId}>
+              {errors.displayName.message}
+            </p>
           ) : null}
         </div>
 
@@ -117,13 +131,20 @@ export function RegisterPage() {
             {t('common.labels.email')}
           </label>
           <Input
+            aria-describedby={getDescribedBy(
+              errors.email ? emailErrorId : undefined,
+            )}
             hasError={Boolean(errors.email)}
             id="register-email"
             placeholder={t('common.placeholders.email')}
             type="email"
             {...register('email')}
           />
-          {errors.email ? <p className="text-sm text-[var(--color-danger)]">{errors.email.message}</p> : null}
+          {errors.email ? (
+            <p className="text-sm text-[var(--color-danger)]" id={emailErrorId}>
+              {errors.email.message}
+            </p>
+          ) : null}
         </div>
 
         <div className="space-y-2">
@@ -131,13 +152,18 @@ export function RegisterPage() {
             {t('common.labels.password')}
           </label>
           <PasswordInput
+            aria-describedby={getDescribedBy(
+              errors.password ? passwordErrorId : undefined,
+            )}
             hasError={Boolean(errors.password)}
             id="register-password"
             placeholder={t('common.placeholders.registerPassword')}
             {...register('password')}
           />
           {errors.password ? (
-            <p className="text-sm text-[var(--color-danger)]">{errors.password.message}</p>
+            <p className="text-sm text-[var(--color-danger)]" id={passwordErrorId}>
+              {errors.password.message}
+            </p>
           ) : null}
         </div>
 

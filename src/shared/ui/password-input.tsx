@@ -8,7 +8,10 @@ type PasswordInputProps = InputHTMLAttributes<HTMLInputElement> & {
 };
 
 export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
-  function PasswordInput({ className, hasError = false, ...props }, ref) {
+  function PasswordInput(
+    { className, hasError = false, 'aria-invalid': ariaInvalidProp, ...props },
+    ref,
+  ) {
     const [visible, setVisible] = useState(false);
     const { t } = useI18n();
 
@@ -21,12 +24,14 @@ export const PasswordInput = forwardRef<HTMLInputElement, PasswordInputProps>(
         )}
       >
         <input
+          aria-invalid={hasError ? true : ariaInvalidProp}
           ref={ref}
           className="w-full rounded-2xl border-none bg-transparent px-4 py-3 text-sm text-[var(--color-ink)] outline-none placeholder:text-[var(--color-ink-soft)]"
           type={visible ? 'text' : 'password'}
           {...props}
         />
         <button
+          aria-pressed={visible}
           className="mr-3 inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--color-ink-soft)] transition hover:bg-[rgba(84,107,65,0.08)] hover:text-[var(--color-forest)]"
           onClick={() => setVisible((current) => !current)}
           type="button"

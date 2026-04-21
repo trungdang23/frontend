@@ -94,7 +94,7 @@ export function TripsPage() {
           <div className="space-y-2">
             <p className="eyebrow-text text-[var(--color-forest)]">{t('trips.listEyebrow')}</p>
             <div className="space-y-2">
-              <h1 className="headline text-4xl text-[var(--color-ink)]">{t('trips.listTitle')}</h1>
+              <h1 className="headline text-3xl text-[var(--color-ink)] sm:text-4xl">{t('trips.listTitle')}</h1>
               <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
                 {t('trips.listDescription')}
               </p>

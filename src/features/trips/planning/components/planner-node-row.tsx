@@ -17,6 +17,7 @@ import {
 import { PlannerNodeInlineForm } from '@/features/trips/planning/components/planner-node-inline-form';
 import { PlannerNodeFormValues } from '@/features/trips/planning/types/plan-node';
 import { useI18n } from '@/shared/i18n/use-i18n';
+import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { Card } from '@/shared/ui/card';
 import { StatusBanner } from '@/shared/ui/status-banner';
@@ -73,11 +74,14 @@ export function PlannerNodeRow({
   }
 
   return (
-    <div className="space-y-4">
-      <Card
-        className="space-y-4 border border-[var(--color-border)] bg-white/75"
-        style={{ marginLeft: `${node.depth * 18}px` }}
-      >
+    <div
+      className={cn(
+        'space-y-4',
+        node.depth > 0 &&
+          'border-l border-[rgba(84,107,65,0.14)] pl-3 sm:pl-5',
+      )}
+    >
+      <Card className="space-y-4 border border-[var(--color-border)] bg-white/75">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
@@ -102,7 +106,7 @@ export function PlannerNodeRow({
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
             {hasChildren ? (
               <Button
                 aria-controls={childRegionId}

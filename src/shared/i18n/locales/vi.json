@@ -17,7 +17,11 @@
       "dashboard": "Bảng điều khiển",
       "trips": "Chuyến đi",
       "profile": "Hồ sơ",
-      "toggle": "Mở hoặc đóng điều hướng"
+      "toggle": "Mở hoặc đóng điều hướng",
+      "publicLabel": "Điều hướng công khai chính",
+      "workspaceLabel": "Điều hướng không gian riêng",
+      "workspaceToggle": "Mở hoặc đóng menu không gian riêng",
+      "skipToContent": "Bỏ qua điều hướng và chuyển tới nội dung chính"
     },
     "actions": {
       "login": "Đăng nhập",

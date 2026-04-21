@@ -47,7 +47,7 @@ export function TripCreatePage() {
           {t("trips.createEyebrow")}
         </p>
         <div className="space-y-2">
-          <h1 className="headline text-4xl text-[var(--color-ink)]">
+          <h1 className="headline text-3xl text-[var(--color-ink)] sm:text-4xl">
             {t("trips.createTitle")}
           </h1>
           <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">

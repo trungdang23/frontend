@@ -1,13 +1,26 @@
-import { BookOpenText, House, LogOut, Map, UserRound } from 'lucide-react';
-import { NavLink, Outlet } from 'react-router-dom';
+import { useId, useState } from 'react';
+import {
+  BookOpenText,
+  House,
+  LogOut,
+  Map,
+  Menu,
+  UserRound,
+  X,
+} from 'lucide-react';
+import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '@/features/auth/session/use-auth';
 import { useI18n } from '@/shared/i18n/use-i18n';
 import { cn } from '@/shared/lib/cn';
 import { Button } from '@/shared/ui/button';
 import { LanguageSwitcher } from '@/shared/ui/language-switcher';
+import { SkipLink } from '@/shared/ui/skip-link';
 
 export function AppShell() {
   const auth = useAuth();
+  const location = useLocation();
+  const workspaceNavId = useId();
+  const [workspaceNavOpenPath, setWorkspaceNavOpenPath] = useState<string | null>(null);
   const { t } = useI18n();
   const publicNavItems = [
     { label: t('common.navigation.explore'), to: '/' },
@@ -25,8 +38,11 @@ export function AppShell() {
     { label: t('common.navigation.profile'), to: '/app/profile', icon: UserRound },
   ];
 
+  const isWorkspaceNavOpen = workspaceNavOpenPath === location.pathname;
+
   return (
     <div className="min-h-screen">
+      <SkipLink />
       <header className="page-shell pt-5">
         <div className="glass-panel flex flex-col gap-4 rounded-[var(--radius-xl)] px-5 py-4">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -42,7 +58,10 @@ export function AppShell() {
                 </p>
               </div>
 
-              <nav className="flex flex-wrap gap-2">
+              <nav
+                aria-label={t('common.navigation.publicLabel')}
+                className="flex flex-wrap gap-2"
+              >
                 {publicNavItems.map((item) => (
                   <NavLink
                     className={({ isActive }) =>
@@ -63,7 +82,7 @@ export function AppShell() {
               </nav>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
               <LanguageSwitcher />
               <Button onClick={auth.logout} variant="secondary">
                 <span className="inline-flex items-center gap-2">
@@ -76,38 +95,91 @@ export function AppShell() {
         </div>
       </header>
 
-      <div className="page-shell grid gap-8 py-8 lg:grid-cols-[240px_1fr]">
-        <aside className="glass-panel rounded-[var(--radius-xl)] p-4">
-          <nav className="flex flex-col gap-2">
-            {workspaceNavItems.map((item) => {
-              const Icon = item.icon;
+      <div className="page-shell space-y-4 py-8 lg:space-y-0">
+        <div className="glass-panel rounded-[var(--radius-xl)] p-4 lg:hidden">
+          <button
+            aria-controls={workspaceNavId}
+            aria-expanded={isWorkspaceNavOpen}
+            className="flex w-full items-center justify-between gap-3 rounded-[1.25rem] border border-[var(--color-border)] bg-white/72 px-4 py-3 text-left text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
+            onClick={() =>
+              setWorkspaceNavOpenPath((currentValue) =>
+                currentValue === location.pathname ? null : location.pathname,
+              )
+            }
+            type="button"
+          >
+            <span>{t('common.navigation.workspaceToggle')}</span>
+            {isWorkspaceNavOpen ? (
+              <X className="h-4 w-4 text-[var(--color-forest)]" />
+            ) : (
+              <Menu className="h-4 w-4 text-[var(--color-forest)]" />
+            )}
+          </button>
 
-              return (
-                <NavLink
-                  className={({ isActive }) =>
-                    cn(
-                      'inline-flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition',
-                      isActive
-                        ? 'bg-[rgba(84,107,65,0.12)] text-[var(--color-forest)]'
-                        : 'text-[var(--color-ink-soft)] hover:bg-white/60 hover:text-[var(--color-forest)]',
-                    )
-                  }
-                  end={item.to === '/app'}
-                  key={item.to}
-                  to={item.to}
-                >
-                  <Icon className="h-4 w-4" />
-                  {item.label}
-                </NavLink>
-              );
-            })}
-          </nav>
-        </aside>
+          {isWorkspaceNavOpen ? (
+            <div className="pt-3" id={workspaceNavId}>
+              <WorkspaceNavLinks
+                items={workspaceNavItems}
+                label={t('common.navigation.workspaceLabel')}
+              />
+            </div>
+          ) : null}
+        </div>
 
-        <main className="pb-10">
-          <Outlet />
-        </main>
+        <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
+          <aside className="glass-panel hidden rounded-[var(--radius-xl)] p-4 lg:block">
+            <WorkspaceNavLinks
+              items={workspaceNavItems}
+              label={t('common.navigation.workspaceLabel')}
+            />
+          </aside>
+
+          <main className="pb-10" id="main-content" tabIndex={-1}>
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
+  );
+}
+
+type WorkspaceNavItem = {
+  label: string;
+  to: string;
+  icon: typeof House;
+};
+
+function WorkspaceNavLinks({
+  items,
+  label,
+}: {
+  items: WorkspaceNavItem[];
+  label: string;
+}) {
+  return (
+    <nav aria-label={label} className="flex flex-col gap-2">
+      {items.map((item) => {
+        const Icon = item.icon;
+
+        return (
+          <NavLink
+            className={({ isActive }) =>
+              cn(
+                'inline-flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition',
+                isActive
+                  ? 'bg-[rgba(84,107,65,0.12)] text-[var(--color-forest)]'
+                  : 'text-[var(--color-ink-soft)] hover:bg-white/60 hover:text-[var(--color-forest)]',
+              )
+            }
+            end={item.to === '/app'}
+            key={item.to}
+            to={item.to}
+          >
+            <Icon className="h-4 w-4" />
+            {item.label}
+          </NavLink>
+        );
+      })}
+    </nav>
   );
 }

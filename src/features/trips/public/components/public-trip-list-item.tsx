@@ -42,7 +42,7 @@ export function PublicTripListItem({ trip }: PublicTripListItemProps) {
             <p className="mt-2 text-sm font-medium text-white/78">
               {formatTripDateRange(trip.startDate, trip.endDate, language)}
             </p>
-            <h2 className="mt-2 text-3xl font-semibold leading-tight">
+            <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">
               {trip.name}
             </h2>
           </div>

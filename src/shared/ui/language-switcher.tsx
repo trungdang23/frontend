@@ -15,6 +15,7 @@ export function LanguageSwitcher() {
     >
       {languages.map((item) => (
         <button
+          aria-pressed={language === item}
           className={cn(
             'rounded-full px-3 py-1.5 text-xs font-semibold transition',
             language === item

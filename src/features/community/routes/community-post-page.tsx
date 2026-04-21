@@ -90,7 +90,9 @@ function CommunityShell({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen pb-12">
       <SiteHeader />
-      <PageSection className="pt-12">{children}</PageSection>
+      <main id="main-content" tabIndex={-1}>
+        <PageSection className="pt-12">{children}</PageSection>
+      </main>
     </div>
   );
 }

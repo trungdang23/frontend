@@ -29,6 +29,12 @@ type CommunityPostFormProps = {
   submitError?: string | null;
 };
 
+function getDescribedBy(...ids: Array<string | undefined>) {
+  const describedBy = ids.filter(Boolean).join(' ');
+
+  return describedBy.length > 0 ? describedBy : undefined;
+}
+
 export function CommunityPostForm({
   cancelTo,
   initialValues,
@@ -57,6 +63,13 @@ export function CommunityPostForm({
     linkedTripOptions.find((option) => option.id === linkedTripId) ?? null;
   const resolvedPreviewCoverImageUrl =
     previewCoverImageUrl || linkedTrip?.coverImageUrl || null;
+  const fieldErrorIds = {
+    title: 'community-title-error',
+    coverImageUrl: 'community-cover-image-url-error',
+    tripId: 'community-trip-id-error',
+    content: 'community-content-error',
+  } as const;
+  const tripHelperId = 'community-trip-id-helper';
 
   useEffect(() => {
     reset(initialValues);
@@ -100,13 +113,16 @@ export function CommunityPostForm({
             {t('community.fields.title')}
           </label>
           <Input
+            aria-describedby={getDescribedBy(
+              errors.title ? fieldErrorIds.title : undefined,
+            )}
             hasError={Boolean(errors.title)}
             id="community-title"
             type="text"
             {...register('title')}
           />
           {errors.title ? (
-            <p className="text-sm text-[var(--color-danger)]">
+            <p className="text-sm text-[var(--color-danger)]" id={fieldErrorIds.title}>
               {errors.title.message}
             </p>
           ) : null}
@@ -120,6 +136,9 @@ export function CommunityPostForm({
             {t('community.fields.coverImageUrl')}
           </label>
           <Input
+            aria-describedby={getDescribedBy(
+              errors.coverImageUrl ? fieldErrorIds.coverImageUrl : undefined,
+            )}
             hasError={Boolean(errors.coverImageUrl)}
             id="community-cover-image-url"
             placeholder={t('community.placeholders.coverImageUrl')}
@@ -127,7 +146,10 @@ export function CommunityPostForm({
             {...register('coverImageUrl')}
           />
           {errors.coverImageUrl ? (
-            <p className="text-sm text-[var(--color-danger)]">
+            <p
+              className="text-sm text-[var(--color-danger)]"
+              id={fieldErrorIds.coverImageUrl}
+            >
               {errors.coverImageUrl.message}
             </p>
           ) : null}
@@ -167,6 +189,11 @@ export function CommunityPostForm({
             {t('community.fields.linkedTrip')}
           </label>
           <select
+            aria-describedby={getDescribedBy(
+              tripHelperId,
+              errors.tripId ? fieldErrorIds.tripId : undefined,
+            )}
+            aria-invalid={Boolean(errors.tripId)}
             className="w-full rounded-2xl border border-[var(--color-border-strong)] bg-white/80 px-4 py-3 text-sm text-[var(--color-ink)] shadow-sm outline-none transition focus:border-[var(--color-forest)] focus:ring-4 focus:ring-[rgba(84,107,65,0.12)]"
             id="community-trip-id"
             {...register('tripId')}
@@ -179,16 +206,22 @@ export function CommunityPostForm({
             ))}
           </select>
           {linkedTripOptions.length === 0 ? (
-            <p className="text-sm leading-7 text-[var(--color-ink-soft)]">
+            <p
+              className="text-sm leading-7 text-[var(--color-ink-soft)]"
+              id={tripHelperId}
+            >
               {t('community.tripSelector.empty')}
             </p>
           ) : (
-            <p className="text-sm leading-7 text-[var(--color-ink-soft)]">
+            <p
+              className="text-sm leading-7 text-[var(--color-ink-soft)]"
+              id={tripHelperId}
+            >
               {t('community.tripSelector.helper')}
             </p>
           )}
           {errors.tripId ? (
-            <p className="text-sm text-[var(--color-danger)]">
+            <p className="text-sm text-[var(--color-danger)]" id={fieldErrorIds.tripId}>
               {errors.tripId.message}
             </p>
           ) : null}
@@ -202,6 +235,9 @@ export function CommunityPostForm({
             {t('community.fields.content')}
           </label>
           <Textarea
+            aria-describedby={getDescribedBy(
+              errors.content ? fieldErrorIds.content : undefined,
+            )}
             hasError={Boolean(errors.content)}
             id="community-content"
             placeholder={t('community.placeholders.content')}
@@ -209,7 +245,7 @@ export function CommunityPostForm({
             {...register('content')}
           />
           {errors.content ? (
-            <p className="text-sm text-[var(--color-danger)]">
+            <p className="text-sm text-[var(--color-danger)]" id={fieldErrorIds.content}>
               {errors.content.message}
             </p>
           ) : null}
