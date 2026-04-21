@@ -237,6 +237,23 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
   - animation hoặc gesture cho navigation panel
   - redesign layout lớn cho auth/community/trip cards
 
+### Focused sub-slice - 2026-04-21 (auth + detail density)
+
+- Scope của lượt này:
+  - giảm cảm giác chật ở `auth shell` trên màn hẹp bằng cách bỏ vertical centering sớm ở mobile
+  - siết lại CTA mobile cho `trip detail`, `public trip detail`, `trip form`, và `community create form`
+  - giảm rủi ro overflow ở title/detail card bằng `break-words` và image height responsive hơn
+  - thêm section semantics cho các khối detail trọng yếu để screen reader dễ theo dõi hơn
+- File owner của lượt này:
+  - `src/features/auth/**`
+  - `src/features/trips/**`
+  - `src/features/community/**`
+  - `src/tests/*`
+- Deferred rõ trong lượt này:
+  - viewport-specific screenshot regression
+  - focus restoration đầy đủ sau mọi mutation success/error
+  - redesign lớn cho information hierarchy ở planner/community feed
+
 ### Current pass - 2026-04-21
 
 - Scope của đợt này:

@@ -170,7 +170,7 @@ export function TripForm({
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,24,18,0.1),rgba(12,24,18,0.75))]" />
               <div className="relative flex h-full items-end p-5 sm:p-6">
                 <div className="space-y-2">
-                  <p className="text-2xl font-semibold text-white">
+                  <p className="break-words text-2xl font-semibold text-white">
                     {previewName || t("trips.preview.titleFallback")}
                   </p>
                 </div>
@@ -392,7 +392,7 @@ export function TripForm({
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Button type="submit">
+        <Button className="w-full sm:w-auto" type="submit">
           {isSubmitting
             ? mode === "create"
               ? t("trips.actions.creating")
@@ -402,7 +402,7 @@ export function TripForm({
               : t("trips.actions.save")}
         </Button>
         <Link
-          className="inline-flex items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
+          className="inline-flex w-full items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)] sm:w-auto"
           to={cancelTo}
         >
           {t("trips.actions.cancel")}

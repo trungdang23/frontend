@@ -149,6 +149,11 @@ describe('Public trip page', () => {
         'Planner ở route công khai đang là read-only. Mọi thao tác chỉnh sửa vẫn nằm trong workspace riêng của chủ chuyến đi.',
       ),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole('region', {
+        name: /planner tree đang được chia sẻ|the shared planner tree/i,
+      }),
+    ).toBeInTheDocument();
   });
 
   it('shows the private-trip state for a 403 response', async () => {

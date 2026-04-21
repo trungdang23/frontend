@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Compass, LogIn } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
@@ -29,6 +29,7 @@ import { StatusBanner } from '@/shared/ui/status-banner';
 export function PublicTripPage() {
   const { tripId } = useParams();
   const { language, t } = useI18n();
+  const plannerHeadingId = useId();
 
   const tripQuery = useQuery({
     queryKey: publicTripQueryKeys.detail(tripId as string),
@@ -149,7 +150,7 @@ export function PublicTripPage() {
                 <p className="eyebrow-text text-[var(--color-forest)]">
                   {t('trips.publicPage.eyebrow')}
                 </p>
-                <h1 className="headline text-3xl text-[var(--color-ink)] sm:text-4xl">
+                <h1 className="headline break-words text-3xl text-[var(--color-ink)] sm:text-4xl">
                   {trip.name}
                 </h1>
                 <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -166,7 +167,7 @@ export function PublicTripPage() {
                 </span>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 <OverviewMetric
                   label={t('trips.fields.dateRange')}
                   value={formatTripDateRange(
@@ -189,13 +190,19 @@ export function PublicTripPage() {
               </div>
 
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <Link className={getButtonClasses()} to="/auth/register">
+                <Link
+                  className={`${getButtonClasses()} w-full sm:w-auto`}
+                  to="/auth/register"
+                >
                   <span className="inline-flex items-center gap-2">
                     <Compass className="h-4 w-4" />
                     {t('trips.publicPage.actions.startPlanning')}
                   </span>
                 </Link>
-                <Link className={getButtonClasses('secondary')} to="/auth/login">
+                <Link
+                  className={`${getButtonClasses('secondary')} w-full sm:w-auto`}
+                  to="/auth/login"
+                >
                   <span className="inline-flex items-center gap-2">
                     <LogIn className="h-4 w-4" />
                     {t('trips.publicPage.actions.login')}
@@ -206,7 +213,7 @@ export function PublicTripPage() {
 
             <TripCoverImage
               alt={trip.name}
-              className="h-full min-h-80 rounded-[2rem]"
+              className="h-64 min-h-64 rounded-[2rem] sm:min-h-80 lg:h-full"
               src={trip.coverImageUrl}
             />
           </div>
@@ -217,7 +224,10 @@ export function PublicTripPage() {
             <p className="eyebrow-text text-[var(--color-forest)]">
               {t('trips.publicPage.plannerEyebrow')}
             </p>
-            <h2 className="headline text-3xl text-[var(--color-ink)]">
+            <h2
+              className="headline break-words text-3xl text-[var(--color-ink)]"
+              id={plannerHeadingId}
+            >
               {t('trips.publicPage.plannerTitle')}
             </h2>
             <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -231,13 +241,15 @@ export function PublicTripPage() {
             </StatusBanner>
           ) : null}
 
-          <PublicTripPlanner
-            defaultCurrency={defaultCurrency}
-            error={plannerQuery.error}
-            isLoading={plannerQuery.isPending}
-            nodes={plannerNodes}
-            onRetry={() => plannerQuery.refetch()}
-          />
+          <section aria-labelledby={plannerHeadingId}>
+            <PublicTripPlanner
+              defaultCurrency={defaultCurrency}
+              error={plannerQuery.error}
+              isLoading={plannerQuery.isPending}
+              nodes={plannerNodes}
+              onRetry={() => plannerQuery.refetch()}
+            />
+          </section>
         </Card>
       </div>
     </PublicTripShell>

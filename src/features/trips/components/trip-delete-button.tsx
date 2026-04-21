@@ -31,7 +31,7 @@ export function TripDeleteButton({
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <Button
-            className="bg-[var(--color-danger)] hover:bg-[#9d3a3a]"
+            className="w-full bg-[var(--color-danger)] hover:bg-[#9d3a3a] sm:w-auto"
             disabled={disabled || isDeleting}
             onClick={() => {
               void onConfirm();
@@ -41,6 +41,7 @@ export function TripDeleteButton({
             {isDeleting ? t('trips.actions.deleting') : t('trips.actions.delete')}
           </Button>
           <Button
+            className="w-full sm:w-auto"
             disabled={isDeleting}
             onClick={() => setIsConfirming(false)}
             type="button"
@@ -55,7 +56,7 @@ export function TripDeleteButton({
 
   return (
     <Button
-      className="border-[rgba(184,71,71,0.24)] text-[var(--color-danger)] hover:border-[var(--color-danger)]"
+      className="w-full border-[rgba(184,71,71,0.24)] text-[var(--color-danger)] hover:border-[var(--color-danger)] sm:w-auto"
       disabled={disabled || isDeleting}
       onClick={() => setIsConfirming(true)}
       type="button"

@@ -100,6 +100,11 @@ describe('Community post page', () => {
         name: /mở chuyến đi được gắn kèm/i,
       }),
     ).toHaveAttribute('href', '/trips/trip-1');
+    expect(
+      screen.getByRole('region', {
+        name: /da lat coffee run/i,
+      }),
+    ).toBeInTheDocument();
   });
 
   it('renders the not-found state for a missing post', async () => {

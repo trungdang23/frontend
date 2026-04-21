@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -46,6 +46,8 @@ export function TripDetailPage() {
   const queryClient = useQueryClient();
   const { tripId } = useParams();
   const { language, t } = useI18n();
+  const overviewHeadingId = useId();
+  const budgetHeadingId = useId();
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const noticeKey = (location.state as TripRouteState | null)?.noticeKey;
@@ -229,7 +231,7 @@ export function TripDetailPage() {
               <p className="eyebrow-text text-[var(--color-forest)]">
                 {t('trips.detailEyebrow')}
               </p>
-              <h1 className="headline text-3xl text-[var(--color-ink)] sm:text-4xl">
+              <h1 className="headline break-words text-3xl text-[var(--color-ink)] sm:text-4xl">
                 {trip.name}
               </h1>
               <p className="max-w-2xl text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -246,12 +248,18 @@ export function TripDetailPage() {
               </span>
             </div>
 
-            <div className="space-y-4 rounded-[1.75rem] border border-[var(--color-border)] bg-white/72 p-5">
+            <section
+              aria-labelledby={overviewHeadingId}
+              className="space-y-4 rounded-[1.75rem] border border-[var(--color-border)] bg-white/72 p-5"
+            >
               <div className="space-y-1">
                 <p className="eyebrow-text-xs text-[var(--color-forest)]">
                   {t('trips.overviewEyebrow')}
                 </p>
-                <h2 className="text-2xl font-semibold text-[var(--color-ink)]">
+                <h2
+                  className="break-words text-2xl font-semibold text-[var(--color-ink)]"
+                  id={overviewHeadingId}
+                >
                   {t('trips.overviewTitle')}
                 </h2>
               </div>
@@ -272,18 +280,21 @@ export function TripDetailPage() {
                   value={formatTripConfiguredBudget(trip, language, t)}
                 />
               </dl>
-            </div>
+            </section>
 
             <TripShareCard trip={trip} />
 
             <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link
-                className={getButtonClasses('secondary')}
+                className={`${getButtonClasses('secondary')} w-full sm:w-auto`}
                 to="/app/trips"
               >
                 {t('trips.actions.backToList')}
               </Link>
-              <Link className={getButtonClasses()} to={`/app/trips/${trip.id}/edit`}>
+              <Link
+                className={`${getButtonClasses()} w-full sm:w-auto`}
+                to={`/app/trips/${trip.id}/edit`}
+              >
                 {t('trips.actions.edit')}
               </Link>
             </div>
@@ -292,7 +303,7 @@ export function TripDetailPage() {
           <div className="space-y-4">
             <TripCoverImage
               alt={trip.name}
-              className="h-full min-h-80 rounded-[2rem]"
+              className="h-64 min-h-64 rounded-[2rem] sm:min-h-80 lg:h-full"
               src={trip.coverImageUrl}
             />
             <TripDeleteButton
@@ -309,7 +320,10 @@ export function TripDetailPage() {
           <p className="eyebrow-text text-[var(--color-forest)]">
             {t('trips.planner.budgetEyebrow')}
           </p>
-          <h2 className="headline text-3xl text-[var(--color-ink)]">
+          <h2
+            className="headline break-words text-3xl text-[var(--color-ink)]"
+            id={budgetHeadingId}
+          >
             {t('trips.planner.budgetTitle')}
           </h2>
           <p className="max-w-3xl text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -334,7 +348,10 @@ export function TripDetailPage() {
           </StatusBanner>
         ) : null}
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <section
+          aria-labelledby={budgetHeadingId}
+          className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"
+        >
           <OverviewMetric
             label={t('trips.planner.metrics.totalBudget')}
             value={formatTripConfiguredBudget(trip, language, t)}
@@ -370,7 +387,7 @@ export function TripDetailPage() {
               roots: rootNodeCount,
             })}
           />
-        </div>
+        </section>
 
         {budgetSummary?.hasMixedCurrencies ? (
           <div className="space-y-3 rounded-[1.5rem] border border-[var(--color-border)] bg-white/72 p-4">

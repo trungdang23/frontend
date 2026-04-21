@@ -31,7 +31,7 @@ export function TripShareCard({ trip }: TripShareCardProps) {
 
       <div className="flex flex-wrap gap-3">
         <Link
-          className="inline-flex items-center justify-center gap-2 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)] sm:w-auto"
           to={`/app/community/new?tripId=${trip.id}`}
         >
           <PencilLine className="h-4 w-4" />

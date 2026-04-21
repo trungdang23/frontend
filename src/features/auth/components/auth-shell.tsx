@@ -16,14 +16,14 @@ export function AuthShell({ children, description, eyebrow, footer, title }: Aut
   const { t } = useI18n();
 
   return (
-    <div className="min-h-screen px-5 py-8 sm:px-8">
+    <div className="min-h-screen px-4 py-5 sm:px-8 sm:py-8">
       <SkipLink />
       <main id="main-content" tabIndex={-1}>
-        <div className="mx-auto mb-4 flex max-w-6xl justify-end">
+        <div className="mx-auto mb-4 flex max-w-6xl justify-end sm:mb-5">
           <LanguageSwitcher />
         </div>
 
-        <div className="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl items-center gap-8 lg:grid lg:grid-cols-[1.2fr_0.9fr]">
+        <div className="mx-auto flex max-w-6xl flex-col gap-6 lg:grid lg:min-h-[calc(100vh-4rem)] lg:grid-cols-[1.2fr_0.9fr] lg:items-center lg:gap-8">
           <section className="hidden flex-col justify-between rounded-[2rem] bg-[rgba(84,107,65,0.92)] p-10 text-white shadow-[var(--shadow-soft)] lg:flex">
             <div className="space-y-5">
               <Link className="headline text-4xl" to="/">
@@ -44,8 +44,8 @@ export function AuthShell({ children, description, eyebrow, footer, title }: Aut
             </div>
           </section>
 
-          <Card className="mx-auto w-full max-w-xl">
-            <div className="space-y-8">
+          <Card className="mx-auto w-full max-w-xl p-5 sm:p-8">
+            <div className="space-y-6 sm:space-y-8">
               <div className="space-y-4">
                 <div className="space-y-2 lg:hidden">
                   <Link className="headline text-3xl text-[var(--color-forest)]" to="/">
@@ -59,7 +59,7 @@ export function AuthShell({ children, description, eyebrow, footer, title }: Aut
                 <div className="space-y-3">
                   <p className="eyebrow-text text-[var(--color-forest)]">{eyebrow}</p>
                   <div className="space-y-2">
-                    <h1 className="headline text-3xl text-[var(--color-ink)] sm:text-4xl">
+                    <h1 className="headline break-words text-3xl text-[var(--color-ink)] sm:text-4xl">
                       {title}
                     </h1>
                     <p className="text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -69,7 +69,7 @@ export function AuthShell({ children, description, eyebrow, footer, title }: Aut
                 </div>
               </div>
               {children}
-              <div className="border-t border-[var(--color-border)] pt-5 text-sm text-[var(--color-ink-soft)]">
+              <div className="border-t border-[var(--color-border)] pt-5 text-sm leading-7 text-[var(--color-ink-soft)]">
                 {footer}
               </div>
             </div>

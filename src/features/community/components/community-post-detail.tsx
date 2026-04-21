@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -18,6 +19,8 @@ type CommunityPostDetailProps = {
 
 export function CommunityPostDetail({ post }: CommunityPostDetailProps) {
   const { language, t } = useI18n();
+  const contentHeadingId = useId();
+  const linkedTripHeadingId = useId();
   const authorName = getCommunityPostAuthorName(post, t);
   const publishedAt = formatCommunityPostDate(post.createdAt, language);
 
@@ -38,7 +41,7 @@ export function CommunityPostDetail({ post }: CommunityPostDetailProps) {
               <p className="eyebrow-text text-[var(--color-forest)]">
                 {t('community.detailEyebrow')}
               </p>
-              <h1 className="headline text-3xl text-[var(--color-ink)] sm:text-4xl">
+              <h1 className="headline break-words text-3xl text-[var(--color-ink)] sm:text-4xl">
                 {post.title}
               </h1>
               <p className="text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -46,22 +49,34 @@ export function CommunityPostDetail({ post }: CommunityPostDetailProps) {
               </p>
             </div>
 
-            <div className="space-y-4 rounded-[1.75rem] border border-[var(--color-border)] bg-white/72 p-5">
+            <section
+              aria-labelledby={contentHeadingId}
+              className="space-y-4 rounded-[1.75rem] border border-[var(--color-border)] bg-white/72 p-5"
+            >
               <p className="eyebrow-text-xs text-[var(--color-forest)]">
                 {t('community.contentEyebrow')}
               </p>
+              <h2 className="sr-only" id={contentHeadingId}>
+                {t('community.contentEyebrow')}
+              </h2>
               <p className="whitespace-pre-line text-sm leading-8 text-[var(--color-ink-soft)]">
                 {post.content}
               </p>
-            </div>
+            </section>
 
             {post.trip ? (
-              <div className="space-y-4 rounded-[1.75rem] border border-[rgba(84,107,65,0.16)] bg-[rgba(255,255,255,0.78)] p-5">
+              <section
+                aria-labelledby={linkedTripHeadingId}
+                className="space-y-4 rounded-[1.75rem] border border-[rgba(84,107,65,0.16)] bg-[rgba(255,255,255,0.78)] p-5"
+              >
                 <div className="space-y-2">
                   <p className="eyebrow-text-xs text-[var(--color-forest)]">
                     {t('community.linkedTripEyebrow')}
                   </p>
-                  <h2 className="text-2xl font-semibold text-[var(--color-ink)]">
+                  <h2
+                    className="break-words text-2xl font-semibold text-[var(--color-ink)]"
+                    id={linkedTripHeadingId}
+                  >
                     {post.trip.name}
                   </h2>
                   <p className="text-sm leading-7 text-[var(--color-ink-soft)]">
@@ -70,18 +85,18 @@ export function CommunityPostDetail({ post }: CommunityPostDetailProps) {
                 </div>
 
                 <Link
-                  className={getButtonClasses()}
+                  className={`${getButtonClasses()} w-full sm:w-auto`}
                   to={`/trips/${post.trip.id}`}
                 >
                   {t('community.actions.viewLinkedTrip')}
                 </Link>
-              </div>
+              </section>
             ) : null}
           </div>
 
           <TripCoverImage
             alt={post.title}
-            className="h-full min-h-80 rounded-[2rem]"
+            className="h-64 min-h-64 rounded-[2rem] sm:min-h-80 lg:h-full"
             src={resolveCommunityPostCoverImage(post)}
           />
         </div>

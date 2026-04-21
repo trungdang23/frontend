@@ -172,7 +172,7 @@ export function CommunityPostForm({
                       ? t('community.preview.linkedTripActive')
                       : t('community.preview.linkedTripInactive')}
                   </p>
-                  <p className="text-2xl font-semibold text-white">
+                  <p className="break-words text-2xl font-semibold text-white">
                     {previewTitle || t('community.preview.titleFallback')}
                   </p>
                 </div>
@@ -253,13 +253,13 @@ export function CommunityPostForm({
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row">
-        <Button type="submit">
+        <Button className="w-full sm:w-auto" type="submit">
           {isSubmitting
             ? t('community.actions.publishing')
             : t('community.actions.create')}
         </Button>
         <Link
-          className="inline-flex items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)]"
+          className="inline-flex w-full items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-strong)] px-5 py-3 text-sm font-semibold text-[var(--color-ink)] transition hover:border-[var(--color-forest)] sm:w-auto"
           to={cancelTo}
         >
           {t('trips.actions.cancel')}
