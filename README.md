@@ -79,6 +79,17 @@ pnpm build
 npm test -- --run
 ```
 
+## Smoke verification hiện tại
+
+- Phase hardening hiện đang dùng `Vitest + Testing Library` làm smoke route/integration layer trước khi mở browser e2e riêng.
+- Smoke coverage hiện có:
+  - login
+  - create trip
+  - add planner root node
+  - public trip read-only
+  - create community post
+- Browser e2e hiện vẫn deferred cho tới khi chốt được harness phù hợp với local/CI runtime cost.
+
 ## GitHub Actions hiện có
 
 - `frontend-ci`: tự chạy khi `push` và `pull_request`, dùng env test nội bộ để chạy `lint`, `test`, `build`

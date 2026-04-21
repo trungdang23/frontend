@@ -22,6 +22,8 @@ const toneIcons = {
 
 export function StatusBanner({ children, tone = 'info' }: StatusBannerProps) {
   const Icon = toneIcons[tone];
+  const role = tone === 'danger' ? 'alert' : 'status';
+  const ariaLive = tone === 'danger' ? 'assertive' : 'polite';
 
   return (
     <div
@@ -29,7 +31,8 @@ export function StatusBanner({ children, tone = 'info' }: StatusBannerProps) {
         'flex items-start gap-3 rounded-3xl border px-4 py-3 text-sm leading-6',
         toneClasses[tone],
       )}
-      role="status"
+      aria-live={ariaLive}
+      role={role}
     >
       <Icon className="mt-0.5 h-4 w-4 shrink-0" />
       <div>{children}</div>

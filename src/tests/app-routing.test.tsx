@@ -19,6 +19,7 @@ import { CommunityPage } from '@/features/community/routes/community-page';
 import { CommunityPostPage } from '@/features/community/routes/community-post-page';
 import { PublicTripPage } from '@/features/trips/public/routes/public-trip-page';
 import { PublicTripsPage } from '@/features/trips/public/routes/public-trips-page';
+import { TripCreatePage } from '@/features/trips/routes/trip-create-page';
 import { TripDetailPage } from '@/features/trips/routes/trip-detail-page';
 import { LanguageProvider } from '@/shared/i18n/language-provider';
 import type { User } from '@/shared/types/user';
@@ -130,6 +131,7 @@ function renderAppWithProviders({
               </Route>
               <Route path="/app" element={<ProtectedLayout />}>
                 <Route path="community/new" element={<CommunityCreatePage />} />
+                <Route path="trips/new" element={<TripCreatePage />} />
                 <Route path="trips/:tripId" element={<TripDetailPage />} />
               </Route>
               <Route path="*" element={<Navigate replace to="/auth/login" />} />
@@ -697,5 +699,308 @@ describe('App routing integration', () => {
     });
 
     expect(await screen.findByText(/800\.000/)).toBeInTheDocument();
+  });
+
+  it('creates a trip from the protected route tree and opens its planner workspace', async () => {
+    const tripId = 'trip-created-1';
+    const createdTrip = {
+      id: tripId,
+      userId: 'user-routing-01',
+      name: 'Sai Gon Cuoi Tuan',
+      destination: null,
+      summaryNotes: 'Smoke flow cho create trip trong route tree hiện tại.',
+      coverImageUrl: null,
+      startDate: '2026-10-04',
+      endDate: '2026-10-05',
+      timezone: null,
+      budgetAmount: 2500000,
+      budgetCurrency: 'VND',
+      budgetMode: 'manual',
+      manualBudgetAmount: 2500000,
+      manualBudgetCurrency: 'VND',
+      visibility: 'private',
+      createdAt: '2026-04-21T00:00:00.000Z',
+      updatedAt: '2026-04-21T00:00:00.000Z',
+    };
+
+    fetchMock.mockImplementation(async (input, init) => {
+      const url = typeof input === 'string' ? input : input.toString();
+      const method = init?.method ?? 'GET';
+
+      if (url.endsWith('/trips') && method === 'POST') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: createdTrip,
+          },
+        });
+      }
+
+      if (url.endsWith(`/trips/${tripId}`) && method === 'GET') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: createdTrip,
+          },
+        });
+      }
+
+      if (url.endsWith(`/trips/${tripId}/budget-summary`) && method === 'GET') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: {
+              tripId,
+              currency: 'VND',
+              totalBudgetAmount: 2500000,
+              totalPlannedAmount: 0,
+              remainingAmount: 2500000,
+              totalDays: 0,
+              totalActivities: 0,
+              isOverBudget: false,
+              hasMixedCurrencies: false,
+              totalsByCurrency: [],
+            },
+          },
+        });
+      }
+
+      if (url.endsWith(`/trips/${tripId}/planner`) && method === 'GET') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: {
+              trip: createdTrip,
+              nodes: [],
+            },
+          },
+        });
+      }
+
+      throw new Error(`Unexpected request: ${method} ${url}`);
+    });
+
+    renderAppWithProviders({
+      initialEntries: ['/app/trips/new'],
+      initialStatus: 'authenticated',
+    });
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 1,
+        name: /bắt đầu một chuyến đi mới/i,
+      }),
+    ).toBeInTheDocument();
+
+    await userEvent.type(screen.getByLabelText('Tên chuyến đi'), createdTrip.name);
+    await userEvent.type(
+      screen.getByLabelText('Ngày bắt đầu'),
+      createdTrip.startDate,
+    );
+    await userEvent.type(
+      screen.getByLabelText('Ngày kết thúc'),
+      createdTrip.endDate,
+    );
+    await userEvent.type(
+      screen.getByLabelText('Ngân sách thủ công'),
+      String(createdTrip.manualBudgetAmount),
+    );
+    await userEvent.clear(screen.getByLabelText('Tiền tệ ngân sách thủ công'));
+    await userEvent.type(
+      screen.getByLabelText('Tiền tệ ngân sách thủ công'),
+      createdTrip.manualBudgetCurrency,
+    );
+    await userEvent.type(
+      screen.getByLabelText('Ghi chú tổng quan'),
+      createdTrip.summaryNotes,
+    );
+    await userEvent.click(
+      screen.getByRole('button', { name: /tạo chuyến đi/i }),
+    );
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 1,
+        name: /sai gon cuoi tuan/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText('Chuyến đi mới đã được tạo thành công.'),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /thêm node gốc/i }),
+    ).toBeInTheDocument();
+  });
+
+  it('creates the first planner root node from an empty trip detail route', async () => {
+    const tripId = 'trip-empty-planner-1';
+    const tripDetail = {
+      id: tripId,
+      userId: 'user-routing-01',
+      name: 'Trip Rong Planner',
+      destination: null,
+      summaryNotes: 'Smoke flow cho add planner root node.',
+      coverImageUrl: null,
+      startDate: '2026-10-10',
+      endDate: '2026-10-11',
+      timezone: null,
+      budgetAmount: 1800000,
+      budgetCurrency: 'VND',
+      budgetMode: 'manual',
+      manualBudgetAmount: 1800000,
+      manualBudgetCurrency: 'VND',
+      visibility: 'private',
+      createdAt: '2026-04-21T00:00:00.000Z',
+      updatedAt: '2026-04-21T00:00:00.000Z',
+    };
+    const rootNode = {
+      id: 'node-root-empty-trip',
+      tripId,
+      parentId: null,
+      type: 'day',
+      title: 'Ngày 1 vào planner',
+      notes: 'Khóa smoke flow cho root node.',
+      startAt: '2026-10-10T08:00:00.000Z',
+      endAt: '2026-10-10T21:00:00.000Z',
+      costAmount: 500000,
+      costCurrency: 'VND',
+      imageUrl: null,
+      sortOrder: 0,
+      depth: 0,
+      createdAt: '2026-04-21T00:00:00.000Z',
+      updatedAt: '2026-04-21T00:00:00.000Z',
+    };
+
+    let plannerRequestCount = 0;
+    let budgetSummaryRequestCount = 0;
+
+    fetchMock.mockImplementation(async (input, init) => {
+      const url = typeof input === 'string' ? input : input.toString();
+      const method = init?.method ?? 'GET';
+
+      if (url.endsWith(`/trips/${tripId}`) && method === 'GET') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: tripDetail,
+          },
+        });
+      }
+
+      if (url.endsWith(`/trips/${tripId}/budget-summary`) && method === 'GET') {
+        budgetSummaryRequestCount += 1;
+
+        return createMockResponse({
+          body: {
+            success: true,
+            data:
+              budgetSummaryRequestCount === 1
+                ? {
+                    tripId,
+                    currency: 'VND',
+                    totalBudgetAmount: 1800000,
+                    totalPlannedAmount: 0,
+                    remainingAmount: 1800000,
+                    totalDays: 0,
+                    totalActivities: 0,
+                    isOverBudget: false,
+                    hasMixedCurrencies: false,
+                    totalsByCurrency: [],
+                  }
+                : {
+                    tripId,
+                    currency: 'VND',
+                    totalBudgetAmount: 1800000,
+                    totalPlannedAmount: 500000,
+                    remainingAmount: 1300000,
+                    totalDays: 1,
+                    totalActivities: 0,
+                    isOverBudget: false,
+                    hasMixedCurrencies: false,
+                    totalsByCurrency: [
+                      {
+                        currency: 'VND',
+                        plannedAmount: 500000,
+                        nodeCount: 1,
+                      },
+                    ],
+                  },
+          },
+        });
+      }
+
+      if (url.endsWith(`/trips/${tripId}/planner`) && method === 'GET') {
+        plannerRequestCount += 1;
+
+        return createMockResponse({
+          body: {
+            success: true,
+            data: {
+              trip: tripDetail,
+              nodes: plannerRequestCount === 1 ? [] : [rootNode],
+            },
+          },
+        });
+      }
+
+      if (url.endsWith('/nodes') && method === 'POST') {
+        return createMockResponse({
+          body: {
+            success: true,
+            data: rootNode,
+          },
+        });
+      }
+
+      throw new Error(`Unexpected request: ${method} ${url}`);
+    });
+
+    renderAppWithProviders({
+      initialEntries: [`/app/trips/${tripId}`],
+      initialStatus: 'authenticated',
+    });
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 1,
+        name: /trip rong planner/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      await screen.findByRole('button', { name: /thêm node gốc đầu tiên/i }),
+    ).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(budgetSummaryRequestCount).toBe(1);
+      expect(plannerRequestCount).toBe(1);
+    });
+
+    await userEvent.click(
+      screen.getByRole('button', { name: /thêm node gốc đầu tiên/i }),
+    );
+    await userEvent.type(screen.getByLabelText('Tên node'), rootNode.title);
+    await userEvent.selectOptions(screen.getByLabelText('Loại node'), 'day');
+    await userEvent.type(
+      screen.getByLabelText('Thời gian bắt đầu'),
+      '2026-10-10T08:00',
+    );
+    await userEvent.type(
+      screen.getByLabelText('Thời gian kết thúc'),
+      '2026-10-10T21:00',
+    );
+    await userEvent.type(screen.getByLabelText('Chi phí dự kiến'), '500000');
+    await userEvent.clear(screen.getByLabelText('Tiền tệ'));
+    await userEvent.type(screen.getByLabelText('Tiền tệ'), 'VND');
+    await userEvent.type(screen.getByLabelText('Ghi chú'), rootNode.notes);
+    await userEvent.click(screen.getByRole('button', { name: /lưu node/i }));
+
+    expect(await screen.findByText(rootNode.title)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(budgetSummaryRequestCount).toBe(2);
+      expect(plannerRequestCount).toBe(2);
+    });
+
+    expect(await screen.findAllByText(/500\.000/)).not.toHaveLength(0);
   });
 });

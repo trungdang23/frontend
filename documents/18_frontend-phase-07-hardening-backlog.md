@@ -188,16 +188,16 @@ Tạo một lớp verify end-to-end mỏng cho các use case có giá trị busi
 
 ### Việc cần làm
 
-- [ ] Chốt approach:
-  - dùng test harness hiện có nếu đủ
-  - hoặc tách một decision slice riêng trước khi thêm browser e2e tool
-- [ ] Cover tối thiểu:
+- [x] Chốt approach:
+  - phase này dùng test harness hiện có (`Vitest` + route/component integration) cho smoke verification
+  - chưa thêm browser e2e tool khi chưa có quyết định rõ về harness và CI/runtime cost
+- [x] Cover tối thiểu:
   - login
   - create trip
   - add planner root node
   - mở public trip read-only
   - create community post
-- [ ] Nếu chưa mở browser e2e trong phase này:
+- [x] Nếu chưa mở browser e2e trong phase này:
   - ghi rõ deferred reason
   - thay bằng smoke route/integration đủ mạnh
 
@@ -261,7 +261,7 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
   - trip form
   - planner inline actions
   - community create form
-- [ ] Rà label/role/name cho CTA chính
+- [~] Rà label/role/name cho CTA chính
 - [ ] Rà empty/loading/error states có copy đủ rõ
 - [ ] Rà focus state sau redirect hoặc mutation quan trọng
 - [ ] Rà motion có cần tôn trọng `prefers-reduced-motion` ở các phần đang dùng animation
@@ -278,6 +278,11 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
 - không còn issue accessibility mức cao ở các flow chính
 - các action quan trọng đều dùng được bằng keyboard
 
+### Current note
+
+- Planner expand/collapse hiện đã có `aria-expanded` và `aria-controls`.
+- `StatusBanner` hiện phân biệt `role="alert"` cho lỗi và `role="status"` cho trạng thái còn lại.
+
 ## Slice FE-07F - Docs, verify command, và post-deploy checklist
 
 ### Mục tiêu
@@ -286,9 +291,9 @@ Biến hardening thành một phần có thể lặp lại, không phụ thuộc
 
 ### Việc cần làm
 
-- [ ] Cập nhật README nếu phase này thêm verify command mới
+- [x] Cập nhật README nếu phase này thêm verify command mới
 - [ ] Nếu có e2e harness mới, document rõ command chạy local/CI
-- [ ] Ghi checklist verify sau deploy cho:
+- [x] Ghi checklist verify sau deploy cho:
   - login
   - mở `/community`
   - mở `/trips`

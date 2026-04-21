@@ -109,6 +109,19 @@ Frontend có các script:
    - logout
    - đổi ngôn ngữ `VI/EN`
 
+## Post-deploy checklist tối thiểu
+
+Sau mỗi deploy production, ưu tiên verify nhanh:
+
+1. mở landing tại `/`
+2. đăng nhập từ `/auth/login`
+3. mở `/community`
+4. mở `/trips`
+5. mở một public trip detail/planner read-only
+6. đăng xuất và xác nhận quay lại flow public/auth
+
+Nếu đang verify phase budget hardening, bổ sung thêm một trip có planner cost để rà lại budget summary owner flow.
+
 ## Kiểm tra sau reboot
 
 ### Local trên máy đích

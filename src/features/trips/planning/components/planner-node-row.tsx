@@ -48,6 +48,7 @@ export function PlannerNodeRow({
   const [isEditing, setIsEditing] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const hasChildren = node.children.length > 0;
+  const childRegionId = `planner-node-children-${node.id}`;
 
   async function handleDelete() {
     const confirmed = window.confirm(
@@ -104,6 +105,8 @@ export function PlannerNodeRow({
           <div className="flex flex-wrap gap-2">
             {hasChildren ? (
               <Button
+                aria-controls={childRegionId}
+                aria-expanded={!isCollapsed}
                 onClick={() => setIsCollapsed((currentValue) => !currentValue)}
                 type="button"
                 variant="secondary"
@@ -192,7 +195,7 @@ export function PlannerNodeRow({
       ) : null}
 
       {hasChildren && !isCollapsed ? (
-        <div className="space-y-4">
+        <div className="space-y-4" id={childRegionId}>
           {node.children.map((childNode) => (
             <PlannerNodeRow
               defaultCurrency={defaultCurrency}

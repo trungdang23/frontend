@@ -185,11 +185,13 @@ Status: `Todo`
 - [x] Chi tiết backlog tại `18_frontend-phase-07-hardening-backlog.md`
 - [x] Unit/component tests cho auth, trips, planner
 - [x] Route-level integration tests
-- [ ] Smoke e2e cho:
+- [~] Smoke route/integration cho:
   - login
   - create trip
   - add node
   - public trip read
+-  - create community post
+-  - browser e2e được defer cho tới khi chốt harness riêng
 - [ ] Rà responsive mobile/desktop
 - [ ] Rà accessibility keyboard/focus
 - [ ] Rà `prefers-reduced-motion`

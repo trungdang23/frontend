@@ -49,7 +49,7 @@ export function PlannerWorkspace({
   const tree = buildPlannerTree(nodes);
 
   return (
-    <div className="space-y-5">
+    <div aria-busy={isLoading} className="space-y-5">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div className="space-y-2">
           <p className="eyebrow-text text-[var(--color-forest)]">
