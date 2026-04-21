@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 
 import { buildPlannerTree } from '@/features/trips/planning/lib/build-planner-tree';
@@ -46,7 +46,31 @@ export function PlannerWorkspace({
 }: PlannerWorkspaceProps) {
   const { t } = useI18n();
   const [isCreatingRoot, setIsCreatingRoot] = useState(false);
+  const addRootButtonRef = useRef<HTMLButtonElement | null>(null);
+  const rootFormTriggerRef = useRef<HTMLElement | null>(null);
   const tree = buildPlannerTree(nodes);
+
+  function restoreRootFocus() {
+    window.setTimeout(() => {
+      const focusTarget = rootFormTriggerRef.current?.isConnected
+        ? rootFormTriggerRef.current
+        : addRootButtonRef.current?.isConnected
+          ? addRootButtonRef.current
+          : null;
+
+      focusTarget?.focus();
+    }, 0);
+  }
+
+  function openRootForm(trigger: HTMLElement | null) {
+    rootFormTriggerRef.current = trigger;
+    setIsCreatingRoot(true);
+  }
+
+  function closeRootForm() {
+    setIsCreatingRoot(false);
+    restoreRootFocus();
+  }
 
   return (
     <div aria-busy={isLoading} className="space-y-5">
@@ -67,7 +91,15 @@ export function PlannerWorkspace({
 
         <div>
           <Button
-            onClick={() => setIsCreatingRoot((currentValue) => !currentValue)}
+            ref={addRootButtonRef}
+            onClick={(event) => {
+              if (isCreatingRoot) {
+                setIsCreatingRoot(false);
+                return;
+              }
+
+              openRootForm(event.currentTarget);
+            }}
             type="button"
           >
             <Plus className="h-4 w-4" />
@@ -82,10 +114,10 @@ export function PlannerWorkspace({
         <PlannerNodeInlineForm
           defaultCurrency={defaultCurrency}
           mode="create"
-          onCancel={() => setIsCreatingRoot(false)}
+          onCancel={closeRootForm}
           onSubmit={async (values) => {
             await onCreateRoot(values);
-            setIsCreatingRoot(false);
+            closeRootForm();
           }}
           title={t('trips.planner.createRootTitle')}
         />
@@ -109,7 +141,10 @@ export function PlannerWorkspace({
       {!isLoading && !error && tree.length === 0 ? (
         <EmptyState
           action={
-            <Button onClick={() => setIsCreatingRoot(true)} type="button">
+            <Button
+              onClick={(event) => openRootForm(event.currentTarget)}
+              type="button"
+            >
               {t('trips.planner.actions.addFirstRoot')}
             </Button>
           }

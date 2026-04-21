@@ -349,6 +349,21 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
 - Planner expand/collapse hiện đã có `aria-expanded` và `aria-controls`.
 - `StatusBanner` hiện phân biệt `role="alert"` cho lỗi và `role="status"` cho trạng thái còn lại.
 
+### Current pass - 2026-04-21 (planner keyboard flow)
+
+- Scope của đợt này:
+  - tự focus vào field nhập chính khi mở planner inline form cho root/create child/edit
+  - trả focus lại nút kích hoạt sau khi cancel hoặc submit thành công ở planner inline actions
+  - thêm regression tests cho keyboard flow ở `PlannerWorkspace` và `PlannerNodeRow`
+- File owner của lượt này:
+  - `src/features/trips/planning/components/**`
+  - `src/shared/ui/button.tsx`
+  - `src/tests/trip-planner.test.tsx`
+- Deferred rõ trong lượt này:
+  - focus restoration cho mọi mutation ngoài planner
+  - shortcut keyboard nâng cao cho planner như reorder hoặc command palette
+  - assistive-tech audit sâu ngoài harness test hiện có
+
 ## Slice FE-07F - Docs, verify command, và post-deploy checklist
 
 ### Mục tiêu

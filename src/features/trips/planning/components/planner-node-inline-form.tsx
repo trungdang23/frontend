@@ -136,6 +136,7 @@ export function PlannerNodeInlineForm({
         <label className="space-y-2 text-sm font-medium text-[var(--color-ink)]">
           <span>{t('trips.planner.fields.title')}</span>
           <Input
+            autoFocus
             onChange={(event) =>
               setValues((currentValue) => ({
                 ...currentValue,

@@ -65,6 +65,7 @@ describe('Trip planner phase 04', () => {
 
   it('submits the first root node with the planner payload fields', async () => {
     const onCreateRoot = vi.fn().mockResolvedValue(undefined);
+    const user = userEvent.setup();
 
     renderWithProviders(
       <PlannerWorkspace
@@ -80,21 +81,26 @@ describe('Trip planner phase 04', () => {
       />,
     );
 
-    await userEvent.click(
-      screen.getByRole('button', { name: /thêm node gốc đầu tiên/i }),
+    const addFirstRootButton = screen.getByRole('button', {
+      name: /thêm node gốc đầu tiên/i,
+    });
+
+    await user.click(addFirstRootButton);
+    await waitFor(() =>
+      expect(screen.getByLabelText('Tên node')).toHaveFocus(),
     );
-    await userEvent.type(screen.getByLabelText('Tên node'), 'Ngày đến Đà Lạt');
-    await userEvent.selectOptions(screen.getByLabelText('Loại node'), 'day');
-    await userEvent.type(
+    await user.type(screen.getByLabelText('Tên node'), 'Ngày đến Đà Lạt');
+    await user.selectOptions(screen.getByLabelText('Loại node'), 'day');
+    await user.type(
       screen.getByLabelText('Thời gian bắt đầu'),
       '2026-07-12T09:00',
     );
-    await userEvent.type(
+    await user.type(
       screen.getByLabelText('Chi phí dự kiến'),
       '250000',
     );
-    await userEvent.type(screen.getByLabelText('Tiền tệ'), 'VND');
-    await userEvent.click(screen.getByRole('button', { name: /lưu node/i }));
+    await user.type(screen.getByLabelText('Tiền tệ'), 'VND');
+    await user.click(screen.getByRole('button', { name: /lưu node/i }));
 
     await waitFor(() => {
       expect(onCreateRoot).toHaveBeenCalledWith({
@@ -108,5 +114,72 @@ describe('Trip planner phase 04', () => {
         imageUrl: '',
       });
     });
+
+    await waitFor(() => expect(addFirstRootButton).toHaveFocus());
+  });
+
+  it('restores focus to the root trigger when the inline root form is cancelled', async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders(
+      <PlannerWorkspace
+        defaultCurrency="VND"
+        error={null}
+        isLoading={false}
+        nodes={[]}
+        onCreateChild={vi.fn().mockResolvedValue(undefined)}
+        onCreateRoot={vi.fn().mockResolvedValue(undefined)}
+        onDeleteNode={vi.fn().mockResolvedValue(undefined)}
+        onRetry={vi.fn().mockResolvedValue(undefined)}
+        onUpdateNode={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+
+    const addFirstRootButton = screen.getByRole('button', {
+      name: /thêm node gốc đầu tiên/i,
+    });
+
+    await user.click(addFirstRootButton);
+    await waitFor(() =>
+      expect(screen.getByLabelText('Tên node')).toHaveFocus(),
+    );
+    await user.click(screen.getByRole('button', { name: /huỷ/i }));
+
+    await waitFor(() => expect(addFirstRootButton).toHaveFocus());
+  });
+
+  it('restores focus to planner inline action triggers after cancelling child and edit forms', async () => {
+    const user = userEvent.setup();
+
+    renderWithProviders(
+      <PlannerWorkspace
+        defaultCurrency="VND"
+        error={null}
+        isLoading={false}
+        nodes={[createNode()]}
+        onCreateChild={vi.fn().mockResolvedValue(undefined)}
+        onCreateRoot={vi.fn().mockResolvedValue(undefined)}
+        onDeleteNode={vi.fn().mockResolvedValue(undefined)}
+        onRetry={vi.fn().mockResolvedValue(undefined)}
+        onUpdateNode={vi.fn().mockResolvedValue(undefined)}
+      />,
+    );
+
+    const addChildButton = screen.getByRole('button', { name: /^thêm node con$/i });
+    await user.click(addChildButton);
+    await waitFor(() =>
+      expect(screen.getByLabelText('Tên node')).toHaveFocus(),
+    );
+    await user.click(screen.getByRole('button', { name: /huỷ/i }));
+    await waitFor(() => expect(addChildButton).toHaveFocus());
+
+    const editButton = screen.getByRole('button', { name: /^chỉnh sửa$/i });
+    await user.click(editButton);
+    await waitFor(() =>
+      expect(screen.getByLabelText('Tên node')).toHaveFocus(),
+    );
+    await user.click(screen.getByRole('button', { name: /huỷ/i }));
+
+    await waitFor(() => expect(editButton).toHaveFocus());
   });
 });

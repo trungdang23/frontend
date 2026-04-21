@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   ChevronDown,
   ChevronRight,
@@ -48,8 +48,28 @@ export function PlannerNodeRow({
   const [isCreatingChild, setIsCreatingChild] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const createChildButtonRef = useRef<HTMLButtonElement | null>(null);
+  const editButtonRef = useRef<HTMLButtonElement | null>(null);
   const hasChildren = node.children.length > 0;
   const childRegionId = `planner-node-children-${node.id}`;
+
+  function restoreActionFocus(target: HTMLButtonElement | null) {
+    window.setTimeout(() => {
+      if (target?.isConnected) {
+        target.focus();
+      }
+    }, 0);
+  }
+
+  function closeChildForm() {
+    setIsCreatingChild(false);
+    restoreActionFocus(createChildButtonRef.current);
+  }
+
+  function closeEditForm() {
+    setIsEditing(false);
+    restoreActionFocus(editButtonRef.current);
+  }
 
   async function handleDelete() {
     const confirmed = window.confirm(
@@ -126,6 +146,7 @@ export function PlannerNodeRow({
               </Button>
             ) : null}
             <Button
+              ref={createChildButtonRef}
               onClick={() => {
                 setIsEditing(false);
                 setIsCreatingChild((currentValue) => !currentValue);
@@ -137,6 +158,7 @@ export function PlannerNodeRow({
               {t('trips.planner.actions.addChild')}
             </Button>
             <Button
+              ref={editButtonRef}
               onClick={() => {
                 setIsCreatingChild(false);
                 setIsEditing((currentValue) => !currentValue);
@@ -175,10 +197,10 @@ export function PlannerNodeRow({
           defaultCurrency={defaultCurrency}
           mode="edit"
           node={node}
-          onCancel={() => setIsEditing(false)}
+          onCancel={closeEditForm}
           onSubmit={async (values) => {
             await onUpdateNode(node, values);
-            setIsEditing(false);
+            closeEditForm();
           }}
           title={t('trips.planner.editNodeTitle')}
         />
@@ -188,10 +210,10 @@ export function PlannerNodeRow({
         <PlannerNodeInlineForm
           defaultCurrency={defaultCurrency}
           mode="create"
-          onCancel={() => setIsCreatingChild(false)}
+          onCancel={closeChildForm}
           onSubmit={async (values) => {
             await onCreateChild(node, values);
-            setIsCreatingChild(false);
+            closeChildForm();
             setIsCollapsed(false);
           }}
           title={t('trips.planner.createChildTitle')}
