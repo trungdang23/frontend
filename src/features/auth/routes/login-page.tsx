@@ -95,8 +95,12 @@ export function LoginPage() {
       title={t('auth.login.title')}
     >
       <form className="space-y-5" onSubmit={onSubmit}>
-        <AuthStatusBanner message={auth.notice} tone={auth.noticeTone} />
-        <AuthStatusBanner message={submitError} tone="danger" />
+        <AuthStatusBanner
+          autoFocus
+          message={auth.notice}
+          tone={auth.noticeTone}
+        />
+        <AuthStatusBanner autoFocus message={submitError} tone="danger" />
 
         <div className="space-y-2">
           <label className="text-sm font-medium text-[var(--color-ink)]" htmlFor="login-email">

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 import { getPostDetail } from '@/features/community/api/posts-api';
 import { CommunityPostDetail } from '@/features/community/components/community-post-detail';
@@ -12,10 +12,17 @@ import { EmptyState } from '@/shared/ui/empty-state';
 import { PageSection } from '@/shared/ui/page-section';
 import { PublicPageSkeleton } from '@/shared/ui/public-page-skeleton';
 import { SiteHeader } from '@/shared/ui/site-header';
+import { StatusBanner } from '@/shared/ui/status-banner';
+
+type CommunityRouteState = {
+  noticeKey?: string;
+};
 
 export function CommunityPostPage() {
+  const location = useLocation();
   const { postId } = useParams();
   const { t } = useI18n();
+  const noticeKey = (location.state as CommunityRouteState | null)?.noticeKey;
   const postQuery = useQuery({
     queryKey: communityQueryKeys.detail(postId as string),
     queryFn: ({ signal }) => getPostDetail(postId as string, { signal }),
@@ -81,7 +88,14 @@ export function CommunityPostPage() {
 
   return (
     <CommunityShell>
-      <CommunityPostDetail post={post} />
+      <div className="space-y-5">
+        {noticeKey ? (
+          <StatusBanner autoFocus tone="success">
+            {t(noticeKey)}
+          </StatusBanner>
+        ) : null}
+        <CommunityPostDetail post={post} />
+      </div>
     </CommunityShell>
   );
 }

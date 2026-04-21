@@ -69,7 +69,11 @@ export function TripsPage() {
   if (data.length === 0) {
     return (
       <div className="space-y-5">
-        {noticeKey ? <StatusBanner tone="success">{t(noticeKey)}</StatusBanner> : null}
+        {noticeKey ? (
+          <StatusBanner autoFocus tone="success">
+            {t(noticeKey)}
+          </StatusBanner>
+        ) : null}
         <EmptyState
           action={
             <Link className={getButtonClasses()} to="/app/trips/new">
@@ -107,7 +111,11 @@ export function TripsPage() {
             </span>
           </Link>
         </div>
-        {noticeKey ? <StatusBanner tone="success">{t(noticeKey)}</StatusBanner> : null}
+        {noticeKey ? (
+          <StatusBanner autoFocus tone="success">
+            {t(noticeKey)}
+          </StatusBanner>
+        ) : null}
         <p className="text-sm text-[var(--color-ink-soft)]">
           {t('trips.listSummary', { count: meta.totalElements })}
         </p>

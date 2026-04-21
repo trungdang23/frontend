@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { CommunityPostPage } from '@/features/community/routes/community-post-page';
 import { CommunityCreatePage } from '@/features/community/routes/community-create-page';
 import { LanguageProvider } from '@/shared/i18n/language-provider';
 
@@ -41,7 +42,7 @@ function renderWithProviders(initialEntries: string[]) {
         <MemoryRouter initialEntries={initialEntries}>
           <Routes>
             <Route path="/app/community/new" element={<CommunityCreatePage />} />
-            <Route path="/community/:postId" element={<div>Community detail route</div>} />
+            <Route path="/community/:postId" element={<CommunityPostPage />} />
           </Routes>
         </MemoryRouter>
       </LanguageProvider>
@@ -161,8 +162,21 @@ describe('Community create page', () => {
     });
 
     expect(
-      await screen.findByText('Community detail route'),
+      await screen.findByRole('heading', {
+        level: 1,
+        name: 'Hoi An under slower light',
+      }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText('Bài viết cộng đồng đã được đăng thành công.'),
+    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen
+          .getByText('Bài viết cộng đồng đã được đăng thành công.')
+          .closest('[role="status"]'),
+      ).toHaveFocus();
+    });
   });
 
   it('shows a warning when the requested trip is private', async () => {

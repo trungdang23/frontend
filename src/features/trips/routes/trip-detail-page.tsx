@@ -219,10 +219,12 @@ export function TripDetailPage() {
   return (
     <div className="space-y-6">
       {noticeKey ? (
-        <StatusBanner tone="success">{t(noticeKey)}</StatusBanner>
+        <StatusBanner autoFocus tone="success">{t(noticeKey)}</StatusBanner>
       ) : null}
 
-      {deleteError ? <StatusBanner tone="danger">{deleteError}</StatusBanner> : null}
+      {deleteError ? (
+        <StatusBanner autoFocus tone="danger">{deleteError}</StatusBanner>
+      ) : null}
 
       <Card className="overflow-hidden">
         <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">

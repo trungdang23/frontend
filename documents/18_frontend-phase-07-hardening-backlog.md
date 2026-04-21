@@ -364,6 +364,23 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
   - shortcut keyboard nâng cao cho planner như reorder hoặc command palette
   - assistive-tech audit sâu ngoài harness test hiện có
 
+### Current pass - 2026-04-21 (redirect + mutation notices)
+
+- Scope của đợt này:
+  - đưa focus vào notice banner khi user quay lại login sau logout/session expiry
+  - đưa focus vào success notice sau redirect từ `trip create/edit/delete` và `community create`
+  - đưa focus vào submit error banner ở `trip form` và `community post form` để keyboard/screen-reader users nhận feedback sớm hơn
+- File owner của lượt này:
+  - `src/shared/ui/status-banner.tsx`
+  - `src/features/auth/**`
+  - `src/features/trips/**`
+  - `src/features/community/**`
+  - `src/tests/*`
+- Deferred rõ trong lượt này:
+  - focus restoration cho mọi banner/info state còn lại ở public read-only screens
+  - toast system hoặc announcement region riêng cho toàn app
+  - audit assistive-tech ngoài môi trường test hiện có
+
 ## Slice FE-07F - Docs, verify command, và post-deploy checklist
 
 ### Mục tiêu

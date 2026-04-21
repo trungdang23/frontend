@@ -74,6 +74,7 @@ export function CommunityCreatePage() {
       queryClient.setQueryData(communityQueryKeys.detail(post.id), post);
       navigate(`/community/${post.id}`, {
         replace: true,
+        state: { noticeKey: 'community.feedback.createSuccess' },
       });
     } catch (error) {
       setSubmitError(
@@ -110,11 +111,11 @@ export function CommunityCreatePage() {
       </Card>
 
       {tripWarningKey ? (
-        <StatusBanner tone="danger">{t(tripWarningKey)}</StatusBanner>
+        <StatusBanner autoFocus tone="danger">{t(tripWarningKey)}</StatusBanner>
       ) : null}
 
       {tripsQuery.isError ? (
-        <StatusBanner tone="danger">
+        <StatusBanner autoFocus tone="danger">
           {tripsQuery.error instanceof ApiError && tripsQuery.error.message
             ? tripsQuery.error.message
             : t('community.create.tripsLoadError')}

@@ -101,7 +101,7 @@ export function CommunityPostForm({
   return (
     <form className="space-y-6" onSubmit={submitHandler}>
       {submitError ? (
-        <StatusBanner tone="danger">{submitError}</StatusBanner>
+        <StatusBanner autoFocus tone="danger">{submitError}</StatusBanner>
       ) : null}
 
       <div className="grid gap-5 md:grid-cols-2">

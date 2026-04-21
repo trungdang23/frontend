@@ -827,8 +827,15 @@ describe('App routing integration', () => {
     expect(
       screen.getByText('Chuyến đi mới đã được tạo thành công.'),
     ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen
+          .getByText('Chuyến đi mới đã được tạo thành công.')
+          .closest('[role="status"]'),
+      ).toHaveFocus();
+    });
     expect(
-      screen.getByRole('button', { name: /thêm node gốc/i }),
+      screen.getByRole('button', { name: /thêm node gốc đầu tiên/i }),
     ).toBeInTheDocument();
   });
 

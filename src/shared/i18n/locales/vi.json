@@ -165,6 +165,7 @@
       "backHome": "Quay lại trang chủ"
     },
     "feedback": {
+      "createSuccess": "Bài viết cộng đồng đã được đăng thành công.",
       "createError": "Không thể đăng bài viết lúc này. Vui lòng thử lại."
     },
     "tripSelector": {

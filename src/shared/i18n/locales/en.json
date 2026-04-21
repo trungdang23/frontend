@@ -165,6 +165,7 @@
       "backHome": "Back home"
     },
     "feedback": {
+      "createSuccess": "The community post was published successfully.",
       "createError": "We couldn't publish the story right now. Please try again."
     },
     "tripSelector": {

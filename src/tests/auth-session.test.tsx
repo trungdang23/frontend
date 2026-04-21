@@ -564,6 +564,11 @@ describe("Auth session lifecycle", () => {
     expect(
       screen.getByText("Bạn đã đăng xuất khỏi Journey."),
     ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByText("Bạn đã đăng xuất khỏi Journey.").closest('[role="status"]'),
+      ).toHaveFocus();
+    });
     expect(
       screen.queryByRole("heading", {
         level: 1,
@@ -649,6 +654,13 @@ describe("Auth session lifecycle", () => {
     expect(
       screen.getByText("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại."),
     ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen
+          .getByText("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.")
+          .closest('[role="alert"]'),
+      ).toHaveFocus();
+    });
 
     await waitFor(() => {
       expect(clearStoredSessionMock).toHaveBeenCalled();
