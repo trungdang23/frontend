@@ -187,12 +187,27 @@ jobs:
           pnpm build
           ${service_restart_command}
 
-      - name: Post-deploy verification
+      - name: Public ingress verification (advisory)
         if: ${{ vars.DEPLOY_VERIFY_URL != '' }}
+        continue-on-error: true
         env:
           DEPLOY_VERIFY_URL: ${{ vars.DEPLOY_VERIFY_URL }}
         run: |
-          curl -fsSLI "${DEPLOY_VERIFY_URL}"
+          if curl -fsSLI "${DEPLOY_VERIFY_URL}"; then
+            {
+              printf 'Public ingress verification passed for %s.\n' "${DEPLOY_VERIFY_URL}"
+              printf 'Cloudflare/public domain is reachable after deploy.\n'
+            } >> "${GITHUB_STEP_SUMMARY}"
+            exit 0
+          fi
+
+          {
+            printf 'Public ingress verification failed for %s.\n' "${DEPLOY_VERIFY_URL}"
+            printf 'Deploy will continue because delayed local runtime verification on the self-hosted runner remains the authoritative gate.\n'
+            printf 'Investigate Cloudflare tunnel or public ingress separately if this warning persists.\n'
+          } >> "${GITHUB_STEP_SUMMARY}"
+          echo "::warning::Public ingress verification failed for ${DEPLOY_VERIFY_URL}; investigate Cloudflare/tunnel health separately."
+          exit 1
 
   verify-runtime-frontend:
     needs: deploy-frontend

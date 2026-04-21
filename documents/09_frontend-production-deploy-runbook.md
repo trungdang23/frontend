@@ -6,6 +6,12 @@
 - Giữ source code frontend trên máy đích, nhưng không còn phụ thuộc vào SSH hay `cloudflared access ssh`.
 - Giữ toàn bộ build-time và runtime config trên GitHub `Environment variables`.
 
+## Checklist hardening verify sau deploy
+
+- [x] Giữ local runtime verification trên self-hosted runner là tín hiệu blocking chính của workflow.
+- [x] Giữ public domain verification để phát hiện lỗi ingress thật, nhưng không để lỗi Cloudflare/tunnel chặn deploy app đã restart thành công.
+- [x] Ghi rõ trong runbook khi nào cần ưu tiên kiểm tra runtime local và khi nào cần điều tra tunnel/public ingress.
+
 ## Kiến trúc deploy hiện tại
 
 - Workflow: `.github/workflows/deploy-frontend.yml`
@@ -22,6 +28,7 @@
   - source env thật
   - `pnpm build`
   - `bash ./scripts/restart-production.sh`
+- Workflow vẫn có public-domain verification qua `DEPLOY_VERIFY_URL`, nhưng bước này chỉ còn vai trò advisory để phát hiện lỗi Cloudflare/tunnel sớm mà không chặn deploy app đã restart thành công.
 - Sau khi self-hosted job kết thúc, workflow còn có một delayed local runtime verification riêng trên self-hosted runner để bắt lỗi runtime chết sau deploy mà không phụ thuộc vào Cloudflare challenge
 
 ## GitHub configuration bắt buộc
@@ -40,6 +47,8 @@
 ### Environment variables tùy chọn
 
 - `DEPLOY_VERIFY_URL`
+
+`DEPLOY_VERIFY_URL` hiện là advisory-only. Nếu URL này lỗi do Cloudflare/public ingress nhưng local runtime vẫn healthy, workflow vẫn cho phép deploy hoàn tất và yêu cầu operator điều tra ingress riêng.
 
 Frontend hiện không cần deploy secret riêng nếu đã chuyển sang self-hosted runner và không còn copy file qua SSH.
 
@@ -217,11 +226,17 @@ Khắc phục:
   - `bash ./scripts/check-production-health.sh`
   - `curl -I https://buicojourney.com/health`
 
-### Public domain trả `1033` hoặc `The origin has been unregistered from Argo Tunnel`
+### Public domain trả `530`, `1033`, hoặc `The origin has been unregistered from Argo Tunnel`
 
 Nguyên nhân hay gặp:
 
 - `cloudflared` process trên Windows còn tồn tại nhưng tunnel `journey-backend` không còn active connection với Cloudflare
+- Cloudflare còn nhìn thấy hostname nhưng không chạm được origin/tunnel đúng cách
+
+Ảnh hưởng trong workflow:
+
+- bước public ingress verification sẽ báo warning
+- delayed local runtime verification vẫn tiếp tục chạy và mới là blocking gate cho deploy app
 
 Khắc phục:
 

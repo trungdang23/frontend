@@ -104,7 +104,7 @@ File mẫu: `.env.example`
 
 Deploy thật không đọc giá trị này từ source. Workflow deploy frontend render `.env.production` từ GitHub `Variables`, ghi file đó trực tiếp trên máy đích qua self-hosted runner, rồi build và restart app tại `DEPLOY_PATH`.
 
-Khi frontend được start từ self-hosted GitHub Actions runner, `scripts/start-production.sh` chủ động clear `RUNNER_TRACKING_ID` trước khi detach process để tránh việc runner dọn luôn runtime sau khi job kết thúc. Workflow deploy cũng có thêm một delayed local runtime verification trên self-hosted runner để bắt các lỗi kiểu "deploy pass nhưng process chết ngay sau khi job đóng" mà không phụ thuộc vào Cloudflare challenge ở public domain.
+Khi frontend được start từ self-hosted GitHub Actions runner, `scripts/start-production.sh` chủ động clear `RUNNER_TRACKING_ID` trước khi detach process để tránh việc runner dọn luôn runtime sau khi job kết thúc. Workflow deploy cũng có thêm một delayed local runtime verification trên self-hosted runner để bắt các lỗi kiểu "deploy pass nhưng process chết ngay sau khi job đóng" mà không phụ thuộc vào Cloudflare challenge ở public domain. Public-domain verification hiện vẫn được giữ như tín hiệu advisory để phát hiện lỗi Cloudflare/tunnel, nhưng không còn là blocking gate cho deploy frontend.
 
 ## Bộ tài liệu planning
 
