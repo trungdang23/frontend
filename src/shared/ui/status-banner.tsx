@@ -6,6 +6,7 @@ type StatusBannerProps = {
   autoFocus?: boolean;
   children: ReactNode;
   id?: string;
+  mode?: 'feedback' | 'note';
   tone?: 'danger' | 'info' | 'success';
 };
 
@@ -26,11 +27,13 @@ export function StatusBanner({
   autoFocus = false,
   children,
   id,
+  mode = 'feedback',
   tone = 'info',
 }: StatusBannerProps) {
   const Icon = toneIcons[tone];
-  const role = tone === 'danger' ? 'alert' : 'status';
-  const ariaLive = tone === 'danger' ? 'assertive' : 'polite';
+  const role = mode === 'note' ? 'note' : tone === 'danger' ? 'alert' : 'status';
+  const ariaLive =
+    mode === 'note' ? undefined : tone === 'danger' ? 'assertive' : 'polite';
   const bannerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -45,7 +48,7 @@ export function StatusBanner({
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [autoFocus, children, tone]);
+  }, [autoFocus, children, mode, tone]);
 
   return (
     <div

@@ -429,6 +429,21 @@ Giảm rủi ro layout vỡ hoặc navigation khó dùng trên mobile/tablet.
   - audit keyboard shortcut hoặc landmark sâu hơn cho card-level actions
   - browser assistive-tech pass ngoài harness test hiện có
 
+### Current pass - 2026-04-21 (public informational note semantics)
+
+- Scope của đợt này:
+  - tách `info/status` feedback sống khỏi các ghi chú tĩnh gắn với section trong public screens
+  - chuyển `read-only notice` của `PublicTripPage` sang semantics dạng note không-live nhưng vẫn giữ liên kết `aria-describedby` với planner section
+  - thêm regression test để khóa policy này ở public trip detail
+- File owner của lượt này:
+  - `src/shared/ui/status-banner.tsx`
+  - `src/features/trips/public/routes/public-trip-page.tsx`
+  - `src/tests/public-trip-page.test.tsx`
+- Deferred rõ trong lượt này:
+  - rà các info banner tĩnh tương tự ở protected workspace như mixed-currency budget info
+  - assistive-tech audit ngoài harness test hiện có
+  - chính sách chung cho note/banner ở mọi feature slice sau phase hardening
+
 ## Slice FE-07F - Docs, verify command, và post-deploy checklist
 
 ### Mục tiêu

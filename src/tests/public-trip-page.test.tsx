@@ -156,7 +156,7 @@ describe('Public trip page', () => {
       .getByText(
         'Planner ở route công khai đang là read-only. Mọi thao tác chỉnh sửa vẫn nằm trong workspace riêng của chủ chuyến đi.',
       )
-      .closest('[role="status"]');
+      .closest('[role="note"]');
 
     expect(plannerRegion).toBeInTheDocument();
     expect(readOnlyBanner).not.toBeNull();
@@ -164,6 +164,7 @@ describe('Public trip page', () => {
       'aria-describedby',
       readOnlyBanner?.getAttribute('id') ?? '',
     );
+    expect(readOnlyBanner).not.toHaveAttribute('aria-live');
   });
 
   it('focuses the planner empty-state heading when the public planner has no nodes', async () => {

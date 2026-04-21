@@ -240,7 +240,7 @@ export function PublicTripPage() {
           </div>
 
           {plannerQuery.isSuccess ? (
-            <StatusBanner id={plannerReadOnlyNoticeId}>
+            <StatusBanner id={plannerReadOnlyNoticeId} mode="note">
               {t('trips.publicPage.readOnlyNotice')}
             </StatusBanner>
           ) : null}
