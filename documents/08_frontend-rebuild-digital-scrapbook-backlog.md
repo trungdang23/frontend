@@ -253,6 +253,19 @@ Làm `header navigation` và `footer` đủ gọn để dùng chung cho các tab
 - [x] giữ navigation desktop ở trạng thái căn giữa và kích thước gần với code mẫu
 - [x] giảm chiều cao khối main và footer để footer lộ ra sớm hơn trên viewport thấp
 
+### FR-B1C - Shared chrome full-width single-row adjustment
+
+### Mục tiêu
+
+Giữ toàn bộ nút navigation trên đúng một hàng và bỏ các giới hạn chiều rộng không cần thiết ở `header/footer` để shared chrome không tự xuống hàng vì bị bó khung.
+
+### Scope của lượt triển khai này
+
+- [x] navigation header luôn nằm trên một hàng duy nhất
+- [x] mobile dùng full chiều rộng thật của màn hình cho hàng navigation
+- [x] desktop vẫn căn giữa, kích thước note vừa phải như code mẫu
+- [x] bỏ `max-width` gây bó khung ở header/footer wrapper
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

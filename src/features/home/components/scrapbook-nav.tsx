@@ -26,14 +26,14 @@ export function ScrapbookNav() {
     <header className="pointer-events-none sticky top-0 z-[100] mb-5 flex w-full items-start justify-center px-3 pt-3 sm:px-4 md:mb-8">
       <nav
         aria-label={t('home.navigation.ariaLabel')}
-        className="pointer-events-auto w-full max-w-[46rem] pb-2"
+        className="pointer-events-auto w-full pb-2"
       >
-        <ul className="flex w-full flex-wrap items-start justify-center gap-x-2 gap-y-3 md:gap-x-4">
+        <ul className="grid w-full grid-cols-5 items-start gap-1 sm:gap-1.5 md:flex md:justify-center md:gap-4">
           {homeNavItems.map((item, index) => (
-            <li className="flex basis-[calc(33.333%-0.4rem)] justify-center sm:basis-auto" key={item.labelKey}>
+            <li className="min-w-0 md:flex-none" key={item.labelKey}>
               <a
                 className={cn(
-                  'nav-note min-h-[3.2rem] w-full max-w-[7.3rem] px-2.5 py-2 text-[0.98rem] leading-[0.92] sm:max-w-none sm:px-4 sm:text-[1.18rem] md:min-h-[4rem] md:px-5 md:text-[1.6rem]',
+                  'nav-note min-h-[3.05rem] w-full min-w-0 px-1.5 py-1.5 text-[0.8rem] leading-[0.9] md:min-h-[4rem] md:w-auto md:min-w-[8rem] md:px-5 md:py-2 md:text-[1.6rem]',
                   noteToneClasses[item.tone],
                   noteShapeClasses[item.shape],
                 )}
@@ -46,7 +46,7 @@ export function ScrapbookNav() {
                   } as CSSProperties
                 }
               >
-                <span className="relative z-10 text-center whitespace-normal sm:whitespace-nowrap">
+                <span className="relative z-10 text-center whitespace-normal md:whitespace-nowrap">
                   {t(item.labelKey)}
                 </span>
               </a>

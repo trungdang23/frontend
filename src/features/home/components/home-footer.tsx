@@ -66,7 +66,7 @@ export function HomeFooter() {
         </svg>
       </div>
 
-      <div className="relative z-20 mx-auto flex max-w-6xl flex-col items-center justify-between gap-7 px-4 md:flex-row md:gap-8 md:px-10">
+      <div className="relative z-20 flex w-full flex-col items-center justify-between gap-7 px-4 sm:px-6 md:flex-row md:gap-8 md:px-10 xl:px-14">
         <div className="group relative inline-block cursor-default px-8 py-4 transition-transform duration-300 hover:scale-105 md:px-10">
           <div className="pointer-events-none absolute inset-0 z-0">
             <svg className="h-full w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 220 90">
