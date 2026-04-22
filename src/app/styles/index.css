@@ -29,15 +29,19 @@
   }
 
   html {
+    height: 100%;
     background: var(--color-page);
+    overflow: hidden;
     scroll-behavior: smooth;
   }
 
   body {
+    height: 100%;
     min-height: 100vh;
     margin: 0;
     color: var(--color-ink);
     font-family: var(--font-sans);
+    overflow: hidden;
     background:
       radial-gradient(circle at top left, rgba(255, 255, 255, 0.72), transparent 34%),
       radial-gradient(circle at bottom right, rgba(153, 205, 232, 0.22), transparent 28%),
@@ -72,7 +76,9 @@
   }
 
   #root {
+    height: 100%;
     min-height: 100vh;
+    overflow: hidden;
   }
 }
 
@@ -80,6 +86,17 @@
   .page-backdrop {
     position: relative;
     isolation: isolate;
+  }
+
+  .shell-scroll-hidden {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .shell-scroll-hidden::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
   }
 
   .paper-shadow {

@@ -55,7 +55,7 @@ export function SharedFooter() {
   const { t } = useI18n();
 
   return (
-    <footer className="relative mt-auto w-full overflow-visible py-3 sm:py-4" id="footer">
+    <footer className="relative mt-auto w-full flex-none overflow-visible py-3 sm:py-4" id="footer">
       <div className="pointer-events-none absolute left-0 top-[-8px] z-0 h-[calc(100%+8px)] w-full">
         <svg className="h-full w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 1440 300">
           <defs>

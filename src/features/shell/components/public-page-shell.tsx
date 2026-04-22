@@ -19,7 +19,7 @@ export function PublicPageShell({
   const { t } = useI18n();
 
   return (
-    <div className={cn('page-backdrop relative flex min-h-screen flex-col items-center overflow-x-hidden pb-0', shellClassName)}>
+    <div className={cn('page-backdrop relative flex h-[100dvh] flex-col items-center overflow-hidden', shellClassName)}>
       <a
         className="absolute left-4 top-4 z-[120] -translate-y-24 rounded-full bg-[var(--color-ink)] px-4 py-2 text-sm font-semibold text-white transition-transform focus:translate-y-0"
         href={`#${mainId}`}
@@ -30,7 +30,7 @@ export function PublicPageShell({
       <SharedHeader />
 
       <main
-        className={cn('relative w-full flex-1', mainClassName)}
+        className={cn('shell-scroll-hidden relative min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden', mainClassName)}
         id={mainId}
       >
         {children}

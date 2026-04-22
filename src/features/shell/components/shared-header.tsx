@@ -32,7 +32,7 @@ export function SharedHeader() {
   const { t } = useI18n();
 
   return (
-    <header className="pointer-events-none sticky top-0 z-[100] mb-5 flex w-full items-start justify-center px-3 pt-3 sm:px-4 md:mb-8">
+    <header className="pointer-events-none z-[100] flex w-full flex-none items-start justify-center px-3 pt-3 sm:px-4">
       <nav
         aria-label={t('home.navigation.ariaLabel')}
         className="pointer-events-auto w-full pb-2"
