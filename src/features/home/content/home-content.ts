@@ -1,10 +1,5 @@
-export type NavNoteTone = 'sun' | 'sky' | 'paper' | 'leaf' | 'coral';
-export type NavNoteShape =
-  | 'fold-right'
-  | 'torn-bottom'
-  | 'notebook'
-  | 'straight'
-  | 'fold-left';
+import type { AccentTone } from '@/features/shell/content/public-chrome-content';
+
 export type FastenerType = 'pin' | 'tape' | 'washi';
 export type FastenerPosition =
   | 'top-center'
@@ -12,16 +7,6 @@ export type FastenerPosition =
   | 'top-right'
   | 'left-center'
   | 'right-center';
-export type AccentTone = 'sun' | 'sky' | 'leaf' | 'coral';
-
-export type HomeNavItem = {
-  href: string;
-  labelKey: string;
-  rotate: number;
-  shape: NavNoteShape;
-  tone: NavNoteTone;
-  yOffset: number;
-};
 
 export type PolaroidMoment = {
   fastenerPosition: FastenerPosition;
@@ -42,61 +27,6 @@ export type MapStop = {
   x: string;
   y: string;
 };
-
-export type FooterLink = {
-  href: string;
-  labelKey: string;
-};
-
-export type SocialStamp = {
-  id: 'facebook' | 'instagram' | 'music' | 'youtube';
-  labelKey: string;
-  rotate: number;
-  tone: AccentTone;
-};
-
-export const homeNavItems: HomeNavItem[] = [
-  {
-    href: '/',
-    labelKey: 'home.navigation.home',
-    rotate: -4,
-    shape: 'fold-right',
-    tone: 'sun',
-    yOffset: 2,
-  },
-  {
-    href: '/',
-    labelKey: 'home.navigation.community',
-    rotate: 3,
-    shape: 'torn-bottom',
-    tone: 'sky',
-    yOffset: -4,
-  },
-  {
-    href: '/',
-    labelKey: 'home.navigation.planner',
-    rotate: -2,
-    shape: 'notebook',
-    tone: 'paper',
-    yOffset: 6,
-  },
-  {
-    href: '/',
-    labelKey: 'home.navigation.journal',
-    rotate: 5,
-    shape: 'straight',
-    tone: 'leaf',
-    yOffset: -2,
-  },
-  {
-    href: '/',
-    labelKey: 'home.navigation.profile',
-    rotate: -3,
-    shape: 'fold-left',
-    tone: 'coral',
-    yOffset: 4,
-  },
-];
 
 export const polaroidMoments: PolaroidMoment[] = [
   {
@@ -225,47 +155,5 @@ export const mapStops: MapStop[] = [
     tone: 'coral',
     x: '70%',
     y: '82%',
-  },
-];
-
-export const footerLinks: FooterLink[] = [
-  {
-    href: '/',
-    labelKey: 'home.footer.links.about',
-  },
-  {
-    href: '/',
-    labelKey: 'home.footer.links.terms',
-  },
-  {
-    href: '/',
-    labelKey: 'home.footer.links.contact',
-  },
-];
-
-export const socialStamps: SocialStamp[] = [
-  {
-    id: 'facebook',
-    labelKey: 'home.footer.socials.facebook',
-    rotate: -4,
-    tone: 'coral',
-  },
-  {
-    id: 'instagram',
-    labelKey: 'home.footer.socials.instagram',
-    rotate: 3,
-    tone: 'leaf',
-  },
-  {
-    id: 'music',
-    labelKey: 'home.footer.socials.music',
-    rotate: -2,
-    tone: 'sky',
-  },
-  {
-    id: 'youtube',
-    labelKey: 'home.footer.socials.youtube',
-    rotate: 4,
-    tone: 'sun',
   },
 ];

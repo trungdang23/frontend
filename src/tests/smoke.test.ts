@@ -1,9 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  footerLinks,
-  homeNavItems,
   polaroidMoments,
 } from '@/features/home/content/home-content';
+import {
+  footerLinks,
+  homeNavItems,
+} from '@/features/shell/content/public-chrome-content';
 
 describe('homepage scaffold', () => {
   it('keeps the shared sticky navigation item for community', () => {
@@ -20,5 +22,9 @@ describe('homepage scaffold', () => {
   it('does not ship homepage chrome links with empty hash fragments', () => {
     expect(homeNavItems.every((item) => item.href.startsWith('/'))).toBe(true);
     expect(footerLinks.every((link) => link.href.startsWith('/'))).toBe(true);
+  });
+
+  it('routes the shared community navigation note to the real community route', () => {
+    expect(homeNavItems.find((item) => item.labelKey === 'home.navigation.community')?.href).toBe('/community');
   });
 });

@@ -6,7 +6,7 @@ Frontend package cho sản phẩm `journey`.
 
 - `frontend/` đang dùng `React + Vite + TypeScript`.
 - Runtime UI không còn chỉ là placeholder. Route `/` đã được dựng thành homepage scrapbook đầu tiên để chốt visual direction cho lần rebuild này.
-- Các surface khác như `community`, `planner`, `journal`, và `profile` hiện vẫn đang ở mức foundation/preview và sẽ được triển khai dần ở các slice tiếp theo.
+- Route `/community` đã có feed public đầu tiên, còn `planner`, `journal`, và `profile` vẫn đang ở mức foundation/preview.
 - Những phần nền vẫn còn giá trị và đang được giữ:
   - shared API client + API error handling
   - auth session modules

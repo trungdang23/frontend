@@ -263,12 +263,15 @@
     "description": "Community giờ lấy dữ liệu thật từ các bài viết công khai để mở một lớp cảm hứng khác ngoài public trip read-only.",
     "summary": "Hiện có {{count}} câu chuyện công khai đang mở.",
     "cardEyebrow": "Câu chuyện cộng đồng",
+    "authorFallback": "Người kể chuyện",
     "detailEyebrow": "Bài viết cộng đồng",
     "contentEyebrow": "Nội dung",
     "linkedTripEyebrow": "Chuyến đi được gắn kèm",
     "linkedTripDescription": "Nếu bạn muốn mở rộng sang planner và khung chuyến đi, route public của trip vẫn nằm ở phía sau bài viết này.",
     "emptyTitle": "Cộng đồng đang chờ câu chuyện đầu tiên",
     "emptyDescription": "Hãy mở một bài viết đầu tiên để cộng đồng có thêm một góc nhìn thực tế từ hành trình của bạn.",
+    "filteredEmptyTitle": "Chưa có bài phù hợp với miền này",
+    "filteredEmptyDescription": "Hãy đổi bộ lọc để xem thêm câu chuyện từ các vùng khác của hành trình Việt Nam.",
     "loadErrorTitle": "Chưa tải được community feed",
     "loadErrorDescription": "Hãy thử lại sau ít phút hoặc tải lại để xem các bài viết mới nhất.",
     "notFoundTitle": "Không tìm thấy bài viết này",
@@ -320,6 +323,11 @@
       "titleFallback": "Tiêu đề bài viết sẽ hiện ở đây",
       "linkedTripActive": "Đang nối với một trip public",
       "linkedTripInactive": "Bài viết độc lập"
+    },
+    "filters": {
+      "north": "Miền Bắc",
+      "central": "Miền Trung",
+      "south": "Miền Nam"
     }
   },
   "dashboard": {

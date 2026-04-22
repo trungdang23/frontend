@@ -263,12 +263,15 @@
     "description": "Community now reads real public posts so the product has a layer of published stories beyond read-only public trips.",
     "summary": "{{count}} public stories are live right now.",
     "cardEyebrow": "Community story",
+    "authorFallback": "Storyteller",
     "detailEyebrow": "Community post",
     "contentEyebrow": "Story",
     "linkedTripEyebrow": "Linked trip",
     "linkedTripDescription": "If you want to go deeper into the actual planner and trip frame, the linked public trip route is still right behind this post.",
     "emptyTitle": "Community is waiting for its first story",
     "emptyDescription": "Open the first post so the community gains a concrete point of view from a real trip.",
+    "filteredEmptyTitle": "No stories match this region yet",
+    "filteredEmptyDescription": "Switch the filter to see more stories from other regions of the Vietnam journey.",
     "loadErrorTitle": "We couldn't load the community feed",
     "loadErrorDescription": "Please try again in a few minutes or reload to see the latest stories.",
     "notFoundTitle": "This post could not be found",
@@ -320,6 +323,11 @@
       "titleFallback": "Your post title preview",
       "linkedTripActive": "Linked to a public trip",
       "linkedTripInactive": "Standalone story"
+    },
+    "filters": {
+      "north": "North",
+      "central": "Central",
+      "south": "South"
     }
   },
   "dashboard": {

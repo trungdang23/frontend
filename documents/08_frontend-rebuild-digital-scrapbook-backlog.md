@@ -192,6 +192,28 @@ Tạo nền thị giác mới cho toàn site mà không phụ thuộc editor.
 - fixed-layout pages nhìn cùng một brand nhưng vẫn dễ đọc
 - không phụ thuộc journal editor mới render được home/community/auth
 
+### FR-B2 - Community feed implementation from approved journal sample
+
+### Mục tiêu
+
+Mở route `community` thật đầu tiên sau homepage, dùng body bám sát mẫu `journey-travel-journal` nhưng giữ shared header/footer đúng chrome của Journey homepage.
+
+### Scope của lượt triển khai này
+
+- [x] tách `header navigation` và `footer` khỏi `home` thành shared chrome components
+- [x] dựng route `/community` thật trong app router
+- [x] map body community theo mẫu `journey-travel-journal` mà không thêm dependency `motion`
+- [x] bind feed vào contract `CommunityPost` hiện tại thay vì data model riêng của mẫu
+- [x] derive `region`, `rotation`, `tapeColor` ở frontend cho phase đầu
+- [x] giữ `likes/comments` ở mức visual decoration, chưa đòi backend field mới
+
+### Acceptance criteria
+
+- `/community` dùng chung header/footer với homepage
+- body community giữ layout/filter/polaroid feel gần mẫu đã chốt
+- page render được với dữ liệu thật từ `GET /posts`
+- không cần đổi contract backend hiện tại để lên bản đầu
+
 ### FR-B1 - Homepage scrapbook implementation
 
 ### Mục tiêu
@@ -206,13 +228,13 @@ Biến route `/` từ placeholder thành homepage thật đầu tiên để ch�
 - [x] dựng cụm polaroid, parchment map, preview cards, và torn-paper footer
 - [x] đưa copy của homepage vào i18n thay vì hardcode rời rạc
 - [x] giữ các surface khác ở mức preview ngay trên homepage để không lấn scope
-- [ ] nối route thật cho `community`, `planner`, `journal`, `profile`
+- [x] nối route thật cho `community`
+- [ ] nối route thật cho `planner`, `journal`, `profile`
 - [ ] thay ảnh demo bằng asset/content product thật
 
 ### Deferred rõ ràng sau homepage
 
 - auth shell và auth screens theo visual mới
-- public community route thật
 - planner route thật
 - journal route thật với renderer/editor riêng
 - profile route thật

@@ -2,30 +2,18 @@ import {
   MapPinned,
   Sparkles,
 } from 'lucide-react';
-import { HomeFooter } from '@/features/home/components/home-footer';
 import { PolaroidCluster } from '@/features/home/components/polaroid-cluster';
-import { ScrapbookNav } from '@/features/home/components/scrapbook-nav';
 import { VietnamMapBoard } from '@/features/home/components/vietnam-map-board';
+import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
 export function HomePage() {
   const { t } = useI18n();
 
   return (
-    <div className="page-backdrop relative flex min-h-screen flex-col items-center overflow-x-hidden pb-0">
-      <a
-        className="absolute left-4 top-4 z-[120] -translate-y-24 rounded-full bg-[var(--color-ink)] px-4 py-2 text-sm font-semibold text-white transition-transform focus:translate-y-0"
-        href="#main-content"
-      >
-        {t('common.navigation.skipToContent')}
-      </a>
-
-      <ScrapbookNav />
-
-      <main
-        className="relative grid w-full max-w-[72rem] flex-1 grid-cols-1 items-center gap-4 px-4 pb-2 pt-2 sm:px-6 sm:pb-3 lg:grid-cols-[1.32fr_0.92fr] lg:gap-6 lg:px-10"
-        id="main-content"
-      >
+    <PublicPageShell
+      mainClassName="grid w-full max-w-[72rem] grid-cols-1 items-center gap-4 px-4 pb-2 pt-2 sm:px-6 sm:pb-3 lg:grid-cols-[1.32fr_0.92fr] lg:gap-6 lg:px-10"
+    >
         <section
           className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[37rem] lg:-translate-x-16"
           id="home"
@@ -54,9 +42,6 @@ export function HomePage() {
         <div className="relative mx-auto w-full max-w-[17rem] self-center pt-0 sm:max-w-[20rem] lg:max-w-[24rem] lg:pt-4">
           <VietnamMapBoard />
         </div>
-      </main>
-
-      <HomeFooter />
-    </div>
+    </PublicPageShell>
   );
 }

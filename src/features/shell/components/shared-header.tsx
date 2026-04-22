@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
-import { homeNavItems } from '@/features/home/content/home-content';
+import { NavLink } from 'react-router-dom';
+import { homeNavItems } from '@/features/shell/content/public-chrome-content';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -27,7 +28,7 @@ const noteHoverClasses = [
   'nav-note--hover-bloom',
 ] as const;
 
-export function ScrapbookNav() {
+export function SharedHeader() {
   const { t } = useI18n();
 
   return (
@@ -39,9 +40,9 @@ export function ScrapbookNav() {
         <ul className="grid w-full grid-cols-5 items-start gap-1 sm:gap-1.5 md:flex md:justify-center md:gap-4">
           {homeNavItems.map((item, index) => (
             <li className="min-w-0 md:flex-none" key={item.labelKey}>
-              <a
+              <NavLink
                 className="nav-note-shell min-h-[3.05rem] w-full min-w-0 md:min-h-[4rem] md:w-auto md:min-w-[8rem]"
-                href={item.href}
+                end={item.href === '/'}
                 style={
                   {
                     ['--note-offset' as string]: `${item.yOffset}px`,
@@ -49,20 +50,24 @@ export function ScrapbookNav() {
                     ['--note-drop-delay' as string]: `${index * 100}ms`,
                   } as CSSProperties
                 }
+                to={item.href}
               >
-                <span
-                  className={cn(
-                    'nav-note min-h-[3.05rem] w-full min-w-0 px-1.5 py-1.5 text-[0.8rem] leading-[0.9] md:min-h-[4rem] md:px-5 md:py-2 md:text-[1.6rem]',
-                    noteToneClasses[item.tone],
-                    noteShapeClasses[item.shape],
-                    noteHoverClasses[index % noteHoverClasses.length],
-                  )}
-                >
-                  <span className="relative z-10 text-center whitespace-normal md:whitespace-nowrap">
-                    {t(item.labelKey)}
+                {({ isActive }) => (
+                  <span
+                    className={cn(
+                      'nav-note min-h-[3.05rem] w-full min-w-0 px-1.5 py-1.5 text-[0.8rem] leading-[0.9] md:min-h-[4rem] md:px-5 md:py-2 md:text-[1.6rem]',
+                      noteToneClasses[item.tone],
+                      noteShapeClasses[item.shape],
+                      noteHoverClasses[index % noteHoverClasses.length],
+                      isActive && 'brightness-[1.03] saturate-[1.08] shadow-[0_22px_34px_rgba(98,74,51,0.2)]',
+                    )}
+                  >
+                    <span className="relative z-10 text-center whitespace-normal md:whitespace-nowrap">
+                      {t(item.labelKey)}
+                    </span>
                   </span>
-                </span>
-              </a>
+                )}
+              </NavLink>
             </li>
           ))}
         </ul>

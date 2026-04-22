@@ -1,10 +1,10 @@
 import type { CSSProperties } from 'react';
 import { polaroidMoments } from '@/features/home/content/home-content';
 import type {
-  AccentTone,
   FastenerPosition,
   PolaroidMoment,
 } from '@/features/home/content/home-content';
+import type { AccentTone } from '@/features/shell/content/public-chrome-content';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
