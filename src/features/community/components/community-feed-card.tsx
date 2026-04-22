@@ -52,9 +52,9 @@ export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
           {card.displayTitle}
         </h2>
 
-        <p className="mt-2 line-clamp-2 min-h-[2.8rem] text-sm leading-relaxed text-slate-600">
+        {/* <p className="mt-2 line-clamp-2 min-h-[2.8rem] text-sm leading-relaxed text-slate-600">
           {card.excerpt}
-        </p>
+        </p> */}
 
         <div className="mt-4 flex items-center justify-between gap-3 text-slate-600">
           <div className="flex min-w-0 items-center gap-2">

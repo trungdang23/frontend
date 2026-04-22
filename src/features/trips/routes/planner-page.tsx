@@ -64,25 +64,25 @@ export function PlannerPage() {
 
   return (
     <PublicPageShell
-      mainClassName="w-full px-4 py-4 sm:px-6 lg:px-8"
+      mainClassName="w-full px-0 py-2 sm:px-0 sm:py-3"
       mainId="planner-content"
     >
-      <div className="mx-auto flex min-h-full w-full max-w-6xl items-start justify-center py-2 sm:py-4 lg:items-center">
-        <section className="relative w-full overflow-hidden rounded-[0.4rem] bg-[#fffdf9] shadow-[0_30px_60px_rgba(0,0,0,0.12),0_15px_25px_rgba(0,0,0,0.08)]">
+      <div className="flex min-h-full w-full items-start justify-center py-0 sm:py-1 lg:items-center">
+        <section className="relative w-full overflow-hidden bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)]">
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 
           <div className="flex flex-col md:flex-row">
             <div
-              className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-6 sm:p-8 md:min-h-[46rem] md:w-1/2 md:border-b-0 md:border-r md:p-10"
+              className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-5 sm:p-7 md:min-h-[38rem] md:w-1/2 md:border-b-0 md:border-r md:p-8 lg:p-9"
               style={pageDotStyle}
             >
               <div className="relative z-30 max-w-[20rem]">
-                <h1 className="font-marker text-[2.35rem] leading-[0.9] tracking-tight text-gray-800 uppercase sm:text-[3rem] lg:text-[3.45rem]">
+                <h1 className="font-marker text-[2.15rem] leading-[0.9] tracking-tight text-gray-800 uppercase sm:text-[2.8rem] lg:text-[3.2rem]">
                   <span className="block">{t('trips.planner.board.titleLine1')}</span>
                   <span className="block">{t('trips.planner.board.titleLine2')}</span>
                 </h1>
-                <p className="mt-3 font-cursive text-[2rem] leading-none text-gray-800 sm:text-[2.6rem]">
+                <p className="mt-2.5 font-cursive text-[1.8rem] leading-none text-gray-800 sm:text-[2.35rem]">
                   {t('trips.planner.board.subtitle')}
                 </p>
               </div>
@@ -123,12 +123,12 @@ export function PlannerPage() {
                 />
               </svg>
 
-              <div className="relative z-20 mt-8 h-[29rem] sm:h-[33rem] md:mt-10 md:h-[35rem]">
+              <div className="relative z-20 mt-6 h-[24rem] sm:h-[28rem] md:mt-8 md:h-[29rem] lg:h-[31rem]">
                 <PlannerPolaroid
                   alt={t('trips.planner.board.cards.hanoi')}
                   className="left-[3%] top-[2%] w-[36%]"
                   dayLabel={t('trips.planner.board.cards.hanoiDays')}
-                  imageClassName="h-24 sm:h-28 md:h-32"
+                  imageClassName="h-20 sm:h-24 md:h-28 lg:h-[7.5rem]"
                   imageUrl="https://images.unsplash.com/photo-1555944805-d835180442e7?auto=format&fit=crop&w=400"
                   label={t('trips.planner.board.cards.hanoi')}
                   tapeClassName="w-12 rotate-1 bg-orange-400/40"
@@ -139,7 +139,7 @@ export function PlannerPage() {
                   alt={t('trips.planner.board.cards.haLong')}
                   className="right-[3%] top-[0%] w-[39%]"
                   dayLabel={t('trips.planner.board.cards.haLongDays')}
-                  imageClassName="h-28 sm:h-32 md:h-36"
+                  imageClassName="h-24 sm:h-28 md:h-32 lg:h-[8.5rem]"
                   imageUrl="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=400"
                   label={t('trips.planner.board.cards.haLong')}
                   tapeClassName="w-14 -rotate-2 bg-blue-400/40"
@@ -150,7 +150,7 @@ export function PlannerPage() {
                   alt={t('trips.planner.board.cards.hoiAn')}
                   className="left-[8%] top-[45%] w-[42%]"
                   dayLabel={t('trips.planner.board.cards.hoiAnDays')}
-                  imageClassName="h-28 sm:h-32 md:h-36"
+                  imageClassName="h-24 sm:h-28 md:h-32 lg:h-[8.5rem]"
                   imageUrl="https://images.unsplash.com/photo-1599708153386-62e2d366336e?auto=format&fit=crop&w=400"
                   label={t('trips.planner.board.cards.hoiAn')}
                   tapeClassName="w-14 rotate-3 bg-yellow-400/50"
@@ -161,7 +161,7 @@ export function PlannerPage() {
                   alt={t('trips.planner.board.cards.daNang')}
                   className="bottom-[1%] right-[6%] w-[36%]"
                   dayLabel={t('trips.planner.board.cards.daNangDays')}
-                  imageClassName="h-24 sm:h-28 md:h-32"
+                  imageClassName="h-20 sm:h-24 md:h-28 lg:h-[7.5rem]"
                   imageUrl="https://images.unsplash.com/photo-1559592442-7e18ad73d63b?auto=format&fit=crop&w=400"
                   label={t('trips.planner.board.cards.daNang')}
                   tapeClassName="w-12 -rotate-1 bg-pink-400/40"
@@ -177,7 +177,7 @@ export function PlannerPage() {
             </div>
 
             <div
-              className="relative overflow-hidden bg-[#fffdfa] p-6 sm:p-8 md:min-h-[46rem] md:w-1/2 md:p-10"
+              className="relative overflow-hidden bg-[#fffdfa] p-5 sm:p-7 md:min-h-[38rem] md:w-1/2 md:p-8 lg:p-9"
               style={pageDotStyle}
             >
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-10 opacity-[0.08]">
@@ -222,12 +222,12 @@ export function PlannerPage() {
                 <MapPinned className="h-8 w-8 drop-shadow-sm" fill="currentColor" strokeWidth={1.6} />
               </div>
 
-              <div className="absolute left-6 top-12 z-30 w-[12.8rem] rotate-[-1deg] border-l-[0.5rem] border-yellow-400 bg-[#fff9c4] p-5 shadow-xl sm:w-60">
+              <div className="absolute left-5 top-10 z-30 w-[11.8rem] rotate-[-1deg] border-l-[0.5rem] border-yellow-400 bg-[#fff9c4] p-4 shadow-xl sm:left-6 sm:top-12 sm:w-56">
                 <div className="absolute left-1/2 top-[-1rem] h-8 w-20 -translate-x-1/2 rotate-3 bg-cyan-400/30 backdrop-blur-sm" />
-                <p className="border-b-2 border-yellow-500/20 pb-2 font-marker text-[1.9rem] tracking-tight text-yellow-900 sm:text-[2.2rem]">
+                <p className="border-b-2 border-yellow-500/20 pb-2 font-marker text-[1.65rem] tracking-tight text-yellow-900 sm:text-[2rem]">
                   {t('trips.planner.board.checklistTitle')}
                 </p>
-                <ul className="mt-4 space-y-3 font-marker text-[1.35rem] text-gray-800 sm:text-[1.5rem]">
+                <ul className="mt-3 space-y-2.5 font-marker text-[1.2rem] text-gray-800 sm:text-[1.4rem]">
                   <li className="flex items-center gap-3">
                     <span className="text-2xl text-green-600">✔</span>
                     <span>{t('trips.planner.board.checklist.flight')}</span>
@@ -243,9 +243,9 @@ export function PlannerPage() {
                 </ul>
               </div>
 
-              <div className="absolute bottom-14 right-12 z-20 opacity-30">
-                <div className="flex h-20 w-20 items-center justify-center rounded-full border border-gray-800/35">
-                  <Compass className="h-10 w-10 text-gray-800" strokeWidth={1.4} />
+              <div className="absolute bottom-10 right-10 z-20 opacity-30">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full border border-gray-800/35">
+                  <Compass className="h-8 w-8 text-gray-800" strokeWidth={1.4} />
                 </div>
               </div>
             </div>
