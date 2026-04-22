@@ -19,6 +19,14 @@ const noteShapeClasses = {
   'torn-bottom': 'nav-note--torn-bottom',
 } as const;
 
+const noteHoverClasses = [
+  'nav-note--hover-bob',
+  'nav-note--hover-wobble',
+  'nav-note--hover-peel',
+  'nav-note--hover-swivel',
+  'nav-note--hover-bloom',
+] as const;
+
 export function ScrapbookNav() {
   const { t } = useI18n();
 
@@ -36,6 +44,7 @@ export function ScrapbookNav() {
                   'nav-note min-h-[3.05rem] w-full min-w-0 px-1.5 py-1.5 text-[0.8rem] leading-[0.9] md:min-h-[4rem] md:w-auto md:min-w-[8rem] md:px-5 md:py-2 md:text-[1.6rem]',
                   noteToneClasses[item.tone],
                   noteShapeClasses[item.shape],
+                  noteHoverClasses[index % noteHoverClasses.length],
                 )}
                 href={item.href}
                 style={

@@ -30,13 +30,11 @@ export function HomePage() {
           className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[37rem] lg:-translate-x-16"
           id="home"
         >
-          <div className="pointer-events-none relative z-[40] max-w-md text-center lg:absolute lg:left-[39%] lg:top-1/2 lg:max-w-[16.5rem] lg:-translate-x-1/2 lg:-translate-y-1/2">
+          <div className="pointer-events-none relative z-[40] max-w-md text-center lg:absolute lg:left-[39%] lg:top-1/2 lg:max-w-[18.5rem] lg:-translate-x-1/2 lg:-translate-y-1/2">
             <h1 className="text-shadow-custom font-title text-[2.7rem] leading-[0.85] tracking-tight text-[#1a1a1a] uppercase sm:text-[3.5rem] md:text-[4rem] lg:text-[3.7rem] xl:text-[4rem]">
-              {t('home.hero.titleLine1')}
-              <br />
-              <span className="text-[0.88em]">{t('home.hero.titleLine2')}</span>
-              <br />
-              <span className="text-[1.08em]">{t('home.hero.titleLine3')}</span>
+              <span className="block whitespace-nowrap">{t('home.hero.titleLine1')}</span>
+              <span className="block whitespace-nowrap text-[0.88em]">{t('home.hero.titleLine2')}</span>
+              <span className="block whitespace-nowrap text-[1.08em]">{t('home.hero.titleLine3')}</span>
             </h1>
 
             <div className="absolute -top-6 left-[-10%] opacity-90 sm:-top-10 sm:left-[-15%]">

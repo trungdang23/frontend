@@ -301,6 +301,19 @@ Tiếp tục nới khoảng rỗng ở giữa vòng card để tiêu đề trung
 - [x] đẩy tâm hero sang trái thêm một nấc nữa
 - [x] giữ tiêu đề nằm gọn trong vùng rỗng của vòng card
 
+### FR-B1G - Hero title lock and hover personality pass
+
+### Mục tiêu
+
+Khóa tiêu đề trung tâm thành đúng 3 dòng, mỗi dòng 2 chữ, đồng thời thêm hover effect có cá tính riêng cho navigation và polaroid thay vì dùng một kiểu lặp lại.
+
+### Scope của lượt triển khai này
+
+- [x] khóa tiêu đề `Nhật Ký / Hành Trình / Việt Nam` thành 3 dòng cố định
+- [x] giữ tiêu đề không tự xuống từng chữ riêng lẻ ở desktop
+- [x] thêm hover variant khác nhau cho từng note ở navigation
+- [x] thêm hover variant khác nhau cho từng polaroid card
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

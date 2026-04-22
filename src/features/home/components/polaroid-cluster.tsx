@@ -23,6 +23,13 @@ const fastenerPositionClasses: Record<FastenerPosition, string> = {
   'top-right': 'right-[10%] top-[-0.8rem] rotate-12',
 };
 
+const polaroidHoverClasses = [
+  'polaroid-card--hover-lift',
+  'polaroid-card--hover-sway',
+  'polaroid-card--hover-flick',
+  'polaroid-card--hover-bloom',
+] as const;
+
 export function PolaroidCluster() {
   return (
     <>
@@ -42,7 +49,7 @@ export function PolaroidCluster() {
                 transform: 'translate(-50%, -50%)',
               }}
             >
-              <PolaroidCard moment={moment} />
+              <PolaroidCard hoverClassName={polaroidHoverClasses[index % polaroidHoverClasses.length]} moment={moment} />
             </div>
           );
         })}
@@ -61,7 +68,7 @@ export function PolaroidCluster() {
               } as CSSProperties
             }
           >
-            <PolaroidCard moment={moment} />
+            <PolaroidCard hoverClassName={polaroidHoverClasses[index % polaroidHoverClasses.length]} moment={moment} />
           </div>
         ))}
       </div>
@@ -69,12 +76,21 @@ export function PolaroidCluster() {
   );
 }
 
-function PolaroidCard({ moment }: { moment: PolaroidMoment }) {
+function PolaroidCard({
+  hoverClassName,
+  moment,
+}: {
+  hoverClassName: string;
+  moment: PolaroidMoment;
+}) {
   const { t } = useI18n();
 
   return (
     <article
-      className="polaroid-card relative border border-slate-100 bg-white p-2 pb-8 ring-1 ring-black/5"
+      className={cn(
+        'polaroid-card relative border border-slate-100 bg-white p-2 pb-8 ring-1 ring-black/5',
+        hoverClassName,
+      )}
       style={
         {
           ['--float-rotate' as string]: `${moment.rotate}deg`,

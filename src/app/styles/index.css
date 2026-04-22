@@ -148,8 +148,9 @@
     transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg));
     animation: note-drop 0.75s ease both;
     transition:
-      transform 180ms ease,
-      box-shadow 180ms ease;
+      transform 220ms ease,
+      box-shadow 220ms ease,
+      filter 220ms ease;
   }
 
   .nav-note::before {
@@ -162,12 +163,46 @@
 
   .nav-note:hover,
   .nav-note:focus-visible {
-    transform: translateY(calc(var(--note-offset, 0px) + 0.35rem))
-      rotate(var(--note-rotate, 0deg)) scale(1.02);
     box-shadow:
       0 20px 32px rgba(98, 74, 51, 0.18),
       inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    filter: saturate(1.04);
     outline: none;
+    z-index: 5;
+  }
+
+  .nav-note--hover-bob:hover,
+  .nav-note--hover-bob:focus-visible {
+    transform: translateY(calc(var(--note-offset, 0px) - 0.55rem))
+      rotate(calc(var(--note-rotate, 0deg) - 2deg)) scale(1.05);
+  }
+
+  .nav-note--hover-wobble:hover,
+  .nav-note--hover-wobble:focus-visible {
+    animation: note-wobble 520ms ease both;
+    transform: translateY(calc(var(--note-offset, 0px) - 0.2rem))
+      rotate(calc(var(--note-rotate, 0deg) + 2deg)) scale(1.03);
+  }
+
+  .nav-note--hover-peel:hover,
+  .nav-note--hover-peel:focus-visible {
+    transform: translateY(calc(var(--note-offset, 0px) - 0.45rem))
+      rotate(calc(var(--note-rotate, 0deg) - 1deg)) skewX(-3deg) scale(1.04);
+    filter: brightness(1.03) saturate(1.08);
+  }
+
+  .nav-note--hover-swivel:hover,
+  .nav-note--hover-swivel:focus-visible {
+    animation: note-swivel 420ms ease both;
+    transform: translate(0.25rem, calc(var(--note-offset, 0px) - 0.45rem))
+      rotate(calc(var(--note-rotate, 0deg) + 5deg)) scale(1.035);
+  }
+
+  .nav-note--hover-bloom:hover,
+  .nav-note--hover-bloom:focus-visible {
+    animation: note-bloom 380ms ease both;
+    transform: translateY(calc(var(--note-offset, 0px) - 0.38rem))
+      rotate(calc(var(--note-rotate, 0deg) - 2deg)) scale(1.06);
   }
 
   .nav-note--fold-right {
@@ -276,6 +311,11 @@
     background: rgba(255, 253, 248, 0.98);
     box-shadow: 0 18px 28px rgba(96, 72, 50, 0.16);
     animation: floaty 7.6s ease-in-out infinite;
+    cursor: pointer;
+    transition:
+      transform 240ms ease,
+      box-shadow 240ms ease,
+      filter 240ms ease;
   }
 
   .polaroid-card::after {
@@ -287,6 +327,66 @@
     background: rgba(58, 43, 31, 0.16);
     filter: blur(12px);
     z-index: -1;
+  }
+
+  .polaroid-card img {
+    transition:
+      transform 240ms ease,
+      filter 240ms ease;
+  }
+
+  .polaroid-card:hover,
+  .polaroid-card:focus-within {
+    animation-play-state: paused;
+    z-index: 8;
+    box-shadow: 0 24px 36px rgba(96, 72, 50, 0.22);
+  }
+
+  .polaroid-card--hover-lift:hover,
+  .polaroid-card--hover-lift:focus-within {
+    transform: translateY(-0.9rem) rotate(calc(var(--float-rotate, 0deg) - 2deg))
+      scale(1.05);
+  }
+
+  .polaroid-card--hover-lift:hover img,
+  .polaroid-card--hover-lift:focus-within img {
+    transform: scale(1.05);
+  }
+
+  .polaroid-card--hover-sway:hover,
+  .polaroid-card--hover-sway:focus-within {
+    transform: translate(-0.35rem, -0.65rem)
+      rotate(calc(var(--float-rotate, 0deg) + 5deg)) scale(1.035);
+  }
+
+  .polaroid-card--hover-sway:hover img,
+  .polaroid-card--hover-sway:focus-within img {
+    transform: translateX(-0.15rem) scale(1.04);
+  }
+
+  .polaroid-card--hover-flick:hover,
+  .polaroid-card--hover-flick:focus-within {
+    transform: translate(0.3rem, -0.75rem)
+      rotate(calc(var(--float-rotate, 0deg) - 6deg)) scale(1.04);
+    filter: brightness(1.02);
+  }
+
+  .polaroid-card--hover-flick:hover img,
+  .polaroid-card--hover-flick:focus-within img {
+    transform: scale(1.08) rotate(1deg);
+  }
+
+  .polaroid-card--hover-bloom:hover,
+  .polaroid-card--hover-bloom:focus-within {
+    transform: translateY(-0.55rem) rotate(calc(var(--float-rotate, 0deg) + 2deg))
+      scale(1.06);
+    filter: saturate(1.06);
+  }
+
+  .polaroid-card--hover-bloom:hover img,
+  .polaroid-card--hover-bloom:focus-within img {
+    transform: scale(1.045);
+    filter: saturate(1.08) contrast(1.04);
   }
 
   .washi-strip {
@@ -355,5 +455,61 @@
 
   50% {
     transform: translateY(-0.45rem) rotate(var(--float-rotate, 0deg));
+  }
+}
+
+@keyframes note-wobble {
+  0% {
+    transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg))
+      scale(1);
+  }
+
+  35% {
+    transform: translateY(calc(var(--note-offset, 0px) - 0.45rem))
+      rotate(calc(var(--note-rotate, 0deg) - 5deg)) scale(1.03);
+  }
+
+  68% {
+    transform: translateY(calc(var(--note-offset, 0px) - 0.35rem))
+      rotate(calc(var(--note-rotate, 0deg) + 4deg)) scale(1.04);
+  }
+
+  100% {
+    transform: translateY(calc(var(--note-offset, 0px) - 0.2rem))
+      rotate(calc(var(--note-rotate, 0deg) + 2deg)) scale(1.03);
+  }
+}
+
+@keyframes note-swivel {
+  0% {
+    transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg))
+      scale(1);
+  }
+
+  50% {
+    transform: translate(0.3rem, calc(var(--note-offset, 0px) - 0.55rem))
+      rotate(calc(var(--note-rotate, 0deg) + 8deg)) scale(1.04);
+  }
+
+  100% {
+    transform: translate(0.25rem, calc(var(--note-offset, 0px) - 0.45rem))
+      rotate(calc(var(--note-rotate, 0deg) + 5deg)) scale(1.035);
+  }
+}
+
+@keyframes note-bloom {
+  0% {
+    transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg))
+      scale(1);
+  }
+
+  60% {
+    transform: translateY(calc(var(--note-offset, 0px) - 0.45rem))
+      rotate(calc(var(--note-rotate, 0deg) - 2deg)) scale(1.08);
+  }
+
+  100% {
+    transform: translateY(calc(var(--note-offset, 0px) - 0.38rem))
+      rotate(calc(var(--note-rotate, 0deg) - 2deg)) scale(1.06);
   }
 }
