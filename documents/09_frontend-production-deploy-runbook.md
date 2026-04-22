@@ -141,6 +141,17 @@ Sau mỗi deploy production, ưu tiên verify nhanh theo đúng thứ tự này:
 
 Nếu đang verify phase budget hardening, bổ sung thêm một trip có planner cost để rà lại budget summary owner flow.
 
+Nếu deploy vừa đụng tới planner/budget owner flow, ưu tiên rà thêm đúng chuỗi này trên `/app/trips/:tripId`:
+
+1. Tạo một planner node có cost
+   - expected: planner tree và budget summary cùng tăng sau refetch
+2. Sửa cost/currency của node vừa tạo
+   - expected: budget summary đổi theo summary mới, không giữ số cũ
+3. Xóa node vừa tạo
+   - expected: budget summary giảm lại đúng và planner tree mất node
+4. Nếu planner có mixed currency
+   - expected: note mixed-currency và breakdown theo currency khớp với summary mới nhất, không bị stale sau mutation
+
 ## Mẫu báo cáo sau deploy
 
 Khi handoff kết quả deploy hoặc hardening verify, ưu tiên dùng format ngắn này:
@@ -149,7 +160,7 @@ Khi handoff kết quả deploy hoặc hardening verify, ưu tiên dùng format n
 - `Local verify`: pass/fail cho `bash ./scripts/check-production-health.sh`
 - `Public smoke`: `/`, `/auth/login`, `/community`, `/trips`, public trip detail, logout
 - `Warnings / advisory`: Cloudflare ingress, tunnel, hoặc public-domain advisory warnings nếu có
-- `Deferred / next action`: phần còn cần verify thêm như owner budget flow hoặc manual ingress investigation
+- `Deferred / next action`: phần còn cần verify thêm như owner budget mutation flow hoặc manual ingress investigation
 
 Ví dụ:
 

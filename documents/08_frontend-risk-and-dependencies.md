@@ -2,8 +2,8 @@
 
 ## Mục tiêu
 
-- Chỉ ra dependency thật giữa frontend roadmap và backend roadmap mới
-- Tránh việc FE build theo DRD nhưng BE vẫn đang ở source bridge cũ
+- Chỉ ra dependency thật giữa frontend redesign và backend contract hiện tại
+- Giữ repo sạch mà không xóa nhầm phần nền kỹ thuật vẫn còn giá trị
 
 ## Dependency chính từ backend
 
@@ -18,106 +18,82 @@
 - trip `visibility`
 - trip `budgetMode/manualBudget`
 - planner APIs trên `PlanNode`
-- planner workspace đã cutover sang `PlanNode`
 - budget summary baseline
-
-### Còn thiếu để aligned với DRD
-
-- budget summary cutover khỏi itinerary bridge
 - public trip read
 - posts APIs
-- comments APIs nếu mở trong MVP social
+
+### Còn mở
+
+- budget summary hardening và mixed-currency runtime verify
+- cleanup legacy itinerary/budget bridge
+- comments APIs nếu social scope mở rộng sau này
 
 ## Rủi ro chính
 
-## 1. DRD mới và source hiện tại đang lệch nhau
+## 1. Redesign rất dễ đụng nhầm contract thay vì chỉ đổi presentation
 
-- DRD muốn `PlanNode`
-- source planner chính đã dùng `PlanNode`, nhưng một số docs cũ vẫn còn mô tả itinerary bridge như flow chính
+- UI đổi toàn bộ rất dễ kéo theo việc đổi route, query shape, hoặc wording của contract
+- nếu không khóa rõ boundary, FE sẽ tự tạo breaking change không cần thiết
 
-Nếu docs không được re-baseline, thứ tự ưu tiên rất dễ bị kéo lệch sang backlog cũ thay vì gap thật còn lại là `budget/public/community`.
+FE nên giữ:
 
-## 2. Planner tree rất dễ bị build quá tay
+- endpoint
+- auth/session pipeline
+- route semantics ở mức sản phẩm
 
-Các phần chưa nên làm sớm:
+FE chỉ nên thay:
 
-- drag-and-drop nhiều tầng
-- route sâu cho từng node
-- animation nặng
-- modal lồng modal
+- visual system
+- component structure
+- screen composition
+- navigation feel
 
-FE phải ưu tiên:
+## 2. Xóa presentation cũ quá sớm sẽ làm app gãy build
 
-- render tree ổn định
-- inline CRUD
-- empty/loading/error states
+- nếu xóa hàng loạt page/component cũ trước khi route mới sẵn, app sẽ không chạy được
+- cleanup code nên đi theo từng route hoặc từng screen group
 
-## 3. `budgetMode/manualBudget` có thể làm trip form vỡ nếu không chốt contract trước
+Thứ tự an toàn:
 
-Trước khi sửa form, FE cần chốt:
+1. dọn docs
+2. viết screen map mới
+3. dựng primitives mới
+4. cutover route mới
+5. xóa file UI cũ sau khi route tương ứng đã thay xong
 
-- field names
-- validation rules
-- response mapping
+## 3. Legacy planner/budget bridge dễ sống dai
 
-## 4. Public trip và community rất dễ bị trộn scope
+- `src/features/trips/api/trip-planning-api.ts` hiện không còn phù hợp làm file trung tâm cho UI mới
+- nếu không tách phần `budget-summary` ra rõ, file này sẽ giữ lại rất nhiều noise itinerary cũ
 
-Hai lớp này khác nhau:
+## 4. Docs cũ dễ làm team đi nhầm hướng
 
-- public trip = share planner
-- post = social content
+- nếu vẫn giữ đầy backlog phase cũ, repo sẽ nặng và mâu thuẫn với redesign reset
+- source of truth nên rút về một bộ docs active nhỏ
 
-Nếu không tách rõ, FE sẽ build một màn nửa trip detail nửa post detail.
+## 5. Tests dễ gãy vì structure/copy thay đổi hàng loạt
 
-## 5. Session localStorage vẫn là tradeoff có chủ đích
+- phần này là bình thường trong redesign
+- điều cần giữ là scenario behavior, không phải selector hoặc text cũ
 
-- Đây là hướng bám DRD hiện tại
+## 6. Session localStorage vẫn là tradeoff có chủ đích
+
+- Đây là hướng bám contract hiện tại
 - Không phải security-optimal dài hạn
 - Khi backend đổi sang cookie-based refresh, FE phải revisit toàn bộ session pipeline
 
-## 6. Community UI dễ bị hiểu nhầm là production-ready quá sớm
+## Điều nên giữ khi cleanup
 
-Nếu backend mới chỉ có feed/list cơ bản:
+- deploy runbook
+- env/runtime conventions
+- API integration plan
+- app architecture
+- definition of done
+- redesign backlog hiện hành
 
-- phải gắn scope rõ
-- không thêm like/follow/reaction giả lập
+## Điều không nên xóa ngay
 
-## 7. Motion dễ làm che mất tiến độ
-
-Motion cần đi sau:
-
-- contract ổn
-- state management ổn
-- layout ổn
-
-Không được để motion trở thành blocker cho planner CRUD.
-
-## Dependency order khuyến nghị
-
-1. BE chốt trip contract mới
-2. FE cập nhật trip form/list/detail
-3. BE mở planner APIs trên `PlanNode`
-4. FE chuyển workspace sang planner APIs
-5. BE chuyển budget summary sang `PlanNode`
-6. BE mở public trip read
-7. FE mở share/public trip UI
-8. BE mở posts
-9. FE mở community data-driven
-
-## Stop conditions nên ghi rõ
-
-- Nếu BE chưa chốt planner response shape:
-  - FE chưa build tree renderer production
-- Nếu BE chưa chốt trip budget fields:
-  - FE chưa merge form `manualBudget`
-- Nếu BE chưa có public trip read:
-  - FE không nên giả public page bằng mock
-- Nếu BE chưa cutover budget summary khỏi itinerary bridge:
-  - FE không nên coi budget widget hiện tại là aligned hoàn toàn với DRD
-
-## Những việc không nên làm tiếp theo
-
-- Không mở rộng itinerary UI như thể đó là target lâu dài
-- Không build community interactive trước khi có API thật
-- Không giữ placeholder mà không ghi rõ là placeholder
-- Không để route `/app/trips/:tripId` vừa là metadata detail vừa là planner tree vừa là post view
+- auth/session infrastructure
+- router foundation
+- API client và feature APIs
+- tests behavior-level còn dùng được

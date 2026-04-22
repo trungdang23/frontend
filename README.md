@@ -150,27 +150,20 @@ Deploy thật không đọc giá trị này từ source. Workflow deploy fronten
 
 Khi frontend được start từ self-hosted GitHub Actions runner, `scripts/start-production.sh` chủ động clear `RUNNER_TRACKING_ID` trước khi detach process để tránh việc runner dọn luôn runtime sau khi job kết thúc. Workflow deploy cũng có thêm một delayed local runtime verification trên self-hosted runner để bắt các lỗi kiểu "deploy pass nhưng process chết ngay sau khi job đóng" mà không phụ thuộc vào Cloudflare challenge ở public domain. Public-domain verification hiện vẫn được giữ như tín hiệu advisory để phát hiện lỗi Cloudflare/tunnel, nhưng không còn là blocking gate cho deploy frontend.
 
-## Bộ tài liệu planning
+## Bộ docs active
 
 - `documents/00_frontend-foundation.md`
 - `documents/01_frontend-phase-checklist.md`
 - `documents/02_frontend-stack-decision.md`
-- `documents/03_frontend-design-principles.md`
-- `documents/04_frontend-route-and-screen-plan.md`
 - `documents/05_frontend-api-integration-plan.md`
 - `documents/06_frontend-app-architecture.md`
 - `documents/07_frontend-definition-of-done.md`
 - `documents/08_frontend-risk-and-dependencies.md`
 - `documents/09_frontend-production-deploy-runbook.md`
-- `documents/10_frontend-trips-execution-backlog.md`
-- `documents/11_frontend-planning-expansion-plan.md`
-- `documents/16_frontend-phase-05-public-trip-sharing-backlog.md`
-- `documents/17_frontend-phase-06-community-minimal-backlog.md`
-- `documents/18_frontend-phase-07-hardening-backlog.md`
+- `documents/19_frontend-phase-08-full-ui-redesign-backlog.md`
 
 ## Giả định nền cho kế hoạch hiện tại
 
-- `UI_demo.txt` là reference về concept và visual direction, không phải source code production.
 - Backend production hiện đã sẵn auth flow thật với:
   - `POST /auth/register`
   - `POST /auth/login`
@@ -200,9 +193,9 @@ Khi frontend được start từ self-hosted GitHub Actions runner, `scripts/sta
 
 ## Mục tiêu của bộ planning này
 
-- Chốt cấu trúc tài liệu và roadmap cho frontend trước khi viết code.
-- Chốt nguyên tắc thiết kế và kiến trúc app ở mức đủ rõ để scaffold một lần cho đúng.
-- Chỉ ra rõ phần nào có thể làm ngay với backend hiện tại và phần nào cần chờ backend phase tiếp theo.
+- Giữ repo frontend gọn quanh docs nền, contract, hạ tầng, và redesign hiện hành.
+- Tránh để backlog và visual direction cũ tiếp tục làm nhiễu quá trình thay toàn bộ UI.
+- Chỉ ra rõ phần nào là nền kỹ thuật cần giữ và phần nào là presentation cần thay.
 
 ## Cấu trúc source hiện tại
 
@@ -216,6 +209,6 @@ src/
 
 ## Bước tiếp theo hợp lý
 
-1. Hoàn tất hardening còn lại: test auth/shared UI, route-level integration, smoke e2e, responsive, accessibility.
-2. Chốt runtime verification cho budget summary mixed-currency trên deploy thật.
-3. Chỉ cân nhắc mở `comments` hoặc social interactions sau khi hardening và budget runtime verification ổn định.
+1. Viết lại screen inventory và design principles cho UI mới.
+2. Giữ nguyên foundation, API, auth/session, và deploy layer.
+3. Cutover UI mới theo route hoặc screen group rồi mới xóa code presentation cũ.

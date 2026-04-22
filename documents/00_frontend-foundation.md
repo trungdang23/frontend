@@ -3,9 +3,9 @@
 ## Mục tiêu
 
 - Xây dựng frontend cho `journey` theo hướng dễ mở rộng, dễ bảo trì, và có thể phát triển từng phase mà không phá vỡ cấu trúc tổng.
-- Giữ trải nghiệm người dùng nhất quán với tinh thần của `UI_demo.txt`: cảm giác khám phá, giàu hình ảnh, và thân thiện với người dùng cuối.
+- Chốt nền kỹ thuật để có thể thay toàn bộ UI mà không phải đập lại routing, session flow, API wiring, và deploy.
 - Tách rõ phần public experience, auth experience, và application workspace để scale dần khi `trips`, `budgets`, và `community` được mở rộng.
-- Dùng planning làm baseline trước khi scaffold source thật để tránh refactor lớn ở những tuần đầu.
+- Giữ contract với backend ổn định trong lúc visual system và screen composition được thay mới hoàn toàn.
 
 ## Phạm vi giai đoạn đầu
 
@@ -19,7 +19,7 @@
   - dashboard và profile mức nền
   - trips, planner, public trip sharing, community theo tiến độ backend
 
-## Snapshot trải nghiệm mục tiêu
+## Snapshot sản phẩm hiện tại
 
 ### Product priority
 
@@ -52,6 +52,13 @@
 - inline editing là primary mode
 - loading dùng skeleton
 - error dùng toast/banner + retry
+
+### Contract freeze trong đợt redesign hiện tại
+
+- giữ nguyên auth/session pipeline
+- giữ nguyên route semantics ở mức sản phẩm
+- giữ nguyên endpoint contracts hiện tại cho auth, trips, planner, public trips, và posts
+- chỉ thay lớp thể hiện và design system, không đổi endpoint chỉ vì lý do thị giác
 
 ## Nguyên tắc nền cho frontend
 
@@ -147,5 +154,5 @@ frontend/
 
 ## Ghi chú
 
-- Tài liệu này là baseline cho quyết định scaffold frontend.
-- Các tài liệu còn lại trong `frontend/documents/` chi tiết hóa stack, route plan, API integration, definition of done, và dependencies.
+- Tài liệu này là baseline lâu dài cho frontend, không gắn với một visual direction cụ thể.
+- Bộ docs active nên chỉ giữ các tài liệu nền như foundation, checklist, stack, API integration, app architecture, definition of done, risk, deploy runbook, và redesign backlog hiện hành.
