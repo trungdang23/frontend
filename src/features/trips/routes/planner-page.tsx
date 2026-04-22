@@ -64,11 +64,11 @@ export function PlannerPage() {
 
   return (
     <PublicPageShell
-      mainClassName="w-full px-0 py-2 sm:px-0 sm:py-3"
+      mainClassName="relative mx-auto w-full max-w-[86rem] px-4 py-2 sm:px-6 sm:py-3 lg:px-10"
       mainId="planner-content"
     >
       <div className="flex min-h-full w-full items-start justify-center py-0 sm:py-1 lg:items-center">
-        <section className="relative w-full overflow-hidden bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)]">
+        <section className="relative w-full overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)]">
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 

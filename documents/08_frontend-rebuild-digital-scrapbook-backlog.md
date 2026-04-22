@@ -537,6 +537,8 @@ Làm planner thành khu rõ ràng, data-first, không cố giả scrapbook edito
 - [x] giữ `header/footer` luôn hiển thị, chỉ cuộn phần body ở giữa
 - [x] ẩn thanh scrollbar ở vùng body chung của các page dùng shared shell
 - [x] loại bỏ toàn bộ CTA, form và nội dung tự phát sinh khỏi page `planner`
+- [x] nới body `home` ra gần nhịp rộng của `community`, tránh cảm giác bị nhốt trong khung
+- [x] trả lại gutter hai bên cho `planner` để không dính mép màn hình
 
 ### Việc cần làm
 

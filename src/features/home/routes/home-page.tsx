@@ -12,10 +12,10 @@ export function HomePage() {
 
   return (
     <PublicPageShell
-      mainClassName="grid w-full max-w-[72rem] grid-cols-1 items-center gap-4 px-4 pb-2 pt-2 sm:px-6 sm:pb-3 lg:grid-cols-[1.32fr_0.92fr] lg:gap-6 lg:px-10"
+      mainClassName="relative mx-auto grid w-full max-w-[86rem] grid-cols-1 items-center gap-4 px-4 pb-2 pt-2 sm:px-6 sm:pb-3 lg:grid-cols-[1.32fr_0.92fr] lg:gap-6 lg:px-10"
     >
         <section
-          className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[37rem] lg:-translate-x-16"
+          className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[37rem] lg:-translate-x-8"
           id="home"
         >
           <div className="pointer-events-none relative z-[40] mx-auto w-fit max-w-none text-center lg:absolute lg:left-[39%] lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2">
