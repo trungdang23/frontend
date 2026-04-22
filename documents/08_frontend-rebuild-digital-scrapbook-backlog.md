@@ -267,6 +267,20 @@ Biến các điểm vào `Lập Kế Hoạch` và `Cá Nhân` từ homepage thà
 - [x] nối `Lập Kế Hoạch` và `Cá Nhân` sang route protected thật thay vì trỏ về `/`
 - [x] đảm bảo khi đăng nhập xong người dùng quay lại route protected vừa chọn
 
+### FR-B3A - Profile sample-body integration with shared public chrome
+
+### Mục tiêu
+
+Đưa route `Cá Nhân` về sát mẫu `journey-app` cho phần body, nhưng vẫn dùng đúng shared `header/footer` hiện có của các page public thay vì dựng chrome riêng cho khu cá nhân.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ `private-page-shell` khỏi route `/app/profile`
+- [x] dùng lại `SharedHeader` và `SharedFooter` thông qua `PublicPageShell`
+- [x] map đúng phần body theo mẫu `journey-app`, không tự thêm section/copy ngoài mẫu
+- [x] giữ flow sau đăng nhập quay lại đúng route protected mà người dùng vừa bấm, đặc biệt với `Lập Kế Hoạch` và `Cá Nhân`
+- [x] cập nhật test nhỏ để khóa hành vi redirect và route profile
+
 ### FR-B1 - Homepage scrapbook implementation
 
 ### Mục tiêu

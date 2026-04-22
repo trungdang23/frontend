@@ -21,7 +21,8 @@ describe('resolvePostAuthPath', () => {
 
   it('keeps protected destinations when available', () => {
     expect(resolvePostAuthPath('/app/profile')).toBe('/app/profile');
+    expect(resolvePostAuthPath('/app/planner')).toBe('/app/planner');
+    expect(readPostAuthPathFromState({ from: { pathname: '/app/profile' } })).toBe('/app/profile');
     expect(readPostAuthPathFromState({ from: { pathname: '/app/planner' } })).toBe('/app/planner');
   });
 });
-
