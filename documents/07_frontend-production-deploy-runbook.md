@@ -33,10 +33,12 @@
 - Workflow sync source checkout vào `DEPLOY_PATH`, sau đó:
   - `pnpm install`
   - source env thật
-  - `pnpm build`
+  - build staged vào `dist.next`
+  - sync asset mới vào `dist/` trước, rồi swap `index.html` sau cùng
   - `bash ./scripts/restart-production.sh`
 - Workflow vẫn có public-domain verification qua `DEPLOY_VERIFY_URL`, nhưng bước này chỉ còn vai trò advisory để phát hiện lỗi Cloudflare/tunnel sớm mà không chặn deploy app đã restart thành công.
 - Sau khi self-hosted job kết thúc, workflow còn có một delayed local runtime verification riêng trên self-hosted runner để bắt lỗi runtime chết sau deploy mà không phụ thuộc vào Cloudflare challenge
+- Cách staged sync này nhằm tránh cửa sổ runtime production đọc phải `dist/index.html` không sẵn sàng trong lúc build chạy trên chính máy đích
 
 ## GitHub configuration bắt buộc
 
@@ -249,6 +251,21 @@ Khắc phục:
 - xem log `pnpm build`
 - kiểm tra `RUNTIME_VITE_API_BASE_URL` và các env build-time
 - chạy lại workflow sau khi sửa lỗi build
+
+### `Unable to read frontend bundle.`
+
+Nguyên nhân hay gặp:
+
+- runtime đọc `dist/index.html` đúng lúc build/deploy đang thay output trực tiếp trong thư mục `dist`
+- deploy cũ build ngay trên `dist` đang live nên tạo ra cửa sổ file tạm thời không đọc được
+
+Khắc phục:
+
+- dùng workflow deploy mới với staged `dist.next -> dist` sync
+- nếu cần thao tác thủ công trên máy đích, tránh build đè trực tiếp lên `dist` đang được runtime phục vụ
+- có thể phục hồi nhanh bằng:
+  - `pnpm build`
+  - `bash ./scripts/restart-production.sh`
 
 ### Push `main` nhưng deploy không tự chạy
 

@@ -184,8 +184,16 @@ jobs:
           set -a
           . "${RUNTIME_ENV_PATH}"
           set +a
-          pnpm build
+          rm -rf dist.next
+          pnpm exec tsc -b
+          pnpm exec vite build --outDir dist.next --emptyOutDir
+          install -m 755 -d dist
+          rsync -a dist.next/ dist/ --exclude 'index.html'
+          install -m 644 dist.next/index.html dist/index.html.next
+          mv dist/index.html.next dist/index.html
           ${service_restart_command}
+          rsync -a --delete dist.next/ dist/
+          rm -rf dist.next
 
       - name: Public ingress verification (advisory)
         if: ${{ vars.DEPLOY_VERIFY_URL != '' }}

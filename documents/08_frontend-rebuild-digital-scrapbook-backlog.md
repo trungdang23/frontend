@@ -214,6 +214,18 @@ Mở route `community` thật đầu tiên sau homepage, dùng body bám sát m�
 - page render được với dữ liệu thật từ `GET /posts`
 - không cần đổi contract backend hiện tại để lên bản đầu
 
+### FR-B2A - Community sample fidelity cleanup
+
+### Mục tiêu
+
+Siết lại `/community` để body không tự thêm intro copy hay label ngoài mẫu đã chốt.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ label `Cộng đồng` phía trên cụm filter vùng miền
+- [x] bỏ khối title/description/summary thêm ngoài mẫu ngay trên feed
+- [x] giữ lại chỉ các phần body cốt lõi của mẫu: filter, doodle, grid card, và state fallback khi thật sự cần
+
 ### FR-B1 - Homepage scrapbook implementation
 
 ### Mục tiêu
@@ -520,6 +532,7 @@ Làm giai đoạn rebuild này đủ sạch để bước vào implementation th
 ### Việc cần làm
 
 - [ ] cập nhật smoke test plan theo route mới
+- [x] đổi deploy workflow sang staged `dist` swap để tránh cửa sổ runtime đọc bundle lỗi khi build trực tiếp trên máy đích
 - [ ] cập nhật deploy smoke checklist cho homepage baseline hiện tại rồi cho post-cutover
 - [ ] gỡ các tham chiếu cũ còn sót tới route/workspace model cũ
 - [ ] rà README và docs active list một lần cuối

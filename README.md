@@ -56,5 +56,6 @@ pnpm build
 ## Ghi chú quan trọng
 
 - Bộ doc trong `frontend/documents/` hiện là source of truth cho lần rebuild này.
+- Deploy production hiện dùng staged `dist` sync trên máy đích để tránh cửa sổ runtime đọc bundle lỗi trong lúc build.
 - Không nên đọc state hiện tại của `src/` rồi giả định rằng product direction đã bị bỏ; ngược lại, source đang được dựng lại từng slice theo hướng `Digital Scrapbook`.
 - Không nên tiếp tục mở rộng UI cũ hoặc dựng thêm route cũ dựa trên các giả định trước reset.

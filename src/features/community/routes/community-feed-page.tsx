@@ -97,13 +97,7 @@ export function CommunityFeedPage() {
         <Sun className="h-11 w-11 animate-pulse text-[var(--color-warm-brown)]" />
       </div>
 
-      <section className="mb-8 flex flex-col items-center gap-5 pt-3 sm:mb-12 sm:pt-6">
-        <div className="rounded-full border border-[rgba(122,75,57,0.16)] bg-[rgba(255,251,243,0.86)] px-5 py-2 shadow-[0_10px_20px_rgba(96,72,50,0.08)]">
-          <p className="font-marker text-xs uppercase tracking-[0.3em] text-[var(--color-warm-brown)]">
-            {t('community.eyebrow')}
-          </p>
-        </div>
-
+      <section className="mb-14 flex justify-center pt-6 sm:mb-20">
         <div className="flex flex-wrap justify-center gap-2 sm:gap-3">
           {REGION_FILTERS.map((filter) => (
             <CommunityRegionFilter
@@ -118,18 +112,6 @@ export function CommunityFeedPage() {
               rotateClassName={filter.rotateClassName}
             />
           ))}
-        </div>
-
-        <div className="max-w-3xl text-center">
-          <h1 className="font-title text-[2.3rem] leading-[0.9] text-[#1a1a1a] sm:text-[2.9rem]">
-            {t('community.title')}
-          </h1>
-          <p className="mt-3 text-sm leading-7 text-[var(--color-ink-soft)] sm:text-base">
-            {t('community.description')}
-          </p>
-          <p className="mt-4 font-hand text-[1.6rem] text-[var(--color-warm-brown)] sm:text-[1.9rem]">
-            {t('community.summary', { count: postsQuery.data?.meta.totalElements || 0 })}
-          </p>
         </div>
       </section>
 
