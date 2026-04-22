@@ -374,6 +374,18 @@ Khôi phục cảm giác `lắc lắc` nhẹ cho từng note trên navigation nh
 - [x] thêm lại hover wiggle nhẹ với cá tính riêng cho từng nút navigation
 - [x] tránh trạng thái bỏ hover là note bị reset opacity/transform rồi hiện lại dần dần
 
+### FR-B1M - Replace broken external polaroid photo links
+
+### Mục tiêu
+
+Khôi phục các polaroid card bị mất ảnh do một số URL external cũ đã bị gỡ hoặc trả `404`.
+
+### Scope của lượt triển khai này
+
+- [x] xác nhận card nào đang dùng URL ảnh hỏng
+- [x] thay các link hỏng của `Huế`, `Hội An`, `Nha Trang`, `Sa Pa` bằng nguồn public còn hoạt động
+- [x] giữ nguyên các card còn hiển thị bình thường để tránh đổi visual không cần thiết
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

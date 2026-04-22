@@ -115,7 +115,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'pin',
     id: 'hue-wall',
     image:
-      'https://images.unsplash.com/photo-1599341626413-989d3c7d1e8c?q=80&w=700&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1739843752812-f87723746525?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000',
     rotate: 8,
     tone: 'sun',
     titleKey: 'home.polaroids.hue.title',
@@ -125,7 +125,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'washi',
     id: 'hoi-an-lantern',
     image:
-      'https://images.unsplash.com/photo-1555931031-137bc83c3167?q=80&w=700&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1552014342-fa1a88c10d33?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000',
     noteKey: 'home.polaroids.hoiAn.note',
     rotate: -6,
     tone: 'sky',
@@ -136,7 +136,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'tape',
     id: 'nha-trang-wave',
     image:
-      'https://images.unsplash.com/photo-1559592442-741e6b856e72?q=80&w=700&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1570366290364-5e76a15ae408?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000',
     rotate: 11,
     tone: 'coral',
     titleKey: 'home.polaroids.nhaTrang.title',
@@ -178,7 +178,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'pin',
     id: 'sapa-dawn',
     image:
-      'https://images.unsplash.com/photo-1563821010041-3b5674066ee6?q=80&w=700&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1579613035165-708cc6bc87d4?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000',
     rotate: 7,
     tone: 'coral',
     titleKey: 'home.polaroids.sapa.title',
