@@ -539,6 +539,7 @@ Làm planner thành khu rõ ràng, data-first, không cố giả scrapbook edito
 - [x] loại bỏ toàn bộ CTA, form và nội dung tự phát sinh khỏi page `planner`
 - [x] nới body `home` ra gần nhịp rộng của `community`, tránh cảm giác bị nhốt trong khung
 - [x] trả lại gutter hai bên cho `planner` để không dính mép màn hình
+- [x] kéo cụm polaroid của `home` vào trong body để không còn bị cắt bên trái
 
 ### Việc cần làm
 

@@ -15,10 +15,10 @@ export function HomePage() {
       mainClassName="relative mx-auto grid w-full max-w-[86rem] grid-cols-1 items-center gap-4 px-4 pb-2 pt-2 sm:px-6 sm:pb-3 lg:grid-cols-[1.32fr_0.92fr] lg:gap-6 lg:px-10"
     >
         <section
-          className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[37rem] lg:-translate-x-8"
+          className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[37rem]"
           id="home"
         >
-          <div className="pointer-events-none relative z-[40] mx-auto w-fit max-w-none text-center lg:absolute lg:left-[39%] lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2">
+          <div className="pointer-events-none relative z-[40] mx-auto w-fit max-w-none text-center lg:absolute lg:left-[43%] lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2">
             <h1 className="text-shadow-custom inline-flex flex-col items-center gap-1 font-title text-[2.55rem] leading-[0.82] tracking-tight text-[#1a1a1a] uppercase sm:text-[3.35rem] md:text-[3.8rem] lg:text-[3.7rem] xl:text-[4rem]">
               <span className="block whitespace-nowrap">{t('home.hero.titleLine1')}</span>
               <span className="block whitespace-nowrap text-[0.88em]">{t('home.hero.titleLine2')}</span>
