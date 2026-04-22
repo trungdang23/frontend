@@ -84,6 +84,7 @@ export function CommunityFeedPage() {
   return (
     <PublicPageShell
       mainClassName={publicPageMainLayouts.community}
+      scrollable
     >
       <div className="pointer-events-none fixed left-6 top-28 hidden opacity-35 lg:block">
         <svg className="translate-x-4 text-[var(--color-ink)]" fill="currentColor" height="40" viewBox="0 0 40 40" width="40">

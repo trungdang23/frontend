@@ -19,11 +19,11 @@ export function ProfileSampleCard({
   summary,
 }: ProfileSampleCardProps) {
   return (
-    <div className="mx-auto w-full max-w-[20rem] rotate-1 rounded-lg border-2 border-amber-200 bg-amber-50 p-6 shadow-[4px_4px_0px_0px_rgba(217,119,6,0.2)]">
-      <div className="mb-4 flex justify-center -rotate-3">
+    <div className="mx-auto w-full max-w-[18rem] rotate-1 rounded-lg border-2 border-amber-200 bg-amber-50 p-5 shadow-[4px_4px_0px_0px_rgba(217,119,6,0.2)]">
+      <div className="mb-3 flex justify-center -rotate-3">
         <img
           alt={name}
-          className="h-32 w-32 -rotate-2 rounded-lg border-4 border-white object-cover shadow-md"
+          className="h-28 w-28 -rotate-2 rounded-lg border-4 border-white object-cover shadow-md"
           loading="lazy"
           src={image}
         />
@@ -39,7 +39,7 @@ export function ProfileSampleCard({
         </span>
       </div>
 
-      <p className="mb-8 text-center font-serif text-sm italic text-gray-700">
+      <p className="mb-5 text-center font-serif text-sm italic text-gray-700">
         {summary}
       </p>
 

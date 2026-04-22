@@ -19,14 +19,14 @@ describe('public page layout isolation', () => {
 
   it('keeps homepage width decisions on the homepage contract only', () => {
     expect(publicPageMainLayouts.home).toContain('max-w-[72rem]');
-    expect(publicPageMainLayouts.home).toContain('lg:grid-cols-[1.32fr_0.92fr]');
+    expect(publicPageMainLayouts.home).toContain('lg:grid-cols-[1.28fr_0.9fr]');
     expect(publicPageMainLayouts.community).not.toContain('max-w-[72rem]');
     expect(publicPageMainLayouts.planner).not.toContain('max-w-[72rem]');
   });
 
   it('keeps wide workspace gutters inside community and planner only', () => {
     expect(publicPageMainLayouts.community).toContain('max-w-[86rem]');
-    expect(publicPageMainLayouts.planner).toContain('max-w-[86rem]');
+    expect(publicPageMainLayouts.planner).toContain('max-w-[84rem]');
     expect(publicPageMainLayouts.home).not.toContain('max-w-[86rem]');
     expect(publicPageMainLayouts.profile).not.toContain('max-w-[86rem]');
   });

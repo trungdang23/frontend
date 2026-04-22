@@ -5,6 +5,7 @@ import { ProtectedRoute } from '@/features/auth/routes/protected-route';
 import { RegisterPage } from '@/features/auth/routes/register-page';
 import { CommunityFeedPage } from '@/features/community/routes/community-feed-page';
 import { HomePage } from '@/features/home/routes/home-page';
+import { JournalPage } from '@/features/journal/routes/journal-page';
 import { ProfilePage } from '@/features/profile/routes/profile-page';
 import { PlannerPage } from '@/features/trips/routes/planner-page';
 
@@ -45,6 +46,14 @@ export function AppRouter() {
             </ProtectedRoute>
           )}
           path="/app/planner"
+        />
+        <Route
+          element={(
+            <ProtectedRoute>
+              <JournalPage />
+            </ProtectedRoute>
+          )}
+          path="/app/journal"
         />
         <Route
           element={(

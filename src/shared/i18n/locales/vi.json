@@ -387,6 +387,19 @@
       "viewMorePlans": "XEM THÊM KẾ HOẠCH"
     }
   },
+  "journalPage": {
+    "eyebrow": "Nhật ký",
+    "title": "Workspace tạo nhật ký đang được tách riêng khỏi trang chủ.",
+    "description": "Trang này đã có route thật để không còn quay về homepage khi bấm vào. Editor hoàn chỉnh sẽ được dựng tiếp trong bước sau, nhưng phần điều hướng và phạm vi layout giờ đã tách riêng.",
+    "cards": {
+      "notesTitle": "Ghi chú hành trình",
+      "notesDescription": "Khu viết tay, caption ngắn và các mẩu note sẽ nằm ở đây.",
+      "stickersTitle": "Sticker và tape",
+      "stickersDescription": "Các lớp sticker, băng dán và trang trí scrapbook sẽ được nối vào editor riêng.",
+      "editorTitle": "Canvas tự do",
+      "editorDescription": "Bố cục kéo thả cho ảnh và mảnh giấy sẽ được hoàn thiện tiếp mà không ảnh hưởng homepage."
+    }
+  },
   "shell": {
     "title": "Không gian riêng của Journey",
     "description": "Xin chào {{name}}, khu vực dành riêng cho bạn đã sẵn sàng."

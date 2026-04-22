@@ -30,6 +30,7 @@ describe('homepage scaffold', () => {
 
   it('routes planner and profile notes to protected destinations', () => {
     expect(homeNavItems.find((item) => item.labelKey === 'home.navigation.planner')?.href).toBe('/app/planner');
+    expect(homeNavItems.find((item) => item.labelKey === 'home.navigation.journal')?.href).toBe('/app/journal');
     expect(homeNavItems.find((item) => item.labelKey === 'home.navigation.profile')?.href).toBe('/app/profile');
   });
 });

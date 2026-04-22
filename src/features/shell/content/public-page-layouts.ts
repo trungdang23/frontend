@@ -1,10 +1,11 @@
 // Keep route-specific spacing and width decisions out of the shared shell.
 export const publicPageMainLayouts = {
-  auth: 'w-full px-0 py-2 sm:py-3',
+  auth: 'h-full w-full px-0 py-1 sm:py-2',
   community: 'relative mx-auto w-full max-w-[86rem] px-4 pb-24 pt-2 sm:px-6 lg:px-10',
-  home: 'grid w-full max-w-[72rem] grid-cols-1 items-center gap-4 px-4 pb-2 pt-2 sm:px-6 sm:pb-3 lg:grid-cols-[1.32fr_0.92fr] lg:gap-6 lg:px-10',
-  planner: 'relative mx-auto w-full max-w-[86rem] px-4 py-2 sm:px-6 sm:py-3 lg:px-10',
-  profile: 'w-full px-4 pb-10 pt-2 sm:px-6 lg:px-10',
+  home: 'mx-auto grid w-full max-w-[72rem] grid-cols-1 items-center gap-3 px-4 pb-1 pt-1 sm:px-6 sm:pb-2 lg:grid-cols-[1.28fr_0.9fr] lg:gap-5 lg:px-8',
+  journal: 'h-full w-full px-4 py-2 sm:px-6 lg:px-8',
+  planner: 'relative mx-auto h-full w-full max-w-[84rem] px-4 py-1 sm:px-6 sm:py-2 lg:px-8',
+  profile: 'h-full w-full px-4 py-1 sm:px-6 sm:py-2 lg:px-8',
 } as const;
 
 export type PublicPageLayoutKey = keyof typeof publicPageMainLayouts;

@@ -55,7 +55,7 @@ export const homeNavItems: HomeNavItem[] = [
     yOffset: 6,
   },
   {
-    href: '/',
+    href: '/app/journal',
     labelKey: 'home.navigation.journal',
     rotate: 5,
     shape: 'straight',

@@ -13,7 +13,7 @@ export function AuthBookScene({ children }: PropsWithChildren) {
       mainClassName={publicPageMainLayouts.auth}
       mainId="auth-content"
     >
-      <section className="relative overflow-hidden px-4 py-6 sm:px-6 lg:px-10">
+      <section className="relative h-full overflow-hidden px-4 py-2 sm:px-6 sm:py-3 lg:px-8">
         <div className="auth-grain" />
 
         <div className="pointer-events-none absolute inset-0">
@@ -53,7 +53,7 @@ export function AuthBookScene({ children }: PropsWithChildren) {
           />
         </div>
 
-        <div className="relative mx-auto flex min-h-[calc(100vh-11rem)] max-w-[76rem] items-center justify-center">
+        <div className="relative mx-auto flex h-full min-h-0 max-w-[68rem] items-center justify-center">
           {children}
         </div>
       </section>

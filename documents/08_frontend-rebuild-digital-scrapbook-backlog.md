@@ -538,6 +538,8 @@ Làm planner thành khu rõ ràng, data-first, không cố giả scrapbook edito
 - [x] ẩn thanh scrollbar ở vùng body chung của các page dùng shared shell
 - [x] tách contract layout của từng public page khỏi `PublicPageShell`
 - [x] thêm test guard để width, gutter và page-specific spacing không bị kéo lên shared shell
+- [x] chỉ giữ `community` là page public có scroll dọc; các page còn lại phải fit trong body giữa header/footer
+- [x] thêm route `journal` thật để note điều hướng không rơi nhầm về homepage
 - [x] loại bỏ toàn bộ CTA, form và nội dung tự phát sinh khỏi page `planner`
 - [x] nới body `home` ra gần nhịp rộng của `community`, tránh cảm giác bị nhốt trong khung
 - [x] trả lại gutter hai bên cho `planner` để không dính mép màn hình

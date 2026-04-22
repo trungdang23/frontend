@@ -41,7 +41,7 @@ export function PolaroidCluster() {
 
           return (
             <div
-              className="absolute w-32 xl:w-[10.9rem]"
+              className="absolute w-28 xl:w-[9.6rem]"
               key={moment.id}
               style={{
                 left: `${x}%`,
@@ -55,7 +55,7 @@ export function PolaroidCluster() {
         })}
       </div>
 
-      <div className="mt-8 grid w-full max-w-2xl grid-cols-2 gap-4 sm:gap-5 lg:hidden">
+      <div className="mt-5 grid w-full max-w-xl grid-cols-2 gap-3 sm:gap-4 lg:hidden">
         {polaroidMoments.map((moment, index) => (
           <div
             key={moment.id}
@@ -111,7 +111,7 @@ function PolaroidCard({
           />
         </div>
 
-        <p className="mt-2 text-center font-hand text-lg font-bold leading-tight text-slate-800 md:text-xl">
+        <p className="mt-2 text-center font-hand text-base font-bold leading-tight text-slate-800 md:text-lg">
           {t(moment.titleKey)}
         </p>
 

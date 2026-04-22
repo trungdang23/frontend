@@ -35,7 +35,7 @@ export function AuthField({
 }: AuthFieldProps) {
   return (
     <label
-      className="flex flex-col gap-1 font-hand text-[2rem] leading-none text-[#231813] sm:text-[2.55rem]"
+      className="flex flex-col gap-1 font-hand text-[1.7rem] leading-none text-[#231813] sm:text-[2.1rem]"
       htmlFor={id}
     >
       <span className="px-1">{label}</span>
@@ -57,4 +57,3 @@ export function AuthField({
     </label>
   );
 }
-

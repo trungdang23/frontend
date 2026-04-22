@@ -64,7 +64,7 @@ export function RegisterPage() {
   return (
     <AuthBookScene>
       <form
-        className="auth-notebook relative w-full max-w-[70rem] overflow-hidden"
+        className="auth-notebook relative w-full max-w-[62rem] overflow-hidden"
         onSubmit={handleSubmit}
       >
         <div className="pointer-events-none absolute left-1/2 top-3 bottom-3 hidden w-8 -translate-x-1/2 bg-[radial-gradient(circle_at_center,rgba(73,49,31,0.5),rgba(73,49,31,0.14)_45%,transparent_72%)] blur-md lg:block" />
@@ -72,14 +72,14 @@ export function RegisterPage() {
         <div className="pointer-events-none absolute right-[-1.05rem] top-1/2 hidden h-20 w-14 -translate-y-1/2 rounded-r-[1.15rem] bg-[linear-gradient(180deg,#6a4327_0%,#4f311c_100%)] shadow-[0_16px_28px_rgba(57,38,26,0.22)] lg:block" />
 
         <div className="grid lg:grid-cols-2">
-          <section className="auth-page auth-page-lines relative border-b border-[#dbcdb6] px-6 py-10 sm:px-10 lg:border-b-0 lg:border-r lg:px-12">
+          <section className="auth-page auth-page-lines relative border-b border-[#dbcdb6] px-5 py-7 sm:px-8 sm:py-8 lg:border-b-0 lg:border-r lg:px-10">
             <div className="absolute left-6 top-4 sm:left-8 sm:top-5">
-              <span className="inline-flex rounded-full border border-[#8b6244]/60 bg-[#f4cf8f] px-5 py-1 font-hand text-[2rem] leading-none text-[#4d2d1b] shadow-[0_8px_14px_rgba(90,62,40,0.16)]">
+              <span className="inline-flex rounded-full border border-[#8b6244]/60 bg-[#f4cf8f] px-4 py-1 font-hand text-[1.7rem] leading-none text-[#4d2d1b] shadow-[0_8px_14px_rgba(90,62,40,0.16)] sm:text-[1.9rem]">
                 {t('auth.register.welcome')}
               </span>
             </div>
 
-            <div className="mx-auto flex w-full max-w-[20rem] flex-col gap-6 pt-10 sm:max-w-[22rem] sm:pt-12">
+            <div className="mx-auto flex w-full max-w-[18rem] flex-col gap-5 pt-9 sm:max-w-[19.5rem] sm:pt-10">
               <AuthField
                 autoComplete="name"
                 id="register-display-name"
@@ -118,7 +118,7 @@ export function RegisterPage() {
                 value={password}
               />
 
-              <div className="pt-5">
+              <div className="pt-3">
                 <button
                   className="auth-stamp-button auth-stamp-button--wide justify-center text-[#a34f39]"
                   disabled={isSubmitting}
@@ -136,14 +136,14 @@ export function RegisterPage() {
             </div>
           </section>
 
-          <section className="auth-page relative flex flex-col justify-center gap-8 px-6 py-10 sm:px-10 lg:px-12">
-            <div className="space-y-4">
-              <p className="font-hand text-[2.2rem] leading-none text-[#251913] sm:text-[2.7rem]">
+          <section className="auth-page relative flex flex-col justify-center gap-6 px-5 py-7 sm:px-8 sm:py-8 lg:px-10">
+            <div className="space-y-3">
+              <p className="font-hand text-[1.95rem] leading-none text-[#251913] sm:text-[2.35rem]">
                 {t('auth.register.interestsTitle')}
               </p>
 
-              <div className="space-y-4 font-hand text-[1.85rem] text-[#2e2018] sm:text-[2.25rem]">
-                <label className="flex items-center gap-3">
+              <div className="space-y-3 font-hand text-[1.55rem] text-[#2e2018] sm:text-[1.9rem]">
+                <label className="flex items-center gap-2.5">
                   <input
                     checked={likesMountain}
                     className="h-5 w-5 rounded border-[#8b6244]"
@@ -154,7 +154,7 @@ export function RegisterPage() {
                   <span>{t('auth.register.mountainLabel')}</span>
                 </label>
 
-                <label className="flex items-center gap-3">
+                <label className="flex items-center gap-2.5">
                   <input
                     checked={likesBeach}
                     className="h-5 w-5 rounded border-[#8b6244]"
@@ -165,7 +165,7 @@ export function RegisterPage() {
                   <span>{t('auth.register.beachLabel')}</span>
                 </label>
 
-                <label className="flex items-center gap-3">
+                <label className="flex items-center gap-2.5">
                   <input
                     checked={likesCity}
                     className="h-5 w-5 rounded border-[#8b6244]"
@@ -178,11 +178,11 @@ export function RegisterPage() {
               </div>
             </div>
 
-            <div className="mx-auto w-full max-w-[14rem] rotate-[-3deg] bg-white p-4 pb-12 shadow-[0_18px_32px_rgba(68,49,34,0.16)]">
+            <div className="mx-auto w-full max-w-[11rem] rotate-[-3deg] bg-white p-3 pb-8 shadow-[0_18px_32px_rgba(68,49,34,0.16)]">
               <div className="flex aspect-square items-center justify-center rounded-[0.15rem] bg-[#111]">
-                <Camera className="h-11 w-11 text-white/35" strokeWidth={1.4} />
+                <Camera className="h-9 w-9 text-white/35" strokeWidth={1.4} />
               </div>
-              <p className="mt-4 text-center font-hand text-[1.95rem] leading-none text-[#453128]">
+              <p className="mt-3 text-center font-hand text-[1.65rem] leading-none text-[#453128]">
                 {t('auth.register.avatarLabel')}
               </p>
             </div>

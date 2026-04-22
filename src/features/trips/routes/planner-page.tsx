@@ -68,22 +68,22 @@ export function PlannerPage() {
       mainClassName={publicPageMainLayouts.planner}
       mainId="planner-content"
     >
-      <div className="flex min-h-full w-full items-start justify-center py-0 sm:py-1 lg:items-center">
+      <div className="flex h-full min-h-0 w-full items-start justify-center py-0 lg:items-center">
         <section className="relative w-full overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)]">
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 
           <div className="flex flex-col md:flex-row">
             <div
-              className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-5 sm:p-7 md:min-h-[38rem] md:w-1/2 md:border-b-0 md:border-r md:p-8 lg:p-9"
+              className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-4 sm:p-5 md:min-h-[31rem] md:w-1/2 md:border-b-0 md:border-r md:p-6 lg:p-7"
               style={pageDotStyle}
             >
               <div className="relative z-30 max-w-[20rem]">
-                <h1 className="font-marker text-[2.15rem] leading-[0.9] tracking-tight text-gray-800 uppercase sm:text-[2.8rem] lg:text-[3.2rem]">
+                <h1 className="font-marker text-[1.9rem] leading-[0.9] tracking-tight text-gray-800 uppercase sm:text-[2.45rem] lg:text-[2.8rem]">
                   <span className="block">{t('trips.planner.board.titleLine1')}</span>
                   <span className="block">{t('trips.planner.board.titleLine2')}</span>
                 </h1>
-                <p className="mt-2.5 font-cursive text-[1.8rem] leading-none text-gray-800 sm:text-[2.35rem]">
+                <p className="mt-2 font-cursive text-[1.55rem] leading-none text-gray-800 sm:text-[2rem]">
                   {t('trips.planner.board.subtitle')}
                 </p>
               </div>
@@ -124,7 +124,7 @@ export function PlannerPage() {
                 />
               </svg>
 
-              <div className="relative z-20 mt-6 h-[24rem] sm:h-[28rem] md:mt-8 md:h-[29rem] lg:h-[31rem]">
+              <div className="relative z-20 mt-4 h-[20rem] sm:h-[22rem] md:mt-6 md:h-[25rem]">
                 <PlannerPolaroid
                   alt={t('trips.planner.board.cards.hanoi')}
                   className="left-[3%] top-[2%] w-[36%]"
@@ -178,7 +178,7 @@ export function PlannerPage() {
             </div>
 
             <div
-              className="relative overflow-hidden bg-[#fffdfa] p-5 sm:p-7 md:min-h-[38rem] md:w-1/2 md:p-8 lg:p-9"
+              className="relative overflow-hidden bg-[#fffdfa] p-4 sm:p-5 md:min-h-[31rem] md:w-1/2 md:p-6 lg:p-7"
               style={pageDotStyle}
             >
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-10 opacity-[0.08]">

@@ -13,10 +13,11 @@ export function HomePage() {
 
   return (
     <PublicPageShell
+      allowOverflowXVisible
       mainClassName={publicPageMainLayouts.home}
     >
         <section
-          className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[37rem] lg:-translate-x-16"
+          className="relative flex h-[20rem] w-full items-center justify-center sm:h-[24rem] lg:h-[31rem] lg:-translate-x-12"
           id="home"
         >
           <div className="pointer-events-none relative z-[40] mx-auto w-fit max-w-none text-center lg:absolute lg:left-[39%] lg:top-1/2 lg:-translate-x-1/2 lg:-translate-y-1/2">
@@ -40,7 +41,7 @@ export function HomePage() {
           <PolaroidCluster />
         </section>
 
-        <div className="relative mx-auto w-full max-w-[17rem] self-center pt-0 sm:max-w-[20rem] lg:max-w-[24rem] lg:pt-4">
+        <div className="relative mx-auto w-full max-w-[14rem] self-center pt-0 sm:max-w-[17rem] lg:max-w-[20rem] lg:pt-2">
           <VietnamMapBoard />
         </div>
     </PublicPageShell>

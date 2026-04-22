@@ -15,7 +15,7 @@ export function ProfileSampleJournalEntry({
     <article className={`rounded-lg border border-gray-100 bg-white p-4 shadow-sm ${rotationClass}`}>
       <img
         alt={title}
-        className="mb-4 h-64 w-full rounded-lg object-cover"
+        className="mb-3 h-48 w-full rounded-lg object-cover"
         loading="lazy"
         src={image}
       />

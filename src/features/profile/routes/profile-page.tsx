@@ -43,7 +43,7 @@ export function ProfilePage() {
   const auth = useAuth();
   const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<ProfileTab>('journal');
-  const [visibleCount, setVisibleCount] = useState(4);
+  const [visibleCount, setVisibleCount] = useState(2);
   const postsQuery = useQuery({
     queryFn: ({ signal }) => listMyPosts(PROFILE_POST_QUERY, { signal }),
     queryKey: ['community', 'posts', 'mine', PROFILE_POST_QUERY],
@@ -73,7 +73,7 @@ export function ProfilePage() {
       mainClassName={publicPageMainLayouts.profile}
       mainId="profile-content"
     >
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 lg:flex-row lg:items-start">
+      <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-6 lg:flex-row lg:items-start">
         <aside className="lg:w-[20rem] lg:flex-none">
           <ProfileSampleCard
             badge={t('profile.badge')}
@@ -105,7 +105,7 @@ export function ProfilePage() {
                 : 'pb-2 font-medium text-gray-400 hover:text-gray-600'}
               onClick={() => {
                 setActiveTab('journal');
-                setVisibleCount(4);
+                setVisibleCount(2);
               }}
               type="button"
             >
@@ -117,7 +117,7 @@ export function ProfilePage() {
                 : 'pb-2 font-medium text-gray-400 hover:text-gray-600'}
               onClick={() => {
                 setActiveTab('plans');
-                setVisibleCount(4);
+                setVisibleCount(2);
               }}
               type="button"
             >

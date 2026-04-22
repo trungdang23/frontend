@@ -8,16 +8,20 @@ export const PUBLIC_PAGE_SHELL_CLASSNAME = 'page-backdrop relative flex h-[100dv
 export const PUBLIC_PAGE_MAIN_BASE_CLASSNAME = 'shell-scroll-hidden relative min-h-0 w-full flex-1 overflow-y-auto overflow-x-hidden';
 
 type PublicPageShellProps = PropsWithChildren<{
+  allowOverflowXVisible?: boolean;
   mainClassName?: string;
   shellClassName?: string;
   mainId?: string;
+  scrollable?: boolean;
 }>;
 
 export function PublicPageShell({
+  allowOverflowXVisible = false,
   children,
   mainClassName,
   mainId = 'main-content',
   shellClassName,
+  scrollable = false,
 }: PublicPageShellProps) {
   const { t } = useI18n();
 
@@ -33,7 +37,15 @@ export function PublicPageShell({
       <SharedHeader />
 
       <main
-        className={cn(PUBLIC_PAGE_MAIN_BASE_CLASSNAME, mainClassName)}
+        className={cn(
+          PUBLIC_PAGE_MAIN_BASE_CLASSNAME,
+          scrollable
+            ? 'overflow-y-auto overflow-x-hidden'
+            : allowOverflowXVisible
+              ? 'overflow-y-hidden overflow-x-visible'
+              : 'overflow-hidden',
+          mainClassName,
+        )}
         id={mainId}
       >
         {children}

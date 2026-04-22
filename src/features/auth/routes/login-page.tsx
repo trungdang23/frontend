@@ -57,38 +57,38 @@ export function LoginPage() {
   return (
     <AuthBookScene>
       <form
-        className="auth-notebook relative w-full max-w-[70rem] overflow-hidden"
+        className="auth-notebook relative w-full max-w-[62rem] overflow-hidden"
         onSubmit={handleSubmit}
       >
         <div className="pointer-events-none absolute left-1/2 top-3 bottom-3 hidden w-8 -translate-x-1/2 bg-[radial-gradient(circle_at_center,rgba(73,49,31,0.5),rgba(73,49,31,0.14)_45%,transparent_72%)] blur-md lg:block" />
         <div className="pointer-events-none absolute left-1/2 top-5 bottom-5 hidden w-px -translate-x-1/2 bg-[#4d3422]/30 lg:block" />
 
         <div className="grid lg:grid-cols-[0.94fr_1.06fr]">
-          <section className="auth-page auth-page-lines flex flex-col items-center justify-center gap-8 border-b border-[#dbcdb6] px-6 py-10 sm:px-10 lg:border-b-0 lg:border-r lg:px-12">
-            <div className="auth-photo-frame w-full max-w-[17.5rem] rotate-[-7deg] sm:max-w-[20rem]">
+          <section className="auth-page auth-page-lines flex flex-col items-center justify-center gap-6 border-b border-[#dbcdb6] px-5 py-7 sm:px-8 sm:py-8 lg:border-b-0 lg:border-r lg:px-10">
+            <div className="auth-photo-frame w-full max-w-[15rem] rotate-[-7deg] sm:max-w-[17rem]">
               <img
                 alt=""
-                className="h-[16rem] w-full rounded-[0.1rem] object-cover sm:h-[18.5rem]"
+                className="h-[13rem] w-full rounded-[0.1rem] object-cover sm:h-[15rem]"
                 src={loginPhotoUrl}
               />
               <div className="absolute -bottom-4 left-[-1.2rem] h-10 w-[5.5rem] rotate-[-28deg] rounded-sm bg-[#ecdfba]/92 shadow-[0_8px_14px_rgba(83,62,44,0.18)]" />
             </div>
 
-            <div className="max-w-[18rem] text-center font-hand text-[2.2rem] leading-[1.02] text-[#231813] sm:max-w-[21rem] sm:text-[2.95rem]">
+            <div className="max-w-[16rem] text-center font-hand text-[1.9rem] leading-[1.02] text-[#231813] sm:max-w-[19rem] sm:text-[2.4rem]">
               <p className="inline-block border-b border-[#6c5848]/70 px-3 pb-2">
                 {t('auth.login.quote')}
               </p>
             </div>
           </section>
 
-          <section className="auth-page auth-page-lines relative flex flex-col justify-center px-6 py-10 sm:px-10 lg:px-12">
+          <section className="auth-page auth-page-lines relative flex flex-col justify-center px-5 py-7 sm:px-8 sm:py-8 lg:px-10">
             <div className="pointer-events-none absolute right-4 top-4 text-[#8d6843] sm:right-6 sm:top-5">
               <div className="auth-compass-badge">
                 <Compass className="h-9 w-9" strokeWidth={1.5} />
               </div>
             </div>
 
-            <div className="mx-auto flex w-full max-w-[20rem] flex-col gap-8 sm:max-w-[22rem]">
+            <div className="mx-auto flex w-full max-w-[18rem] flex-col gap-6 sm:max-w-[19.5rem]">
               <AuthField
                 autoComplete="email"
                 id="login-email"
@@ -119,7 +119,7 @@ export function LoginPage() {
                 </p>
               ) : null}
 
-              <div className="flex flex-col items-center gap-5 pt-2">
+              <div className="flex flex-col items-center gap-4 pt-1">
                 <button
                   className="auth-washi-button w-full max-w-[15rem]"
                   disabled={isSubmitting}

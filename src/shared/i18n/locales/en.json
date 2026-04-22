@@ -387,6 +387,19 @@
       "viewMorePlans": "VIEW MORE PLANS"
     }
   },
+  "journalPage": {
+    "eyebrow": "Journal",
+    "title": "The journal workspace now has its own route.",
+    "description": "This page now exists as a real destination so the journal note no longer falls back to the homepage. The full editor will come next, but navigation and layout scope are now separated properly.",
+    "cards": {
+      "notesTitle": "Travel notes",
+      "notesDescription": "Handwritten notes, short captions, and memory snippets will live here.",
+      "stickersTitle": "Stickers and tape",
+      "stickersDescription": "Scrapbook stickers, tape, and decorative layers will be connected here next.",
+      "editorTitle": "Freeform canvas",
+      "editorDescription": "The drag-and-place layout for photos and paper pieces will be completed here without affecting the homepage."
+    }
+  },
   "shell": {
     "title": "Your Journey workspace",
     "description": "Hi {{name}}, your personal space is ready."
