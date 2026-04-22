@@ -19,7 +19,8 @@ describe('public page layout isolation', () => {
 
   it('keeps homepage width decisions on the homepage contract only', () => {
     expect(publicPageMainLayouts.home).toContain('max-w-none');
-    expect(publicPageMainLayouts.home).toContain('lg:grid-cols-[minmax(0,1fr)_20rem]');
+    expect(publicPageMainLayouts.home).toContain('lg:grid-cols-[52rem_20rem]');
+    expect(publicPageMainLayouts.home).toContain('lg:justify-center');
     expect(publicPageMainLayouts.community).not.toContain('max-w-none');
     expect(publicPageMainLayouts.planner).not.toContain('max-w-none');
   });
