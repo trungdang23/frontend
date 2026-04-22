@@ -266,6 +266,17 @@ Giữ toàn bộ nút navigation trên đúng một hàng và bỏ các giới h
 - [x] desktop vẫn căn giữa, kích thước note vừa phải như code mẫu
 - [x] bỏ `max-width` gây bó khung ở header/footer wrapper
 
+### FR-B1D - Left hero spacing refinement
+
+### Mục tiêu
+
+Làm cụm hero bên trái thoáng hơn, tránh polaroid chụm sát nhau và tách khối hero khỏi bản đồ bên phải rõ hơn.
+
+### Scope của lượt triển khai này
+
+- [x] tăng khoảng cách giữa các polaroid ở desktop
+- [x] đẩy toàn bộ cụm hero bên trái lệch trái nhẹ để thoáng hơn
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

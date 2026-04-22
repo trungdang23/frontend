@@ -27,7 +27,7 @@ export function HomePage() {
         id="main-content"
       >
         <section
-          className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[34rem]"
+          className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[34rem] lg:-translate-x-6"
           id="home"
         >
           <div className="pointer-events-none relative z-[40] max-w-md text-center">

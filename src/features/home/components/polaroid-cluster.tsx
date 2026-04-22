@@ -29,12 +29,12 @@ export function PolaroidCluster() {
       <div className="absolute inset-0 hidden lg:block">
         {polaroidMoments.map((moment, index) => {
           const angle = (index / polaroidMoments.length) * Math.PI * 2 - Math.PI / 2;
-          const x = 50 + 38 * Math.cos(angle);
-          const y = 50 + 32 * Math.sin(angle);
+          const x = 46 + 42 * Math.cos(angle);
+          const y = 50 + 35 * Math.sin(angle);
 
           return (
             <div
-              className="absolute w-32 xl:w-40"
+              className="absolute w-32 xl:w-[10.5rem]"
               key={moment.id}
               style={{
                 left: `${x}%`,
