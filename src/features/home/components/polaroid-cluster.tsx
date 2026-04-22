@@ -30,14 +30,19 @@ const polaroidHoverClasses = [
   'polaroid-card--hover-bloom',
 ] as const;
 
+const twelveClockVerticalBias = [0, -5.5, -7, 0, 7, 5.5, 0, 5.5, 7, 0, -7, -5.5] as const;
+
 export function PolaroidCluster() {
   return (
     <>
       <div className="absolute inset-0 hidden lg:block">
         {polaroidMoments.map((moment, index) => {
           const angle = (index / polaroidMoments.length) * Math.PI * 2 - Math.PI / 2;
+          const verticalBias = polaroidMoments.length === 12
+            ? twelveClockVerticalBias[index] || 0
+            : 0;
           const x = 39 + 51 * Math.cos(angle);
-          const y = 50 + 44 * Math.sin(angle);
+          const y = 50 + 44 * Math.sin(angle) + verticalBias;
 
           return (
             <div

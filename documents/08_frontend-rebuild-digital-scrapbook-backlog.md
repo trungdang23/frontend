@@ -489,6 +489,18 @@ Mở rộng vòng polaroid trên homepage để có đủ 12 mốc ảnh, vẫn 
 - [x] giữ dữ liệu card đi qua cùng presenter/i18n hiện tại thay vì hardcode trong component
 - [x] cập nhật test số lượng polaroid để khóa cấu hình 12 vị trí
 
+### FR-B1O - Polaroid clock distribution refinement
+
+### Mục tiêu
+
+Làm vòng polaroid tròn hơn sau khi tăng lên 12 thẻ, tránh cảm giác bị bẹp ngang và tránh dồn card vào hai cụm 3 giờ và 9 giờ.
+
+### Scope của lượt triển khai này
+
+- [x] đẩy các card 1 giờ, 2 giờ, 10 giờ, 11 giờ lên gần 12 giờ hơn
+- [x] đẩy các card 4 giờ, 5 giờ, 7 giờ, 8 giờ xuống gần 6 giờ hơn
+- [x] giữ nguyên cơ chế phân bố theo thứ tự dữ liệu hiện tại của vòng 12 card
+
 ### FR-B1K - Navigation hover cleanup and extra footer reduction
 
 ### Mục tiêu
