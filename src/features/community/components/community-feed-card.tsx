@@ -12,7 +12,7 @@ type CommunityFeedCardProps = {
 };
 
 export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
-  const { formatDate, t } = useI18n();
+  const { t } = useI18n();
   const authorName = card.post.author.displayName || t('community.authorFallback');
 
   return (
@@ -34,7 +34,7 @@ export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
       <div className="mb-4 aspect-[4/5] w-full overflow-hidden border border-black/5 bg-[#efe7d8]">
         {card.coverImageUrl ? (
           <img
-            alt={card.post.title}
+            alt={card.displayTitle}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
             referrerPolicy="no-referrer"
             src={card.coverImageUrl}
@@ -43,7 +43,7 @@ export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
           <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.9),_transparent_34%),linear-gradient(180deg,_#f7efdf,_#ead9bd)] px-5 text-center">
             <div className="rounded-[1.2rem] border border-[rgba(122,75,57,0.18)] bg-white/70 px-4 py-5 shadow-[0_10px_20px_rgba(96,72,50,0.1)]">
               <p className="font-hand text-[1.8rem] leading-[0.9] text-[var(--color-warm-brown)]">
-                {card.post.title}
+                {card.displayTitle}
               </p>
             </div>
           </div>
@@ -51,12 +51,8 @@ export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
       </div>
 
       <div className="w-full px-2 text-left">
-        <p className="font-marker text-[0.72rem] uppercase tracking-[0.22em] text-[var(--color-warm-red)]">
-          {t('community.cardEyebrow')}
-        </p>
-
-        <h2 className="mt-2 font-hand text-[2rem] leading-[0.92] text-slate-900">
-          {card.post.title}
+        <h2 className="line-clamp-1 font-hand text-[1.9rem] leading-[0.95] text-slate-900">
+          {card.displayTitle}
         </h2>
 
         <p className="mt-2 line-clamp-2 min-h-[2.8rem] text-sm leading-relaxed text-slate-600">
@@ -73,12 +69,7 @@ export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
                 src={card.avatarUrl}
               />
             </div>
-            <div className="min-w-0">
-              <p className="truncate text-xs font-semibold text-slate-800">{authorName}</p>
-              <p className="truncate text-[0.65rem] uppercase tracking-[0.16em] text-slate-500">
-                {formatDate(card.post.createdAt)}
-              </p>
-            </div>
+            <p className="min-w-0 truncate text-xs font-semibold text-slate-800">{authorName}</p>
           </div>
 
           <div className="flex shrink-0 items-center gap-2.5">
@@ -92,12 +83,6 @@ export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
             </div>
           </div>
         </div>
-
-        {card.post.trip ? (
-          <div className="mt-3 inline-flex max-w-full items-center rounded-full border border-[rgba(122,75,57,0.18)] bg-[rgba(255,248,235,0.96)] px-3 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--color-warm-brown)]">
-            <span className="truncate">{card.post.trip.name}</span>
-          </div>
-        ) : null}
       </div>
     </article>
   );

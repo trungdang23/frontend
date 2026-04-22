@@ -7,6 +7,7 @@ export type CommunityFeedCard = {
   coverImageUrl: string | null;
   decorativeCommentCount: number;
   decorativeLikeCount: number;
+  displayTitle: string;
   excerpt: string;
   post: CommunityPost;
   region: Exclude<CommunityRegion, 'All'>;
@@ -122,6 +123,16 @@ function createExcerpt(content: string) {
   return `${collapsed.slice(0, 107).trimEnd()}...`;
 }
 
+function getCommunityCardTitle(post: CommunityPost) {
+  const tripName = post.trip?.name?.trim();
+
+  if (tripName) {
+    return tripName;
+  }
+
+  return post.title.trim();
+}
+
 export function decorateCommunityPosts(posts: CommunityPost[]): CommunityFeedCard[] {
   return posts.map((post) => {
     const hash = hashString(post.id);
@@ -132,6 +143,7 @@ export function decorateCommunityPosts(posts: CommunityPost[]): CommunityFeedCar
       coverImageUrl: post.coverImageUrl || post.trip?.coverImageUrl || null,
       decorativeCommentCount: (hash % 18) + 6,
       decorativeLikeCount: (hash % 260) + 48,
+      displayTitle: getCommunityCardTitle(post),
       excerpt: createExcerpt(post.content),
       post,
       region: deriveCommunityRegion(post),

@@ -226,6 +226,20 @@ Siết lại `/community` để body không tự thêm intro copy hay label ngo�
 - [x] bỏ khối title/description/summary thêm ngoài mẫu ngay trên feed
 - [x] giữ lại chỉ các phần body cốt lõi của mẫu: filter, doodle, grid card, và state fallback khi thật sự cần
 
+### FR-B2B - Community card title simplification
+
+### Mục tiêu
+
+Rút gọn phần heading của card bài viết để chỉ còn tên chuyến đi trên một dòng, không giữ metadata và tag phụ gây lệch so với mẫu đang chốt.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ eyebrow `Câu chuyện cộng đồng` khỏi card bài viết
+- [x] đổi title card sang ưu tiên `trip.name` thay vì `post.title`
+- [x] giới hạn title card còn đúng một dòng
+- [x] bỏ dòng ngày tháng trong phần metadata của card
+- [x] bỏ chip tag ở đáy card vì title đã dùng trực tiếp tên chuyến đi
+
 ### FR-B1 - Homepage scrapbook implementation
 
 ### Mục tiêu
