@@ -86,49 +86,53 @@ function PolaroidCard({
   const { t } = useI18n();
 
   return (
-    <article
-      className={cn(
-        'polaroid-card relative border border-slate-100 bg-white p-2 pb-8 ring-1 ring-black/5',
-        hoverClassName,
-      )}
+    <div
+      className="polaroid-float-frame w-full"
       style={
         {
           ['--float-rotate' as string]: `${moment.rotate}deg`,
         } as CSSProperties
       }
     >
-      <Fastener moment={moment} />
+      <article
+        className={cn(
+          'polaroid-card relative border border-slate-100 bg-white p-2 pb-8 ring-1 ring-black/5',
+          hoverClassName,
+        )}
+      >
+        <Fastener moment={moment} />
 
-      <div className="aspect-[4/3] overflow-hidden bg-[#e8e7e1]">
-        <img
-          alt={t(moment.titleKey)}
-          className="h-full w-full object-cover"
-          referrerPolicy="no-referrer"
-          src={moment.image}
-        />
-      </div>
-
-      <p className="mt-2 text-center font-hand text-lg font-bold leading-tight text-slate-800 md:text-xl">
-        {t(moment.titleKey)}
-      </p>
-
-      {moment.noteKey ? (
-        <div className="pointer-events-none absolute -right-12 top-0 w-24 opacity-80">
-          <svg className="h-8 w-8 rotate-[-30deg]" viewBox="0 0 100 100">
-            <path
-              className="text-slate-500"
-              d="M10,50 Q40,40 10,10"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-          </svg>
-          <span className="ml-2 mt-[-0.5rem] block whitespace-nowrap font-hand text-xs italic leading-none text-slate-700 md:text-sm">
-            {t(moment.noteKey)}
-          </span>
+        <div className="aspect-[4/3] overflow-hidden bg-[#e8e7e1]">
+          <img
+            alt={t(moment.titleKey)}
+            className="h-full w-full object-cover"
+            referrerPolicy="no-referrer"
+            src={moment.image}
+          />
         </div>
-      ) : null}
-    </article>
+
+        <p className="mt-2 text-center font-hand text-lg font-bold leading-tight text-slate-800 md:text-xl">
+          {t(moment.titleKey)}
+        </p>
+
+        {moment.noteKey ? (
+          <div className="pointer-events-none absolute -right-12 top-0 w-24 opacity-80">
+            <svg className="h-8 w-8 rotate-[-30deg]" viewBox="0 0 100 100">
+              <path
+                className="text-slate-500"
+                d="M10,50 Q40,40 10,10"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              />
+            </svg>
+            <span className="ml-2 mt-[-0.5rem] block whitespace-nowrap font-hand text-xs italic leading-none text-slate-700 md:text-sm">
+              {t(moment.noteKey)}
+            </span>
+          </div>
+        ) : null}
+      </article>
+    </div>
   );
 }
 

@@ -338,6 +338,18 @@ Loại bỏ trạng thái homepage tự nhảy sang URL có `#` do dùng placeho
 - [x] thay các footer placeholder link để không còn tạo `/#`
 - [x] bổ sung test nhỏ để chặn việc đưa fragment rỗng quay trở lại
 
+### FR-B1J - Polaroid hover lift and footer compaction refinement
+
+### Mục tiêu
+
+Sửa hover của polaroid để cả thẻ thật sự nổi lên thay vì chỉ ảnh bên trong phóng to, đồng thời nén footer xuống gọn hơn để ít chiếm chiều cao màn hình.
+
+### Scope của lượt triển khai này
+
+- [x] tách lớp `float` và lớp `hover` của polaroid để hover transform áp lên toàn bộ thẻ
+- [x] giữ cá tính hover riêng cho từng polaroid sau khi tách animation
+- [x] giảm padding, gap và scale trang trí của footer để footer thấp hơn
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu
