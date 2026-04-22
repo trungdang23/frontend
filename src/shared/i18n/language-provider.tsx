@@ -3,7 +3,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useState,
 } from 'react';
 import {
   Language,
@@ -11,15 +10,7 @@ import {
   LanguageContextValue,
   TranslationValues,
 } from '@/shared/i18n/language-context';
-import en from '@/shared/i18n/locales/en.json';
 import vi from '@/shared/i18n/locales/vi.json';
-
-const LANGUAGE_STORAGE_KEY = 'journey.language';
-
-const dictionaries = {
-  en,
-  vi,
-} as const;
 
 function applyDocumentLanguage(language: Language) {
   if (typeof document === 'undefined') {
@@ -28,37 +19,6 @@ function applyDocumentLanguage(language: Language) {
 
   document.documentElement.lang = language;
   document.documentElement.dataset.language = language;
-}
-
-function getStorage() {
-  if (typeof window === 'undefined') {
-    return null;
-  }
-
-  const storage = window.localStorage;
-
-  if (
-    !storage ||
-    typeof storage.getItem !== 'function' ||
-    typeof storage.setItem !== 'function'
-  ) {
-    return null;
-  }
-
-  return storage;
-}
-
-function getInitialLanguage(): Language {
-  const storage = getStorage();
-  const storedLanguage = storage?.getItem(LANGUAGE_STORAGE_KEY);
-
-  if (storedLanguage === 'vi' || storedLanguage === 'en') {
-    applyDocumentLanguage(storedLanguage);
-    return storedLanguage;
-  }
-
-  applyDocumentLanguage('vi');
-  return 'vi';
 }
 
 function getMessageValue(source: unknown, key: string): string | undefined {
@@ -87,21 +47,13 @@ function interpolate(template: string, values?: TranslationValues) {
 }
 
 export function LanguageProvider({ children }: PropsWithChildren) {
-  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+  const language: Language = 'vi';
 
   useEffect(() => {
     applyDocumentLanguage(language);
-
-    const storage = getStorage();
-
-    if (!storage) {
-      return;
-    }
-
-    storage.setItem(LANGUAGE_STORAGE_KEY, language);
   }, [language]);
 
-  const messages = dictionaries[language];
+  const messages = vi;
 
   const t = useCallback(
     (key: string, values?: TranslationValues) => {
@@ -118,20 +70,18 @@ export function LanguageProvider({ children }: PropsWithChildren) {
 
   const formatDate = useCallback(
     (value: Date | number | string) => {
-      const locale = language === 'vi' ? 'vi-VN' : 'en-US';
-
-      return new Intl.DateTimeFormat(locale, {
+      return new Intl.DateTimeFormat('vi-VN', {
         dateStyle: 'medium',
         timeStyle: 'short',
       }).format(new Date(value));
     },
-    [language],
+    [],
   );
 
   const contextValue = useMemo<LanguageContextValue>(
     () => ({
       language,
-      setLanguage,
+      setLanguage: () => undefined,
       t,
       formatDate,
     }),

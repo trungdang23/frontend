@@ -216,6 +216,28 @@ Biến route `/` từ placeholder thành homepage thật đầu tiên để ch�
 - journal route thật với renderer/editor riêng
 - profile route thật
 
+### FE-08B1A - Homepage notebook alignment theo mẫu chốt ngày 2026-04-22
+
+### Mục tiêu
+
+Đưa route `/` về sát mẫu `journey---nhật-ký-hành-trình-việt-nam` theo đúng yêu cầu đã chốt, không giữ các khối preview/dashboard phát sinh từ lượt triển khai trước.
+
+### Scope của lượt triển khai này
+
+- [x] bám layout chính của thư mục mẫu cho `hero`, cụm polaroid, bản đồ và footer
+- [x] loại bỏ `community` khỏi homepage và khỏi sticky nav của homepage
+- [x] bỏ language switch, khóa homepage về tiếng Việt
+- [x] bỏ các khối vuông/card preview phụ để giữ cảm giác sổ tay ghi chú
+- [x] giữ nguyên route map hiện tại, không mở rộng thêm surface mới ngoài homepage
+- [x] cập nhật test/check liên quan sau khi thay đổi content structure
+
+### Acceptance criteria
+
+- homepage không còn preview grid hoặc section cộng đồng
+- homepage không còn nút đổi ngôn ngữ
+- giao diện chính mang hình thức giấy note/polaroid/parchment thay vì card grid vuông
+- text hiển thị của homepage chỉ còn tiếng Việt
+
 ## FE-08C - Structured planner surfaces
 
 ### Mục tiêu

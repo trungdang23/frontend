@@ -15,7 +15,7 @@ export type FastenerPosition =
 export type AccentTone = 'sun' | 'sky' | 'leaf' | 'coral';
 
 export type HomeNavItem = {
-  anchorId: string;
+  href: string;
   labelKey: string;
   rotate: number;
   shape: NavNoteShape;
@@ -24,8 +24,6 @@ export type HomeNavItem = {
 };
 
 export type PolaroidMoment = {
-  desktopX: number;
-  desktopY: number;
   fastenerPosition: FastenerPosition;
   fastenerType: FastenerType;
   id: string;
@@ -45,17 +43,6 @@ export type MapStop = {
   y: string;
 };
 
-export type PreviewCard = {
-  anchorId: string;
-  descriptionKey: string;
-  detailKeys: [string, string];
-  eyebrowKey: string;
-  icon: 'community' | 'planner' | 'journal' | 'profile';
-  id: 'community' | 'planner' | 'journal' | 'profile';
-  titleKey: string;
-  tone: AccentTone;
-};
-
 export type FooterLink = {
   href: string;
   labelKey: string;
@@ -70,51 +57,41 @@ export type SocialStamp = {
 
 export const homeNavItems: HomeNavItem[] = [
   {
-    anchorId: 'home',
+    href: '#',
     labelKey: 'home.navigation.home',
     rotate: -4,
     shape: 'fold-right',
     tone: 'sun',
-    yOffset: 4,
+    yOffset: 2,
   },
   {
-    anchorId: 'community',
-    labelKey: 'home.navigation.community',
-    rotate: 3,
-    shape: 'torn-bottom',
-    tone: 'sky',
-    yOffset: -4,
-  },
-  {
-    anchorId: 'planner',
+    href: '#',
     labelKey: 'home.navigation.planner',
     rotate: -2,
     shape: 'notebook',
     tone: 'paper',
-    yOffset: 7,
+    yOffset: 6,
   },
   {
-    anchorId: 'journal',
+    href: '#',
     labelKey: 'home.navigation.journal',
     rotate: 5,
     shape: 'straight',
     tone: 'leaf',
-    yOffset: -1,
+    yOffset: -2,
   },
   {
-    anchorId: 'profile',
+    href: '#',
     labelKey: 'home.navigation.profile',
     rotate: -3,
     shape: 'fold-left',
     tone: 'coral',
-    yOffset: 5,
+    yOffset: 4,
   },
 ];
 
 export const polaroidMoments: PolaroidMoment[] = [
   {
-    desktopX: 49,
-    desktopY: 12,
     fastenerPosition: 'top-center',
     fastenerType: 'tape',
     id: 'ha-long-clouds',
@@ -126,8 +103,6 @@ export const polaroidMoments: PolaroidMoment[] = [
     titleKey: 'home.polaroids.haLong.title',
   },
   {
-    desktopX: 76,
-    desktopY: 23,
     fastenerPosition: 'top-right',
     fastenerType: 'pin',
     id: 'hue-wall',
@@ -138,9 +113,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     titleKey: 'home.polaroids.hue.title',
   },
   {
-    desktopX: 85,
-    desktopY: 50,
-    fastenerPosition: 'right-center',
+    fastenerPosition: 'top-left',
     fastenerType: 'washi',
     id: 'hoi-an-lantern',
     image:
@@ -151,9 +124,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     titleKey: 'home.polaroids.hoiAn.title',
   },
   {
-    desktopX: 77,
-    desktopY: 78,
-    fastenerPosition: 'top-center',
+    fastenerPosition: 'top-right',
     fastenerType: 'tape',
     id: 'nha-trang-wave',
     image:
@@ -163,8 +134,6 @@ export const polaroidMoments: PolaroidMoment[] = [
     titleKey: 'home.polaroids.nhaTrang.title',
   },
   {
-    desktopX: 50,
-    desktopY: 87,
     fastenerPosition: 'top-left',
     fastenerType: 'pin',
     id: 'tam-coc-morning',
@@ -176,8 +145,6 @@ export const polaroidMoments: PolaroidMoment[] = [
     titleKey: 'home.polaroids.tamCoc.title',
   },
   {
-    desktopX: 22,
-    desktopY: 76,
     fastenerPosition: 'left-center',
     fastenerType: 'washi',
     id: 'mekong-evening',
@@ -188,8 +155,6 @@ export const polaroidMoments: PolaroidMoment[] = [
     titleKey: 'home.polaroids.mekong.title',
   },
   {
-    desktopX: 13,
-    desktopY: 47,
     fastenerPosition: 'top-left',
     fastenerType: 'tape',
     id: 'da-lat-mist',
@@ -201,8 +166,6 @@ export const polaroidMoments: PolaroidMoment[] = [
     titleKey: 'home.polaroids.daLat.title',
   },
   {
-    desktopX: 24,
-    desktopY: 22,
     fastenerPosition: 'top-center',
     fastenerType: 'pin',
     id: 'sapa-dawn',
@@ -220,23 +183,23 @@ export const mapStops: MapStop[] = [
     id: 'sapa',
     titleKey: 'home.map.locations.sapa.title',
     tone: 'sky',
-    x: '38%',
-    y: '16%',
+    x: '48%',
+    y: '10%',
   },
   {
     descriptionKey: 'home.map.locations.hanoi.description',
     id: 'hanoi',
     titleKey: 'home.map.locations.hanoi.title',
     tone: 'coral',
-    x: '56%',
-    y: '24%',
+    x: '65%',
+    y: '16%',
   },
   {
     descriptionKey: 'home.map.locations.hue.description',
     id: 'hue',
     titleKey: 'home.map.locations.hue.title',
     tone: 'sun',
-    x: '62%',
+    x: '78%',
     y: '48%',
   },
   {
@@ -244,85 +207,30 @@ export const mapStops: MapStop[] = [
     id: 'nha-trang',
     titleKey: 'home.map.locations.nhaTrang.title',
     tone: 'leaf',
-    x: '69%',
-    y: '66%',
+    x: '88%',
+    y: '65%',
   },
   {
     descriptionKey: 'home.map.locations.saiGon.description',
     id: 'sai-gon',
     titleKey: 'home.map.locations.saiGon.title',
     tone: 'coral',
-    x: '60%',
-    y: '83%',
-  },
-];
-
-export const homePreviewCards: PreviewCard[] = [
-  {
-    anchorId: 'community',
-    descriptionKey: 'home.previews.community.description',
-    detailKeys: [
-      'home.previews.community.detailOne',
-      'home.previews.community.detailTwo',
-    ],
-    eyebrowKey: 'home.previews.community.eyebrow',
-    icon: 'community',
-    id: 'community',
-    titleKey: 'home.previews.community.title',
-    tone: 'sun',
-  },
-  {
-    anchorId: 'planner',
-    descriptionKey: 'home.previews.planner.description',
-    detailKeys: [
-      'home.previews.planner.detailOne',
-      'home.previews.planner.detailTwo',
-    ],
-    eyebrowKey: 'home.previews.planner.eyebrow',
-    icon: 'planner',
-    id: 'planner',
-    titleKey: 'home.previews.planner.title',
-    tone: 'sky',
-  },
-  {
-    anchorId: 'journal',
-    descriptionKey: 'home.previews.journal.description',
-    detailKeys: [
-      'home.previews.journal.detailOne',
-      'home.previews.journal.detailTwo',
-    ],
-    eyebrowKey: 'home.previews.journal.eyebrow',
-    icon: 'journal',
-    id: 'journal',
-    titleKey: 'home.previews.journal.title',
-    tone: 'leaf',
-  },
-  {
-    anchorId: 'profile',
-    descriptionKey: 'home.previews.profile.description',
-    detailKeys: [
-      'home.previews.profile.detailOne',
-      'home.previews.profile.detailTwo',
-    ],
-    eyebrowKey: 'home.previews.profile.eyebrow',
-    icon: 'profile',
-    id: 'profile',
-    titleKey: 'home.previews.profile.title',
-    tone: 'coral',
+    x: '70%',
+    y: '82%',
   },
 ];
 
 export const footerLinks: FooterLink[] = [
   {
-    href: '#home',
+    href: '#',
     labelKey: 'home.footer.links.about',
   },
   {
-    href: '#planner',
+    href: '#',
     labelKey: 'home.footer.links.terms',
   },
   {
-    href: '#footer',
+    href: '#',
     labelKey: 'home.footer.links.contact',
   },
 ];

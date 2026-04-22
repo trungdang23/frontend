@@ -9,15 +9,15 @@ import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
 const tapeToneClasses: Record<AccentTone, string> = {
-  coral: 'bg-[rgba(242,160,136,0.82)]',
-  leaf: 'bg-[rgba(167,215,173,0.82)]',
-  sky: 'bg-[rgba(153,205,232,0.82)]',
-  sun: 'bg-[rgba(242,204,111,0.84)]',
+  coral: 'bg-[rgba(242,160,136,0.78)]',
+  leaf: 'bg-[rgba(167,215,173,0.78)]',
+  sky: 'bg-[rgba(153,205,232,0.78)]',
+  sun: 'bg-[rgba(242,204,111,0.82)]',
 };
 
 const fastenerPositionClasses: Record<FastenerPosition, string> = {
-  'left-center': 'left-[-0.95rem] top-1/3 -rotate-90',
-  'right-center': 'right-[-0.95rem] top-1/3 rotate-90',
+  'left-center': 'left-[-0.95rem] top-1/4 -rotate-90',
+  'right-center': 'right-[-0.95rem] top-1/4 rotate-90',
   'top-center': 'left-1/2 top-[-0.95rem] -translate-x-1/2',
   'top-left': 'left-[10%] top-[-0.8rem] -rotate-12',
   'top-right': 'right-[10%] top-[-0.8rem] rotate-12',
@@ -26,105 +26,93 @@ const fastenerPositionClasses: Record<FastenerPosition, string> = {
 export function PolaroidCluster() {
   return (
     <>
-      <div className="pointer-events-none absolute inset-0 hidden lg:block">
-        {polaroidMoments.map((moment, index) => (
-          <PolaroidCard
-            animationDelayMs={index * 90}
-            containerStyle={
-              {
-                left: `${moment.desktopX}%`,
-                top: `${moment.desktopY}%`,
+      <div className="absolute inset-0 hidden lg:block">
+        {polaroidMoments.map((moment, index) => {
+          const angle = (index / polaroidMoments.length) * Math.PI * 2 - Math.PI / 2;
+          const x = 50 + 38 * Math.cos(angle);
+          const y = 50 + 32 * Math.sin(angle);
+
+          return (
+            <div
+              className="absolute w-32 xl:w-40"
+              key={moment.id}
+              style={{
+                left: `${x}%`,
+                top: `${y}%`,
                 transform: 'translate(-50%, -50%)',
-              } as CSSProperties
-            }
-            key={moment.id}
-            moment={moment}
-            wrapperClassName="absolute w-36 xl:w-40"
-          />
-        ))}
+              }}
+            >
+              <PolaroidCard moment={moment} />
+            </div>
+          );
+        })}
       </div>
 
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:hidden">
-        {polaroidMoments.slice(0, 4).map((moment, index) => (
-          <PolaroidCard
-            animationDelayMs={index * 90}
-            containerStyle={
+      <div className="mt-8 grid w-full max-w-2xl grid-cols-2 gap-4 sm:gap-5 lg:hidden">
+        {polaroidMoments.map((moment, index) => (
+          <div
+            key={moment.id}
+            style={
               {
                 transform:
                   index % 2 === 0
-                    ? `translateY(0.45rem) rotate(${moment.rotate}deg)`
-                    : `translateY(-0.25rem) rotate(${moment.rotate}deg)`,
+                    ? 'translateY(0.45rem)'
+                    : 'translateY(-0.25rem)',
               } as CSSProperties
             }
-            key={moment.id}
-            moment={moment}
-            wrapperClassName="w-full"
-          />
+          >
+            <PolaroidCard moment={moment} />
+          </div>
         ))}
       </div>
     </>
   );
 }
 
-type PolaroidCardProps = {
-  animationDelayMs?: number;
-  containerStyle?: CSSProperties;
-  moment: PolaroidMoment;
-  wrapperClassName?: string;
-};
-
-function PolaroidCard({
-  animationDelayMs,
-  containerStyle,
-  moment,
-  wrapperClassName,
-}: PolaroidCardProps) {
+function PolaroidCard({ moment }: { moment: PolaroidMoment }) {
   const { t } = useI18n();
 
   return (
-    <div className={cn(wrapperClassName)} style={containerStyle}>
-      <article
-        className="polaroid-card p-2 pb-7"
-        style={
-          {
-            animationDelay: `${animationDelayMs ?? 0}ms`,
-            ['--float-rotate' as string]: '0deg',
-          } as CSSProperties
-        }
-      >
-        <Fastener moment={moment} />
+    <article
+      className="polaroid-card relative border border-slate-100 bg-white p-2 pb-8 ring-1 ring-black/5"
+      style={
+        {
+          ['--float-rotate' as string]: `${moment.rotate}deg`,
+        } as CSSProperties
+      }
+    >
+      <Fastener moment={moment} />
 
-        <div className="aspect-[4/3] overflow-hidden rounded-[0.35rem] bg-[#ece7dd]">
-          <img
-            alt={t(moment.titleKey)}
-            className="h-full w-full object-cover"
-            referrerPolicy="no-referrer"
-            src={moment.image}
-          />
+      <div className="aspect-[4/3] overflow-hidden bg-[#e8e7e1]">
+        <img
+          alt={t(moment.titleKey)}
+          className="h-full w-full object-cover"
+          referrerPolicy="no-referrer"
+          src={moment.image}
+        />
+      </div>
+
+      <p className="mt-2 text-center font-hand text-lg font-bold leading-tight text-slate-800 md:text-xl">
+        {t(moment.titleKey)}
+      </p>
+
+      {moment.noteKey ? (
+        <div className="pointer-events-none absolute -right-12 top-0 w-24 opacity-80">
+          <svg className="h-8 w-8 rotate-[-30deg]" viewBox="0 0 100 100">
+            <path
+              className="text-slate-500"
+              d="M10,50 Q40,40 10,10"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+          </svg>
+          <span className="ml-2 mt-[-0.5rem] block whitespace-nowrap font-hand text-xs italic leading-none text-slate-700 md:text-sm">
+            {t(moment.noteKey)}
+          </span>
         </div>
-
-        <p className="mt-3 text-center font-hand text-[1.45rem] font-bold leading-none text-[var(--color-ink)]">
-          {t(moment.titleKey)}
-        </p>
-
-        {moment.noteKey ? (
-          <div className="absolute -right-10 top-2 w-20">
-            <svg className="h-8 w-8 rotate-[-28deg] text-[rgba(122,75,57,0.74)]" viewBox="0 0 100 100">
-              <path
-                d="M10 54c20-10 26-16 36-34M46 20l4 14m-4-14 14 2"
-                fill="none"
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeWidth="3"
-              />
-            </svg>
-            <span className="mt-[-0.4rem] block font-hand text-lg font-semibold italic leading-none text-[var(--color-warm-brown)]">
-              {t(moment.noteKey)}
-            </span>
-          </div>
-        ) : null}
-      </article>
-    </div>
+      ) : null}
+    </article>
   );
 }
 
@@ -133,7 +121,7 @@ function Fastener({ moment }: { moment: PolaroidMoment }) {
     return (
       <span
         className={cn(
-          'absolute z-20 inline-flex h-4 w-4 items-center justify-center rounded-full border border-[rgba(126,46,36,0.7)] bg-[var(--color-warm-red)] shadow-md',
+          'absolute z-20 inline-flex h-4 w-4 items-center justify-center rounded-full border border-red-800 bg-red-600 shadow-md',
           fastenerPositionClasses[moment.fastenerPosition],
         )}
       >
@@ -145,9 +133,9 @@ function Fastener({ moment }: { moment: PolaroidMoment }) {
   return (
     <span
       className={cn(
-        'absolute z-10 border border-white/70 shadow-sm',
+        'absolute z-10 border border-white/20 backdrop-blur-[1px]',
         moment.fastenerType === 'washi'
-          ? 'washi-strip h-7 w-20'
+          ? 'washi-strip h-7 w-20 opacity-80'
           : 'h-6 w-16 rounded-[0.35rem]',
         fastenerPositionClasses[moment.fastenerPosition],
         tapeToneClasses[moment.tone],
