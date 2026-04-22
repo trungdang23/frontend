@@ -1,6 +1,12 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { GuestRoute } from '@/features/auth/routes/guest-route';
+import { LoginPage } from '@/features/auth/routes/login-page';
+import { ProtectedRoute } from '@/features/auth/routes/protected-route';
+import { RegisterPage } from '@/features/auth/routes/register-page';
 import { CommunityFeedPage } from '@/features/community/routes/community-feed-page';
 import { HomePage } from '@/features/home/routes/home-page';
+import { ProfilePage } from '@/features/profile/routes/profile-page';
+import { PlannerPage } from '@/features/trips/routes/planner-page';
 
 export function AppRouter() {
   return (
@@ -8,6 +14,46 @@ export function AppRouter() {
       <Routes>
         <Route element={<HomePage />} path="/" />
         <Route element={<CommunityFeedPage />} path="/community" />
+        <Route
+          element={(
+            <GuestRoute>
+              <LoginPage />
+            </GuestRoute>
+          )}
+          path="/auth/login"
+        />
+        <Route
+          element={(
+            <GuestRoute>
+              <RegisterPage />
+            </GuestRoute>
+          )}
+          path="/auth/register"
+        />
+        <Route
+          element={(
+            <ProtectedRoute>
+              <Navigate replace to="/app/planner" />
+            </ProtectedRoute>
+          )}
+          path="/app"
+        />
+        <Route
+          element={(
+            <ProtectedRoute>
+              <PlannerPage />
+            </ProtectedRoute>
+          )}
+          path="/app/planner"
+        />
+        <Route
+          element={(
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          )}
+          path="/app/profile"
+        />
         <Route element={<Navigate replace to="/" />} path="*" />
       </Routes>
     </BrowserRouter>

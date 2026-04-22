@@ -557,6 +557,285 @@
       height: 1.22rem;
     }
   }
+
+  .auth-grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.62' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  .auth-notebook {
+    padding: 0.85rem;
+    border: 1px solid rgba(85, 56, 31, 0.26);
+    border-radius: 2.1rem;
+    background: linear-gradient(135deg, #8d5b36 0%, #734522 48%, #a56e3c 100%);
+    box-shadow:
+      0 30px 55px rgba(73, 51, 34, 0.24),
+      0 8px 14px rgba(73, 51, 34, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  .auth-page {
+    min-height: 32rem;
+    background:
+      linear-gradient(180deg, rgba(255, 252, 245, 0.98), rgba(249, 239, 219, 0.96)),
+      repeating-linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.26) 0,
+        rgba(255, 255, 255, 0.26) 0.12rem,
+        transparent 0.12rem,
+        transparent 2.9rem
+      );
+  }
+
+  .auth-page-lines {
+    background-image:
+      linear-gradient(180deg, rgba(255, 252, 245, 0.98), rgba(249, 239, 219, 0.96)),
+      repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 2.92rem,
+        rgba(104, 84, 69, 0.26) 2.92rem,
+        rgba(104, 84, 69, 0.26) 3rem
+      );
+  }
+
+  .auth-photo-frame {
+    position: relative;
+    padding: 1rem 1rem 3.55rem;
+    border: 1px solid rgba(126, 102, 81, 0.2);
+    background: #fff;
+    box-shadow:
+      0 18px 34px rgba(74, 54, 39, 0.18),
+      0 4px 9px rgba(74, 54, 39, 0.08);
+  }
+
+  .auth-photo-frame::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -0.9rem;
+    width: 4.8rem;
+    height: 1.55rem;
+    border-radius: 0.2rem;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        #e08a5b 0,
+        #e08a5b 0.7rem,
+        #f0d172 0.7rem,
+        #f0d172 1.4rem
+      );
+    transform: translateX(-50%) rotate(-8deg);
+    opacity: 0.96;
+    box-shadow: 0 6px 12px rgba(73, 51, 34, 0.12);
+  }
+
+  .auth-washi-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4rem;
+    padding: 0.75rem 2.4rem;
+    border: none;
+    border-radius: 0.32rem;
+    color: #1f1612;
+    font-family: var(--font-hand);
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1;
+    background:
+      linear-gradient(
+        90deg,
+        #f3cf6b 0 14%,
+        #fff7cf 14% 22%,
+        #8cd6c7 22% 36%,
+        #f7b878 36% 50%,
+        #f49eb1 50% 64%,
+        #97d0eb 64% 78%,
+        #f6e17c 78% 100%
+      );
+    box-shadow:
+      0 14px 22px rgba(82, 60, 42, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.42);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      filter 180ms ease;
+  }
+
+  .auth-washi-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.2), transparent 42%);
+    pointer-events: none;
+  }
+
+  .auth-washi-button:hover,
+  .auth-washi-button:focus-visible {
+    transform: translateY(-0.2rem) rotate(-1deg);
+    box-shadow:
+      0 20px 30px rgba(82, 60, 42, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    filter: saturate(1.04) brightness(1.02);
+    outline: none;
+  }
+
+  .auth-washi-button:disabled {
+    transform: none;
+    cursor: default;
+    opacity: 0.74;
+    box-shadow:
+      0 12px 18px rgba(82, 60, 42, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  }
+
+  .auth-stamp-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 3.6rem;
+    padding: 0.55rem 1.6rem;
+    border: 3px solid rgba(131, 87, 62, 0.68);
+    border-radius: 0.95rem;
+    background: rgba(255, 251, 245, 0.8);
+    color: #84503b;
+    font-family: var(--font-hand);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    box-shadow: 0 12px 18px rgba(83, 62, 44, 0.14);
+    transform: rotate(-8deg);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease,
+      background 180ms ease;
+  }
+
+  .auth-stamp-button::before {
+    content: '';
+    position: absolute;
+    inset: 0.28rem;
+    border: 1.5px dashed rgba(131, 87, 62, 0.52);
+    border-radius: 0.62rem;
+    pointer-events: none;
+  }
+
+  .auth-stamp-button:hover,
+  .auth-stamp-button:focus-visible {
+    transform: translateY(-0.18rem) rotate(-6deg) scale(1.02);
+    background: rgba(255, 252, 247, 0.94);
+    box-shadow: 0 16px 24px rgba(83, 62, 44, 0.18);
+    outline: none;
+  }
+
+  .auth-stamp-button:disabled {
+    transform: rotate(-8deg);
+    cursor: default;
+    opacity: 0.74;
+  }
+
+  .auth-stamp-button--small {
+    min-height: 3.05rem;
+    padding: 0.45rem 1.2rem;
+    font-size: 1.65rem;
+  }
+
+  .auth-stamp-button--wide {
+    width: 100%;
+    max-width: 17rem;
+  }
+
+  .auth-compass-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4.9rem;
+    height: 4.9rem;
+    border: 3px solid rgba(141, 104, 67, 0.72);
+    border-radius: 999px;
+    background:
+      radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.7), transparent 30%),
+      linear-gradient(180deg, #fff8e8 0%, #efdfb9 100%);
+    box-shadow:
+      0 14px 24px rgba(83, 62, 44, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.52);
+  }
+
+  .auth-line-input {
+    width: 100%;
+    border: 0;
+    border-bottom: 2px solid rgba(108, 88, 72, 0.68);
+    padding: 0 0.35rem 0.52rem;
+    background: transparent;
+    color: #221813;
+    font-family: var(--font-hand);
+    font-size: 2rem;
+    outline: none;
+    transition:
+      border-color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .auth-line-input:focus {
+    border-color: #653c28;
+  }
+
+  .auth-line-input:disabled {
+    opacity: 0.72;
+  }
+
+  .auth-error-note {
+    border: 1px solid rgba(167, 70, 51, 0.24);
+    border-radius: 1rem;
+    background: rgba(218, 126, 105, 0.12);
+    padding: 0.75rem 0.95rem;
+    color: #8d3d2b;
+    font-size: 0.96rem;
+    line-height: 1.55;
+    box-shadow: 0 8px 16px rgba(113, 78, 55, 0.08);
+  }
+
+  @media (max-width: 1023px) {
+    .auth-notebook {
+      padding: 0.75rem;
+    }
+
+    .auth-page {
+      min-height: 0;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .auth-washi-button {
+      width: 100%;
+      max-width: none;
+      min-height: 3.7rem;
+      font-size: 1.95rem;
+    }
+
+    .auth-stamp-button {
+      font-size: 1.7rem;
+    }
+
+    .auth-photo-frame::before {
+      width: 4rem;
+    }
+
+    .auth-compass-badge {
+      width: 4rem;
+      height: 4rem;
+    }
+
+    .auth-line-input {
+      font-size: 1.78rem;
+    }
+  }
 }
 
 @layer utilities {

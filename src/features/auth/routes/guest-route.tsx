@@ -1,4 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom';
+import { resolvePostAuthPath } from '@/features/auth/lib/resolve-post-auth-path';
 import { useAuth } from '@/features/auth/session/use-auth';
 
 type GuestRouteProps = {
@@ -14,16 +15,8 @@ export function GuestRoute({ children }: GuestRouteProps) {
   }
 
   if (auth.status === 'authenticated') {
-    return <Navigate replace to={resolveGuestRedirectPath(location.state?.from?.pathname)} />;
+    return <Navigate replace to={resolvePostAuthPath(location.state?.from?.pathname)} />;
   }
 
   return <>{children}</>;
-}
-
-function resolveGuestRedirectPath(nextPathname: unknown) {
-  if (typeof nextPathname !== 'string' || nextPathname.length === 0) {
-    return '/app';
-  }
-
-  return nextPathname.startsWith('/auth') ? '/app' : nextPathname;
 }

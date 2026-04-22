@@ -27,4 +27,9 @@ describe('homepage scaffold', () => {
   it('routes the shared community navigation note to the real community route', () => {
     expect(homeNavItems.find((item) => item.labelKey === 'home.navigation.community')?.href).toBe('/community');
   });
+
+  it('routes planner and profile notes to protected destinations', () => {
+    expect(homeNavItems.find((item) => item.labelKey === 'home.navigation.planner')?.href).toBe('/app/planner');
+    expect(homeNavItems.find((item) => item.labelKey === 'home.navigation.profile')?.href).toBe('/app/profile');
+  });
 });

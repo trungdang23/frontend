@@ -252,6 +252,21 @@ Rút gọn phần heading của card bài viết để chỉ còn tên chuyến 
 - [x] bỏ dòng ngày tháng trong phần metadata của card
 - [x] bỏ chip tag ở đáy card vì title đã dùng trực tiếp tên chuyến đi
 
+### FR-B3 - Auth scrapbook gate cho planner và profile
+
+### Mục tiêu
+
+Biến các điểm vào `Lập Kế Hoạch` và `Cá Nhân` từ homepage thành route thật có chặn đăng nhập, đồng thời dựng màn `Đăng Nhập` theo visual cuốn sổ mở gần ảnh tham chiếu và mở được sang `Đăng Ký`.
+
+### Scope của lượt triển khai này
+
+- [x] thêm route `auth/login` và `auth/register`
+- [x] dựng trang `Đăng Nhập` theo bố cục notebook mở, khác mẫu đăng ký nhưng cùng chất liệu giấy/sổ tay
+- [x] giữ text trên auth screen gọn đúng các nhãn cốt lõi của mẫu, không thêm intro copy thừa
+- [x] thêm nút mở sang page đăng ký khi chưa có tài khoản
+- [x] nối `Lập Kế Hoạch` và `Cá Nhân` sang route protected thật thay vì trỏ về `/`
+- [x] đảm bảo khi đăng nhập xong người dùng quay lại route protected vừa chọn
+
 ### FR-B1 - Homepage scrapbook implementation
 
 ### Mục tiêu

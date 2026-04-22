@@ -47,7 +47,7 @@ export const homeNavItems: HomeNavItem[] = [
     yOffset: -4,
   },
   {
-    href: '/',
+    href: '/app/planner',
     labelKey: 'home.navigation.planner',
     rotate: -2,
     shape: 'notebook',
@@ -63,7 +63,7 @@ export const homeNavItems: HomeNavItem[] = [
     yOffset: -2,
   },
   {
-    href: '/',
+    href: '/app/profile',
     labelKey: 'home.navigation.profile',
     rotate: -3,
     shape: 'fold-left',
