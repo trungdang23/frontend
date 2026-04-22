@@ -5,7 +5,8 @@ Frontend package cho sản phẩm `journey`.
 ## Trạng thái hiện tại
 
 - `frontend/` đang dùng `React + Vite + TypeScript`.
-- Runtime UI hiện ở trạng thái `reset có chủ đích`: `src/main.tsx` chỉ render placeholder để giữ build, test, deploy, auth/session infrastructure, và API modules còn sống trong lúc chốt lại trải nghiệm mới.
+- Runtime UI không còn chỉ là placeholder. Route `/` đã được dựng thành homepage scrapbook đầu tiên để chốt visual direction cho lần rebuild này.
+- Các surface khác như `community`, `planner`, `journal`, và `profile` hiện vẫn đang ở mức foundation/preview và sẽ được triển khai dần ở các slice tiếp theo.
 - Những phần nền vẫn còn giá trị và đang được giữ:
   - shared API client + API error handling
   - auth session modules
@@ -55,5 +56,5 @@ pnpm build
 ## Ghi chú quan trọng
 
 - Bộ doc trong `frontend/documents/` hiện là source of truth cho lần rebuild này.
-- Không nên đọc state hiện tại của `src/` rồi giả định rằng product direction đã bị bỏ; ngược lại, source đang được làm gọn để chuẩn bị dựng lại đúng hướng.
+- Không nên đọc state hiện tại của `src/` rồi giả định rằng product direction đã bị bỏ; ngược lại, source đang được dựng lại từng slice theo hướng `Digital Scrapbook`.
 - Không nên tiếp tục mở rộng UI cũ hoặc dựng thêm route cũ dựa trên các giả định trước reset.

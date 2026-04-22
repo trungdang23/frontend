@@ -1,0 +1,348 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&family=Caveat:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-hand: "Caveat", cursive;
+
+  --color-page: #f4ead6;
+  --color-paper: #fff9ee;
+  --color-paper-strong: #f5e5c3;
+  --color-ink: #201916;
+  --color-ink-soft: #66594d;
+  --color-ink-faint: #8d7f72;
+  --color-warm-yellow: #f2cc6f;
+  --color-warm-blue: #99cde8;
+  --color-warm-green: #a7d7ad;
+  --color-warm-coral: #f2a088;
+  --color-warm-red: #d76355;
+  --color-warm-brown: #7a4b39;
+}
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    background: var(--color-page);
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-height: 100vh;
+    margin: 0;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.72), transparent 34%),
+      radial-gradient(circle at bottom right, rgba(153, 205, 232, 0.26), transparent 28%),
+      linear-gradient(180deg, #f8f1e5 0%, #f2e8d8 44%, #ebddc8 100%);
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.34), transparent 38%),
+      radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.22), transparent 18%),
+      radial-gradient(circle at 80% 75%, rgba(122, 75, 57, 0.08), transparent 22%);
+    mix-blend-mode: multiply;
+    opacity: 0.6;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  a {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #root {
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .page-backdrop {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .paper-panel {
+    position: relative;
+    border: 1px solid rgba(122, 75, 57, 0.16);
+    border-radius: 2rem;
+    background:
+      linear-gradient(180deg, rgba(255, 252, 245, 0.94), rgba(255, 247, 233, 0.92));
+    box-shadow:
+      0 22px 48px rgba(96, 72, 50, 0.12),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  }
+
+  .glass-panel {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 249, 239, 0.78);
+    box-shadow: 0 18px 35px rgba(96, 72, 50, 0.12);
+    backdrop-filter: blur(12px);
+  }
+
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-hand);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--color-warm-brown);
+  }
+
+  .section-label::before {
+    content: '';
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 999px;
+    background: rgba(215, 99, 85, 0.88);
+    box-shadow: 0 0 0 0.32rem rgba(215, 99, 85, 0.16);
+  }
+
+  .nav-note {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 4.15rem;
+    padding: 0.95rem 1.4rem;
+    overflow: hidden;
+    border: 1px solid rgba(107, 84, 63, 0.18);
+    box-shadow:
+      0 16px 28px rgba(98, 74, 51, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    font-family: var(--font-hand);
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg));
+    animation: note-drop 0.75s ease both;
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .nav-note::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 40%);
+    pointer-events: none;
+  }
+
+  .nav-note:hover,
+  .nav-note:focus-visible {
+    transform: translateY(calc(var(--note-offset, 0px) + 0.35rem))
+      rotate(var(--note-rotate, 0deg)) scale(1.02);
+    box-shadow:
+      0 20px 32px rgba(98, 74, 51, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    outline: none;
+  }
+
+  .nav-note--fold-right {
+    clip-path: polygon(0 0, 100% 0, 100% 84%, 86% 100%, 0 100%);
+  }
+
+  .nav-note--torn-bottom {
+    clip-path: polygon(
+      0 0,
+      100% 0,
+      100% 88%,
+      96% 94%,
+      90% 90%,
+      84% 97%,
+      75% 89%,
+      66% 96%,
+      57% 89%,
+      48% 97%,
+      39% 90%,
+      30% 96%,
+      21% 89%,
+      12% 95%,
+      5% 88%,
+      0 92%
+    );
+  }
+
+  .nav-note--notebook {
+    background-image:
+      linear-gradient(90deg, rgba(215, 99, 85, 0.24) 0, rgba(215, 99, 85, 0.24) 2px, transparent 2px),
+      repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 1.1rem,
+        rgba(95, 157, 216, 0.22) 1.1rem,
+        rgba(95, 157, 216, 0.22) 1.22rem
+      );
+    background-position: 1.15rem 0, 0 0;
+    background-repeat: no-repeat;
+    clip-path: polygon(
+      6% 0,
+      100% 0,
+      100% 100%,
+      6% 100%,
+      4% 97%,
+      6% 92%,
+      4% 87%,
+      6% 82%,
+      4% 77%,
+      6% 72%,
+      4% 67%,
+      6% 62%,
+      4% 57%,
+      6% 52%,
+      4% 47%,
+      6% 42%,
+      4% 37%,
+      6% 32%,
+      4% 27%,
+      6% 22%,
+      4% 17%,
+      6% 12%,
+      4% 7%,
+      6% 2%
+    );
+  }
+
+  .nav-note--straight {
+    border-radius: 1.2rem;
+  }
+
+  .nav-note--fold-left {
+    clip-path: polygon(100% 0, 100% 100%, 14% 100%, 0 84%, 0 0);
+  }
+
+  .tape-tab {
+    position: absolute;
+    width: 4.4rem;
+    height: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 0.4rem;
+    box-shadow: 0 10px 18px rgba(122, 75, 57, 0.1);
+    opacity: 0.92;
+  }
+
+  .tape-tab--sun {
+    background: rgba(242, 204, 111, 0.82);
+  }
+
+  .tape-tab--sky {
+    background: rgba(153, 205, 232, 0.82);
+  }
+
+  .tape-tab--leaf {
+    background: rgba(167, 215, 173, 0.84);
+  }
+
+  .tape-tab--coral {
+    background: rgba(242, 160, 136, 0.82);
+  }
+
+  .polaroid-card {
+    position: relative;
+    border: 1px solid rgba(96, 72, 50, 0.12);
+    border-radius: 0.5rem 0.5rem 0.95rem 0.95rem;
+    background: rgba(255, 253, 248, 0.98);
+    box-shadow: 0 18px 28px rgba(96, 72, 50, 0.16);
+    animation: floaty 7.6s ease-in-out infinite;
+  }
+
+  .polaroid-card::after {
+    content: '';
+    position: absolute;
+    inset: auto 10% -1rem;
+    height: 1rem;
+    border-radius: 999px;
+    background: rgba(58, 43, 31, 0.16);
+    filter: blur(12px);
+    z-index: -1;
+  }
+
+  .washi-strip {
+    clip-path: polygon(6% 0, 94% 4%, 100% 50%, 94% 96%, 6% 100%, 0 50%);
+  }
+
+  .scrapbook-sticker {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid rgba(122, 75, 57, 0.14);
+    background: rgba(255, 250, 242, 0.88);
+    box-shadow: 0 10px 16px rgba(96, 72, 50, 0.12);
+    backdrop-filter: blur(8px);
+  }
+
+  .stamp-button {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.6rem;
+    height: 4.1rem;
+    border: 2px solid rgba(255, 255, 255, 0.82);
+    color: white;
+    transform: rotate(var(--stamp-rotate, 0deg));
+    box-shadow: 0 16px 24px rgba(96, 72, 50, 0.12);
+    transition:
+      transform 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .stamp-button:hover,
+  .stamp-button:focus-visible {
+    transform: translateY(-0.2rem) rotate(var(--stamp-rotate, 0deg));
+    box-shadow: 0 20px 30px rgba(96, 72, 50, 0.16);
+    outline: none;
+  }
+}
+
+@layer utilities {
+  .text-ink-soft {
+    color: var(--color-ink-soft);
+  }
+}
+
+@keyframes note-drop {
+  from {
+    opacity: 0;
+    transform: translateY(calc(var(--note-offset, 0px) - 1.5rem)) rotate(-3deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg));
+  }
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--float-rotate, 0deg));
+  }
+
+  50% {
+    transform: translateY(-0.45rem) rotate(var(--float-rotate, 0deg));
+  }
+}

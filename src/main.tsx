@@ -1,20 +1,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-
-export function ResetPlaceholderApp() {
-  return (
-    <main>
-      <h1>Journey frontend UI reset in progress</h1>
-      <p>
-        Presentation layer has been intentionally removed. Deploy, config, and
-        API infrastructure are being kept while the new UI is rebuilt.
-      </p>
-    </main>
-  );
-}
+import { AppProviders } from '@/app/providers/app-providers';
+import { AppRouter } from '@/app/router/app-router';
+import '@/app/styles/index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ResetPlaceholderApp />
+    <AppProviders>
+      <AppRouter />
+    </AppProviders>
   </StrictMode>,
 );

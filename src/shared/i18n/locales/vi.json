@@ -119,6 +119,144 @@
       }
     }
   },
+  "home": {
+    "navigation": {
+      "ariaLabel": "Điều hướng scrapbook của trang chủ",
+      "home": "Trang Chủ",
+      "community": "Cộng Đồng",
+      "planner": "Lập Kế Hoạch",
+      "journal": "Tạo Nhật Ký",
+      "profile": "Cá Nhân"
+    },
+    "hero": {
+      "eyebrow": "Journey scrapbook landing",
+      "titleLine1": "Nhật Ký",
+      "titleLine2": "Hành Trình",
+      "titleLine3": "Việt Nam",
+      "description": "Trang chủ này mở cảm giác scrapbook trước: ảnh chụp, giấy dán, bản đồ và các lớp preview để người dùng hiểu Journey là nơi gom cảm hứng, chuẩn bị chuyến đi và kể lại hành trình của mình.",
+      "primaryCta": "Xem khu nhật ký",
+      "secondaryCta": "Khám phá community",
+      "readyLabel": "Nhịp trải nghiệm",
+      "readyValue": "Ấm, có chất du lịch, nhiều bề mặt giấy và đủ rõ cấu trúc để tiếp tục phát triển thành product thật.",
+      "surfaceLabel": "Scope vòng này",
+      "surfaceValue": "Triển khai riêng homepage trước. Community, planner, journal và profile hiện mới dừng ở mức preview ngay trên trang chủ."
+    },
+    "floatingNote": {
+      "eyebrow": "Ghi chú trang chủ",
+      "title": "Trang chủ cần gợi cảm hứng trước khi dẫn người dùng sang thao tác cụ thể.",
+      "description": "Tone visual đi theo giấy cũ, tape, ảnh chụp và map pin để tạo cảm giác kể chuyện. Những route khác sẽ được nối tiếp sau nhưng vẫn giữ cùng ngôn ngữ hình ảnh này."
+    },
+    "map": {
+      "eyebrow": "Dọc đất nước",
+      "title": "Từ Bắc vào Nam, mỗi điểm dừng là một mẩu chuyện đủ để muốn mở tiếp hành trình.",
+      "description": "Bản đồ parchment là neo thị giác cho homepage và là chiếc cầu nối giữa cảm hứng du lịch với các surface thực dụng hơn như planner hay journal editor sau này.",
+      "moodLabel": "Moodboard",
+      "moodValue": "Vệt mực, ghim màu, giấy cũ và các điểm dừng có cá tính riêng.",
+      "nextLabel": "Lớp kế tiếp",
+      "nextValue": "Từ landing này có thể nối tiếp sang community, planner, journal và profile mà không đổi giọng thiết kế.",
+      "locations": {
+        "sapa": {
+          "title": "Sương sớm Sa Pa",
+          "description": "lạnh nhẹ, ruộng bậc thang và nhịp thở chậm"
+        },
+        "hanoi": {
+          "title": "Góc phố Hà Nội",
+          "description": "một buổi sáng cổ điển, cà phê và tiếng xe xa"
+        },
+        "hue": {
+          "title": "Chiều Huế",
+          "description": "tường thành cũ, ánh nắng mỏng và sắc vàng dịu"
+        },
+        "nhaTrang": {
+          "title": "Biển Nha Trang",
+          "description": "mùi muối, gió mạnh và một ngày muốn đi xa hơn"
+        },
+        "saiGon": {
+          "title": "Sài Gòn tối muộn",
+          "description": "đèn xe, nhịp sống nhanh và nhiều chuyện để kể"
+        }
+      }
+    },
+    "previews": {
+      "eyebrow": "Các lớp trải nghiệm",
+      "title": "Homepage không kể hết mọi thứ, nhưng nó nên hé đúng nhịp của từng surface tiếp theo.",
+      "description": "Bốn thẻ dưới đây giữ vai trò preview cho các route sẽ được làm tiếp. Mỗi surface vẫn cùng brand scrapbook nhưng nhấn vào một mục đích rõ ràng hơn.",
+      "community": {
+        "eyebrow": "Cộng đồng",
+        "title": "Đọc những hành trình thật trước khi lên đường.",
+        "description": "Community sẽ là nơi gom các câu chuyện public, feed ngắn, ảnh bìa và các bài viết có chiều sâu hơn mà không làm loãng phần planner.",
+        "detailOne": "feed câu chuyện public",
+        "detailTwo": "mở sang bài viết chi tiết"
+      },
+      "planner": {
+        "eyebrow": "Lập kế hoạch",
+        "title": "Chuyển cảm hứng thành một lịch trình đủ chắc tay.",
+        "description": "Planner giữ cấu trúc rõ ràng, dữ liệu trước tiên và tách khỏi freeform journal để người dùng dễ quay lại chỉnh sửa trong suốt hành trình.",
+        "detailOne": "workspace có cấu trúc",
+        "detailTwo": "gắn với dữ liệu chuyến đi"
+      },
+      "journal": {
+        "eyebrow": "Tạo nhật ký",
+        "title": "Đưa ảnh, ghi chú và sticker về đúng cảm giác của một cuốn sổ du lịch.",
+        "description": "Journal sẽ là nơi duy nhất cho phép dàn trang tự do. Homepage này chỉ lấy đúng tinh thần đó để mở nhịp thương hiệu và dẫn vào editor sau.",
+        "detailOne": "scene scrapbook tự do",
+        "detailTwo": "ảnh, tape, note, sticker"
+      },
+      "profile": {
+        "eyebrow": "Cá nhân",
+        "title": "Giữ hồ sơ và nhịp chuẩn bị trong cùng một không gian gần gũi.",
+        "description": "Profile sẽ là nơi gom thông tin tài khoản, lịch sử hoạt động và các chuyến đi đang theo dõi nhưng vẫn nằm trong cùng chất liệu visual của Journey.",
+        "detailOne": "thông tin tài khoản",
+        "detailTwo": "tóm tắt hành trình đang có"
+      }
+    },
+    "polaroids": {
+      "haLong": {
+        "title": "Vịnh Hạ Long",
+        "note": "mây thấp, nước xanh"
+      },
+      "hue": {
+        "title": "Tường thành Huế"
+      },
+      "hoiAn": {
+        "title": "Đèn lồng Hội An",
+        "note": "ánh vàng đầu tối"
+      },
+      "nhaTrang": {
+        "title": "Sóng Nha Trang"
+      },
+      "tamCoc": {
+        "title": "Tam Cốc sớm",
+        "note": "một khúc sông yên"
+      },
+      "mekong": {
+        "title": "Mekong chiều xuống"
+      },
+      "daLat": {
+        "title": "Đà Lạt mù sương",
+        "note": "lạnh vừa đủ"
+      },
+      "sapa": {
+        "title": "Bình minh Sa Pa"
+      }
+    },
+    "footer": {
+      "tagline": "Giữ cảm hứng du lịch ở dạng gần gũi, viết tay và dễ quay lại, rồi từ đó nối dần sang những công cụ thật sự giúp một hành trình được chuẩn bị và kể lại trọn vẹn hơn.",
+      "navigationLabel": "Liên kết footer",
+      "profileNote": "Khu Cá Nhân sẽ là surface tiếp theo cùng chung ngôn ngữ scrapbook này.",
+      "links": {
+        "about": "Về Journey",
+        "terms": "Điều Khoản",
+        "contact": "Liên Hệ"
+      },
+      "socials": {
+        "facebook": "Journey trên Facebook",
+        "instagram": "Journey trên Instagram",
+        "music": "Journey trên TikTok",
+        "youtube": "Journey trên YouTube"
+      }
+    }
+  },
   "community": {
     "eyebrow": "Cộng đồng",
     "title": "Những câu chuyện đang được chia sẻ",

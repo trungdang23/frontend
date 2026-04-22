@@ -191,6 +191,31 @@ Tạo nền thị giác mới cho toàn site mà không phụ thuộc editor.
 - fixed-layout pages nhìn cùng một brand nhưng vẫn dễ đọc
 - không phụ thuộc journal editor mới render được home/community/auth
 
+### FE-08B1 - Homepage scrapbook implementation
+
+### Mục tiêu
+
+Biến route `/` từ placeholder thành homepage thật đầu tiên để chốt visual language, responsive behavior, và cách brand scrapbook thể hiện trên fixed-layout surface.
+
+### Scope của lượt triển khai này
+
+- [x] scaffold app bootstrap lại bằng `AppProviders + router + global styles`
+- [x] dựng homepage hero theo tinh thần `journey---nhật-ký-hành-trình-việt-nam`
+- [x] giữ sticky scrapbook navigation như lớp định hướng đầu tiên của trang chủ
+- [x] dựng cụm polaroid, parchment map, preview cards, và torn-paper footer
+- [x] đưa copy của homepage vào i18n thay vì hardcode rời rạc
+- [x] giữ các surface khác ở mức preview ngay trên homepage để không lấn scope
+- [ ] nối route thật cho `community`, `planner`, `journal`, `profile`
+- [ ] thay ảnh demo bằng asset/content product thật
+
+### Deferred rõ ràng sau homepage
+
+- auth shell và auth screens theo visual mới
+- public community route thật
+- planner route thật
+- journal route thật với renderer/editor riêng
+- profile route thật
+
 ## FE-08C - Structured planner surfaces
 
 ### Mục tiêu

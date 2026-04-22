@@ -119,6 +119,144 @@
       }
     }
   },
+  "home": {
+    "navigation": {
+      "ariaLabel": "Homepage scrapbook navigation",
+      "home": "Home",
+      "community": "Community",
+      "planner": "Planner",
+      "journal": "Journal",
+      "profile": "Profile"
+    },
+    "hero": {
+      "eyebrow": "Journey scrapbook landing",
+      "titleLine1": "Travel",
+      "titleLine2": "Journal",
+      "titleLine3": "Vietnam",
+      "description": "This homepage opens with the scrapbook mood first: photos, paper layers, a map, and route previews so Journey reads as a place to gather inspiration, prepare a trip, and tell the story afterward.",
+      "primaryCta": "Open the journal mood",
+      "secondaryCta": "Explore community",
+      "readyLabel": "Experience rhythm",
+      "readyValue": "Warm, travel-heavy, playful with paper details, and still structured enough to grow into a real product surface.",
+      "surfaceLabel": "Current scope",
+      "surfaceValue": "Only the homepage is implemented in this pass. Community, planner, journal, and profile are still previews inside the landing page."
+    },
+    "floatingNote": {
+      "eyebrow": "Homepage note",
+      "title": "The homepage should spark the story before it sends people into concrete tasks.",
+      "description": "The visual language leans on aged paper, tape, photos, and map pins to feel narrative-driven. The later routes can build on top of the same brand direction without changing tone."
+    },
+    "map": {
+      "eyebrow": "Across the country",
+      "title": "From north to south, each stop should feel like a small story worth opening next.",
+      "description": "The parchment map anchors the landing page visually and bridges the inspirational side of travel with later practical surfaces like the planner and journal editor.",
+      "moodLabel": "Moodboard",
+      "moodValue": "Ink traces, color pins, aged paper, and stops with distinct personalities.",
+      "nextLabel": "Next layer",
+      "nextValue": "This landing can later connect into community, planner, journal, and profile without losing its visual voice.",
+      "locations": {
+        "sapa": {
+          "title": "Sapa at dawn",
+          "description": "cool air, terraced fields, and a slower breath"
+        },
+        "hanoi": {
+          "title": "Old Hanoi corner",
+          "description": "a classic morning, coffee, and distant traffic"
+        },
+        "hue": {
+          "title": "Hue at dusk",
+          "description": "old walls, thin sunlight, and soft yellow tones"
+        },
+        "nhaTrang": {
+          "title": "Nha Trang shore",
+          "description": "salt air, stronger wind, and a longer horizon"
+        },
+        "saiGon": {
+          "title": "Late Saigon",
+          "description": "street lights, fast motion, and stories everywhere"
+        }
+      }
+    },
+    "previews": {
+      "eyebrow": "Experience layers",
+      "title": "The homepage does not tell everything, but it should preview the rhythm of every surface that comes next.",
+      "description": "The four cards below act as previews for the routes we will build next. Each surface keeps the scrapbook brand while leaning into a more specific purpose.",
+      "community": {
+        "eyebrow": "Community",
+        "title": "Read real travel stories before you set off.",
+        "description": "Community will collect public stories, short feed moments, cover images, and deeper writing without diluting the planner experience.",
+        "detailOne": "public story feed",
+        "detailTwo": "open full story detail"
+      },
+      "planner": {
+        "eyebrow": "Planner",
+        "title": "Turn inspiration into a trip frame that feels reliable.",
+        "description": "Planner stays structured and data-first, separated from the freeform journal so people can return to it and edit it throughout the trip lifecycle.",
+        "detailOne": "structured workspace",
+        "detailTwo": "connected to trip data"
+      },
+      "journal": {
+        "eyebrow": "Journal",
+        "title": "Bring photos, notes, and stickers back into the feel of a travel notebook.",
+        "description": "Journal will be the only freeform surface. This homepage borrows just enough of that spirit to establish the brand and lead naturally into the editor later.",
+        "detailOne": "freeform scrapbook scene",
+        "detailTwo": "photos, tape, notes, stickers"
+      },
+      "profile": {
+        "eyebrow": "Profile",
+        "title": "Keep identity and preparation inside the same familiar space.",
+        "description": "Profile will gather account details, activity history, and tracked trips while staying grounded in the same visual material as the rest of Journey.",
+        "detailOne": "account details",
+        "detailTwo": "trip summary snapshot"
+      }
+    },
+    "polaroids": {
+      "haLong": {
+        "title": "Ha Long Bay",
+        "note": "low clouds, green water"
+      },
+      "hue": {
+        "title": "Hue Citadel"
+      },
+      "hoiAn": {
+        "title": "Hoi An lanterns",
+        "note": "gold light at dusk"
+      },
+      "nhaTrang": {
+        "title": "Nha Trang surf"
+      },
+      "tamCoc": {
+        "title": "Tam Coc morning",
+        "note": "a quiet river bend"
+      },
+      "mekong": {
+        "title": "Mekong evening"
+      },
+      "daLat": {
+        "title": "Da Lat mist",
+        "note": "just enough chill"
+      },
+      "sapa": {
+        "title": "Sapa sunrise"
+      }
+    },
+    "footer": {
+      "tagline": "Keep travel inspiration in a form that feels handwritten, warm, and easy to return to, then extend that same energy into the tools that help a trip get prepared and retold with more care.",
+      "navigationLabel": "Footer links",
+      "profileNote": "Profile is the next surface planned within the same scrapbook language.",
+      "links": {
+        "about": "About Journey",
+        "terms": "Terms",
+        "contact": "Contact"
+      },
+      "socials": {
+        "facebook": "Journey on Facebook",
+        "instagram": "Journey on Instagram",
+        "music": "Journey on TikTok",
+        "youtube": "Journey on YouTube"
+      }
+    }
+  },
   "community": {
     "eyebrow": "Community",
     "title": "Stories the community is sharing now",
