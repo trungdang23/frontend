@@ -27,10 +27,10 @@ export function HomePage() {
         id="main-content"
       >
         <section
-          className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[34rem] lg:-translate-x-6"
+          className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[35rem] lg:-translate-x-12"
           id="home"
         >
-          <div className="pointer-events-none relative z-[40] max-w-md text-center">
+          <div className="pointer-events-none relative z-[40] max-w-md text-center lg:absolute lg:left-[43%] lg:top-1/2 lg:max-w-[19rem] lg:-translate-x-1/2 lg:-translate-y-1/2">
             <h1 className="text-shadow-custom font-title text-[2.7rem] leading-[0.85] tracking-tight text-[#1a1a1a] uppercase sm:text-[3.5rem] md:text-[4rem]">
               {t('home.hero.titleLine1')}
               <br />

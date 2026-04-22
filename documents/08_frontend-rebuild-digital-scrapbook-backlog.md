@@ -277,6 +277,18 @@ Làm cụm hero bên trái thoáng hơn, tránh polaroid chụm sát nhau và t�
 - [x] tăng khoảng cách giữa các polaroid ở desktop
 - [x] đẩy toàn bộ cụm hero bên trái lệch trái nhẹ để thoáng hơn
 
+### FR-B1E - Left hero ring centering refinement
+
+### Mục tiêu
+
+Làm vòng polaroid bên trái rộng hơn nữa và giữ tiêu đề chính luôn nằm đúng giữa vùng rỗng được vòng thẻ bao quanh.
+
+### Scope của lượt triển khai này
+
+- [x] tăng bán kính vòng polaroid thêm ở desktop
+- [x] đẩy tâm của cả vòng card sang trái thêm
+- [x] đẩy tiêu đề trung tâm theo cùng tâm để không đè lên thẻ
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu
