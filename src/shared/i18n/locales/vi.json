@@ -497,6 +497,47 @@
       "eyebrow": "Planner",
       "title": "Workspace planner dạng cây",
       "description": "Xây toàn bộ chuyến đi thành cây gồm section, day, location, activity và note ngay trong một route.",
+      "intro": {
+        "eyebrow": "Lập kế hoạch",
+        "titleLine1": "Lập kế hoạch",
+        "titleLine2": "chuyến đi sáng tạo",
+        "scriptTitle": "Travel Itinerary",
+        "description": "Đây là màn mở đầu của planner sau khi người dùng bấm tạo kế hoạch. Nội dung giữ cảm giác như một trang giới thiệu, nhưng bên trong vẫn dẫn thẳng vào hành động tạo chuyến đi thật.",
+        "formTitle": "Bắt đầu một kế hoạch mới",
+        "formDescription": "Điền khung chuyến đi ngắn gọn để Journey tạo kế hoạch đầu tiên cho bạn. Khi flow planner tree hoàn chỉnh hơn, màn này vẫn có thể đóng vai trò cửa vào nhẹ nhàng trước workspace chi tiết.",
+        "collapsedTitle": "Form tạo kế hoạch đang chờ ở đây",
+        "collapsedDescription": "Dùng nút ở trên hoặc nút nổi góc phải dưới để mở nhanh phần tạo kế hoạch mà không rời khỏi page giới thiệu này.",
+        "recentTitle": "Kế hoạch gần đây",
+        "recentDescription": "Hiện có {{count}} kế hoạch trong tài khoản. Danh sách này giúp màn intro vẫn có cảm giác sống và nối với dữ liệu thật.",
+        "defaultDestination": "Chưa thêm điểm đến",
+        "actions": {
+          "startPlanning": "Tạo kế hoạch của bạn",
+          "viewRecent": "Xem kế hoạch gần đây",
+          "openForm": "Mở form tạo kế hoạch"
+        },
+        "stats": {
+          "daysTitle": "Khung ngày đi",
+          "daysDescription": "Xác định khoảng ngày ngay từ đầu để planner sau đó dễ chia day và nhịp hành trình.",
+          "stopsTitle": "Điểm dừng chính",
+          "stopsDescription": "Gom các chặng nổi bật vào một board chung trước khi đi sâu vào activity chi tiết.",
+          "readyTitle": "Sẵn sàng bắt đầu",
+          "readyDescription": "Tài khoản hiện có {{count}} kế hoạch để bạn tiếp tục hoàn thiện hoặc mở thêm chuyến mới."
+        },
+        "cards": {
+          "destinationOne": "Hà Nội",
+          "destinationOneDate": "Ngày 1-3",
+          "destinationTwo": "Hội An",
+          "destinationTwoDate": "Ngày 4-5",
+          "destinationThree": "Hạ Long Bay",
+          "destinationThreeDate": "Ngày 4-5"
+        },
+        "checklist": {
+          "title": "travel checklist",
+          "flight": "Đặt vé máy bay",
+          "photo": "Chuẩn bị máy ảnh",
+          "budget": "Đặt vé tàu đêm"
+        }
+      },
       "createRootTitle": "Thêm node gốc",
       "createChildTitle": "Thêm node con",
       "editNodeTitle": "Sửa planner node",

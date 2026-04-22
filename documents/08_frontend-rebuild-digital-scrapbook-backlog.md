@@ -531,6 +531,13 @@ Làm các nút mạng xã hội ở footer nổi bật hơn khi hover, sáng mà
 
 Làm planner thành khu rõ ràng, data-first, không cố giả scrapbook editor.
 
+### Scope của lượt triển khai này
+
+- [x] thay placeholder `planner` bằng intro page có shared `header/footer`
+- [x] dựng hero planner theo tinh thần travel board từ `UI_demo.txt` và ảnh tham chiếu
+- [x] thêm CTA nổi góc phải dưới để mở form tạo kế hoạch ngay trong page
+- [x] nối form với API `createTrip` hiện có và hiện danh sách kế hoạch gần đây
+
 ### Việc cần làm
 
 - [ ] dựng trip list
