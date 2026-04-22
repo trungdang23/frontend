@@ -40,12 +40,9 @@ export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
             src={card.coverImageUrl}
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.9),_transparent_34%),linear-gradient(180deg,_#f7efdf,_#ead9bd)] px-5 text-center">
-            <div className="rounded-[1.2rem] border border-[rgba(122,75,57,0.18)] bg-white/70 px-4 py-5 shadow-[0_10px_20px_rgba(96,72,50,0.1)]">
-              <p className="font-hand text-[1.8rem] leading-[0.9] text-[var(--color-warm-brown)]">
-                {card.displayTitle}
-              </p>
-            </div>
+          <div className="relative h-full w-full bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.9),_transparent_34%),linear-gradient(180deg,_#f7efdf,_#ead9bd)]">
+            <div className="absolute left-5 top-5 h-16 w-16 rotate-[-8deg] rounded-[1rem] border border-[rgba(122,75,57,0.15)] bg-white/60 shadow-[0_10px_20px_rgba(96,72,50,0.08)]" />
+            <div className="absolute bottom-6 right-6 h-24 w-24 rotate-[7deg] rounded-[1.2rem] border border-[rgba(122,75,57,0.12)] bg-white/40 shadow-[0_14px_24px_rgba(96,72,50,0.08)]" />
           </div>
         )}
       </div>

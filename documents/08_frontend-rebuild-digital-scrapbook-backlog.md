@@ -264,6 +264,17 @@ Rút gọn phần heading của card bài viết để chỉ còn tên chuyến 
 - [x] giữ fallback an toàn nếu title rỗng
 - [x] thêm test nhỏ để khóa lại nguồn title của card
 
+### FR-B2D - Community duplicate title cleanup
+
+### Mục tiêu
+
+Giữ mỗi card community chỉ có một tiêu đề bài post chính, không lặp lại title thêm lần nữa trong placeholder của card.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ title lặp trong placeholder khi card không có ảnh bìa
+- [x] giữ lại đúng một title chính trên card
+
 ### FR-B3 - Auth scrapbook gate cho planner và profile
 
 ### Mục tiêu
