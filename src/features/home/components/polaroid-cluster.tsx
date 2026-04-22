@@ -36,8 +36,8 @@ export function PolaroidCluster() {
       <div className="absolute inset-0 hidden lg:block">
         {polaroidMoments.map((moment, index) => {
           const angle = (index / polaroidMoments.length) * Math.PI * 2 - Math.PI / 2;
-          const x = 49 + 34 * Math.cos(angle);
-          const y = 50 + 40 * Math.sin(angle);
+          const x = 39 + 51 * Math.cos(angle);
+          const y = 50 + 44 * Math.sin(angle);
 
           return (
             <div
