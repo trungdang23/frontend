@@ -326,6 +326,18 @@ Khóa tiêu đề trung tâm thành đúng 3 dòng, mỗi dòng 2 chữ, đồng
 - [x] giữ anchor của title bám cùng tâm vòng polaroid khi khối chữ thay đổi bề rộng
 - [x] tinh chỉnh font-size và line-height để ba dòng đứng gọn hơn trong vùng rỗng ở giữa
 
+### FR-B1I - Homepage clean URL pass
+
+### Mục tiêu
+
+Loại bỏ trạng thái homepage tự nhảy sang URL có `#` do dùng placeholder fragment rỗng trong shared chrome của trang chủ.
+
+### Scope của lượt triển khai này
+
+- [x] thay toàn bộ `href="#"` của navigation homepage sang đường dẫn sạch
+- [x] thay các footer placeholder link để không còn tạo `/#`
+- [x] bổ sung test nhỏ để chặn việc đưa fragment rỗng quay trở lại
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

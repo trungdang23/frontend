@@ -57,7 +57,7 @@ export type SocialStamp = {
 
 export const homeNavItems: HomeNavItem[] = [
   {
-    href: '#',
+    href: '/',
     labelKey: 'home.navigation.home',
     rotate: -4,
     shape: 'fold-right',
@@ -65,7 +65,7 @@ export const homeNavItems: HomeNavItem[] = [
     yOffset: 2,
   },
   {
-    href: '#',
+    href: '/',
     labelKey: 'home.navigation.community',
     rotate: 3,
     shape: 'torn-bottom',
@@ -73,7 +73,7 @@ export const homeNavItems: HomeNavItem[] = [
     yOffset: -4,
   },
   {
-    href: '#',
+    href: '/',
     labelKey: 'home.navigation.planner',
     rotate: -2,
     shape: 'notebook',
@@ -81,7 +81,7 @@ export const homeNavItems: HomeNavItem[] = [
     yOffset: 6,
   },
   {
-    href: '#',
+    href: '/',
     labelKey: 'home.navigation.journal',
     rotate: 5,
     shape: 'straight',
@@ -89,7 +89,7 @@ export const homeNavItems: HomeNavItem[] = [
     yOffset: -2,
   },
   {
-    href: '#',
+    href: '/',
     labelKey: 'home.navigation.profile',
     rotate: -3,
     shape: 'fold-left',
@@ -230,15 +230,15 @@ export const mapStops: MapStop[] = [
 
 export const footerLinks: FooterLink[] = [
   {
-    href: '#',
+    href: '/',
     labelKey: 'home.footer.links.about',
   },
   {
-    href: '#',
+    href: '/',
     labelKey: 'home.footer.links.terms',
   },
   {
-    href: '#',
+    href: '/',
     labelKey: 'home.footer.links.contact',
   },
 ];
