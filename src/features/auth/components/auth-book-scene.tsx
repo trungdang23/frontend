@@ -5,11 +5,12 @@ import {
   Plane,
 } from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
+import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 
 export function AuthBookScene({ children }: PropsWithChildren) {
   return (
     <PublicPageShell
-      mainClassName="w-full px-0 py-2 sm:py-3"
+      mainClassName={publicPageMainLayouts.auth}
       mainId="auth-content"
     >
       <section className="relative overflow-hidden px-4 py-6 sm:px-6 lg:px-10">

@@ -10,6 +10,7 @@ import {
 import type { CommunityRegion } from '@/features/community/lib/community-feed-presenters';
 import { communityQueryKeys } from '@/features/community/lib/community-query-keys';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
+import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
 const COMMUNITY_FEED_QUERY = {
@@ -82,7 +83,7 @@ export function CommunityFeedPage() {
 
   return (
     <PublicPageShell
-      mainClassName="relative mx-auto w-full max-w-[86rem] flex-1 px-4 pb-24 pt-2 sm:px-6 lg:px-10"
+      mainClassName={publicPageMainLayouts.community}
     >
       <div className="pointer-events-none fixed left-6 top-28 hidden opacity-35 lg:block">
         <svg className="translate-x-4 text-[var(--color-ink)]" fill="currentColor" height="40" viewBox="0 0 40 40" width="40">

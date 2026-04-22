@@ -5,6 +5,7 @@ import {
 import { PolaroidCluster } from '@/features/home/components/polaroid-cluster';
 import { VietnamMapBoard } from '@/features/home/components/vietnam-map-board';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
+import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
 export function HomePage() {
@@ -12,7 +13,7 @@ export function HomePage() {
 
   return (
     <PublicPageShell
-      mainClassName="grid w-full max-w-[72rem] grid-cols-1 items-center gap-4 px-4 pb-2 pt-2 sm:px-6 sm:pb-3 lg:grid-cols-[1.32fr_0.92fr] lg:gap-6 lg:px-10"
+      mainClassName={publicPageMainLayouts.home}
     >
         <section
           className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[37rem] lg:-translate-x-16"

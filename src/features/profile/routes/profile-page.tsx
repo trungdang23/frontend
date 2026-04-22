@@ -12,6 +12,7 @@ import {
   formatProfileDate,
 } from '@/features/profile/lib/profile-presenters';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
+import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { listTrips } from '@/features/trips/api/trips-api';
 import { useAuth } from '@/features/auth/session/use-auth';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -69,7 +70,7 @@ export function ProfilePage() {
 
   return (
     <PublicPageShell
-      mainClassName="w-full px-4 pb-10 pt-2 sm:px-6 lg:px-10"
+      mainClassName={publicPageMainLayouts.profile}
       mainId="profile-content"
     >
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 lg:flex-row lg:items-start">

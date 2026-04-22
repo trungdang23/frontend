@@ -536,6 +536,8 @@ Làm planner thành khu rõ ràng, data-first, không cố giả scrapbook edito
 - [x] đưa `planner` về đúng body notebook tham chiếu từ `demo.txt`
 - [x] giữ `header/footer` luôn hiển thị, chỉ cuộn phần body ở giữa
 - [x] ẩn thanh scrollbar ở vùng body chung của các page dùng shared shell
+- [x] tách contract layout của từng public page khỏi `PublicPageShell`
+- [x] thêm test guard để width, gutter và page-specific spacing không bị kéo lên shared shell
 - [x] loại bỏ toàn bộ CTA, form và nội dung tự phát sinh khỏi page `planner`
 - [x] nới body `home` ra gần nhịp rộng của `community`, tránh cảm giác bị nhốt trong khung
 - [x] trả lại gutter hai bên cho `planner` để không dính mép màn hình
@@ -553,6 +555,7 @@ Làm planner thành khu rõ ràng, data-first, không cố giả scrapbook edito
 
 - planner nhìn cùng thương hiệu nhưng vẫn là workspace có cấu trúc
 - budget/planner data đọc dễ hơn UI cũ
+- thay đổi layout của một public page không tự động làm lệch width, gutter hoặc spacing của public page khác
 
 ## FR-D - Journal scene renderer
 

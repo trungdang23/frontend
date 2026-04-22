@@ -5,6 +5,7 @@ import {
   Plane,
 } from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
+import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -64,7 +65,7 @@ export function PlannerPage() {
 
   return (
     <PublicPageShell
-      mainClassName="relative mx-auto w-full max-w-[86rem] px-4 py-2 sm:px-6 sm:py-3 lg:px-10"
+      mainClassName={publicPageMainLayouts.planner}
       mainId="planner-content"
     >
       <div className="flex min-h-full w-full items-start justify-center py-0 sm:py-1 lg:items-center">
