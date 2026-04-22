@@ -41,7 +41,7 @@ export function HomePage() {
           <PolaroidCluster />
         </section>
 
-        <div className="relative mx-auto w-full max-w-[14rem] self-center pt-0 sm:max-w-[17rem] lg:max-w-[20rem] lg:pt-2">
+        <div className="relative mx-auto w-full max-w-[14rem] self-center pt-0 sm:max-w-[17rem] lg:justify-self-end lg:max-w-[20rem] lg:pt-2">
           <VietnamMapBoard />
         </div>
     </PublicPageShell>
