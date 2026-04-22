@@ -2,8 +2,8 @@
 
 ## Scope
 
-- Checklist này là source of truth ngắn gọn cho trạng thái frontend sau khi reset planning cho full UI redesign.
-- Chỉ giữ những mục có giá trị lâu dài: nền kỹ thuật, contract đang khóa, và checklist triển khai redesign.
+- Checklist này là source of truth ngắn gọn cho trạng thái frontend sau khi reset UI và chốt hướng `Digital Scrapbook`.
+- Mục tiêu của file này là giữ cả team nhìn cùng một thực tế: source đang ở reset phase, docs là nơi chốt hướng, và journal editor chỉ là một phần của tổng trải nghiệm.
 
 ## Quy ước trạng thái
 
@@ -11,79 +11,75 @@
 - `[~]` đang chuyển tiếp hoặc còn cleanup
 - `[ ]` chưa hoàn thành
 
-## Contract hiện tại cần giữ nguyên
+## Thực trạng repo hiện tại
 
-- Auth:
-  - `login`
-  - `register`
-  - `me`
-  - `refresh`
-  - `logout`
-- Trips:
-  - create/list/detail/update/delete
-  - `budgetMode`
-  - `manualBudget`
-  - `visibility`
-- Planner:
-  - `GET /trips/:id/planner`
-  - `POST /nodes`
-  - `PATCH /nodes/:id`
-  - `DELETE /nodes/:id`
-- Public trips:
-  - `GET /public/trips`
-  - `GET /public/trips/:tripId`
-  - `GET /public/trips/:tripId/planner`
-- Posts:
-  - `POST /posts`
-  - `GET /posts`
-  - `GET /posts/:postId`
+- [x] `frontend/` còn toolchain `React + Vite + TypeScript`
+- [x] `src/main.tsx` đã reset về placeholder app có chủ đích
+- [x] shared API client vẫn còn
+- [x] auth session modules vẫn còn
+- [x] `trips` và `community` API modules vẫn còn
+- [x] i18n baseline vẫn còn
+- [x] test baseline vẫn còn
+- [~] runtime router/shell/UI primitives chưa được scaffold lại theo hướng mới
 
-## Trạng thái nền hiện tại
+## Bộ docs active cần giữ
 
-- [x] Có app foundation `React + Vite + TypeScript`
-- [x] Có router public/protected
-- [x] Có HTTP client nền và auth/session pipeline thật
-- [x] Có trips CRUD thật
-- [x] Có planner workspace thật trên `PlanNode`
-- [x] Có public trip read cho guest
-- [x] Có community posts create/list/detail
-- [~] Budget summary owner flow vẫn còn phần hardening và legacy cleanup
-- [~] Source hiện vẫn chứa presentation layer cũ và cần được thay sạch trong Phase 08
-
-## Bộ docs active nên giữ
-
-- [x] `00_frontend-foundation.md`
+- [x] `00_frontend-product-and-experience-foundation.md`
 - [x] `01_frontend-phase-checklist.md`
 - [x] `02_frontend-stack-decision.md`
-- [x] `05_frontend-api-integration-plan.md`
-- [x] `06_frontend-app-architecture.md`
-- [x] `07_frontend-definition-of-done.md`
-- [x] `08_frontend-risk-and-dependencies.md`
-- [x] `09_frontend-production-deploy-runbook.md`
-- [x] `19_frontend-phase-08-full-ui-redesign-backlog.md`
+- [x] `03_frontend-api-integration-plan.md`
+- [x] `04_frontend-app-architecture.md`
+- [x] `05_frontend-definition-of-done.md`
+- [x] `06_frontend-risk-and-dependencies.md`
+- [x] `07_frontend-production-deploy-runbook.md`
+- [x] `08_frontend-phase-08-digital-scrapbook-redesign-backlog.md`
 
-## Cleanup docs cũ
+## Quyết định nền đã chốt
 
-- [x] Loại khỏi active docs các backlog/screen-plan cũ gắn với UI cũ
-- [ ] Gỡ hết các tham chiếu còn sót tới docs đã xóa trong source và README nếu còn
+- [x] chỉ `journal` là surface freeform
+- [x] các page còn lại là `fixed-layout`
+- [x] `planner` và `journal` tách thành hai workspace riêng
+- [x] route cũ `/app/trips/:tripId` sẽ đóng vai trò compatibility redirect
+- [x] hướng lưu trữ khuyến nghị là `PostgreSQL + JSONB`, chưa đổi hẳn sang Mongo
 
-## Phase 08 - Full UI redesign
+## Việc tài liệu đã xử lý trong lượt review này
+
+- [x] đổi tên file foundation cho đúng phạm vi mới
+- [x] đổi tên backlog redesign cho đúng định hướng scrapbook
+- [x] cập nhật README cho đúng trạng thái source hiện tại
+- [x] viết lại foundation theo hướng `fixed-layout + scrapbook journal`
+- [x] cập nhật stack decision với editor/runtime/storage guidance
+- [x] cập nhật API plan với journal scene model đề xuất
+- [x] cập nhật architecture, definition of done, risk doc
+
+## Phase 08 - Digital Scrapbook rebuild
 
 Status: `In progress`
 
-- [x] Chốt quyết định giữ contract, thay presentation
-- [x] Chốt nguyên tắc giữ docs nền + docs hạ tầng, bỏ docs UI cũ
-- [ ] Viết lại design principles cho UI mới
-- [ ] Viết lại route map/screen inventory cho UI mới
-- [ ] Dựng design system mới
-- [ ] Dựng lại public surface
-- [ ] Dựng lại protected workspace
-- [ ] Cutover route-by-route khỏi UI cũ
-- [ ] Xóa presentation files cũ sau khi từng route mới đã lên xong
+- [x] chốt hướng visual `Digital Scrapbook`
+- [x] chốt ranh giới `fixed-layout vs freeform`
+- [x] chốt route map mức nền cho `planner` và `journal`
+- [ ] dựng lại router và app shell
+- [ ] dựng design token system mới
+- [ ] dựng fixed-layout public/auth/protected surfaces
+- [ ] dựng journal scene renderer
+- [ ] dựng journal editor interactions
+- [ ] chốt journal API contract với backend
+- [ ] chốt asset flow
+- [ ] cập nhật deploy smoke checklist theo route mới
 
-## Definition of done cho cleanup đợt này
+## Điểm cần giữ kỷ luật trong phase này
 
-- [ ] README chỉ còn trỏ tới bộ docs active
-- [ ] Bộ docs không còn backlog cũ gây nhiễu
-- [ ] Deploy docs và infra docs vẫn nguyên vẹn
-- [ ] Source code foundation không bị đụng tới chỉ vì reset UI
+- [ ] không mở rộng thêm UI cũ chỉ vì tiện
+- [ ] không dùng editor engine cho các page fixed-layout
+- [ ] không lưu journal object theo pixel viewport hiện tại
+- [ ] không mở rộng tiếp `trip-planning-api.ts` cho journal editor
+- [ ] không đổi storage platform chỉ vì scene data nhìn giống document
+
+## Definition of done cho đợt reset doc này
+
+- [x] docs active dùng cùng một route model
+- [x] docs không còn claim sai trạng thái source
+- [x] foundation đã ghi rõ quyết định storage
+- [x] backlog đã có slice cụ thể cho journal renderer/editor
+- [ ] deploy runbook được refresh đầy đủ theo route mới sau khi runtime app quay lại

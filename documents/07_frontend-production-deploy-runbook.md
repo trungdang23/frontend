@@ -6,6 +6,13 @@
 - Giữ source code frontend trên máy đích, nhưng không còn phụ thuộc vào SSH hay `cloudflared access ssh`.
 - Giữ toàn bộ build-time và runtime config trên GitHub `Environment variables`.
 
+## Ghi chú trạng thái hiện tại
+
+- Frontend đang ở `UI reset phase`, nên runtime production có thể tạm chỉ là placeholder app trong thời gian rebuild.
+- Vì vậy checklist smoke cần tách rõ:
+  - smoke tối thiểu cho reset phase hiện tại
+  - smoke đầy đủ cho giai đoạn sau khi các route `planner/journal/community/auth` quay lại
+
 ## Checklist hardening verify sau deploy
 
 - [x] Giữ local runtime verification trên self-hosted runner là tín hiệu blocking chính của workflow.
@@ -109,14 +116,9 @@ Frontend có các script:
 5. Mở:
    - `https://buicojourney.com`
    - `https://www.buicojourney.com`
-6. Test:
-   - landing
-   - login
-   - register
-   - me/profile
-   - refresh session
-   - logout
-   - đổi ngôn ngữ `VI/EN`
+6. Test theo đúng phase hiện tại của app:
+   - nếu đang ở reset phase: verify landing/placeholder/runtime health
+   - nếu route mới đã lên lại: verify thêm auth/community/planner/journal theo checklist bên dưới
 
 ## Post-deploy checklist tối thiểu
 
@@ -127,21 +129,33 @@ Sau mỗi deploy production, ưu tiên verify nhanh theo đúng thứ tự này:
    - `bash ./scripts/check-production-health.sh`
    - expected: script pass và app còn bind ở `127.0.0.1:3000`
 2. Public landing tại `/`
-   - expected: load được landing, không `5xx`, không trắng trang
+   - expected: load được app, không `5xx`, không trắng trang
+
+### Nếu app vẫn đang ở reset phase
+
+3. Verify placeholder shell hiện đúng
+   - expected: có thông điệp UI reset/rebuild đang diễn ra
+4. Verify asset runtime cơ bản
+   - expected: `index.html`, JS bundle, CSS bundle load được
+
+### Nếu app đã quay lại route mới
+
 3. Đăng nhập từ `/auth/login`
    - expected: vào được app shell và session boot ổn
 4. Mở `/community`
    - expected: feed load được hoặc hiện empty state hợp lệ, không crash route
-5. Mở `/trips`
-   - expected: public trip list load được
-6. Mở một public trip detail/planner read-only
-   - expected: trip detail mở được, planner section load được, read-only note hiện đúng
-7. Đăng xuất
+5. Mở `/app/trips`
+   - expected: trip list load được
+6. Mở `/app/trips/:tripId/planner`
+   - expected: planner workspace load được
+7. Mở `/app/trips/:tripId/journal` hoặc public `/trips/:tripId/journal`
+   - expected: journal viewer/editor render được scene đúng
+8. Đăng xuất
    - expected: quay lại flow public/auth với notice hợp lệ
 
 Nếu đang verify phase budget hardening, bổ sung thêm một trip có planner cost để rà lại budget summary owner flow.
 
-Nếu deploy vừa đụng tới planner/budget owner flow, ưu tiên rà thêm đúng chuỗi này trên `/app/trips/:tripId`:
+Nếu deploy vừa đụng tới planner/budget owner flow, ưu tiên rà thêm đúng chuỗi này trên `/app/trips/:tripId/planner`:
 
 1. Tạo một planner node có cost
    - expected: planner tree và budget summary cùng tăng sau refetch
@@ -158,7 +172,7 @@ Khi handoff kết quả deploy hoặc hardening verify, ưu tiên dùng format n
 
 - `Scope`: commit hoặc slice vừa deploy
 - `Local verify`: pass/fail cho `bash ./scripts/check-production-health.sh`
-- `Public smoke`: `/`, `/auth/login`, `/community`, `/trips`, public trip detail, logout
+- `Public smoke`: `/`, và các route thật đang tồn tại ở phase hiện tại
 - `Warnings / advisory`: Cloudflare ingress, tunnel, hoặc public-domain advisory warnings nếu có
 - `Deferred / next action`: phần còn cần verify thêm như owner budget mutation flow hoặc manual ingress investigation
 
@@ -167,9 +181,9 @@ Ví dụ:
 ```text
 Scope: frontend/main @ <commit>
 Local verify: pass
-Public smoke: landing pass, login pass, community pass, trips pass, public trip detail pass, logout pass
+Public smoke: landing pass, reset placeholder pass
 Warnings / advisory: public domain health có warning Cloudflare nhưng local runtime vẫn healthy
-Deferred / next action: verify owner budget summary trên trip mixed-currency ở deploy kế tiếp
+Deferred / next action: verify planner/journal routes sau khi UI mới được scaffold lại
 ```
 
 ## Kiểm tra sau reboot

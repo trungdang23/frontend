@@ -1,7 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
-function ResetPlaceholderApp() {
+export function ResetPlaceholderApp() {
   return (
     <main>
       <h1>Journey frontend UI reset in progress</h1>

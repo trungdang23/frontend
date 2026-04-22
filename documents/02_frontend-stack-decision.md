@@ -2,58 +2,118 @@
 
 ## Trạng thái
 
-- Date: `2026-04-14`
-- Status: `Implemented as scaffold baseline`
-- Scope: stack và toolchain cho app frontend đầu tiên trong `frontend/`
+- Date: `2026-04-22`
+- Status: `Re-evaluated for Phase 08 reset`
+- Scope: chốt stack cho frontend mới với một editor scrapbook riêng cho journal nhưng không làm nặng toàn bộ website.
 
-## Mục tiêu của quyết định này
+## Kết luận ngắn
 
-- Giảm số lượng lựa chọn mở khi bắt đầu scaffold.
-- Chọn stack đủ hiện đại cho SPA production nhưng không quá nặng cho phase đầu.
-- Giữ frontend bám sát tốc độ phát triển backend hiện tại.
+- Giữ nền `React + Vite + TypeScript`.
+- Giữ `TanStack Query`, `React Hook Form`, `Zod`.
+- Giữ `Tailwind CSS + CSS variables`, nhưng dùng thêm authored CSS/token layer thay vì biến Tailwind thành toàn bộ design system.
+- Chỉ journal editor mới cần editor runtime chuyên biệt.
+- Chưa đổi sang `Next.js`, chưa đổi sang `MongoDB`.
 
-## Đề xuất chốt cho phase scaffold đầu tiên
+## Giữ nguyên những gì
 
-| Hạng mục | Lựa chọn đề xuất | Lý do |
+| Hạng mục | Quyết định | Lý do |
 | --- | --- | --- |
-| Ngôn ngữ | `TypeScript` | đồng bộ với backend và giảm lỗi contract |
-| Runtime | `Node.js LTS` | đồng bộ với workspace |
-| Package manager | `pnpm` | đồng bộ repo và lockfile strategy |
-| App framework | `React` | phù hợp SPA feature-driven |
-| Build tool | `Vite` | scaffold nhanh, DX tốt, phù hợp SPA |
-| Routing | `React Router` | route grouping rõ cho public/protected/app |
-| Server state | `TanStack Query` | phù hợp dữ liệu API, cache, retry, invalidation |
-| Form handling | `React Hook Form` | form auth và trip form gọn, dễ validate |
-| Schema validation | `Zod` | typing tốt cho client-side form/data validation |
-| Styling | `Tailwind CSS` + CSS variables | phù hợp reference UI và dễ token hóa |
-| Icon strategy | `lucide-react` hoặc bộ icon tương đương | hợp với hướng UI hiện tại |
-| Component test | `Vitest` + `Testing Library` | nhanh và hợp Vite |
-| E2E smoke test | `Playwright` | đủ tốt cho login/session smoke |
+| Ngôn ngữ | `TypeScript` | dữ liệu scene nhiều field, cần typing rõ |
+| Runtime | `Node.js LTS` | đồng bộ workspace |
+| Package manager | `pnpm` | đúng quy ước repo |
+| App framework | `React` | phù hợp cho fixed-layout pages và editor composition |
+| Build tool | `Vite` | nhanh, đơn giản, hợp với reset phase |
+| Routing | `React Router` | đủ tốt cho public/protected/app routes |
+| Server state | `TanStack Query` | phù hợp auth/trips/posts/journal persistence |
+| Forms | `React Hook Form` | hợp cho auth/trip forms |
+| Validation | `Zod` | rõ schema ở client |
 
-## Điều không chốt ở giai đoạn này
+## Điều cần đổi trong cách dùng stack
 
-- Chưa chốt SSR framework như `Next.js`.
-- Chưa chốt animation library lớn.
-- Chưa chốt headless component library ngoài.
-- Chưa chốt analytics SDK.
-- Không dùng preview/static publish riêng nữa; deploy production path đã được đồng bộ theo mô hình backend.
+### 1. Styling không còn là "Tailwind là đủ"
 
-## Lý do chưa chọn SSR ở phase đầu
+- Giữ `Tailwind CSS` để xử lý utility layout nhanh.
+- Nhưng brand scrapbook cần thêm:
+  - CSS variables làm token
+  - authored component styles cho paper texture, tape, stacked cards, handwriting accent
+  - animation layer có chủ đích
+- Không nên build toàn bộ giao diện mới bằng các class utility dài và khó đọc.
 
-- Backend hiện đi theo REST API tách riêng, auth cũng đã sẵn cho SPA.
-- Giai đoạn gần nhất cần ưu tiên app shell, auth, dashboard, và tốc độ dựng UI.
-- Chưa có yêu cầu SEO hoặc public content complexity đủ mạnh để bắt buộc SSR.
-- Có thể chuyển sang SSR sau nếu product scope thay đổi, nhưng phase đầu nên giảm biến số.
+### 2. Không dùng generic component kit làm visual backbone
 
-## Hệ quả kiến trúc từ stack này
+- UI mới có cá tính rất riêng, nên không nên phụ thuộc vào một bộ component generic theo kiểu dashboard SaaS.
+- Có thể dùng headless/accessibility primitives chọn lọc khi cần, nhưng visual system phải là của Journey.
 
-- App được xem là `SPA` với route public và protected.
-- Tầng fetch/API client cần chuẩn hóa từ đầu.
-- Server state đi qua query/mutation hooks thay vì tự quản lý thủ công bằng `useEffect` rải rác.
-- Design token và utility classes cần được chuẩn hóa ngay từ app foundation.
+### 3. Editor state phải có ranh giới riêng
 
-## Ghi chú quan trọng về auth
+- Query cache không phù hợp để giữ selection, drag state, undo stack, hovered target, z-order draft.
+- Editor cần một local state layer riêng, scoped cho feature `journal`.
 
-- Backend hiện trả `accessToken` và `refreshToken` trong response body.
-- Phase đầu của frontend cần chấp nhận điều này để đi nhanh.
-- Về hardening lâu dài, nên cân nhắc chuyển `refreshToken` sang `httpOnly cookie` khi backend hỗ trợ.
+## Công cụ nên thêm cho journal editor
+
+| Hạng mục | Đề xuất | Trạng thái | Vì sao |
+| --- | --- | --- | --- |
+| Scene renderer/editor | `react-konva` hoặc engine canvas React-first tương đương | Khuyến nghị | hợp với free positioning, rotation, transform handles, z-index |
+| Editor local state | `zustand` hoặc store nhẹ tương đương | Khuyến nghị | giữ editor state cục bộ, không làm nặng global app state |
+| Immutable scene updates | `immer` hoặc helper thuần tương đương | Tùy chọn | dễ cập nhật object tree/revision |
+| E2E browser tests | `Playwright` | Deferred tới khi editor baseline ổn | phù hợp để test drag/save/publish thật |
+
+## Công cụ không nên dùng sai mục đích
+
+### `dnd-kit`
+
+- Hợp nếu sau này asset tray hoặc sortable layer list phức tạp.
+- Không nên lấy làm engine chính cho scrapbook scene nếu scene đã có runtime riêng.
+
+### Generic whiteboard/editor framework
+
+- Chỉ cân nhắc nếu product chuyển hẳn thành document editor đa năng.
+- Với scope hiện tại, dễ quá nặng và quá nhiều abstraction thừa.
+
+## Khuyến nghị cụ thể cho journal editor
+
+### Mô hình render
+
+- Fixed-layout pages: dùng `React DOM`.
+- Journal editor: dùng engine scene riêng.
+- Journal public read-only: reuse chính renderer của journal editor nhưng tắt controls.
+
+### Mô hình lưu vị trí
+
+- Lưu object theo hệ tọa độ trang chuẩn.
+- Không lưu theo pixel viewport.
+- Scale scene ở runtime.
+
+## Database/storage decision từ góc nhìn frontend
+
+| Phương án | Khuyến nghị | Nhận xét |
+| --- | --- | --- |
+| `PostgreSQL + JSONB` | `Recommend now` | giữ domain relation mạnh, thêm được scene linh hoạt |
+| `MongoDB` | `Not recommended now` | đổi platform lớn hơn nhu cầu hiện tại |
+
+### Vì sao chưa nên đổi sang Mongo
+
+- Backend hiện đã bám `Prisma + PostgreSQL` khá sâu.
+- Chỉ journal page mới thật sự cần schema linh hoạt.
+- Trips, users, posts, permissions, revisions, assets vẫn là dữ liệu quan hệ rõ ràng.
+- `JSONB` là đủ tốt cho scene payload giai đoạn này.
+
+### Khi nào mới nên mở lại câu hỏi Mongo
+
+- editor trở thành domain trung tâm của toàn sản phẩm
+- cần realtime collaboration nhiều người
+- cần patch nested object cực thường xuyên ở quy mô lớn
+- nhiều feature ngoài journal cũng chuyển sang document-shaped data
+
+## Điều chưa chốt ở phase này
+
+- Có cần thêm thư viện crop/asset editing ở client hay không
+- Có cần undo/redo qua command stack phức tạp ngay phase đầu hay chỉ revision snapshot
+- Có cần mobile editing full-feature từ phase 1 hay chỉ baseline usable
+
+## Tóm tắt quyết định
+
+- Giữ stack SPA hiện tại.
+- Thêm engine editor chuyên biệt chỉ cho `journal`.
+- Giữ database chính là `PostgreSQL`.
+- Đầu tư vào scene model và token system thay vì đổi platform quá sớm.
