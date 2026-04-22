@@ -23,15 +23,15 @@ export function HomePage() {
       <ScrapbookNav />
 
       <main
-        className="relative grid w-full max-w-7xl flex-1 grid-cols-1 items-center gap-12 px-4 py-8 md:px-12 lg:grid-cols-[1.5fr_1fr]"
+        className="relative grid w-full max-w-[72rem] flex-1 grid-cols-1 items-center gap-4 px-4 pb-2 pt-2 sm:px-6 sm:pb-3 lg:grid-cols-[1.32fr_0.92fr] lg:gap-6 lg:px-10"
         id="main-content"
       >
         <section
-          className="relative flex h-[720px] w-full items-center justify-center"
+          className="relative flex h-[24rem] w-full items-center justify-center sm:h-[29rem] lg:h-[34rem]"
           id="home"
         >
           <div className="pointer-events-none relative z-[40] max-w-md text-center">
-            <h1 className="text-shadow-custom font-title text-[50px] leading-[0.85] tracking-tight text-[#1a1a1a] uppercase md:text-[65px]">
+            <h1 className="text-shadow-custom font-title text-[2.7rem] leading-[0.85] tracking-tight text-[#1a1a1a] uppercase sm:text-[3.5rem] md:text-[4rem]">
               {t('home.hero.titleLine1')}
               <br />
               <span className="text-[0.88em]">{t('home.hero.titleLine2')}</span>
@@ -39,21 +39,21 @@ export function HomePage() {
               <span className="text-[1.08em]">{t('home.hero.titleLine3')}</span>
             </h1>
 
-            <div className="absolute -top-10 left-[-15%] opacity-90">
-              <div className="flex h-12 w-12 rotate-12 items-center justify-center rounded-full bg-yellow-400 text-[#1a1a1a] shadow-md">
-                <Sparkles className="h-6 w-6" />
+            <div className="absolute -top-6 left-[-10%] opacity-90 sm:-top-10 sm:left-[-15%]">
+              <div className="flex h-10 w-10 rotate-12 items-center justify-center rounded-full bg-yellow-400 text-[#1a1a1a] shadow-md sm:h-12 sm:w-12">
+                <Sparkles className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
             </div>
 
-            <div className="absolute right-[-10%] top-[80%] opacity-80">
-              <MapPinned className="h-10 w-10 text-[#c46a4d]" />
+            <div className="absolute right-[-6%] top-[80%] opacity-80 sm:right-[-10%]">
+              <MapPinned className="h-8 w-8 text-[#c46a4d] sm:h-10 sm:w-10" />
             </div>
           </div>
 
           <PolaroidCluster />
         </section>
 
-        <div className="relative self-center pt-0 lg:pt-12">
+        <div className="relative mx-auto w-full max-w-[17rem] self-center pt-0 sm:max-w-[20rem] lg:max-w-[24rem] lg:pt-4">
           <VietnamMapBoard />
         </div>
       </main>

@@ -31,8 +31,8 @@ export function HomeFooter() {
   const { t } = useI18n();
 
   return (
-    <footer className="relative mt-auto w-full overflow-visible py-12" id="footer">
-      <div className="pointer-events-none absolute left-0 top-[-30px] z-0 h-[calc(100%+30px)] w-full">
+    <footer className="relative mt-auto w-full overflow-visible py-7 sm:py-8" id="footer">
+      <div className="pointer-events-none absolute left-0 top-[-18px] z-0 h-[calc(100%+18px)] w-full">
         <svg className="h-full w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 1440 300">
           <defs>
             <filter id="paper-shadow" height="140%" width="140%" x="-20%" y="-20%">
@@ -66,8 +66,8 @@ export function HomeFooter() {
         </svg>
       </div>
 
-      <div className="relative z-20 mx-auto flex max-w-7xl flex-col items-center justify-between gap-12 px-4 md:flex-row md:px-12">
-        <div className="group relative inline-block cursor-default px-12 py-6 transition-transform duration-300 hover:scale-105">
+      <div className="relative z-20 mx-auto flex max-w-6xl flex-col items-center justify-between gap-7 px-4 md:flex-row md:gap-8 md:px-10">
+        <div className="group relative inline-block cursor-default px-8 py-4 transition-transform duration-300 hover:scale-105 md:px-10">
           <div className="pointer-events-none absolute inset-0 z-0">
             <svg className="h-full w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 220 90">
               <path
@@ -81,12 +81,12 @@ export function HomeFooter() {
               />
             </svg>
           </div>
-          <span className="relative z-10 select-none pb-2 font-cursive text-5xl tracking-normal text-slate-900 md:text-6xl">
+          <span className="relative z-10 select-none pb-1 font-cursive text-[2.7rem] tracking-normal text-slate-900 sm:text-5xl">
             Journey
           </span>
         </div>
 
-        <div className="flex gap-6 md:gap-8">
+        <div className="flex gap-4 sm:gap-5 md:gap-6">
           {socialStamps.map((social) => {
             const Icon = stampIconMap[social.id];
 
@@ -96,7 +96,7 @@ export function HomeFooter() {
                 <div
                   aria-label={t(social.labelKey)}
                   className={cn(
-                    'relative flex h-16 w-14 cursor-pointer items-center justify-center border-[2px] border-white p-2 text-white shadow-md transition-all duration-300 group-hover:scale-110 group-hover:rotate-0',
+                    'relative flex h-14 w-12 cursor-pointer items-center justify-center border-[2px] border-white p-2 text-white shadow-md transition-all duration-300 group-hover:scale-105 group-hover:rotate-0 sm:h-16 sm:w-14',
                     stampToneClasses[social.tone],
                   )}
                   role="img"
@@ -126,7 +126,7 @@ export function HomeFooter() {
 
         <nav
           aria-label={t('home.footer.navigationLabel')}
-          className="flex flex-wrap justify-center gap-8 font-cursive text-3xl text-slate-900 md:text-4xl"
+          className="flex flex-wrap justify-center gap-x-6 gap-y-2 font-cursive text-[1.9rem] text-slate-900 sm:text-[2.25rem] md:justify-end md:text-[2.5rem]"
         >
           {footerLinks.map((link) => (
             <a

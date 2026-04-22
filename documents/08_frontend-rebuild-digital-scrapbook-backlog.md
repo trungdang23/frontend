@@ -226,7 +226,7 @@ Biến route `/` từ placeholder thành homepage thật đầu tiên để ch�
 ### Scope của lượt triển khai này
 
 - [x] bám layout chính của thư mục mẫu cho `hero`, cụm polaroid, bản đồ và footer
-- [x] loại bỏ `community` khỏi homepage và khỏi sticky nav của homepage
+- [x] loại bỏ nội dung `community` khỏi body homepage nhưng giữ item `Cộng Đồng` trên navigation dùng chung
 - [x] bỏ language switch, khóa homepage về tiếng Việt
 - [x] bỏ các khối vuông/card preview phụ để giữ cảm giác sổ tay ghi chú
 - [x] giữ nguyên route map hiện tại, không mở rộng thêm surface mới ngoài homepage
@@ -238,6 +238,20 @@ Biến route `/` từ placeholder thành homepage thật đầu tiên để ch�
 - homepage không còn nút đổi ngôn ngữ
 - giao diện chính mang hình thức giấy note/polaroid/parchment thay vì card grid vuông
 - text hiển thị của homepage chỉ còn tiếng Việt
+
+### FR-B1B - Shared navigation/footer responsiveness cleanup
+
+### Mục tiêu
+
+Làm `header navigation` và `footer` đủ gọn để dùng chung cho các tab khác, không gây khung cuộn ẩn trên mobile và không chiếm quá nhiều chiều cao ở các màn hình thấp.
+
+### Scope của lượt triển khai này
+
+- [x] giữ `Cộng Đồng` trong navigation nhưng không render section cộng đồng trong body homepage
+- [x] bỏ horizontal scroll/overflow hidden frame ở navigation
+- [x] để navigation tự wrap theo full chiều rộng màn hình nhỏ, đặc biệt mobile portrait
+- [x] giữ navigation desktop ở trạng thái căn giữa và kích thước gần với code mẫu
+- [x] giảm chiều cao khối main và footer để footer lộ ra sớm hơn trên viewport thấp
 
 ## FR-C - Structured planner surfaces
 

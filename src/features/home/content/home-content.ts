@@ -66,6 +66,14 @@ export const homeNavItems: HomeNavItem[] = [
   },
   {
     href: '#',
+    labelKey: 'home.navigation.community',
+    rotate: 3,
+    shape: 'torn-bottom',
+    tone: 'sky',
+    yOffset: -4,
+  },
+  {
+    href: '#',
     labelKey: 'home.navigation.planner',
     rotate: -2,
     shape: 'notebook',

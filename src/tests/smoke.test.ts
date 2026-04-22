@@ -5,10 +5,11 @@ import {
 } from '@/features/home/content/home-content';
 
 describe('homepage scaffold', () => {
-  it('keeps the sticky navigation free of community items', () => {
+  it('keeps the shared sticky navigation item for community', () => {
     const labels = homeNavItems.map((item) => item.labelKey);
 
-    expect(labels).not.toContain('home.navigation.community');
+    expect(labels).toContain('home.navigation.community');
+    expect(labels).toHaveLength(5);
   });
 
   it('ships a scrapbook ring of travel moments', () => {
