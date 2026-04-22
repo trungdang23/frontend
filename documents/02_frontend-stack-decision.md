@@ -3,7 +3,7 @@
 ## Trạng thái
 
 - Date: `2026-04-22`
-- Status: `Re-evaluated for Phase 08 reset`
+- Status: `Re-evaluated for frontend rebuild`
 - Scope: chốt stack cho frontend mới với một editor scrapbook riêng cho journal nhưng không làm nặng toàn bộ website.
 
 ## Kết luận ngắn
@@ -22,7 +22,7 @@
 | Runtime | `Node.js LTS` | đồng bộ workspace |
 | Package manager | `pnpm` | đúng quy ước repo |
 | App framework | `React` | phù hợp cho fixed-layout pages và editor composition |
-| Build tool | `Vite` | nhanh, đơn giản, hợp với reset phase |
+| Build tool | `Vite` | nhanh, đơn giản, hợp với giai đoạn rebuild hiện tại |
 | Routing | `React Router` | đủ tốt cho public/protected/app routes |
 | Server state | `TanStack Query` | phù hợp auth/trips/posts/journal persistence |
 | Forms | `React Hook Form` | hợp cho auth/trip forms |

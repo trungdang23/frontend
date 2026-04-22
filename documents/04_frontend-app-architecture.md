@@ -9,9 +9,9 @@
 
 ## Thực trạng source hiện tại
 
-- `src/main.tsx` đang là placeholder app.
+- `src/main.tsx` đã bootstrap app thật với `AppProviders + router`.
 - `app/providers`, `shared/api`, `auth/session`, `trips` API, `community` API, và i18n baseline vẫn còn.
-- Router và screen tree thực tế cần được scaffold lại theo direction mới.
+- Route `/` đã có homepage scrapbook baseline, nhưng router và screen tree còn lại vẫn cần được scaffold tiếp theo direction mới.
 
 ## Kiến trúc mục tiêu
 

@@ -1,9 +1,9 @@
-# Frontend Phase Checklist
+# Frontend Rebuild Checklist
 
 ## Scope
 
-- Checklist này là source of truth ngắn gọn cho trạng thái frontend sau khi reset UI và chốt hướng `Digital Scrapbook`.
-- Mục tiêu của file này là giữ cả team nhìn cùng một thực tế: source đang ở reset phase, docs là nơi chốt hướng, và journal editor chỉ là một phần của tổng trải nghiệm.
+- Checklist này là source of truth ngắn gọn cho trạng thái frontend trong giai đoạn rebuild và chốt hướng `Digital Scrapbook`.
+- Mục tiêu của file này là giữ cả team nhìn cùng một thực tế: homepage `/` đã có baseline thật, các surface còn lại đang được dựng dần, và journal editor chỉ là một phần của tổng trải nghiệm.
 
 ## Quy ước trạng thái
 
@@ -14,25 +14,26 @@
 ## Thực trạng repo hiện tại
 
 - [x] `frontend/` còn toolchain `React + Vite + TypeScript`
-- [x] `src/main.tsx` đã reset về placeholder app có chủ đích
+- [x] `src/main.tsx` đã bootstrap lại bằng `AppProviders + router`
+- [x] route `/` đã có homepage scrapbook baseline thật
 - [x] shared API client vẫn còn
 - [x] auth session modules vẫn còn
 - [x] `trips` và `community` API modules vẫn còn
 - [x] i18n baseline vẫn còn
 - [x] test baseline vẫn còn
-- [~] runtime router/shell/UI primitives chưa được scaffold lại theo hướng mới
+- [~] runtime router/shell/UI primitives mới chỉ được scaffold cho homepage và foundation chung
 
 ## Bộ docs active cần giữ
 
 - [x] `00_frontend-product-and-experience-foundation.md`
-- [x] `01_frontend-phase-checklist.md`
+- [x] `01_frontend-rebuild-checklist.md`
 - [x] `02_frontend-stack-decision.md`
 - [x] `03_frontend-api-integration-plan.md`
 - [x] `04_frontend-app-architecture.md`
 - [x] `05_frontend-definition-of-done.md`
 - [x] `06_frontend-risk-and-dependencies.md`
 - [x] `07_frontend-production-deploy-runbook.md`
-- [x] `08_frontend-phase-08-digital-scrapbook-redesign-backlog.md`
+- [x] `08_frontend-rebuild-digital-scrapbook-backlog.md`
 
 ## Quyết định nền đã chốt
 
@@ -51,14 +52,16 @@
 - [x] cập nhật stack decision với editor/runtime/storage guidance
 - [x] cập nhật API plan với journal scene model đề xuất
 - [x] cập nhật architecture, definition of done, risk doc
+- [x] đồng bộ naming docs để bỏ numbering legacy và khớp với homepage `/` hiện tại
 
-## Phase 08 - Digital Scrapbook rebuild
+## Frontend rebuild - Digital Scrapbook
 
 Status: `In progress`
 
 - [x] chốt hướng visual `Digital Scrapbook`
 - [x] chốt ranh giới `fixed-layout vs freeform`
 - [x] chốt route map mức nền cho `planner` và `journal`
+- [x] dựng homepage scrapbook baseline ở `/`
 - [ ] dựng lại router và app shell
 - [ ] dựng design token system mới
 - [ ] dựng fixed-layout public/auth/protected surfaces
@@ -68,7 +71,7 @@ Status: `In progress`
 - [ ] chốt asset flow
 - [ ] cập nhật deploy smoke checklist theo route mới
 
-## Điểm cần giữ kỷ luật trong phase này
+## Điểm cần giữ kỷ luật trong giai đoạn này
 
 - [ ] không mở rộng thêm UI cũ chỉ vì tiện
 - [ ] không dùng editor engine cho các page fixed-layout
@@ -76,10 +79,10 @@ Status: `In progress`
 - [ ] không mở rộng tiếp `trip-planning-api.ts` cho journal editor
 - [ ] không đổi storage platform chỉ vì scene data nhìn giống document
 
-## Definition of done cho đợt reset doc này
+## Definition of done cho đợt sync doc này
 
 - [x] docs active dùng cùng một route model
 - [x] docs không còn claim sai trạng thái source
 - [x] foundation đã ghi rõ quyết định storage
 - [x] backlog đã có slice cụ thể cho journal renderer/editor
-- [ ] deploy runbook được refresh đầy đủ theo route mới sau khi runtime app quay lại
+- [~] deploy runbook đã được refresh cho homepage hiện tại và sẽ cập nhật tiếp khi các route mới lên đầy đủ

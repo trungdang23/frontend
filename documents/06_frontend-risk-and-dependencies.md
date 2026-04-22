@@ -13,7 +13,7 @@
 - shared API client còn sống
 - auth/session modules còn sống
 - `trips`, `community`, i18n baseline còn sống
-- runtime UI đang reset về placeholder
+- runtime UI đã có homepage baseline ở `/`, nhưng các surface còn lại vẫn đang trong rebuild
 
 ### Từ backend
 
@@ -124,4 +124,4 @@ Hướng xử lý:
   - planner/journal tách route
   - `PostgreSQL + JSONB` là nền lưu trữ hiện tại
 
-thì phase rebuild sẽ thực tế và kiểm soát được hơn nhiều.
+thì giai đoạn rebuild sẽ thực tế và kiểm soát được hơn nhiều.

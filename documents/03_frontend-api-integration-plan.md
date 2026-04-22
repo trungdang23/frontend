@@ -17,7 +17,7 @@ Các API modules còn giữ trong repo:
 
 Nhận xét quan trọng:
 
-- Runtime UI hiện chưa wiring các module này vào route thật vì app đang ở reset phase.
+- Runtime UI hiện mới wiring thật cho homepage `/`; các module còn lại sẽ được nối tiếp khi từng surface được scaffold hoàn chỉnh.
 - `trip-planning-api.ts` vẫn còn mang nặng semantics `itinerary + budget` cũ.
 - Nếu backend planner `PlanNode` tiếp tục là hướng chính cho planning workspace, frontend nên tách `planner-api.ts` riêng thay vì mở rộng tiếp file bridge cũ.
 

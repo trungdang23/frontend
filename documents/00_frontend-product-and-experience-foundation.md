@@ -4,13 +4,13 @@
 
 - Date: `2026-04-22`
 - Status: `Active planning baseline`
-- Scope: chốt nền sản phẩm và trải nghiệm cho lần rebuild frontend sau khi presentation layer cũ đã được gỡ về placeholder.
+- Scope: chốt nền sản phẩm và trải nghiệm cho lần rebuild frontend sau khi presentation layer cũ được thay bằng homepage baseline mới.
 
 ## Thực trạng repo hiện tại
 
 - `frontend/` vẫn giữ `React + Vite + TypeScript`, toolchain, test baseline, i18n, auth/session modules, shared API client, và một số API modules cho `auth`, `trips`, `community`.
-- Runtime UI hiện đang được reset có chủ đích: `src/main.tsx` chỉ render placeholder để giữ build/deploy sống trong lúc chốt lại kiến trúc trải nghiệm.
-- Vì vậy, bộ doc này là source of truth cho giai đoạn hiện tại; không thể tiếp tục dùng các mô tả cũ kiểu "app đã có full route và full shell" như trạng thái thật của source.
+- Runtime UI hiện đã có baseline có chủ đích: `src/main.tsx` bootstrap app thật với homepage scrapbook ở `/`, trong khi các surface còn lại vẫn đang được dựng dần theo kiến trúc mới.
+- Vì vậy, bộ doc này là source of truth cho giai đoạn hiện tại; không thể tiếp tục dùng các mô tả cũ kiểu "app đã có full route và full shell" nhưng cũng không được mô tả source như thể nó vẫn chỉ là placeholder.
 
 ## Những gì phải chốt ngay ở foundation
 

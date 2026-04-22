@@ -49,9 +49,9 @@
 - Budget/planning information đọc rõ
 - Route planner tách biệt với route journal
 
-## Một phase được xem là xong khi
+## Một mốc rebuild được xem là xong khi
 
-- Checklist phase đã tick theo artifact thật
+- Checklist rebuild đã tick theo artifact thật
 - Docs phản ánh đúng trạng thái source
 - Các verify tối thiểu của package đã pass
 - Route model, architecture, và API plan không mâu thuẫn nhau

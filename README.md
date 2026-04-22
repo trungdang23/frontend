@@ -29,14 +29,14 @@ Frontend package cho sản phẩm `journey`.
 ## Docs nên đọc theo thứ tự
 
 - `documents/00_frontend-product-and-experience-foundation.md`
-- `documents/01_frontend-phase-checklist.md`
+- `documents/01_frontend-rebuild-checklist.md`
 - `documents/02_frontend-stack-decision.md`
 - `documents/03_frontend-api-integration-plan.md`
 - `documents/04_frontend-app-architecture.md`
 - `documents/05_frontend-definition-of-done.md`
 - `documents/06_frontend-risk-and-dependencies.md`
 - `documents/07_frontend-production-deploy-runbook.md`
-- `documents/08_frontend-phase-08-digital-scrapbook-redesign-backlog.md`
+- `documents/08_frontend-rebuild-digital-scrapbook-backlog.md`
 
 ## Chạy package
 

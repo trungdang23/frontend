@@ -1,22 +1,22 @@
-# Frontend Phase 08 Digital Scrapbook Redesign Backlog
+# Frontend Rebuild Digital Scrapbook Backlog
 
 ## Trạng thái
 
 - Date: `2026-04-22`
-- Status: `Active planning baseline`
+- Status: `Active rebuild baseline`
 - Owner area:
   - `frontend/documents`
   - `frontend/src`
 - File này thay cho backlog `full-ui-redesign` cũ vì hướng mới không còn là redesign chung chung; nó đã được chốt rõ thành `Digital Scrapbook + fixed-layout supporting pages`.
 
-## Mục tiêu phase
+## Mục tiêu rebuild
 
 Rebuild frontend Journey quanh hai lớp trải nghiệm khác nhau nhưng cùng một brand:
 
 - `fixed-layout surfaces` cho hầu hết website
 - `freeform scrapbook journal editor` cho riêng khu nhật ký
 
-Phase này tập trung vào:
+Giai đoạn rebuild này tập trung vào:
 
 - làm rõ route map mới
 - chốt visual system mới
@@ -24,7 +24,7 @@ Phase này tập trung vào:
 - giữ lại foundation backend/auth/deploy đang còn giá trị
 - tránh việc cả team tiếp tục suy nghĩ theo UI dashboard cũ
 
-Phase này chưa xử lý:
+Giai đoạn rebuild này chưa xử lý:
 
 - đổi backend contract chỉ vì visual
 - realtime collaboration
@@ -63,7 +63,7 @@ Phase này chưa xử lý:
 ### 4. Giữ `PostgreSQL` làm nền tảng chính
 
 - Journal scene nên đi theo hướng `PostgreSQL + JSONB + revisions`.
-- Không chuyển hẳn sang `MongoDB` ở phase này.
+- Không chuyển hẳn sang `MongoDB` ở giai đoạn này.
 
 ## Screen inventory mục tiêu
 
@@ -79,7 +79,7 @@ Phase này chưa xử lý:
 | Journal editor | `/app/trips/:tripId/journal` | freeform scrapbook | drag/drop, rotate, layer |
 | Journal public view | `/trips/:tripId/journal` | scrapbook read-only | share/publish surface |
 | Profile | `/app/profile` | fixed-layout | user/account summary |
-| Compatibility | `/app/trips/:tripId` | redirect | về `planner` trong phase đầu |
+| Compatibility | `/app/trips/:tripId` | redirect | về `planner` trong giai đoạn đầu |
 
 ## Deliverables bắt buộc trước khi code lớn
 
@@ -151,7 +151,7 @@ Phase này chưa xử lý:
 
 ## Slice implementation đề xuất
 
-## FE-08A - Documentation reset và route map
+## FR-A - Documentation reset và route map
 
 ### Mục tiêu
 
@@ -161,17 +161,18 @@ Phase này chưa xử lý:
 
 - [x] đổi tên file foundation cho đúng phạm vi
 - [x] đổi tên backlog redesign cho đúng định hướng scrapbook
-- [x] cập nhật README theo trạng thái reset hiện tại
+- [x] cập nhật README theo trạng thái rebuild hiện tại
 - [x] chốt nguyên tắc `fixed-layout vs journal freeform`
 - [x] chốt route map mới với `planner` và `journal` tách riêng
 - [x] ghi rõ khuyến nghị `PostgreSQL + JSONB`
+- [x] đồng bộ naming docs để bỏ numbering legacy và bám đúng trạng thái homepage `/`
 
 ### Acceptance criteria
 
 - mọi doc active nói cùng một ngôn ngữ
 - không còn claim sai kiểu "frontend đã có đầy đủ route production"
 
-## FE-08B - Brand system và fixed-layout foundation
+## FR-B - Brand system và fixed-layout foundation
 
 ### Mục tiêu
 
@@ -191,7 +192,7 @@ Tạo nền thị giác mới cho toàn site mà không phụ thuộc editor.
 - fixed-layout pages nhìn cùng một brand nhưng vẫn dễ đọc
 - không phụ thuộc journal editor mới render được home/community/auth
 
-### FE-08B1 - Homepage scrapbook implementation
+### FR-B1 - Homepage scrapbook implementation
 
 ### Mục tiêu
 
@@ -216,7 +217,7 @@ Biến route `/` từ placeholder thành homepage thật đầu tiên để ch�
 - journal route thật với renderer/editor riêng
 - profile route thật
 
-### FE-08B1A - Homepage notebook alignment theo mẫu chốt ngày 2026-04-22
+### FR-B1A - Homepage notebook alignment theo mẫu chốt ngày 2026-04-22
 
 ### Mục tiêu
 
@@ -238,7 +239,7 @@ Biến route `/` từ placeholder thành homepage thật đầu tiên để ch�
 - giao diện chính mang hình thức giấy note/polaroid/parchment thay vì card grid vuông
 - text hiển thị của homepage chỉ còn tiếng Việt
 
-## FE-08C - Structured planner surfaces
+## FR-C - Structured planner surfaces
 
 ### Mục tiêu
 
@@ -257,7 +258,7 @@ Làm planner thành khu rõ ràng, data-first, không cố giả scrapbook edito
 - planner nhìn cùng thương hiệu nhưng vẫn là workspace có cấu trúc
 - budget/planner data đọc dễ hơn UI cũ
 
-## FE-08D - Journal scene renderer
+## FR-D - Journal scene renderer
 
 ### Mục tiêu
 
@@ -282,7 +283,7 @@ Có engine render một page scrapbook từ dữ liệu scene đã lưu.
 - cùng một scene render ổn trên desktop và mobile
 - object không drift vị trí khi reload ở viewport khác
 
-## FE-08E - Journal editor interactions
+## FR-E - Journal editor interactions
 
 ### Mục tiêu
 
@@ -306,7 +307,7 @@ Biến renderer thành editor usable thật.
 - user có thể hoàn thành một page journal mà không đụng JSON thủ công
 - editor usable bằng chuột trước, rồi touch/mobile follow-up nhưng không bị bỏ quên
 
-## FE-08F - Persistence, versioning, publish
+## FR-F - Persistence, versioning, publish
 
 ### Mục tiêu
 
@@ -329,16 +330,16 @@ Kết nối editor với backend theo một contract bền vững.
 - published journal render đúng scene đã lưu
 - không cần đổi cả database platform để chạy feature này
 
-## FE-08G - Verification, cleanup, deploy smoke refresh
+## FR-G - Verification, cleanup, deploy smoke refresh
 
 ### Mục tiêu
 
-Làm phase này đủ sạch để bước vào implementation thật mà không bị docs/source drift trở lại.
+Làm giai đoạn rebuild này đủ sạch để bước vào implementation thật mà không bị docs/source drift trở lại.
 
 ### Việc cần làm
 
 - [ ] cập nhật smoke test plan theo route mới
-- [ ] cập nhật deploy smoke checklist cho reset phase rồi cho post-cutover phase
+- [ ] cập nhật deploy smoke checklist cho homepage baseline hiện tại rồi cho post-cutover
 - [ ] gỡ các tham chiếu cũ còn sót tới route/workspace model cũ
 - [ ] rà README và docs active list một lần cuối
 
@@ -347,7 +348,7 @@ Làm phase này đủ sạch để bước vào implementation thật mà không
 - team đọc docs là hiểu đúng product direction ngay
 - deploy/test docs không còn mô tả nhầm app cũ
 
-## Decision log ngắn cần giữ trong phase này
+## Decision log ngắn cần giữ trong giai đoạn này
 
 ### Chốt
 
@@ -360,7 +361,7 @@ Làm phase này đủ sạch để bước vào implementation thật mà không
 
 - [ ] thư viện editor runtime cụ thể sẽ là `react-konva` hay phương án tương đương
 - [ ] contract backend cuối cùng cho journal pages
-- [ ] scope mobile editing phase đầu rộng tới đâu
+- [ ] scope mobile editing giai đoạn đầu rộng tới đâu
 - [ ] asset upload provider/storage strategy
 
 ## Non-goals cần nhắc lại
@@ -368,9 +369,9 @@ Làm phase này đủ sạch để bước vào implementation thật mà không
 - không redesign toàn site thành hệ grid tự do
 - không mở thêm social complexity chỉ vì đã có community
 - không đổi backend storage sang Mongo chỉ vì scene data linh hoạt
-- không cố đạt "Figma-like editor" ở phase đầu
+- không cố đạt "Figma-like editor" ở giai đoạn đầu
 
-## Exit criteria cho Phase 08
+## Exit criteria cho frontend rebuild
 
 - docs, source skeleton, và route map cùng một hướng
 - fixed-layout pages có nền brand rõ

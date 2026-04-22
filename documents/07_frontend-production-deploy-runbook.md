@@ -8,9 +8,9 @@
 
 ## Ghi chú trạng thái hiện tại
 
-- Frontend đang ở `UI reset phase`, nên runtime production có thể tạm chỉ là placeholder app trong thời gian rebuild.
+- Frontend đang ở giai đoạn rebuild hiện tại, nên runtime production đang có homepage baseline ở `/` và sẽ mở dần các route khác theo từng slice.
 - Vì vậy checklist smoke cần tách rõ:
-  - smoke tối thiểu cho reset phase hiện tại
+  - smoke tối thiểu cho homepage baseline hiện tại
   - smoke đầy đủ cho giai đoạn sau khi các route `planner/journal/community/auth` quay lại
 
 ## Checklist hardening verify sau deploy
@@ -116,8 +116,8 @@ Frontend có các script:
 5. Mở:
    - `https://buicojourney.com`
    - `https://www.buicojourney.com`
-6. Test theo đúng phase hiện tại của app:
-   - nếu đang ở reset phase: verify landing/placeholder/runtime health
+6. Test theo đúng giai đoạn hiện tại của app:
+   - nếu đang ở giai đoạn rebuild hiện tại: verify homepage baseline/runtime health
    - nếu route mới đã lên lại: verify thêm auth/community/planner/journal theo checklist bên dưới
 
 ## Post-deploy checklist tối thiểu
@@ -131,10 +131,10 @@ Sau mỗi deploy production, ưu tiên verify nhanh theo đúng thứ tự này:
 2. Public landing tại `/`
    - expected: load được app, không `5xx`, không trắng trang
 
-### Nếu app vẫn đang ở reset phase
+### Nếu app vẫn đang ở giai đoạn rebuild hiện tại
 
-3. Verify placeholder shell hiện đúng
-   - expected: có thông điệp UI reset/rebuild đang diễn ra
+3. Verify homepage scrapbook baseline hiện đúng
+   - expected: route `/` render đúng homepage notebook/scrapbook, không trắng trang và không vỡ layout chính
 4. Verify asset runtime cơ bản
    - expected: `index.html`, JS bundle, CSS bundle load được
 
@@ -181,7 +181,7 @@ Ví dụ:
 ```text
 Scope: frontend/main @ <commit>
 Local verify: pass
-Public smoke: landing pass, reset placeholder pass
+Public smoke: landing pass, homepage baseline pass
 Warnings / advisory: public domain health có warning Cloudflare nhưng local runtime vẫn healthy
 Deferred / next action: verify planner/journal routes sau khi UI mới được scaffold lại
 ```
