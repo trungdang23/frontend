@@ -192,6 +192,18 @@ Tạo nền thị giác mới cho toàn site mà không phụ thuộc editor.
 - fixed-layout pages nhìn cùng một brand nhưng vẫn dễ đọc
 - không phụ thuộc journal editor mới render được home/community/auth
 
+### FR-B0 - Public default image library seed
+
+### Mục tiêu
+
+Tạo một chỗ lưu ảnh mặc định ổn định trong frontend để các surface public có thể dùng cùng một convention URL thay vì tiếp tục rải link ngoài.
+
+### Scope của lượt triển khai này
+
+- [x] tạo thư mục public cho ảnh mặc định trong frontend
+- [x] chốt convention URL public cho ảnh trong thư mục này
+- [x] ghi lại quy ước ngắn trong README để các lượt sau dùng thống nhất
+
 ### FR-B2 - Community feed implementation from approved journal sample
 
 ### Mục tiêu
