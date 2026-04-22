@@ -350,6 +350,18 @@ Sửa hover của polaroid để cả thẻ thật sự nổi lên thay vì ch�
 - [x] giữ cá tính hover riêng cho từng polaroid sau khi tách animation
 - [x] giảm padding, gap và scale trang trí của footer để footer thấp hơn
 
+### FR-B1K - Navigation hover cleanup and extra footer reduction
+
+### Mục tiêu
+
+Làm hover của navigation gọn và đẹp hơn, tránh cảm giác rung lắc khó chịu, đồng thời đảm bảo các note như `Trang Chủ` và `Lập Kế Hoạch` có phản hồi hover rõ ràng. Cùng lượt này tiếp tục hạ chiều cao footer thêm một nấc.
+
+### Scope của lượt triển khai này
+
+- [x] thay hover navigation sang motion tinh gọn hơn, không dùng kiểu lắc mạnh
+- [x] tăng độ rõ của hover trên `Trang Chủ` và `Lập Kế Hoạch`
+- [x] giảm thêm chiều cao footer bằng cách nén tiếp logo, stamp và footer links
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

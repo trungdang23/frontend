@@ -145,12 +145,15 @@
     font-weight: 700;
     line-height: 1;
     text-decoration: none;
+    transform-origin: center 70%;
     transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg));
     animation: note-drop 0.75s ease both;
     transition:
       transform 220ms ease,
       box-shadow 220ms ease,
-      filter 220ms ease;
+      filter 220ms ease,
+      background-position 220ms ease;
+    will-change: transform;
   }
 
   .nav-note::before {
@@ -164,45 +167,44 @@
   .nav-note:hover,
   .nav-note:focus-visible {
     box-shadow:
-      0 20px 32px rgba(98, 74, 51, 0.18),
+      0 22px 34px rgba(98, 74, 51, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.72);
-    filter: saturate(1.04);
+    filter: brightness(1.02) saturate(1.05);
     outline: none;
     z-index: 5;
   }
 
   .nav-note--hover-bob:hover,
   .nav-note--hover-bob:focus-visible {
-    transform: translateY(calc(var(--note-offset, 0px) - 0.55rem))
-      rotate(calc(var(--note-rotate, 0deg) - 2deg)) scale(1.05);
+    transform: translate(-0.08rem, calc(var(--note-offset, 0px) - 0.62rem))
+      rotate(calc(var(--note-rotate, 0deg) - 1.6deg)) scale(1.05);
   }
 
   .nav-note--hover-wobble:hover,
   .nav-note--hover-wobble:focus-visible {
-    animation: note-wobble 520ms ease both;
-    transform: translateY(calc(var(--note-offset, 0px) - 0.2rem))
-      rotate(calc(var(--note-rotate, 0deg) + 2deg)) scale(1.03);
+    transform: translate(0.22rem, calc(var(--note-offset, 0px) - 0.46rem))
+      rotate(calc(var(--note-rotate, 0deg) + 2.4deg)) scale(1.04);
   }
 
   .nav-note--hover-peel:hover,
   .nav-note--hover-peel:focus-visible {
-    transform: translateY(calc(var(--note-offset, 0px) - 0.45rem))
-      rotate(calc(var(--note-rotate, 0deg) - 1deg)) skewX(-3deg) scale(1.04);
-    filter: brightness(1.03) saturate(1.08);
+    transform: translate(-0.22rem, calc(var(--note-offset, 0px) - 0.58rem))
+      rotate(calc(var(--note-rotate, 0deg) - 2.3deg)) scale(1.045);
+    background-position: 1.4rem 0, 0 0.16rem;
+    filter: brightness(1.03) saturate(1.07);
   }
 
   .nav-note--hover-swivel:hover,
   .nav-note--hover-swivel:focus-visible {
-    animation: note-swivel 420ms ease both;
-    transform: translate(0.25rem, calc(var(--note-offset, 0px) - 0.45rem))
-      rotate(calc(var(--note-rotate, 0deg) + 5deg)) scale(1.035);
+    transform: translate(0.28rem, calc(var(--note-offset, 0px) - 0.42rem))
+      rotate(calc(var(--note-rotate, 0deg) + 3.4deg)) scale(1.035);
   }
 
   .nav-note--hover-bloom:hover,
   .nav-note--hover-bloom:focus-visible {
-    animation: note-bloom 380ms ease both;
-    transform: translateY(calc(var(--note-offset, 0px) - 0.38rem))
-      rotate(calc(var(--note-rotate, 0deg) - 2deg)) scale(1.06);
+    transform: translate(0.05rem, calc(var(--note-offset, 0px) - 0.48rem))
+      rotate(calc(var(--note-rotate, 0deg) - 1.8deg)) scale(1.06);
+    filter: brightness(1.04) saturate(1.09);
   }
 
   .nav-note--fold-right {
@@ -461,61 +463,5 @@
 
   50% {
     transform: translateY(-0.45rem) rotate(var(--float-rotate, 0deg));
-  }
-}
-
-@keyframes note-wobble {
-  0% {
-    transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg))
-      scale(1);
-  }
-
-  35% {
-    transform: translateY(calc(var(--note-offset, 0px) - 0.45rem))
-      rotate(calc(var(--note-rotate, 0deg) - 5deg)) scale(1.03);
-  }
-
-  68% {
-    transform: translateY(calc(var(--note-offset, 0px) - 0.35rem))
-      rotate(calc(var(--note-rotate, 0deg) + 4deg)) scale(1.04);
-  }
-
-  100% {
-    transform: translateY(calc(var(--note-offset, 0px) - 0.2rem))
-      rotate(calc(var(--note-rotate, 0deg) + 2deg)) scale(1.03);
-  }
-}
-
-@keyframes note-swivel {
-  0% {
-    transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg))
-      scale(1);
-  }
-
-  50% {
-    transform: translate(0.3rem, calc(var(--note-offset, 0px) - 0.55rem))
-      rotate(calc(var(--note-rotate, 0deg) + 8deg)) scale(1.04);
-  }
-
-  100% {
-    transform: translate(0.25rem, calc(var(--note-offset, 0px) - 0.45rem))
-      rotate(calc(var(--note-rotate, 0deg) + 5deg)) scale(1.035);
-  }
-}
-
-@keyframes note-bloom {
-  0% {
-    transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg))
-      scale(1);
-  }
-
-  60% {
-    transform: translateY(calc(var(--note-offset, 0px) - 0.45rem))
-      rotate(calc(var(--note-rotate, 0deg) - 2deg)) scale(1.08);
-  }
-
-  100% {
-    transform: translateY(calc(var(--note-offset, 0px) - 0.38rem))
-      rotate(calc(var(--note-rotate, 0deg) - 2deg)) scale(1.06);
   }
 }
