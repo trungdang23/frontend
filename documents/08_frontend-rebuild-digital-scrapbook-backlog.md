@@ -314,6 +314,18 @@ Khóa tiêu đề trung tâm thành đúng 3 dòng, mỗi dòng 2 chữ, đồng
 - [x] thêm hover variant khác nhau cho từng note ở navigation
 - [x] thêm hover variant khác nhau cho từng polaroid card
 
+### FR-B1H - Hero title intrinsic width stabilization
+
+### Mục tiêu
+
+Ổn định khối tiêu đề trung tâm theo đúng bề rộng nội dung thật để ba dòng `Nhật Ký / Hành Trình / Việt Nam` không còn phụ thuộc vào khung rộng cố định và không bị tách chữ ngoài ý muốn.
+
+### Scope của lượt triển khai này
+
+- [x] đổi khối tiêu đề sang sizing theo content thay vì `max-width` cố định
+- [x] giữ anchor của title bám cùng tâm vòng polaroid khi khối chữ thay đổi bề rộng
+- [x] tinh chỉnh font-size và line-height để ba dòng đứng gọn hơn trong vùng rỗng ở giữa
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu
