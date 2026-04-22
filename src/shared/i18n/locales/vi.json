@@ -358,7 +358,34 @@
     "title": "Thông tin tài khoản hiện tại",
     "description": "Trang này hiển thị thông tin tài khoản hiện tại của bạn và là nền tảng cho hồ sơ cá nhân về sau.",
     "summary": "Tài khoản của bạn đã sẵn sàng để đồng bộ cùng bảng điều khiển và không gian riêng.",
-    "loadError": "Hiện chưa tải được thông tin tài khoản."
+    "loadError": "Hiện chưa tải được dữ liệu cá nhân.",
+    "badge": "#TRAVELER",
+    "memberSince": "Tham gia Journey từ {{date}}",
+    "memberSinceFallback": "chưa rõ",
+    "tabs": {
+      "journal": "Nhật ký của tôi",
+      "plans": "Kế hoạch đã lưu"
+    },
+    "stats": {
+      "postsLine1": "Bài",
+      "postsLine2": "viết",
+      "plansLine1": "Kế",
+      "plansLine2": "hoạch",
+      "publicLine1": "Công",
+      "publicLine2": "khai"
+    },
+    "meta": {
+      "posted": "Đã đăng"
+    },
+    "states": {
+      "loading": "Đang tải dữ liệu cá nhân...",
+      "postsEmpty": "Bạn chưa đăng bài viết nào.",
+      "plansEmpty": "Bạn chưa tạo kế hoạch nào."
+    },
+    "actions": {
+      "viewMoreJournal": "XEM THÊM KÝ ỨC",
+      "viewMorePlans": "XEM THÊM KẾ HOẠCH"
+    }
   },
   "shell": {
     "title": "Không gian riêng của Journey",

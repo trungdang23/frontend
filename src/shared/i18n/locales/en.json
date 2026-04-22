@@ -358,7 +358,34 @@
     "title": "Current account information",
     "description": "This page shows your current account information and serves as the foundation for the fuller profile experience later on.",
     "summary": "This account is ready to stay in sync with the dashboard and the protected workspace.",
-    "loadError": "Unable to load profile information right now."
+    "loadError": "Unable to load personal data right now.",
+    "badge": "#TRAVELER",
+    "memberSince": "On Journey since {{date}}",
+    "memberSinceFallback": "unknown",
+    "tabs": {
+      "journal": "My journal",
+      "plans": "Saved plans"
+    },
+    "stats": {
+      "postsLine1": "Posts",
+      "postsLine2": "shared",
+      "plansLine1": "Plans",
+      "plansLine2": "saved",
+      "publicLine1": "Public",
+      "publicLine2": "trips"
+    },
+    "meta": {
+      "posted": "Published"
+    },
+    "states": {
+      "loading": "Loading your personal data...",
+      "postsEmpty": "You have not published any posts yet.",
+      "plansEmpty": "You have not created any plans yet."
+    },
+    "actions": {
+      "viewMoreJournal": "VIEW MORE MEMORIES",
+      "viewMorePlans": "VIEW MORE PLANS"
+    }
   },
   "shell": {
     "title": "Your Journey workspace",

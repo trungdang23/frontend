@@ -30,6 +30,9 @@ export function AppProviders({ children }: PropsWithChildren) {
       client.setQueryDefaults(['community', 'posts', 'list'], {
         staleTime: 30_000,
       });
+      client.setQueryDefaults(['community', 'posts', 'mine'], {
+        staleTime: 30_000,
+      });
       client.setQueryDefaults(['community', 'posts', 'detail'], {
         staleTime: 30_000,
       });

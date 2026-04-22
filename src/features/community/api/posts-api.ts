@@ -48,6 +48,31 @@ export async function getPostDetail(
   });
 }
 
+export async function listMyPosts(
+  query?: Partial<CommunityPostListQuery>,
+  options: RequestOptions = {},
+): Promise<CommunityPostListResult> {
+  const resolvedQuery = resolveCommunityPostListQuery(query);
+  const response = await requestWithMeta<CommunityPost[], CommunityPostListMeta>(
+    `/posts/mine?${buildCommunityPostListQueryString(resolvedQuery)}`,
+    {
+      auth: true,
+      signal: options.signal,
+    },
+  );
+
+  return {
+    data: response.data,
+    meta: response.meta || {
+      page: resolvedQuery.page,
+      size: resolvedQuery.size,
+      sort: resolvedQuery.sort,
+      totalElements: response.data.length,
+      totalPages: response.data.length > 0 ? 1 : 0,
+    },
+  };
+}
+
 export async function createPost(payload: CommunityPostCreatePayload) {
   return request<CommunityPost, CommunityPostCreatePayload>('/posts', {
     method: 'POST',

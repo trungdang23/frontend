@@ -1,12 +1,16 @@
-import type { ProfileSampleEntry } from '@/features/profile/content/profile-sample-content';
+type ProfileSampleJournalEntryProps = {
+  image: string;
+  metadata: string;
+  rotationClass?: string;
+  title: string;
+};
 
 export function ProfileSampleJournalEntry({
-  date,
-  duration,
   image,
+  metadata,
   rotationClass,
   title,
-}: ProfileSampleEntry) {
+}: ProfileSampleJournalEntryProps) {
   return (
     <article className={`rounded-lg border border-gray-100 bg-white p-4 shadow-sm ${rotationClass}`}>
       <img
@@ -16,13 +20,7 @@ export function ProfileSampleJournalEntry({
         src={image}
       />
       <h3 className="mb-1 text-lg font-bold text-gray-900">{title}</h3>
-      <p className="text-sm text-gray-500">
-        {date}
-        {' '}
-        •
-        {' '}
-        {duration}
-      </p>
+      <p className="text-sm text-gray-500">{metadata}</p>
     </article>
   );
 }

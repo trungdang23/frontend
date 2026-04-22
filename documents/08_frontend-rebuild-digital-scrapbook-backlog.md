@@ -281,6 +281,21 @@ Biến các điểm vào `Lập Kế Hoạch` và `Cá Nhân` từ homepage thà
 - [x] giữ flow sau đăng nhập quay lại đúng route protected mà người dùng vừa bấm, đặc biệt với `Lập Kế Hoạch` và `Cá Nhân`
 - [x] cập nhật test nhỏ để khóa hành vi redirect và route profile
 
+### FR-B3B - Auth shared chrome and profile data binding
+
+### Mục tiêu
+
+Đưa `Đăng Nhập` và `Đăng Ký` vào đúng shared `header/footer` của site, đồng thời thay phần dữ liệu tĩnh ở `Cá Nhân` bằng dữ liệu thật từ DB: tab `Nhật ký của tôi` là các bài viết đã đăng, tab `Kế hoạch đã lưu` là các kế hoạch đã tạo.
+
+### Scope của lượt triển khai này
+
+- [x] bọc `auth/login` và `auth/register` bằng shared `header/footer` như các page public khác
+- [x] giữ nguyên body notebook của auth screens, không tự thêm layout chrome riêng
+- [x] nối tab `Nhật ký của tôi` với bài viết của current user từ backend
+- [x] nối tab `Kế hoạch đã lưu` với danh sách trip của current user từ backend
+- [x] thay số liệu chính trên card trái bằng dữ liệu thật có thể lấy được từ auth/posts/trips hiện tại
+- [x] cập nhật test/check nhỏ nhất liên quan đến contract mới
+
 ### FR-B1 - Homepage scrapbook implementation
 
 ### Mục tiêu
