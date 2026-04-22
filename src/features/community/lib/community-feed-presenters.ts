@@ -124,13 +124,13 @@ function createExcerpt(content: string) {
 }
 
 function getCommunityCardTitle(post: CommunityPost) {
-  const tripName = post.trip?.name?.trim();
+  const postTitle = post.title.trim();
 
-  if (tripName) {
-    return tripName;
+  if (postTitle) {
+    return postTitle;
   }
 
-  return post.title.trim();
+  return post.trip?.name?.trim() || post.id;
 }
 
 export function decorateCommunityPosts(posts: CommunityPost[]): CommunityFeedCard[] {

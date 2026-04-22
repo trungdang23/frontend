@@ -252,6 +252,18 @@ Rút gọn phần heading của card bài viết để chỉ còn tên chuyến 
 - [x] bỏ dòng ngày tháng trong phần metadata của card
 - [x] bỏ chip tag ở đáy card vì title đã dùng trực tiếp tên chuyến đi
 
+### FR-B2C - Community card title source correction
+
+### Mục tiêu
+
+Đưa card community về đúng yêu cầu hiển thị tên bài post thay vì tên chuyến đi.
+
+### Scope của lượt triển khai này
+
+- [x] đổi presenter của community card sang ưu tiên `post.title`
+- [x] giữ fallback an toàn nếu title rỗng
+- [x] thêm test nhỏ để khóa lại nguồn title của card
+
 ### FR-B3 - Auth scrapbook gate cho planner và profile
 
 ### Mục tiêu
