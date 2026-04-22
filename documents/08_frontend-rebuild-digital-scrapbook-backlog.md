@@ -362,6 +362,18 @@ Làm hover của navigation gọn và đẹp hơn, tránh cảm giác rung lắc
 - [x] tăng độ rõ của hover trên `Trang Chủ` và `Lập Kế Hoạch`
 - [x] giảm thêm chiều cao footer bằng cách nén tiếp logo, stamp và footer links
 
+### FR-B1L - Navigation wiggle recovery without hover-exit reset
+
+### Mục tiêu
+
+Khôi phục cảm giác `lắc lắc` nhẹ cho từng note trên navigation nhưng không dùng cách làm khiến note bị re-trigger entry animation khi rời hover.
+
+### Scope của lượt triển khai này
+
+- [x] tách motion `drop-in` ban đầu khỏi motion `hover` của từng note
+- [x] thêm lại hover wiggle nhẹ với cá tính riêng cho từng nút navigation
+- [x] tránh trạng thái bỏ hover là note bị reset opacity/transform rồi hiện lại dần dần
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

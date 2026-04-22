@@ -128,11 +128,23 @@
     box-shadow: 0 0 0 0.32rem rgba(215, 99, 85, 0.16);
   }
 
+  .nav-note-shell {
+    position: relative;
+    display: inline-flex;
+    transform-origin: center 70%;
+    transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg));
+    animation: note-drop 0.75s ease both;
+    animation-delay: var(--note-drop-delay, 0ms);
+    will-change: transform;
+  }
+
   .nav-note {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    min-width: 0;
     min-height: 4rem;
     padding: 0.85rem 1.35rem;
     overflow: hidden;
@@ -145,9 +157,8 @@
     font-weight: 700;
     line-height: 1;
     text-decoration: none;
+    text-align: center;
     transform-origin: center 70%;
-    transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg));
-    animation: note-drop 0.75s ease both;
     transition:
       transform 220ms ease,
       box-shadow 220ms ease,
@@ -164,46 +175,46 @@
     pointer-events: none;
   }
 
-  .nav-note:hover,
-  .nav-note:focus-visible {
+  .nav-note-shell:hover .nav-note,
+  .nav-note-shell:focus-visible .nav-note {
     box-shadow:
       0 22px 34px rgba(98, 74, 51, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.72);
     filter: brightness(1.02) saturate(1.05);
     outline: none;
+  }
+
+  .nav-note-shell:hover,
+  .nav-note-shell:focus-visible {
     z-index: 5;
+    outline: none;
   }
 
-  .nav-note--hover-bob:hover,
-  .nav-note--hover-bob:focus-visible {
-    transform: translate(-0.08rem, calc(var(--note-offset, 0px) - 0.62rem))
-      rotate(calc(var(--note-rotate, 0deg) - 1.6deg)) scale(1.05);
+  .nav-note-shell:hover .nav-note--hover-bob,
+  .nav-note-shell:focus-visible .nav-note--hover-bob {
+    animation: note-hover-bob 760ms ease-in-out infinite alternate;
   }
 
-  .nav-note--hover-wobble:hover,
-  .nav-note--hover-wobble:focus-visible {
-    transform: translate(0.22rem, calc(var(--note-offset, 0px) - 0.46rem))
-      rotate(calc(var(--note-rotate, 0deg) + 2.4deg)) scale(1.04);
+  .nav-note-shell:hover .nav-note--hover-wobble,
+  .nav-note-shell:focus-visible .nav-note--hover-wobble {
+    animation: note-hover-wobble 690ms ease-in-out infinite alternate;
   }
 
-  .nav-note--hover-peel:hover,
-  .nav-note--hover-peel:focus-visible {
-    transform: translate(-0.22rem, calc(var(--note-offset, 0px) - 0.58rem))
-      rotate(calc(var(--note-rotate, 0deg) - 2.3deg)) scale(1.045);
+  .nav-note-shell:hover .nav-note--hover-peel,
+  .nav-note-shell:focus-visible .nav-note--hover-peel {
+    animation: note-hover-peel 820ms ease-in-out infinite alternate;
     background-position: 1.4rem 0, 0 0.16rem;
     filter: brightness(1.03) saturate(1.07);
   }
 
-  .nav-note--hover-swivel:hover,
-  .nav-note--hover-swivel:focus-visible {
-    transform: translate(0.28rem, calc(var(--note-offset, 0px) - 0.42rem))
-      rotate(calc(var(--note-rotate, 0deg) + 3.4deg)) scale(1.035);
+  .nav-note-shell:hover .nav-note--hover-swivel,
+  .nav-note-shell:focus-visible .nav-note--hover-swivel {
+    animation: note-hover-swivel 740ms ease-in-out infinite alternate;
   }
 
-  .nav-note--hover-bloom:hover,
-  .nav-note--hover-bloom:focus-visible {
-    transform: translate(0.05rem, calc(var(--note-offset, 0px) - 0.48rem))
-      rotate(calc(var(--note-rotate, 0deg) - 1.8deg)) scale(1.06);
+  .nav-note-shell:hover .nav-note--hover-bloom,
+  .nav-note-shell:focus-visible .nav-note--hover-bloom {
+    animation: note-hover-bloom 780ms ease-in-out infinite alternate;
     filter: brightness(1.04) saturate(1.09);
   }
 
@@ -452,6 +463,56 @@
   to {
     opacity: 1;
     transform: translateY(var(--note-offset, 0px)) rotate(var(--note-rotate, 0deg));
+  }
+}
+
+@keyframes note-hover-bob {
+  0% {
+    transform: translate(-0.04rem, -0.22rem) rotate(-0.7deg) scale(1.02);
+  }
+
+  100% {
+    transform: translate(0.08rem, -0.6rem) rotate(-1.8deg) scale(1.05);
+  }
+}
+
+@keyframes note-hover-wobble {
+  0% {
+    transform: translate(0.06rem, -0.18rem) rotate(0.8deg) scale(1.015);
+  }
+
+  100% {
+    transform: translate(0.24rem, -0.46rem) rotate(2.1deg) scale(1.04);
+  }
+}
+
+@keyframes note-hover-peel {
+  0% {
+    transform: translate(-0.08rem, -0.18rem) rotate(-0.9deg) scale(1.018);
+  }
+
+  100% {
+    transform: translate(-0.22rem, -0.54rem) rotate(-2.1deg) scale(1.045);
+  }
+}
+
+@keyframes note-hover-swivel {
+  0% {
+    transform: translate(0.08rem, -0.16rem) rotate(1deg) scale(1.014);
+  }
+
+  100% {
+    transform: translate(0.28rem, -0.42rem) rotate(3deg) scale(1.035);
+  }
+}
+
+@keyframes note-hover-bloom {
+  0% {
+    transform: translate(0, -0.16rem) rotate(-0.7deg) scale(1.02);
+  }
+
+  100% {
+    transform: translate(0.06rem, -0.48rem) rotate(-1.7deg) scale(1.06);
   }
 }
 

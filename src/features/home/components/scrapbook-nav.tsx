@@ -40,23 +40,27 @@ export function ScrapbookNav() {
           {homeNavItems.map((item, index) => (
             <li className="min-w-0 md:flex-none" key={item.labelKey}>
               <a
-                className={cn(
-                  'nav-note min-h-[3.05rem] w-full min-w-0 px-1.5 py-1.5 text-[0.8rem] leading-[0.9] md:min-h-[4rem] md:w-auto md:min-w-[8rem] md:px-5 md:py-2 md:text-[1.6rem]',
-                  noteToneClasses[item.tone],
-                  noteShapeClasses[item.shape],
-                  noteHoverClasses[index % noteHoverClasses.length],
-                )}
+                className="nav-note-shell min-h-[3.05rem] w-full min-w-0 md:min-h-[4rem] md:w-auto md:min-w-[8rem]"
                 href={item.href}
                 style={
                   {
                     ['--note-offset' as string]: `${item.yOffset}px`,
                     ['--note-rotate' as string]: `${item.rotate}deg`,
-                    animationDelay: `${index * 100}ms`,
+                    ['--note-drop-delay' as string]: `${index * 100}ms`,
                   } as CSSProperties
                 }
               >
-                <span className="relative z-10 text-center whitespace-normal md:whitespace-nowrap">
-                  {t(item.labelKey)}
+                <span
+                  className={cn(
+                    'nav-note min-h-[3.05rem] w-full min-w-0 px-1.5 py-1.5 text-[0.8rem] leading-[0.9] md:min-h-[4rem] md:px-5 md:py-2 md:text-[1.6rem]',
+                    noteToneClasses[item.tone],
+                    noteShapeClasses[item.shape],
+                    noteHoverClasses[index % noteHoverClasses.length],
+                  )}
+                >
+                  <span className="relative z-10 text-center whitespace-normal md:whitespace-nowrap">
+                    {t(item.labelKey)}
+                  </span>
                 </span>
               </a>
             </li>
