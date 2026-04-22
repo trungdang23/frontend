@@ -250,6 +250,20 @@
       },
       "sapa": {
         "title": "Sapa sunrise"
+      },
+      "haGiang": {
+        "title": "Ha Giang pass",
+        "note": "high rock, strong wind"
+      },
+      "daNang": {
+        "title": "Da Nang shore"
+      },
+      "phuQuoc": {
+        "title": "Phu Quoc sunset",
+        "note": "late light in gold"
+      },
+      "canTho": {
+        "title": "Can Tho floating market"
       }
     },
     "footer": {

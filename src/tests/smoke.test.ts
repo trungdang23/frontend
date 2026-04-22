@@ -16,7 +16,7 @@ describe('homepage scaffold', () => {
   });
 
   it('ships a scrapbook ring of travel moments', () => {
-    expect(polaroidMoments).toHaveLength(8);
+    expect(polaroidMoments).toHaveLength(12);
   });
 
   it('does not ship homepage chrome links with empty hash fragments', () => {

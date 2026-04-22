@@ -113,6 +113,48 @@ export const polaroidMoments: PolaroidMoment[] = [
     tone: 'coral',
     titleKey: 'home.polaroids.sapa.title',
   },
+  {
+    fastenerPosition: 'top-right',
+    fastenerType: 'washi',
+    id: 'ha-giang-pass',
+    image:
+      'https://images.unsplash.com/photo-1529154036614-a60975f5c760?q=80&w=700&auto=format&fit=crop',
+    noteKey: 'home.polaroids.haGiang.note',
+    rotate: -5,
+    tone: 'sky',
+    titleKey: 'home.polaroids.haGiang.title',
+  },
+  {
+    fastenerPosition: 'right-center',
+    fastenerType: 'tape',
+    id: 'da-nang-shore',
+    image:
+      'https://images.unsplash.com/photo-1583417319070-4a69db38a482?q=80&w=700&auto=format&fit=crop',
+    rotate: 9,
+    tone: 'sun',
+    titleKey: 'home.polaroids.daNang.title',
+  },
+  {
+    fastenerPosition: 'top-left',
+    fastenerType: 'pin',
+    id: 'phu-quoc-sunset',
+    image:
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=700&auto=format&fit=crop',
+    noteKey: 'home.polaroids.phuQuoc.note',
+    rotate: -9,
+    tone: 'coral',
+    titleKey: 'home.polaroids.phuQuoc.title',
+  },
+  {
+    fastenerPosition: 'top-center',
+    fastenerType: 'tape',
+    id: 'can-tho-market',
+    image:
+      'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?q=80&w=700&auto=format&fit=crop',
+    rotate: 5,
+    tone: 'leaf',
+    titleKey: 'home.polaroids.canTho.title',
+  },
 ];
 
 export const mapStops: MapStop[] = [

@@ -477,6 +477,18 @@ Sửa hover của polaroid để cả thẻ thật sự nổi lên thay vì ch�
 - [x] giữ cá tính hover riêng cho từng polaroid sau khi tách animation
 - [x] giảm padding, gap và scale trang trí của footer để footer thấp hơn
 
+### FR-B1K - Homepage polaroid ring expansion
+
+### Mục tiêu
+
+Mở rộng vòng polaroid trên homepage để có đủ 12 mốc ảnh, vẫn giữ cách phân bổ đều theo chiều kim đồng hồ quanh tiêu đề trung tâm.
+
+### Scope của lượt triển khai này
+
+- [x] thêm 4 polaroid card mới vào vòng ảnh homepage
+- [x] giữ dữ liệu card đi qua cùng presenter/i18n hiện tại thay vì hardcode trong component
+- [x] cập nhật test số lượng polaroid để khóa cấu hình 12 vị trí
+
 ### FR-B1K - Navigation hover cleanup and extra footer reduction
 
 ### Mục tiêu

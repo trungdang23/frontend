@@ -250,6 +250,20 @@
       },
       "sapa": {
         "title": "Bình minh Sa Pa"
+      },
+      "haGiang": {
+        "title": "Đèo Hà Giang",
+        "note": "đá cao, gió mạnh"
+      },
+      "daNang": {
+        "title": "Bờ biển Đà Nẵng"
+      },
+      "phuQuoc": {
+        "title": "Hoàng hôn Phú Quốc",
+        "note": "nắng muộn rất vàng"
+      },
+      "canTho": {
+        "title": "Chợ nổi Cần Thơ"
       }
     },
     "footer": {
