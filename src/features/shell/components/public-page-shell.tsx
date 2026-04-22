@@ -26,7 +26,13 @@ export function PublicPageShell({
   const { t } = useI18n();
 
   return (
-    <div className={cn(PUBLIC_PAGE_SHELL_CLASSNAME, shellClassName)}>
+    <div
+      className={cn(
+        PUBLIC_PAGE_SHELL_CLASSNAME,
+        allowOverflowXVisible && 'overflow-y-hidden overflow-x-visible',
+        shellClassName,
+      )}
+    >
       <a
         className="absolute left-4 top-4 z-[120] -translate-y-24 rounded-full bg-[var(--color-ink)] px-4 py-2 text-sm font-semibold text-white transition-transform focus:translate-y-0"
         href={`#${mainId}`}
