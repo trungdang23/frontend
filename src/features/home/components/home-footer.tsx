@@ -20,11 +20,35 @@ const stampIconMap = {
   youtube: Youtube,
 } as const;
 
-const stampToneClasses: Record<AccentTone, string> = {
-  coral: 'bg-[#8B4513]',
-  leaf: 'bg-[#2E8B57]',
-  sky: 'bg-[#191970]',
-  sun: 'bg-[#804000]',
+const stampToneStyles: Record<AccentTone, CSSProperties> = {
+  coral: {
+    ['--stamp-base' as string]: '#e89a81',
+    ['--stamp-hover' as string]: '#ffd5c6',
+    ['--stamp-edge' as string]: '#8e4d3a',
+    ['--stamp-ink' as string]: '#5e2418',
+    ['--stamp-glow' as string]: 'rgba(221, 137, 110, 0.42)',
+  },
+  leaf: {
+    ['--stamp-base' as string]: '#abd2ab',
+    ['--stamp-hover' as string]: '#dff2d4',
+    ['--stamp-edge' as string]: '#4d7753',
+    ['--stamp-ink' as string]: '#24452a',
+    ['--stamp-glow' as string]: 'rgba(121, 176, 128, 0.38)',
+  },
+  sky: {
+    ['--stamp-base' as string]: '#adcde9',
+    ['--stamp-hover' as string]: '#def3ff',
+    ['--stamp-edge' as string]: '#496a90',
+    ['--stamp-ink' as string]: '#1f3e61',
+    ['--stamp-glow' as string]: 'rgba(119, 165, 208, 0.38)',
+  },
+  sun: {
+    ['--stamp-base' as string]: '#ecc57f',
+    ['--stamp-hover' as string]: '#ffe3ab',
+    ['--stamp-edge' as string]: '#936120',
+    ['--stamp-ink' as string]: '#5e3b05',
+    ['--stamp-glow' as string]: 'rgba(225, 180, 83, 0.4)',
+  },
 };
 
 export function HomeFooter() {
@@ -91,33 +115,19 @@ export function HomeFooter() {
             const Icon = stampIconMap[social.id];
 
             return (
-              <div className="group relative" key={social.id}>
-                <div className="absolute inset-0 translate-x-1.5 translate-y-1.5 rotate-2 bg-white shadow-sm" />
+              <div className="relative" key={social.id}>
                 <div
                   aria-label={t(social.labelKey)}
-                  className={cn(
-                    'relative flex h-10 w-9 cursor-pointer items-center justify-center border-[2px] border-white p-1 text-white shadow-md transition-all duration-300 group-hover:scale-105 group-hover:rotate-0 sm:h-11 sm:w-10',
-                    stampToneClasses[social.tone],
-                  )}
+                  className={cn('footer-social-stamp cursor-pointer')}
                   role="img"
                   style={
                     {
-                      transform: `rotate(${social.rotate}deg)`,
+                      ['--stamp-rotate' as string]: `${social.rotate}deg`,
+                      ...stampToneStyles[social.tone],
                     } as CSSProperties
                   }
                 >
-                  <Icon />
-                  <div className="absolute left-0 right-0 top-[-4px] flex justify-around px-0.5">
-                    {Array.from({ length: 8 }).map((_, index) => (
-                      <div className="h-[4px] w-[4px] rounded-full bg-white opacity-90" key={index} />
-                    ))}
-                  </div>
-                  <div className="absolute bottom-[-4px] left-0 right-0 flex justify-around px-0.5">
-                    {Array.from({ length: 8 }).map((_, index) => (
-                      <div className="h-[4px] w-[4px] rounded-full bg-white opacity-90" key={index} />
-                    ))}
-                  </div>
-                  <div className="pointer-events-none absolute inset-1 border border-white/20" />
+                  <Icon aria-hidden="true" />
                 </div>
               </div>
             );

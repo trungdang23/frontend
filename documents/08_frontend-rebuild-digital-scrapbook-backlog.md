@@ -386,6 +386,18 @@ Khôi phục các polaroid card bị mất ảnh do một số URL external cũ 
 - [x] thay các link hỏng của `Huế`, `Hội An`, `Nha Trang`, `Sa Pa` bằng nguồn public còn hoạt động
 - [x] giữ nguyên các card còn hiển thị bình thường để tránh đổi visual không cần thiết
 
+### FR-B1N - Footer social stamp hover and silhouette refinement
+
+### Mục tiêu
+
+Làm các nút mạng xã hội ở footer nổi bật hơn khi hover, sáng màu hơn, phóng to rõ hơn, và có silhouette gần với con tem thay vì giữ lớp khung vuông phía sau.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ lớp khung nền lệch phía sau social stamps
+- [x] đổi visual stamp sang viền tem răng cưa và inner border rõ hơn
+- [x] tăng hover lift, scale, glow và độ sáng nền cho từng social stamp
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

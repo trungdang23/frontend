@@ -424,27 +424,138 @@
     backdrop-filter: blur(8px);
   }
 
-  .stamp-button {
+  .footer-social-stamp {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 3.6rem;
-    height: 4.1rem;
-    border: 2px solid rgba(255, 255, 255, 0.82);
-    color: white;
-    transform: rotate(var(--stamp-rotate, 0deg));
-    box-shadow: 0 16px 24px rgba(96, 72, 50, 0.12);
+    width: 2.7rem;
+    height: 3.05rem;
+    padding: 0.4rem;
+    color: var(--stamp-ink, #5b3418);
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.46), transparent 38%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.24), transparent 56%),
+      var(--stamp-base, #e8c090);
+    border: 1.5px solid var(--stamp-edge, rgba(117, 82, 52, 0.72));
+    clip-path: polygon(
+      14% 0,
+      22% 4%,
+      30% 0,
+      38% 4%,
+      46% 0,
+      54% 4%,
+      62% 0,
+      70% 4%,
+      78% 0,
+      86% 4%,
+      100% 14%,
+      96% 22%,
+      100% 30%,
+      96% 38%,
+      100% 46%,
+      96% 54%,
+      100% 62%,
+      96% 70%,
+      100% 78%,
+      96% 86%,
+      86% 100%,
+      78% 96%,
+      70% 100%,
+      62% 96%,
+      54% 100%,
+      46% 96%,
+      38% 100%,
+      30% 96%,
+      22% 100%,
+      14% 96%,
+      0 86%,
+      4% 78%,
+      0 70%,
+      4% 62%,
+      0 54%,
+      4% 46%,
+      0 38%,
+      4% 30%,
+      0 22%,
+      4% 14%
+    );
+    transform: rotate(var(--stamp-rotate, 0deg)) translateY(0) scale(1);
+    transform-origin: center;
+    box-shadow:
+      0 12px 18px rgba(96, 72, 50, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.58);
     transition:
-      transform 180ms ease,
-      box-shadow 180ms ease;
+      transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 220ms ease,
+      filter 220ms ease,
+      background 220ms ease,
+      border-color 220ms ease,
+      color 220ms ease;
   }
 
-  .stamp-button:hover,
-  .stamp-button:focus-visible {
-    transform: translateY(-0.2rem) rotate(var(--stamp-rotate, 0deg));
-    box-shadow: 0 20px 30px rgba(96, 72, 50, 0.16);
+  .footer-social-stamp::before {
+    content: '';
+    position: absolute;
+    inset: 0.32rem;
+    border: 1px dashed rgba(255, 255, 255, 0.72);
+    box-shadow: inset 0 0 0 1px rgba(93, 63, 35, 0.1);
+    clip-path: inherit;
+    opacity: 0.92;
+    pointer-events: none;
+  }
+
+  .footer-social-stamp::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 42%);
+    clip-path: inherit;
+    pointer-events: none;
+  }
+
+  .footer-social-stamp svg {
+    width: 1.15rem;
+    height: 1.15rem;
+    filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.24));
+    transition:
+      transform 220ms ease,
+      filter 220ms ease;
+  }
+
+  .footer-social-stamp:hover,
+  .footer-social-stamp:focus-visible {
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.58), transparent 38%),
+      linear-gradient(145deg, rgba(255, 255, 255, 0.3), transparent 56%),
+      var(--stamp-hover, #f6dab2);
+    transform: translateY(-0.45rem) scale(1.18) rotate(var(--stamp-rotate, 0deg));
+    box-shadow:
+      0 24px 34px rgba(96, 72, 50, 0.22),
+      0 0 0 0.32rem var(--stamp-glow, rgba(220, 175, 95, 0.28)),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+    filter: brightness(1.05) saturate(1.08);
     outline: none;
+  }
+
+  .footer-social-stamp:hover svg,
+  .footer-social-stamp:focus-visible svg {
+    transform: scale(1.12);
+    filter:
+      drop-shadow(0 2px 0 rgba(255, 255, 255, 0.22))
+      drop-shadow(0 4px 6px rgba(84, 58, 36, 0.18));
+  }
+
+  @media (min-width: 640px) {
+    .footer-social-stamp {
+      width: 3rem;
+      height: 3.35rem;
+    }
+
+    .footer-social-stamp svg {
+      width: 1.22rem;
+      height: 1.22rem;
+    }
   }
 }
 
