@@ -289,6 +289,18 @@ Làm vòng polaroid bên trái rộng hơn nữa và giữ tiêu đề chính lu
 - [x] đẩy tâm của cả vòng card sang trái thêm
 - [x] đẩy tiêu đề trung tâm theo cùng tâm để không đè lên thẻ
 
+### FR-B1F - Left hero spacing expansion follow-up
+
+### Mục tiêu
+
+Tiếp tục nới khoảng rỗng ở giữa vòng card để tiêu đề trung tâm nằm gọn bên trong, không chạm bất kỳ polaroid nào.
+
+### Scope của lượt triển khai này
+
+- [x] tăng thêm khoảng cách của vòng card ở desktop
+- [x] đẩy tâm hero sang trái thêm một nấc nữa
+- [x] giữ tiêu đề nằm gọn trong vùng rỗng của vòng card
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu
