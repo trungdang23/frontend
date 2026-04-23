@@ -1,7 +1,4 @@
 import {
-  useEffect,
-  useRef,
-  useState,
   type CSSProperties,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -23,24 +20,6 @@ const pageDotStyle: CSSProperties = {
   backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)',
   backgroundSize: '28px 28px',
 };
-
-const bookPerspectiveStyle: CSSProperties = {
-  perspective: '2400px',
-};
-
-const bookFaceStyle: CSSProperties = {
-  WebkitBackfaceVisibility: 'hidden',
-  backfaceVisibility: 'hidden',
-};
-
-const bookSpreadStyle: CSSProperties = {
-  transformOrigin: 'left center',
-  transformStyle: 'preserve-3d',
-};
-
-const plannerFlipFallbackMs = 2800;
-
-type PlannerFlipPhase = 'intro' | 'forward' | 'created' | 'backward';
 
 type PlannerPolaroidProps = {
   alt: string;
@@ -294,15 +273,6 @@ function PlannerRightPageFront({
         </button>
       ) : null}
     </div>
-  );
-}
-
-function PlannerBlankPage() {
-  return (
-    <div
-      className="relative h-full min-h-0 overflow-hidden bg-[#fffdfa] p-3 sm:p-3.5 md:p-3.5 lg:p-4"
-      style={pageDotStyle}
-    />
   );
 }
 
@@ -618,45 +588,6 @@ function PlannerCreateSpread({
 export function PlannerPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const isCreatingPlan = searchParams.get('page') === 'next';
-  const [flipPhase, setFlipPhase] = useState<PlannerFlipPhase>(() => (
-    isCreatingPlan ? 'created' : 'intro'
-  ));
-  const previousIsCreatingPlan = useRef(isCreatingPlan);
-  const fallbackTimeoutRef = useRef(0);
-
-  useEffect(() => {
-    if (previousIsCreatingPlan.current === isCreatingPlan) {
-      return;
-    }
-
-    previousIsCreatingPlan.current = isCreatingPlan;
-    const frameId = window.requestAnimationFrame(() => {
-      setFlipPhase(isCreatingPlan ? 'forward' : 'backward');
-
-      fallbackTimeoutRef.current = window.setTimeout(() => {
-        setFlipPhase(isCreatingPlan ? 'created' : 'intro');
-      }, plannerFlipFallbackMs);
-    });
-
-    return () => {
-      window.cancelAnimationFrame(frameId);
-      window.clearTimeout(fallbackTimeoutRef.current);
-    };
-  }, [isCreatingPlan]);
-
-  const isSheetFlipped = flipPhase === 'forward' || flipPhase === 'created';
-  const isPageTurnRunning = flipPhase === 'forward' || flipPhase === 'backward';
-  const showCreateSpreadBase = flipPhase === 'created' || flipPhase === 'forward';
-  const showIntroLeftPage = flipPhase !== 'created';
-
-  const finishPageTurn = () => {
-    if (!isPageTurnRunning) {
-      return;
-    }
-
-    window.clearTimeout(fallbackTimeoutRef.current);
-    setFlipPhase(flipPhase === 'forward' ? 'created' : 'intro');
-  };
 
   const openNextPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
@@ -701,79 +632,18 @@ export function PlannerPage() {
             </div>
 
             <div className="relative hidden h-full min-h-0 md:block">
-              {showCreateSpreadBase ? (
-                <div
-                  aria-hidden={isPageTurnRunning}
-                  className={cn(
-                    'absolute inset-0',
-                    isPageTurnRunning ? 'pointer-events-none' : 'pointer-events-auto',
-                  )}
-                  inert={isPageTurnRunning}
-                >
-                  <PlannerCreateSpread onBack={returnToIntroPlannerPage} />
-                </div>
+              {isCreatingPlan ? (
+                <PlannerCreateSpread onBack={returnToIntroPlannerPage} />
               ) : (
                 <div className="absolute inset-0 flex">
                   <div className="w-1/2">
-                    <PlannerBlankPage />
+                    <PlannerLeftPage />
                   </div>
                   <div className="w-1/2">
-                    <PlannerBlankPage />
+                    <PlannerRightPageFront onCreatePlan={openNextPlannerPage} />
                   </div>
                 </div>
               )}
-
-              {showIntroLeftPage ? (
-                <div className="absolute inset-y-0 left-0 z-10 w-1/2">
-                  <PlannerLeftPage />
-                </div>
-              ) : null}
-
-              <div
-                className={cn(
-                  'absolute inset-y-0 right-0 z-20 w-1/2 overflow-visible',
-                  flipPhase === 'intro' ? 'pointer-events-auto' : 'pointer-events-none',
-                )}
-                style={bookPerspectiveStyle}
-              >
-                <div
-                  className={cn(
-                    'relative h-full transition-[transform,box-shadow,filter] duration-[2600ms] will-change-transform [transition-timing-function:cubic-bezier(0.17,0.84,0.2,1)]',
-                    isSheetFlipped
-                      ? '[transform:rotateY(-180deg)_translateX(-0.12rem)] shadow-[-34px_18px_42px_rgba(32,25,22,0.24)]'
-                      : '[transform:rotateY(0deg)_rotateZ(0deg)_translateX(0)] shadow-[-8px_6px_16px_rgba(32,25,22,0.1)]',
-                  )}
-                  onTransitionEnd={(event) => {
-                    if (event.currentTarget === event.target && event.propertyName === 'transform') {
-                      finishPageTurn();
-                    }
-                  }}
-                  style={bookSpreadStyle}
-                >
-                  <div className="absolute inset-0 flex">
-                    <div
-                      className={cn(
-                        'pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(to_right,rgba(34,25,22,0.24),rgba(34,25,22,0.08),transparent)] transition-opacity duration-[2600ms]',
-                        isSheetFlipped ? 'opacity-80' : 'opacity-35',
-                      )}
-                    />
-                    <div
-                      className={cn(
-                        'pointer-events-none absolute inset-y-[6%] right-0 z-20 w-8 rounded-l-full bg-[radial-gradient(circle_at_right,rgba(88,59,39,0.26)_0%,rgba(88,59,39,0.12)_40%,rgba(88,59,39,0)_78%)] blur-[1.5px] transition-all duration-[2600ms]',
-                        isSheetFlipped ? 'translate-x-1 opacity-90' : 'opacity-45',
-                      )}
-                    />
-                    <div className="absolute inset-0" style={bookFaceStyle}>
-                      <PlannerRightPageFront
-                        onCreatePlan={flipPhase === 'intro' ? openNextPlannerPage : undefined}
-                      />
-                    </div>
-                    <div className="absolute inset-0 [transform:rotateY(180deg)]" style={bookFaceStyle}>
-                      <PlannerCreateTripPage onBack={returnToIntroPlannerPage} />
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
           </section>
         </div>
