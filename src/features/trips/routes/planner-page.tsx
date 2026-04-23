@@ -89,46 +89,63 @@ export function PlannerPage() {
 
               <div className="relative mt-4 min-h-[20rem] sm:mt-6 sm:min-h-[25rem] md:min-h-[27rem]">
                 <svg
-                  className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full opacity-80 sm:block"
+                  className="pointer-events-none absolute inset-0 z-20 hidden h-full w-full opacity-90 sm:block"
                   style={{ filter: 'drop-shadow(1px 1px 1px rgba(0,0,0,0.1))' }}
                   viewBox="0 0 100 100"
                 >
                   <defs>
-                    <marker id="planner-arrowhead" markerHeight="7" markerWidth="10" orient="auto" refX="9" refY="3.5">
-                      <polygon fill="#444" points="0 0, 10 3.5, 0 7" />
+                    <marker
+                      id="planner-arrowhead"
+                      markerHeight="8"
+                      markerWidth="8"
+                      markerUnits="strokeWidth"
+                      orient="auto"
+                      refX="7"
+                      refY="4"
+                      viewBox="0 0 8 8"
+                    >
+                      <polygon fill="#444" points="0 0, 8 4, 0 8" />
                     </marker>
                   </defs>
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M18,4 C13,9 10,15 10,21 C10,25 11,28 13,30"
+                    d="M18,4 C12,10 10,16 11,22 C12,25 13,27 15,29"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     stroke="#444"
-                    strokeWidth="0.5"
+                    strokeWidth="0.9"
                   />
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M40,24 C46,16 55,13 63,14 C71,15 76,19 78,24"
+                    d="M39,24 C45,15 56,12 65,13 C73,14 78,18 81,24"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     stroke="#444"
-                    strokeWidth="0.5"
+                    strokeWidth="0.9"
                   />
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M84,31 C91,38 92,47 87,54 C79,62 61,66 34,67 C21,68 13,71 10,76"
+                    d="M58,45 C56,52 50,57 42,60 C34,62 28,65 26,69"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     stroke="#444"
-                    strokeWidth="0.5"
+                    strokeWidth="0.9"
                   />
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M40,90 C47,95 56,97 65,96 C73,95 79,92 83,88"
+                    d="M41,66 C47,61 56,60 64,61 C71,62 76,64 79,67"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     stroke="#444"
-                    strokeWidth="0.5"
+                    strokeWidth="0.9"
                   />
                 </svg>
 

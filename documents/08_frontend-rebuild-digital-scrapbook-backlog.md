@@ -271,6 +271,20 @@ Tách subtitle khỏi cụm title để có offset trái rõ ràng, đồng th�
 - [x] tạo thêm khoảng trắng quanh và giữa các card để arrow có hành lang riêng
 - [x] vẽ lại các arrow path để chỉ chạm cạnh hoặc góc card, không chạy đè qua mặt card
 
+### FR-B3D - Planner arrow anchor correction
+
+### Mục tiêu
+
+Đưa các mũi tên itinerary về đúng các điểm neo giữa cạnh/góc card theo flow mà product đã chốt, đồng thời làm arrowhead nhìn rõ trên desktop.
+
+### Scope của lượt triển khai này
+
+- [x] tăng độ rõ của stroke và arrowhead để đầu mũi tên nhìn thấy được
+- [x] đưa arrow layer lên trên cụm card nhưng vẫn route path ở gutter ngoài card
+- [x] neo đường `1-2 -> 3-4` giữa hai cạnh trên của hai card hàng trên
+- [x] neo đường `3-4 -> 5-6` từ góc dưới trái card phải trên tới điểm giữa cạnh trên card trái dưới
+- [x] neo đường `5-6 -> 7-8` từ góc trên phải card trái dưới tới cạnh trên card phải dưới
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
