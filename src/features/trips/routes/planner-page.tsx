@@ -293,42 +293,24 @@ function PlannerRightPageFront({
           onClick={onCreatePlan}
           type="button"
         >
-          {t('trips.planner.board.createPlanAction')}
+          {t('trips.actions.create')}
         </button>
       ) : null}
     </div>
   );
 }
 
-function PlannerBlankPage({
-  actionLabel,
-  onAction,
-}: {
-  actionLabel?: string;
-  onAction?: () => void;
-}) {
+function PlannerBlankPage() {
   return (
     <div
       className="relative h-full min-h-0 overflow-hidden bg-[#fffdfa] p-3.5 sm:p-4 md:p-[1.125rem] lg:p-5"
       style={pageDotStyle}
-    >
-      {actionLabel && onAction ? (
-        <button
-          className="absolute bottom-5 right-5 z-40 rounded-full border border-[#8b6244]/30 bg-[#f7ead1] px-5 py-2.5 font-hand text-[1.45rem] leading-none text-[#6b4938] shadow-[0_10px_16px_rgba(90,62,40,0.12)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fff1d9] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/20"
-          onClick={onAction}
-          type="button"
-        >
-          {actionLabel}
-        </button>
-      ) : null}
-    </div>
+    />
   );
 }
 
 export function PlannerPage() {
-  const { t } = useI18n();
   const [isCreatingPlan, setIsCreatingPlan] = useState(false);
-  const flippedPageActionLabel = t('trips.actions.create');
 
   return (
     <PublicPageShell
@@ -352,10 +334,7 @@ export function PlannerPage() {
               {isCreatingPlan ? (
                 <>
                   <PlannerBlankPage />
-                  <PlannerBlankPage
-                    actionLabel={flippedPageActionLabel}
-                    onAction={() => setIsCreatingPlan(false)}
-                  />
+                  <PlannerBlankPage />
                 </>
               ) : (
                 <>
@@ -371,10 +350,7 @@ export function PlannerPage() {
                   <PlannerBlankPage />
                 </div>
                 <div className="w-1/2">
-                  <PlannerBlankPage
-                    actionLabel={flippedPageActionLabel}
-                    onAction={() => setIsCreatingPlan(false)}
-                  />
+                  <PlannerBlankPage />
                 </div>
               </div>
 
@@ -402,10 +378,7 @@ export function PlannerPage() {
                     <PlannerRightPageFront onCreatePlan={() => setIsCreatingPlan(true)} />
                   </div>
                   <div className="absolute inset-0 [transform:rotateY(180deg)]" style={bookFaceStyle}>
-                    <PlannerBlankPage
-                      actionLabel={flippedPageActionLabel}
-                      onAction={() => setIsCreatingPlan(false)}
-                    />
+                    <PlannerBlankPage />
                   </div>
                 </div>
               </div>

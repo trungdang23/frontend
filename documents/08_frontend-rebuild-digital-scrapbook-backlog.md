@@ -458,6 +458,19 @@ Thu nhỏ thêm phần bìa và wrapper của quyển sổ planner để desktop
 - [x] giữ nguyên bố cục nội dung và hiệu ứng lật trang
 - [x] xác nhận quyển sổ fit gọn hơn trong body
 
+### FR-B5G - Planner flip CTA correction
+
+### Mục tiêu
+
+Đưa CTA `Tạo chuyến đi` về đúng mặt trước của nửa trang phải và làm mặt sau sau khi lật chỉ còn là một trang trắng trống.
+
+### Scope của lượt triển khai này
+
+- [x] đổi CTA mặt trước từ `Tạo kế hoạch` sang `Tạo chuyến đi`
+- [x] giữ click CTA để kích hoạt lật nửa trang phải
+- [x] bỏ toàn bộ nút/CTA ở trang trắng mặt sau
+- [x] giữ nguyên hiệu ứng 3D flip hiện có
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu
