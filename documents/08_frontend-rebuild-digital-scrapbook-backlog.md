@@ -510,6 +510,19 @@ Khôi phục arrowhead của planner board ở trạng thái đầu và thêm kh
 - [x] thêm nút `Quay lại trang trước` trên trang trắng sau khi lật
 - [x] giữ nút tạo tiếp tục lật từ phải sang trái
 
+### FR-B5K - Planner nav-aware reverse flip and softer curl
+
+### Mục tiêu
+
+Cho navigation `Lập kế hoạch` tự kéo planner về trang giới thiệu đầu tiên nếu đang ở trang kế tiếp của intro planner, đồng thời làm cú lật cong và mềm hơn.
+
+### Scope của lượt triển khai này
+
+- [x] chuyển state intro/next page của planner sang URL để navigation điều khiển được
+- [x] để link `Lập kế hoạch` về `/app/planner` tự kích hoạt lật ngược khi đang ở trang kế tiếp
+- [x] chỉ áp dụng logic này cho intro planner, không ảnh hưởng các route khác
+- [x] làm transform/shadow của flip mềm và lả lướt hơn
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu

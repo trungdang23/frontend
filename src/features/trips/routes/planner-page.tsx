@@ -1,7 +1,7 @@
 import {
   type CSSProperties,
-  useState,
 } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import {
   Compass,
   MapPinned,
@@ -313,8 +313,21 @@ function PlannerBlankPage({
 
 export function PlannerPage() {
   const { t } = useI18n();
-  const [isCreatingPlan, setIsCreatingPlan] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isCreatingPlan = searchParams.get('page') === 'next';
   const returnToPreviousPageLabel = t('trips.planner.board.returnToPreviousPageAction');
+
+  const openNextPlannerPage = () => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set('page', 'next');
+    setSearchParams(nextParams, { replace: true });
+  };
+
+  const returnToIntroPlannerPage = () => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete('page');
+    setSearchParams(nextParams, { replace: true });
+  };
 
   return (
     <PublicPageShell
@@ -340,13 +353,13 @@ export function PlannerPage() {
                   <PlannerBlankPage />
                   <PlannerBlankPage
                     actionLabel={returnToPreviousPageLabel}
-                    onAction={() => setIsCreatingPlan(false)}
+                    onAction={returnToIntroPlannerPage}
                   />
                 </>
               ) : (
                 <>
                   <PlannerLeftPage />
-                  <PlannerRightPageFront onCreatePlan={() => setIsCreatingPlan(true)} />
+                  <PlannerRightPageFront onCreatePlan={openNextPlannerPage} />
                 </>
               )}
             </div>
@@ -368,26 +381,32 @@ export function PlannerPage() {
               <div className="absolute inset-y-0 right-0 z-20 w-1/2 overflow-visible" style={bookPerspectiveStyle}>
                 <div
                   className={cn(
-                    'relative h-full transition-[transform,box-shadow] duration-[2200ms] will-change-transform [transition-timing-function:cubic-bezier(0.16,0.78,0.18,1)]',
+                    'relative h-full transition-[transform,box-shadow,filter] duration-[2600ms] will-change-transform [transition-timing-function:cubic-bezier(0.17,0.84,0.2,1)]',
                     isCreatingPlan
-                      ? '[transform:rotateY(-180deg)] shadow-[-28px_16px_34px_rgba(32,25,22,0.22)]'
-                      : '[transform:rotateY(0deg)] shadow-[-8px_6px_16px_rgba(32,25,22,0.1)]',
+                      ? '[transform:rotateY(-180deg)_rotateZ(-2.35deg)_translateX(-0.28rem)] shadow-[-34px_18px_42px_rgba(32,25,22,0.24)]'
+                      : '[transform:rotateY(0deg)_rotateZ(0deg)_translateX(0)] shadow-[-8px_6px_16px_rgba(32,25,22,0.1)]',
                   )}
                   style={bookSpreadStyle}
                 >
                   <div
                     className={cn(
-                      'pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(to_right,rgba(34,25,22,0.2),rgba(34,25,22,0.06),transparent)] transition-opacity duration-[2200ms]',
+                      'pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(to_right,rgba(34,25,22,0.24),rgba(34,25,22,0.08),transparent)] transition-opacity duration-[2600ms]',
                       isCreatingPlan ? 'opacity-80' : 'opacity-35',
                     )}
                   />
+                  <div
+                    className={cn(
+                      'pointer-events-none absolute inset-y-[6%] right-0 z-20 w-8 rounded-l-full bg-[radial-gradient(circle_at_right,rgba(88,59,39,0.26)_0%,rgba(88,59,39,0.12)_40%,rgba(88,59,39,0)_78%)] blur-[1.5px] transition-all duration-[2600ms]',
+                      isCreatingPlan ? 'translate-x-1 opacity-90' : 'opacity-45',
+                    )}
+                  />
                   <div className="absolute inset-0" style={bookFaceStyle}>
-                    <PlannerRightPageFront onCreatePlan={() => setIsCreatingPlan(true)} />
+                    <PlannerRightPageFront onCreatePlan={openNextPlannerPage} />
                   </div>
                   <div className="absolute inset-0 [transform:rotateY(180deg)]" style={bookFaceStyle}>
                     <PlannerBlankPage
                       actionLabel={returnToPreviousPageLabel}
-                      onAction={() => setIsCreatingPlan(false)}
+                      onAction={returnToIntroPlannerPage}
                     />
                   </div>
                 </div>
