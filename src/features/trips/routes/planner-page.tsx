@@ -65,7 +65,16 @@ export function PlannerPage() {
       mainId="planner-content"
     >
       <div className="flex h-full min-h-0 w-full items-start justify-center py-1 sm:py-2 lg:py-3">
-        <section className="relative w-full overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)]">
+        <div className="relative w-full px-3 pb-6 sm:px-4 sm:pb-7 md:px-5 md:pb-8">
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-0">
+            <div className="absolute -left-2 -right-2 top-0 h-full rounded-[0.85rem] bg-[linear-gradient(180deg,#d6b384_0%,#bf9568_100%)] shadow-[0_24px_48px_rgba(76,51,33,0.18)] sm:-left-3 sm:-right-3 md:-left-4 md:-right-4" />
+            <div className="absolute inset-x-[0.4rem] top-[0.45rem] h-full rounded-[0.7rem] bg-[#ead7b5] shadow-[0_18px_36px_rgba(76,51,33,0.12)] sm:inset-x-[0.55rem] sm:top-[0.6rem] md:inset-x-[0.75rem] md:top-[0.7rem]" />
+            <div className="absolute inset-x-[0.65rem] top-[0.9rem] h-full rounded-[0.7rem] bg-[#f3e7d0] shadow-[0_16px_28px_rgba(76,51,33,0.1)] sm:inset-x-[0.85rem] sm:top-[1rem] md:inset-x-[1rem] md:top-[1.15rem]" />
+            <div className="absolute inset-x-[0.9rem] top-[1.35rem] h-full rounded-[0.7rem] bg-[#f8f0df] shadow-[0_14px_24px_rgba(76,51,33,0.08)] sm:inset-x-[1.1rem] sm:top-[1.45rem] md:inset-x-[1.25rem] md:top-[1.6rem]" />
+            <div className="absolute inset-x-[1.15rem] top-[1.8rem] h-full rounded-[0.7rem] bg-[#fbf5ea] shadow-[0_12px_20px_rgba(76,51,33,0.06)] sm:inset-x-[1.35rem] sm:top-[1.95rem] md:inset-x-[1.55rem] md:top-[2.1rem]" />
+          </div>
+
+        <section className="relative z-10 w-full overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)]">
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 
@@ -272,6 +281,7 @@ export function PlannerPage() {
             </div>
           </div>
         </section>
+        </div>
       </div>
     </PublicPageShell>
   );

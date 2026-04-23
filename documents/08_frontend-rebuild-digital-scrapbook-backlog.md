@@ -369,6 +369,18 @@ Giảm chiều cao footer và nới nhịp ba cụm link để footer gọn hơn
 - [x] đổi label `Về chúng tôi` thành `Về tôi`
 - [x] tăng khoảng cách giữa ba link footer
 
+### FR-B5 - Planner notebook depth treatment
+
+### Mục tiêu
+
+Làm planner board giống một quyển sổ thật hơn bằng cách thêm bìa và nhiều lớp giấy phía dưới thay vì chỉ có một tờ mỏng.
+
+### Scope của lượt triển khai này
+
+- [x] thêm lớp bìa dưới body của planner, cùng mép trên nhưng chìa ra ở hai cạnh trái/phải
+- [x] thêm nhiều lớp giấy phía dưới để tạo cảm giác quyển sổ dày hơn
+- [x] giữ layout bên trong planner board không đổi đáng kể
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
