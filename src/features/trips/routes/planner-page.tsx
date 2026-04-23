@@ -154,7 +154,7 @@ export function PlannerPage() {
                     <PlannerPolaroid
                       alt={t('trips.planner.board.cards.hanoi')}
                       dayLabel={t('trips.planner.board.cards.hanoiDays')}
-                      imageUrl="https://images.unsplash.com/photo-1555944805-d835180442e7?auto=format&fit=crop&w=400"
+                      imageUrl="/images/defaults/planner-hanoi.svg"
                       label={t('trips.planner.board.cards.hanoi')}
                       tapeClassName="w-12 rotate-1 bg-orange-400/40"
                       tiltClassName="-rotate-3"
@@ -163,7 +163,7 @@ export function PlannerPage() {
                     <PlannerPolaroid
                       alt={t('trips.planner.board.cards.haLong')}
                       dayLabel={t('trips.planner.board.cards.haLongDays')}
-                      imageUrl="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=400"
+                      imageUrl="/images/defaults/planner-halong.svg"
                       label={t('trips.planner.board.cards.haLong')}
                       tapeClassName="w-14 -rotate-2 bg-blue-400/40"
                       tiltClassName="rotate-2 sm:translate-y-2"
@@ -172,7 +172,7 @@ export function PlannerPage() {
                     <PlannerPolaroid
                       alt={t('trips.planner.board.cards.hoiAn')}
                       dayLabel={t('trips.planner.board.cards.hoiAnDays')}
-                      imageUrl="https://images.unsplash.com/photo-1599708153386-62e2d366336e?auto=format&fit=crop&w=400"
+                      imageUrl="/images/defaults/planner-hoian.svg"
                       label={t('trips.planner.board.cards.hoiAn')}
                       tapeClassName="w-14 rotate-3 bg-yellow-400/50"
                       tiltClassName="rotate-1 sm:-translate-y-1"
@@ -181,7 +181,7 @@ export function PlannerPage() {
                     <PlannerPolaroid
                       alt={t('trips.planner.board.cards.daNang')}
                       dayLabel={t('trips.planner.board.cards.daNangDays')}
-                      imageUrl="https://images.unsplash.com/photo-1559592442-7e18ad73d63b?auto=format&fit=crop&w=400"
+                      imageUrl="/images/defaults/planner-danang.svg"
                       label={t('trips.planner.board.cards.daNang')}
                       tapeClassName="w-12 -rotate-1 bg-pink-400/40"
                       tiltClassName="-rotate-1 sm:translate-y-1"

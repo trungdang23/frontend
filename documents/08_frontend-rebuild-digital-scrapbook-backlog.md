@@ -346,6 +346,17 @@ Tinh lại đúng vị trí dọc của hai arrow đầu trên planner board sau
 - [x] đẩy thêm một nhịp dọc cho hai đường `Travel -> 1-2` và `1-2 -> 3-4`
 - [x] giữ nguyên mọi kích thước và các arrow còn lại
 
+### FR-B3J - Planner card image source hardening
+
+### Mục tiêu
+
+Loại bỏ phụ thuộc vào ảnh ngoài cho planner board để các card luôn hiển thị ổn định.
+
+### Scope của lượt triển khai này
+
+- [x] thêm ảnh local mặc định cho bốn planner card trong `public/images/defaults`
+- [x] đổi planner page sang dùng asset local thay vì URL ngoài
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage

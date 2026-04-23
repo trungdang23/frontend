@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420">
+  <defs>
+    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#f9d8aa"/>
+      <stop offset="100%" stop-color="#f8f0da"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="420" fill="url(#sky)"/>
+  <rect y="254" width="640" height="166" fill="#7f8d7b"/>
+  <rect x="73" y="166" width="126" height="104" fill="#d7a05f"/>
+  <rect x="214" y="138" width="136" height="132" fill="#d58d54"/>
+  <rect x="366" y="154" width="112" height="116" fill="#c47248"/>
+  <rect x="491" y="174" width="94" height="96" fill="#dfb070"/>
+  <path d="M62 169 L136 124 L209 169 Z" fill="#7b4a39"/>
+  <path d="M204 141 L282 91 L360 141 Z" fill="#73412f"/>
+  <path d="M354 157 L422 116 L490 157 Z" fill="#6a3b2d"/>
+  <path d="M485 177 L539 142 L593 177 Z" fill="#895341"/>
+  <circle cx="146" cy="137" r="17" fill="#f3d86f"/>
+  <circle cx="284" cy="112" r="18" fill="#f2c863"/>
+  <circle cx="424" cy="133" r="16" fill="#f6dd82"/>
+  <path d="M0 306 C112 291 191 290 278 309 C357 326 438 325 640 298" fill="none" stroke="#ece2c8" stroke-width="8" stroke-linecap="round" opacity="0.7"/>
+</svg>
