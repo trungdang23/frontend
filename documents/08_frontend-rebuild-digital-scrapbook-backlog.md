@@ -393,6 +393,19 @@ Làm hiệu ứng bìa và độ dày của quyển sổ nhìn ra ngay thay vì 
 - [x] làm các lớp giấy lộ rõ hơn ở cạnh dưới và cạnh phải
 - [x] tăng tương phản giữa bìa và các lớp giấy để hiệu ứng dày nhìn rõ
 
+### FR-B5B - Planner page-turn create action
+
+### Mục tiêu
+
+Thêm hành động `Tạo kế hoạch` với hiệu ứng lật sách mềm và trang trắng ở mặt sau để chuẩn bị cho flow planner creation tiếp theo.
+
+### Scope của lượt triển khai này
+
+- [x] thêm nút `Tạo kế hoạch` ở góc dưới bên phải của nửa trang phải
+- [x] dựng hiệu ứng lật sách bằng CSS 3D thay vì đổi trạng thái cứng
+- [x] hiển thị mặt sau là spread trắng của quyển sổ, chưa có nội dung
+- [x] thêm nút quay lại từ spread trắng để test/lặp lại hiệu ứng
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage

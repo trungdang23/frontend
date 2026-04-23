@@ -543,7 +543,9 @@
           "flight": "Đặt vé máy bay",
           "camera": "Chuẩn bị máy ảnh",
           "train": "Đặt vé tàu điện"
-        }
+        },
+        "createPlanAction": "Tạo kế hoạch",
+        "returnToPlannerAction": "Quay lại planner"
       },
       "createRootTitle": "Thêm node gốc",
       "createChildTitle": "Thêm node con",

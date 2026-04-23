@@ -543,7 +543,9 @@
           "flight": "Book flights",
           "camera": "Pack the camera",
           "train": "Book train tickets"
-        }
+        },
+        "createPlanAction": "Create plan",
+        "returnToPlannerAction": "Back to planner"
       },
       "createRootTitle": "Add root node",
       "createChildTitle": "Add child node",
