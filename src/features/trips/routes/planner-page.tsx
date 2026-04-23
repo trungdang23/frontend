@@ -64,14 +64,14 @@ export function PlannerPage() {
       mainClassName={publicPageMainLayouts.planner}
       mainId="planner-content"
     >
-      <div className="flex h-full min-h-0 w-full items-start justify-center py-4 sm:py-5 lg:py-6">
-        <section className="relative w-full overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)]">
+      <div className="flex h-full min-h-0 w-full items-start justify-center py-2 sm:py-3 lg:py-4">
+        <section className="relative w-full origin-top overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)] lg:scale-[0.94]">
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 
           <div className="flex flex-col md:flex-row">
             <div
-              className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-4 sm:p-5 md:min-h-[31rem] md:w-1/2 md:border-b-0 md:border-r md:p-6 lg:p-7"
+              className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-4 sm:p-5 md:min-h-[29rem] md:w-1/2 md:border-b-0 md:border-r md:p-5 lg:p-6"
               style={pageDotStyle}
             >
               <div className="relative z-30">
@@ -87,7 +87,7 @@ export function PlannerPage() {
                 </div>
               </div>
 
-              <div className="relative mt-4 min-h-[20rem] sm:mt-6 sm:min-h-[25rem] md:min-h-[27rem]">
+              <div className="relative mt-4 min-h-[19rem] sm:mt-5 sm:min-h-[23rem] md:min-h-[24.5rem]">
                 <svg
                   className="pointer-events-none absolute inset-0 z-20 hidden h-full w-full opacity-90 sm:block"
                   style={{ filter: 'drop-shadow(1px 1px 1px rgba(0,0,0,0.1))' }}
@@ -109,7 +109,7 @@ export function PlannerPage() {
                   </defs>
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M18,8 C14,12 12,16 12,20 C12,22 13,24 15,26"
+                    d="M18,6 C16,10 16,13 18,16 C20,18 22,20 24,22"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
@@ -119,7 +119,7 @@ export function PlannerPage() {
                   />
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M31,24 C40,19 56,19 69,24"
+                    d="M31,18 C41,14 57,14 69,18"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
@@ -149,8 +149,8 @@ export function PlannerPage() {
                   />
                 </svg>
 
-                <div className="relative z-10 px-1 pt-8 sm:px-3 sm:pt-10 sm:pb-6 md:px-4 md:pt-12">
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-12 sm:gap-y-16 md:gap-x-14 md:gap-y-18">
+                <div className="relative z-10 px-1 pt-7 sm:px-3 sm:pt-9 sm:pb-5 md:px-4 md:pt-10">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-12 sm:gap-y-15 md:gap-x-14 md:gap-y-16">
                     <PlannerPolaroid
                       alt={t('trips.planner.board.cards.hanoi')}
                       dayLabel={t('trips.planner.board.cards.hanoiDays')}

@@ -310,6 +310,20 @@ Loại bỏ tình trạng planner board bị đẩy lên trên viewport và neo 
 - [x] neo lại đường `Travel -> 1-2` từ subtitle tới cạnh trên card đầu tiên
 - [x] neo lại đường `1-2 -> 3-4` để chạy ngoài card và nối giữa hai cạnh trên
 
+### FR-B3G - Planner no-scroll fit and top-gutter arrows
+
+### Mục tiêu
+
+Thu nhỏ planner board để fit viewport tốt hơn trên desktop, đồng thời đẩy hai arrow đầu lên hẳn gutter phía trên hàng card.
+
+### Scope của lượt triển khai này
+
+- [x] giảm scale tổng thể của planner board trên desktop để tránh phải scroll
+- [x] giảm thêm một nhịp chiều cao và spacing ở planner board để fit tốt hơn
+- [x] dời đường `Travel -> 1-2` lên hẳn vùng trên card
+- [x] dời đường `1-2 -> 3-4` lên trên card và giữ hai đầu neo ở cạnh trên
+- [x] giữ nguyên hai đường `3-4 -> 5-6` và `5-6 -> 7-8`
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
