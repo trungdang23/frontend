@@ -150,6 +150,7 @@
     filter: saturate(1);
     transform: rotateY(0deg);
     transform-origin: left center;
+    transform-style: preserve-3d;
   }
 
   .planner-page-turn-sheet::before,
@@ -179,32 +180,30 @@
     filter: blur(2px);
   }
 
-  .planner-page-turn-sheet--intro {
-    box-shadow: -8px 6px 16px rgba(32, 25, 22, 0.1);
-    transform: rotateY(0deg) rotateZ(0deg) translateX(0);
-  }
-
-  .planner-page-turn-sheet--created {
-    box-shadow: -28px 16px 34px rgba(32, 25, 22, 0.19);
-    transform: rotateY(-180deg) rotateZ(0deg) translateX(-0.08rem);
-  }
-
   .planner-page-turn-sheet--forward {
-    animation: planner-page-forward-curl 2600ms cubic-bezier(0.17, 0.84, 0.2, 1) both;
+    animation: planner-page-forward-curl 1850ms cubic-bezier(0.2, 0.78, 0.18, 1) both;
+    transform-origin: left center;
   }
 
   .planner-page-turn-sheet--forward::before,
   .planner-page-turn-sheet--backward::before {
-    animation: planner-page-shade-sweep 2600ms cubic-bezier(0.17, 0.84, 0.2, 1) both;
+    animation: planner-page-shade-sweep 1850ms cubic-bezier(0.2, 0.78, 0.18, 1) both;
   }
 
   .planner-page-turn-sheet--forward::after,
   .planner-page-turn-sheet--backward::after {
-    animation: planner-page-edge-curl 2600ms cubic-bezier(0.17, 0.84, 0.2, 1) both;
+    animation: planner-page-edge-curl 1850ms cubic-bezier(0.2, 0.78, 0.18, 1) both;
   }
 
   .planner-page-turn-sheet--backward {
-    animation: planner-page-backward-curl 2600ms cubic-bezier(0.17, 0.84, 0.2, 1) both;
+    animation: planner-page-backward-curl 1850ms cubic-bezier(0.2, 0.78, 0.18, 1) both;
+    border-radius: 1rem 0 0 1rem;
+    transform-origin: right center;
+  }
+
+  .planner-page-turn-sheet--backward::after {
+    right: auto;
+    left: -0.55rem;
   }
 
   .planner-page-turn-spine,
@@ -214,23 +213,14 @@
     transform-origin: left center;
   }
 
-  .planner-page-turn-spine--created {
-    opacity: 0.78;
-  }
-
-  .planner-page-turn-curl--created {
-    opacity: 0.72;
-    transform: translateX(0.25rem) scaleX(1.16);
-  }
-
   .planner-page-turn-spine--forward,
   .planner-page-turn-spine--backward {
-    animation: planner-page-spine-curl 2600ms cubic-bezier(0.17, 0.84, 0.2, 1) both;
+    animation: planner-page-spine-curl 1850ms cubic-bezier(0.2, 0.78, 0.18, 1) both;
   }
 
   .planner-page-turn-curl--forward,
   .planner-page-turn-curl--backward {
-    animation: planner-page-curl-shadow 2600ms cubic-bezier(0.17, 0.84, 0.2, 1) both;
+    animation: planner-page-curl-shadow 1850ms cubic-bezier(0.2, 0.78, 0.18, 1) both;
   }
 
   .nav-note-shell {
@@ -1029,72 +1019,60 @@
     transform: rotateY(0deg) rotateZ(0deg) translateX(0) translateY(0) skewY(0deg) scaleX(1);
   }
 
-  16% {
-    box-shadow: -14px 9px 22px rgba(32, 25, 22, 0.14);
+  18% {
+    box-shadow: -14px 10px 22px rgba(32, 25, 22, 0.14);
     filter: saturate(1.02);
-    transform: rotateY(-18deg) rotateZ(-1.8deg) translateX(0.04rem) translateY(-0.08rem) skewY(0.8deg) scaleX(1.01);
+    transform: rotateY(-22deg) rotateZ(-1.2deg) translateX(0.03rem) translateY(-0.04rem) skewY(0.5deg) scaleX(1.01);
   }
 
-  38% {
-    box-shadow: -24px 15px 30px rgba(32, 25, 22, 0.2);
+  44% {
+    box-shadow: -28px 18px 34px rgba(32, 25, 22, 0.22);
     filter: saturate(1.03);
-    transform: rotateY(-72deg) rotateZ(-6.4deg) translateX(-0.04rem) translateY(-0.16rem) skewY(2.6deg) scaleX(0.97);
+    transform: rotateY(-92deg) rotateZ(-3.8deg) translateX(-0.06rem) translateY(-0.12rem) skewY(2deg) scaleX(0.95);
   }
 
-  58% {
-    box-shadow: -34px 20px 42px rgba(32, 25, 22, 0.26);
+  68% {
+    box-shadow: -36px 21px 42px rgba(32, 25, 22, 0.28);
     filter: saturate(1.02);
-    transform: rotateY(-124deg) rotateZ(-4.8deg) translateX(-0.18rem) translateY(-0.12rem) skewY(-1.9deg) scaleX(0.92);
-  }
-
-  78% {
-    box-shadow: -34px 18px 42px rgba(32, 25, 22, 0.24);
-    filter: saturate(1.01);
-    transform: rotateY(-166deg) rotateZ(-1.2deg) translateX(-0.14rem) translateY(-0.03rem) skewY(-0.5deg) scaleX(0.98);
+    transform: rotateY(-148deg) rotateZ(-1.8deg) translateX(-0.12rem) translateY(-0.08rem) skewY(-0.9deg) scaleX(0.93);
   }
 
   100% {
-    box-shadow: -28px 16px 34px rgba(32, 25, 22, 0.19);
+    box-shadow: -20px 12px 24px rgba(32, 25, 22, 0.12);
     filter: saturate(1);
-    transform: rotateY(-180deg) rotateZ(0deg) translateX(-0.08rem) translateY(0) skewY(0deg) scaleX(1);
+    transform: rotateY(-179.5deg) rotateZ(0deg) translateX(-0.04rem) translateY(0) skewY(0deg) scaleX(1);
   }
 }
 
 @keyframes planner-page-backward-curl {
   0% {
-    box-shadow: -28px 16px 34px rgba(32, 25, 22, 0.19);
+    box-shadow: 8px 6px 16px rgba(32, 25, 22, 0.1);
     filter: saturate(1);
-    transform: rotateY(-180deg) rotateZ(0deg) translateX(-0.08rem) translateY(0) skewY(0deg) scaleX(1);
+    transform: rotateY(0deg) rotateZ(0deg) translateX(0) translateY(0) skewY(0deg) scaleX(1);
   }
 
   18% {
-    box-shadow: -32px 18px 40px rgba(32, 25, 22, 0.24);
-    filter: saturate(1.01);
-    transform: rotateY(-158deg) rotateZ(1.5deg) translateX(-0.12rem) translateY(-0.03rem) skewY(0.6deg) scaleX(0.98);
-  }
-
-  42% {
-    box-shadow: -34px 20px 42px rgba(32, 25, 22, 0.26);
-    filter: saturate(1.03);
-    transform: rotateY(-114deg) rotateZ(5.8deg) translateX(-0.14rem) translateY(-0.12rem) skewY(2deg) scaleX(0.93);
-  }
-
-  63% {
-    box-shadow: -22px 14px 28px rgba(32, 25, 22, 0.19);
+    box-shadow: 14px 10px 22px rgba(32, 25, 22, 0.14);
     filter: saturate(1.02);
-    transform: rotateY(-66deg) rotateZ(5deg) translateX(-0.04rem) translateY(-0.16rem) skewY(-1.5deg) scaleX(0.97);
+    transform: rotateY(22deg) rotateZ(1.2deg) translateX(-0.03rem) translateY(-0.04rem) skewY(-0.5deg) scaleX(1.01);
   }
 
-  82% {
-    box-shadow: -12px 8px 20px rgba(32, 25, 22, 0.14);
-    filter: saturate(1.01);
-    transform: rotateY(-18deg) rotateZ(1.6deg) translateX(0.03rem) translateY(-0.06rem) skewY(-0.3deg) scaleX(1.01);
+  44% {
+    box-shadow: 28px 18px 34px rgba(32, 25, 22, 0.22);
+    filter: saturate(1.03);
+    transform: rotateY(92deg) rotateZ(3.8deg) translateX(0.06rem) translateY(-0.12rem) skewY(-2deg) scaleX(0.95);
+  }
+
+  68% {
+    box-shadow: 36px 21px 42px rgba(32, 25, 22, 0.28);
+    filter: saturate(1.02);
+    transform: rotateY(148deg) rotateZ(1.8deg) translateX(0.12rem) translateY(-0.08rem) skewY(0.9deg) scaleX(0.93);
   }
 
   100% {
-    box-shadow: -8px 6px 16px rgba(32, 25, 22, 0.1);
+    box-shadow: 20px 12px 24px rgba(32, 25, 22, 0.12);
     filter: saturate(1);
-    transform: rotateY(0deg) rotateZ(0deg) translateX(0) translateY(0) skewY(0deg) scaleX(1);
+    transform: rotateY(179.5deg) rotateZ(0deg) translateX(0.04rem) translateY(0) skewY(0deg) scaleX(1);
   }
 }
 
@@ -1104,24 +1082,19 @@
     transform: scaleX(1);
   }
 
-  36% {
-    opacity: 0.7;
+  30% {
+    opacity: 0.64;
     transform: scaleX(1.18);
   }
 
-  58% {
-    opacity: 0.92;
-    transform: scaleX(1.34);
-  }
-
-  82% {
-    opacity: 0.74;
-    transform: scaleX(1.16);
+  56% {
+    opacity: 0.88;
+    transform: scaleX(1.42);
   }
 
   100% {
-    opacity: 0.78;
-    transform: scaleX(1.08);
+    opacity: 0.22;
+    transform: scaleX(0.86);
   }
 }
 
@@ -1131,24 +1104,19 @@
     transform: translateX(0) scaleX(1);
   }
 
-  32% {
-    opacity: 0.68;
-    transform: translateX(0.16rem) scaleX(1.18);
+  26% {
+    opacity: 0.66;
+    transform: translateX(0.14rem) scaleX(1.14);
   }
 
-  56% {
+  52% {
     opacity: 0.92;
-    transform: translateX(0.46rem) scaleX(1.44);
-  }
-
-  82% {
-    opacity: 0.76;
-    transform: translateX(0.28rem) scaleX(1.24);
+    transform: translateX(0.42rem) scaleX(1.5);
   }
 
   100% {
-    opacity: 0.72;
-    transform: translateX(0.25rem) scaleX(1.16);
+    opacity: 0.18;
+    transform: translateX(0.08rem) scaleX(0.86);
   }
 }
 
@@ -1161,16 +1129,12 @@
     opacity: 0.32;
   }
 
-  48% {
-    opacity: 0.76;
-  }
-
-  74% {
-    opacity: 0.54;
+  46% {
+    opacity: 0.72;
   }
 
   100% {
-    opacity: 0.22;
+    opacity: 0.08;
   }
 }
 
@@ -1185,18 +1149,13 @@
     transform: translateX(0.08rem) scaleY(1);
   }
 
-  55% {
+  52% {
     opacity: 0.84;
     transform: translateX(0.36rem) scaleY(1.18);
   }
 
-  80% {
-    opacity: 0.56;
-    transform: translateX(0.18rem) scaleY(1.04);
-  }
-
   100% {
-    opacity: 0.28;
-    transform: translateX(0.08rem) scaleY(0.96);
+    opacity: 0.12;
+    transform: translateX(0.04rem) scaleY(0.94);
   }
 }
