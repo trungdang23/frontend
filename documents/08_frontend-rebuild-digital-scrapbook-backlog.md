@@ -549,6 +549,19 @@ Khi người dùng bấm `Tạo chuyến đi` ở planner, chuyển sang một s
 - [x] sửa nút `Quay lại trang trước` để toàn bộ vùng nút click được khi sang trang kế tiếp
 - [x] giữ responsive mobile bằng cách xếp hai trang theo chiều dọc
 
+### FR-B5N - Planner create spread flip recovery
+
+### Mục tiêu
+
+Khôi phục lại hiệu ứng lật trang của planner sau khi `create spread` đã thay phần animation bằng việc đổi spread trực tiếp.
+
+### Scope của lượt triển khai này
+
+- [x] dựng lại lớp page-turn 3D cho desktop để spread tạo chuyến đi nằm dưới sheet đang lật
+- [x] giữ CTA `Tạo chuyến đi` kích hoạt lật nửa trang phải thay vì đổi trạng thái cứng
+- [x] giữ URL/query param hiện tại để navigation planner vẫn dùng lại được
+- [x] không thay đổi flow mobile ngoài nội dung hiện có
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu
