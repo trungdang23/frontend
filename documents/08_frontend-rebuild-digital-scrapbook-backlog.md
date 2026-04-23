@@ -419,6 +419,19 @@ Sửa hiệu ứng lật để chỉ lật đúng nửa trang phải như lật 
 - [x] xoay sheet phải quanh gáy ở giữa quyển sổ
 - [x] tăng cảm giác cong/mềm của cú lật bằng timing và shadow phù hợp hơn
 
+### FR-B5D - Planner full-body height fit
+
+### Mục tiêu
+
+Làm quyển sổ planner chiếm gần hết chiều cao phần body khả dụng trên desktop nhưng không dính sát header/footer, đồng thời bỏ tình trạng phần dưới bị cắt.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ chiều cao cứng của spread desktop và cho notebook bám theo `main` height khả dụng
+- [x] giảm các khoảng đệm dọc đang làm notebook bị hụt chỗ ở cạnh dưới
+- [x] giữ lại một nhịp khoảng trống nhỏ với header/footer để notebook không bị dính mép
+- [x] xác nhận lại các card hàng dưới không còn bị cắt
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu

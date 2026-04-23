@@ -78,7 +78,7 @@ function PlannerLeftPage() {
 
   return (
     <div
-      className="relative h-full overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-3.5 sm:p-4 md:min-h-[33rem] md:border-b-0 md:border-r md:p-[1.125rem] lg:min-h-[34rem] lg:p-5"
+      className="relative h-full min-h-0 overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-3.5 sm:p-4 md:border-b-0 md:border-r md:p-[1.125rem] lg:p-5"
       style={pageDotStyle}
     >
       <div className="relative z-30">
@@ -215,7 +215,7 @@ function PlannerRightPageFront({
 
   return (
     <div
-      className="relative h-full overflow-hidden bg-[#fffdfa] p-3.5 sm:p-4 md:min-h-[33rem] md:p-[1.125rem] lg:min-h-[34rem] lg:p-5"
+      className="relative h-full min-h-0 overflow-hidden bg-[#fffdfa] p-3.5 sm:p-4 md:p-[1.125rem] lg:p-5"
       style={pageDotStyle}
     >
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-10 opacity-[0.08]">
@@ -309,7 +309,7 @@ function PlannerBlankPage({
 }) {
   return (
     <div
-      className="relative h-full overflow-hidden bg-[#fffdfa] p-3.5 sm:p-4 md:min-h-[33rem] md:p-[1.125rem] lg:min-h-[34rem] lg:p-5"
+      className="relative h-full min-h-0 overflow-hidden bg-[#fffdfa] p-3.5 sm:p-4 md:p-[1.125rem] lg:p-5"
       style={pageDotStyle}
     >
       {actionLabel && onAction ? (
@@ -334,16 +334,16 @@ export function PlannerPage() {
       mainClassName={publicPageMainLayouts.planner}
       mainId="planner-content"
     >
-      <div className="flex h-full min-h-0 w-full items-start justify-center py-1 sm:py-2 lg:py-3">
-        <div className="relative w-full px-4 pb-10 sm:px-5 sm:pb-11 md:px-6 md:pb-12">
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-0">
-            <div className="absolute -left-4 -right-4 top-0 bottom-2 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_26px_54px_rgba(76,51,33,0.22)] sm:-left-5 sm:-right-5 sm:bottom-2.5 md:-left-6 md:-right-6 md:bottom-3" />
-            <div className="absolute left-2 right-1 top-0 bottom-3 rounded-[0.8rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_18px_32px_rgba(76,51,33,0.14)] sm:left-3 sm:right-1.5 sm:bottom-4 md:left-4 md:right-2 md:bottom-5" />
-            <div className="absolute left-4 right-0.5 top-0 bottom-4 rounded-[0.8rem] border border-[#efe5d2] bg-[#f5ebd8] shadow-[0_16px_28px_rgba(76,51,33,0.12)] sm:left-5 sm:right-1 sm:bottom-5 md:left-6 md:right-1.5 md:bottom-6" />
-            <div className="absolute left-6 right-0 top-0 bottom-5 rounded-[0.8rem] border border-[#f6efe1] bg-[#fbf5ea] shadow-[0_14px_22px_rgba(76,51,33,0.1)] sm:left-7 sm:bottom-6 md:left-8 md:bottom-7" />
+      <div className="flex h-full min-h-0 w-full items-stretch justify-center">
+        <div className="relative w-full px-2 py-2 sm:px-3 sm:py-3 md:flex md:h-full md:min-h-0 md:items-center md:px-4 md:py-4 lg:px-5 lg:py-5">
+          <div className="pointer-events-none absolute inset-x-0 top-2 bottom-0 z-0 md:top-4 md:bottom-4">
+            <div className="absolute -left-3 -right-3 top-0 bottom-2 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_26px_54px_rgba(76,51,33,0.22)] sm:-left-4 sm:-right-4 sm:bottom-2.5 md:-left-5 md:-right-5 md:bottom-3" />
+            <div className="absolute left-1.5 right-1 top-0 bottom-3 rounded-[0.8rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_18px_32px_rgba(76,51,33,0.14)] sm:left-2.5 sm:right-1.5 sm:bottom-4 md:left-3 md:right-2 md:bottom-5" />
+            <div className="absolute left-3 right-0.5 top-0 bottom-4 rounded-[0.8rem] border border-[#efe5d2] bg-[#f5ebd8] shadow-[0_16px_28px_rgba(76,51,33,0.12)] sm:left-4 sm:right-1 sm:bottom-5 md:left-5 md:right-1.5 md:bottom-6" />
+            <div className="absolute left-4.5 right-0 top-0 bottom-5 rounded-[0.8rem] border border-[#f6efe1] bg-[#fbf5ea] shadow-[0_14px_22px_rgba(76,51,33,0.1)] sm:left-6 sm:bottom-6 md:left-7 md:bottom-7" />
           </div>
 
-          <section className="relative w-full overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)]">
+          <section className="relative w-full overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)] md:h-full md:min-h-0">
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 
@@ -364,7 +364,7 @@ export function PlannerPage() {
               )}
             </div>
 
-            <div className="relative hidden min-h-[33rem] md:block lg:min-h-[34rem]">
+            <div className="relative hidden h-full min-h-0 md:block">
               <div className="absolute inset-0 flex">
                 <div className="w-1/2">
                   <PlannerBlankPage />
