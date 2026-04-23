@@ -324,6 +324,17 @@ Thu nhỏ planner board để fit viewport tốt hơn trên desktop, đồng th�
 - [x] dời đường `1-2 -> 3-4` lên trên card và giữ hai đầu neo ở cạnh trên
 - [x] giữ nguyên hai đường `3-4 -> 5-6` và `5-6 -> 7-8`
 
+### FR-B3H - Planner top-arrow vertical lift
+
+### Mục tiêu
+
+Tinh lại đúng vị trí dọc của hai arrow đầu trên planner board sau khi scale tổng thể đã ổn.
+
+### Scope của lượt triển khai này
+
+- [x] chỉ đẩy lên thêm hai đường `Travel -> 1-2` và `1-2 -> 3-4`
+- [x] giữ nguyên kích thước board và hai đường dưới
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage

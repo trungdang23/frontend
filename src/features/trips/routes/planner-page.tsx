@@ -109,7 +109,7 @@ export function PlannerPage() {
                   </defs>
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M18,5 C16,8 16,11 18,13 C19,14.5 21,16 23,17"
+                    d="M18,2.5 C15,5.5 15,8.5 17,10.5 C19,12 21,13.5 23,14.5"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
@@ -119,7 +119,7 @@ export function PlannerPage() {
                   />
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M31,13 C41,10 57,10 69,13"
+                    d="M31,9.5 C41,7 57,7 69,9.5"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
