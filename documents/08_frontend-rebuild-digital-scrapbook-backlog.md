@@ -586,17 +586,18 @@ Sửa lỗi sau khi lật xong thì sheet 3D vẫn còn đè lên spread tạo c
 - [x] khi đã settle ở create spread thì render trực tiếp spread thật, không giữ lớp sheet flipped
 - [x] giữ nguyên animation tiến/lùi vừa tinh chỉnh
 
-### FR-B5Q - Planner page-turn direction rebuild
+### FR-B5Q - Planner pre-create-spread page-turn restoration
 
 ### Mục tiêu
 
-Làm lại cơ chế lật trang để lượt đi và lượt về dùng hai hướng sheet khác nhau, tránh trạng thái ngược mặt, giật khung và độ trễ khi settle.
+Khôi phục lại đúng cấu trúc lật trang mượt trước commit `2aada719249cb7c067d89bf344b8e558763b3c60`, rồi gắn nội dung create spread hiện tại vào mặt sau/trang đích.
 
 ### Scope của lượt triển khai này
 
-- [x] forward dùng sheet của trang phải intro lật sang trái trên nền create spread
-- [x] backward dùng sheet của trang trái create spread lật sang phải trên nền intro spread
-- [x] kết thúc animation phải swap ngay sang spread đích, không chờ fade trễ
+- [x] trả desktop về một right-page sheet duy nhất xoay quanh gáy giữa như trước commit `2aada71`
+- [x] giữ lại timing/transform/shadow cũ của sheet thay vì keyframe mới
+- [x] đặt `PlannerCreateTripPage` vào mặt sau của sheet và `PlannerCreateSpread` ở nền sau khi lật
+- [x] giữ form/map create spread hiện tại và mobile layout hiện tại
 
 ### FR-B5D - Planner spread height recovery
 
