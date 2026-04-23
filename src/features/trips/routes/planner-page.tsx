@@ -96,61 +96,61 @@ export function PlannerPage() {
                   <defs>
                     <marker
                       id="planner-arrowhead"
-                      markerHeight="8"
-                      markerWidth="8"
+                      markerHeight="5"
+                      markerWidth="5"
                       markerUnits="strokeWidth"
                       orient="auto"
-                      refX="7"
-                      refY="4"
-                      viewBox="0 0 8 8"
+                      refX="4.5"
+                      refY="2.5"
+                      viewBox="0 0 5 5"
                     >
-                      <polygon fill="#444" points="0 0, 8 4, 0 8" />
+                      <polygon fill="#444" points="0 0, 5 2.5, 0 5" />
                     </marker>
                   </defs>
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M18,4 C12,10 10,16 11,22 C12,25 13,27 15,29"
+                    d="M18,5 C13,10 11,15 11,20 C11,23 12,25 14,27"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     stroke="#444"
-                    strokeWidth="0.9"
+                    strokeWidth="0.58"
                   />
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M39,24 C45,15 56,12 65,13 C73,14 78,18 81,24"
+                    d="M35,19 C43,13 56,11 66,12 C74,13 80,15 84,19"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     stroke="#444"
-                    strokeWidth="0.9"
+                    strokeWidth="0.58"
                   />
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M58,45 C56,52 50,57 42,60 C34,62 28,65 26,69"
+                    d="M59,40 C57,45 53,49 47,52 C40,55 33,56 29,60"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     stroke="#444"
-                    strokeWidth="0.9"
+                    strokeWidth="0.58"
                   />
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M41,66 C47,61 56,60 64,61 C71,62 76,64 79,67"
+                    d="M41,61 C48,58 57,57 66,57 C73,58 79,59 83,61"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     stroke="#444"
-                    strokeWidth="0.9"
+                    strokeWidth="0.58"
                   />
                 </svg>
 
                 <div className="relative z-10 px-1 pt-8 sm:px-3 sm:pt-10 sm:pb-6 md:px-4 md:pt-12">
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-14 md:gap-x-10 md:gap-y-16">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-12 sm:gap-y-16 md:gap-x-14 md:gap-y-18">
                     <PlannerPolaroid
                       alt={t('trips.planner.board.cards.hanoi')}
                       dayLabel={t('trips.planner.board.cards.hanoiDays')}

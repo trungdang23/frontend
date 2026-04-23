@@ -285,6 +285,18 @@ Tách subtitle khỏi cụm title để có offset trái rõ ràng, đồng th�
 - [x] neo đường `3-4 -> 5-6` từ góc dưới trái card phải trên tới điểm giữa cạnh trên card trái dưới
 - [x] neo đường `5-6 -> 7-8` từ góc trên phải card trái dưới tới cạnh trên card phải dưới
 
+### FR-B3E - Planner arrow scale and gutter spacing refinement
+
+### Mục tiêu
+
+Giảm cảm giác arrow quá to và nắn lại path theo các gutter thật sự của layout để không còn đè lên card.
+
+### Scope của lượt triển khai này
+
+- [x] giảm kích thước marker và stroke của arrow
+- [x] tăng khoảng cách ngang/dọc giữa các card trong desktop grid để có gutter rõ hơn
+- [x] dời các path vào các gutter ngoài card thay vì chạy sát vùng card
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
