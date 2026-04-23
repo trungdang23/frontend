@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react';
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '@/features/auth/session/use-auth';
 import { homeNavItems } from '@/features/shell/content/public-chrome-content';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -29,6 +30,7 @@ const noteHoverClasses = [
 ] as const;
 
 export function SharedHeader() {
+  const auth = useAuth();
   const { t } = useI18n();
 
   return (
@@ -38,38 +40,52 @@ export function SharedHeader() {
         className="pointer-events-auto w-full pb-2"
       >
         <ul className="grid w-full grid-cols-5 items-start gap-1 sm:gap-1.5 md:flex md:justify-center md:gap-4">
-          {homeNavItems.map((item, index) => (
-            <li className="min-w-0 md:flex-none" key={item.labelKey}>
-              <NavLink
-                className="nav-note-shell min-h-[3.05rem] w-full min-w-0 md:min-h-[4rem] md:w-auto md:min-w-[8rem]"
-                end={item.href === '/'}
-                style={
-                  {
-                    ['--note-offset' as string]: `${item.yOffset}px`,
-                    ['--note-rotate' as string]: `${item.rotate}deg`,
-                    ['--note-drop-delay' as string]: `${index * 100}ms`,
-                  } as CSSProperties
-                }
-                to={item.href}
-              >
-                {({ isActive }) => (
-                  <span
-                    className={cn(
-                      'nav-note min-h-[3.05rem] w-full min-w-0 px-1.5 py-1.5 text-[0.8rem] leading-[0.9] md:min-h-[4rem] md:px-5 md:py-2 md:text-[1.6rem]',
-                      noteToneClasses[item.tone],
-                      noteShapeClasses[item.shape],
-                      noteHoverClasses[index % noteHoverClasses.length],
-                      isActive && 'brightness-[1.03] saturate-[1.08] shadow-[0_22px_34px_rgba(98,74,51,0.2)]',
-                    )}
-                  >
-                    <span className="relative z-10 text-center whitespace-normal md:whitespace-nowrap">
-                      {t(item.labelKey)}
+          {homeNavItems.map((item, index) => {
+            const isProtectedPlanner = item.href === '/app/planner';
+            const isProtectedWorkspace = item.href.startsWith('/app/');
+            const navTarget = isProtectedWorkspace && auth.status !== 'authenticated'
+              ? '/auth/login'
+              : isProtectedPlanner
+                ? '/app/planner'
+                : item.href;
+            const navState = isProtectedWorkspace && auth.status !== 'authenticated'
+              ? { from: { pathname: item.href } }
+              : undefined;
+
+            return (
+              <li className="min-w-0 md:flex-none" key={item.labelKey}>
+                <NavLink
+                  className="nav-note-shell min-h-[3.05rem] w-full min-w-0 md:min-h-[4rem] md:w-auto md:min-w-[8rem]"
+                  end={item.href === '/'}
+                  state={navState}
+                  style={
+                    {
+                      ['--note-offset' as string]: `${item.yOffset}px`,
+                      ['--note-rotate' as string]: `${item.rotate}deg`,
+                      ['--note-drop-delay' as string]: `${index * 100}ms`,
+                    } as CSSProperties
+                  }
+                  to={navTarget}
+                >
+                  {({ isActive }) => (
+                    <span
+                      className={cn(
+                        'nav-note min-h-[3.05rem] w-full min-w-0 px-1.5 py-1.5 text-[0.8rem] leading-[0.9] md:min-h-[4rem] md:px-5 md:py-2 md:text-[1.6rem]',
+                        noteToneClasses[item.tone],
+                        noteShapeClasses[item.shape],
+                        noteHoverClasses[index % noteHoverClasses.length],
+                        isActive && 'brightness-[1.03] saturate-[1.08] shadow-[0_22px_34px_rgba(98,74,51,0.2)]',
+                      )}
+                    >
+                      <span className="relative z-10 text-center whitespace-normal md:whitespace-nowrap">
+                        {t(item.labelKey)}
+                      </span>
                     </span>
-                  </span>
-                )}
-              </NavLink>
-            </li>
-          ))}
+                  )}
+                </NavLink>
+              </li>
+            );
+          })}
         </ul>
       </nav>
     </header>

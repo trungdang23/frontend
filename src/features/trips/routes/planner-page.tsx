@@ -78,7 +78,7 @@ function PlannerLeftPage() {
 
   return (
     <div
-      className="relative h-full min-h-0 overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-3 sm:p-3.5 md:border-b-0 md:border-r md:p-4 lg:p-[1.125rem]"
+      className="relative h-full min-h-0 overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-3 sm:p-3.5 md:border-b-0 md:border-r md:p-3.5 lg:p-4"
       style={pageDotStyle}
     >
       <div className="relative z-30">
@@ -94,7 +94,7 @@ function PlannerLeftPage() {
         </div>
       </div>
 
-      <div className="relative mt-3 min-h-[17rem] sm:mt-4 sm:min-h-[20rem] md:min-h-[20.5rem]">
+      <div className="relative mt-3 min-h-[17rem] sm:mt-4 sm:min-h-[20rem] md:min-h-[19.25rem]">
         <svg
           className="pointer-events-none absolute inset-0 z-20 hidden h-full w-full opacity-90 sm:block"
           style={{ filter: 'drop-shadow(1px 1px 1px rgba(0,0,0,0.1))' }}
@@ -156,8 +156,8 @@ function PlannerLeftPage() {
           />
         </svg>
 
-        <div className="relative z-10 px-1 pt-6 sm:px-2.5 sm:pt-7 sm:pb-3 md:px-3 md:pt-8">
-          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-12 md:gap-x-11 md:gap-y-12">
+        <div className="relative z-10 px-1 pt-6 sm:px-2.5 sm:pt-7 sm:pb-3 md:px-2.5 md:pt-7">
+          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-12 md:gap-x-10 md:gap-y-10">
             <PlannerPolaroid
               alt={t('trips.planner.board.cards.hanoi')}
               dayLabel={t('trips.planner.board.cards.hanoiDays')}
@@ -215,7 +215,7 @@ function PlannerRightPageFront({
 
   return (
     <div
-      className="relative h-full min-h-0 overflow-hidden bg-[#fffdfa] p-3 sm:p-3.5 md:p-4 lg:p-[1.125rem]"
+      className="relative h-full min-h-0 overflow-hidden bg-[#fffdfa] p-3 sm:p-3.5 md:p-3.5 lg:p-4"
       style={pageDotStyle}
     >
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-10 opacity-[0.08]">
@@ -303,7 +303,7 @@ function PlannerRightPageFront({
 function PlannerBlankPage() {
   return (
     <div
-      className="relative h-full min-h-0 overflow-hidden bg-[#fffdfa] p-3 sm:p-3.5 md:p-4 lg:p-[1.125rem]"
+      className="relative h-full min-h-0 overflow-hidden bg-[#fffdfa] p-3 sm:p-3.5 md:p-3.5 lg:p-4"
       style={pageDotStyle}
     />
   );
@@ -318,15 +318,15 @@ export function PlannerPage() {
       mainId="planner-content"
     >
       <div className="flex h-full min-h-0 w-full items-stretch justify-center">
-        <div className="relative w-full px-2 py-1 sm:px-2.5 sm:py-1.5 md:flex md:h-full md:min-h-0 md:items-center md:px-2.5 md:py-2 lg:px-3 lg:py-2.5">
-          <div className="pointer-events-none absolute inset-x-0 top-1 bottom-[-0.05rem] z-0 md:top-2 md:bottom-[-0.1rem]">
-            <div className="absolute -left-2 -right-2 top-0 bottom-0 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_18px_36px_rgba(76,51,33,0.18)] sm:-left-2.5 sm:-right-2.5 md:-left-3 md:-right-3" />
-            <div className="absolute left-1 right-1 top-0 bottom-[0.1rem] rounded-[1rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_14px_24px_rgba(76,51,33,0.12)] sm:left-1.5 sm:right-1.5 sm:bottom-[0.18rem] md:left-2 md:right-1.5 md:bottom-[0.24rem]" />
-            <div className="absolute left-2 right-0.5 top-0 bottom-[0.24rem] rounded-[1rem] border border-[#efe5d2] bg-[#f5ebd8] shadow-[0_12px_20px_rgba(76,51,33,0.1)] sm:left-3 sm:right-1 sm:bottom-[0.38rem] md:left-3 md:right-1 md:bottom-[0.5rem]" />
-            <div className="absolute left-3.5 right-0 top-0 bottom-[0.38rem] rounded-[1rem] border border-[#f6efe1] bg-[#fbf5ea] shadow-[0_10px_16px_rgba(76,51,33,0.08)] sm:left-4 sm:bottom-[0.56rem] md:left-5 md:bottom-[0.68rem]" />
+        <div className="relative w-full px-2 py-1 sm:px-2.5 sm:py-1 md:flex md:h-full md:min-h-0 md:items-center md:px-2 md:py-1.5 lg:px-2.5 lg:py-2">
+          <div className="pointer-events-none absolute inset-x-0 top-1 bottom-0 z-0 md:top-1.5 md:bottom-0">
+            <div className="absolute -left-1.5 -right-1.5 top-0 bottom-0 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_16px_30px_rgba(76,51,33,0.16)] sm:-left-2 sm:-right-2 md:-left-2.5 md:-right-2.5" />
+            <div className="absolute left-1 right-1 top-0 bottom-[0.06rem] rounded-[1rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_12px_20px_rgba(76,51,33,0.11)] sm:left-1.5 sm:right-[1.25rem] sm:bottom-[0.12rem] md:left-[1.75rem] md:right-[1.25rem] md:bottom-[0.16rem]" />
+            <div className="absolute left-2 right-0.5 top-0 bottom-[0.16rem] rounded-[1rem] border border-[#efe5d2] bg-[#f5ebd8] shadow-[0_10px_16px_rgba(76,51,33,0.09)] sm:left-2.5 sm:right-[0.75rem] sm:bottom-[0.26rem] md:left-[2.75rem] md:right-[0.9rem] md:bottom-[0.34rem]" />
+            <div className="absolute left-3 right-0 top-0 bottom-[0.28rem] rounded-[1rem] border border-[#f6efe1] bg-[#fbf5ea] shadow-[0_8px_14px_rgba(76,51,33,0.07)] sm:left-3.5 sm:bottom-[0.42rem] md:left-[4.25rem] md:bottom-[0.5rem]" />
           </div>
 
-          <section className="relative w-full overflow-hidden rounded-[1rem] border border-[#efe2ca] bg-[#fffdf9] shadow-[0_22px_42px_rgba(0,0,0,0.1),0_10px_18px_rgba(0,0,0,0.07)] md:h-[calc(100%_-_0.45rem)] md:min-h-0 lg:h-[calc(100%_-_0.6rem)]">
+          <section className="relative w-full overflow-hidden rounded-[1rem] border border-[#efe2ca] bg-[#fffdf9] shadow-[0_20px_36px_rgba(0,0,0,0.09),0_8px_16px_rgba(0,0,0,0.06)] md:h-[min(100%,calc(100dvh-10.9rem))] md:min-h-0 lg:h-[min(100%,calc(100dvh-11.25rem))]">
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 
@@ -361,7 +361,7 @@ export function PlannerPage() {
               <div className="absolute inset-y-0 right-0 z-20 w-1/2 overflow-visible" style={bookPerspectiveStyle}>
                 <div
                   className={cn(
-                    'relative h-full transition-[transform,box-shadow] duration-[1600ms] will-change-transform [transition-timing-function:cubic-bezier(0.2,0.72,0.18,1)]',
+                    'relative h-full transition-[transform,box-shadow] duration-[2200ms] will-change-transform [transition-timing-function:cubic-bezier(0.16,0.78,0.18,1)]',
                     isCreatingPlan
                       ? '[transform:rotateY(-180deg)] shadow-[-28px_16px_34px_rgba(32,25,22,0.22)]'
                       : '[transform:rotateY(0deg)] shadow-[-8px_6px_16px_rgba(32,25,22,0.1)]',
@@ -370,7 +370,7 @@ export function PlannerPage() {
                 >
                   <div
                     className={cn(
-                      'pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(to_right,rgba(34,25,22,0.2),rgba(34,25,22,0.06),transparent)] transition-opacity duration-[1600ms]',
+                      'pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(to_right,rgba(34,25,22,0.2),rgba(34,25,22,0.06),transparent)] transition-opacity duration-[2200ms]',
                       isCreatingPlan ? 'opacity-80' : 'opacity-35',
                     )}
                   />

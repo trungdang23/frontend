@@ -484,6 +484,19 @@ Làm hiệu ứng lật trang chậm/mượt hơn và thu nhỏ toàn bộ quy�
 - [x] giảm nhẹ phần bìa/lớp giấy và padding liên quan
 - [x] giữ trang trắng sau khi lật không có nội dung
 
+### FR-B5I - Planner intro routing and no-scroll clamp
+
+### Mục tiêu
+
+Chặn hẳn scroll của planner intro bằng giới hạn chiều cao theo viewport khả dụng, đồng thời buộc navigation `Lập kế hoạch` mở đúng intro planner khi người dùng đã đăng nhập.
+
+### Scope của lượt triển khai này
+
+- [x] làm chậm thêm nhịp flip của nửa trang phải
+- [x] clamp chiều cao notebook theo `100dvh` để desktop không còn scroll
+- [x] giảm thêm một nhịp spacing desktop bên trong notebook nếu cần
+- [x] làm nav `Lập kế hoạch` đi thẳng vào `/app/planner` khi đã đăng nhập
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu
