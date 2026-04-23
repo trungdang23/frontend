@@ -335,6 +335,17 @@ Tinh lại đúng vị trí dọc của hai arrow đầu trên planner board sau
 - [x] chỉ đẩy lên thêm hai đường `Travel -> 1-2` và `1-2 -> 3-4`
 - [x] giữ nguyên kích thước board và hai đường dưới
 
+### FR-B3I - Planner top-arrow final lift
+
+### Mục tiêu
+
+Đẩy thêm hai arrow đầu sau khi phần còn lại của planner board đã ổn.
+
+### Scope của lượt triển khai này
+
+- [x] đẩy thêm một nhịp dọc cho hai đường `Travel -> 1-2` và `1-2 -> 3-4`
+- [x] giữ nguyên mọi kích thước và các arrow còn lại
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
