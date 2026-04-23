@@ -536,6 +536,19 @@ Làm mặt trái đứng thẳng sau khi lật sang trang kế tiếp và căn n
 - [x] căn nút `Quay lại trang trước` về lề trái của trang trái
 - [x] giữ nguyên logic lật ngược qua navigation planner
 
+### FR-B5M - Planner create-trip notebook spread
+
+### Mục tiêu
+
+Khi người dùng bấm `Tạo chuyến đi` ở planner, chuyển sang một spread hai nửa quyển sổ có form thông tin chung ở trang trái và bản đồ/chọn điểm đến ở trang phải.
+
+### Scope của lượt triển khai này
+
+- [x] dựng trang trái kiểu notebook với tên chuyến đi, ngày đi và step dots
+- [x] dựng trang phải với tiêu đề điểm đến, thanh tìm kiếm, bản đồ minh họa và nút tiếp tục
+- [x] sửa nút `Quay lại trang trước` để toàn bộ vùng nút click được khi sang trang kế tiếp
+- [x] giữ responsive mobile bằng cách xếp hai trang theo chiều dọc
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu

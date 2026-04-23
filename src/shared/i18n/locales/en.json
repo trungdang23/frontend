@@ -546,7 +546,22 @@
         },
         "createPlanAction": "Create plan",
         "returnToPlannerAction": "Back to planner",
-        "returnToPreviousPageAction": "Return to previous page"
+        "returnToPreviousPageAction": "Return to previous page",
+        "createSpread": {
+          "stepTitle": "Step 1: Trip Basics",
+          "tripNameLabel": "Trip Name:",
+          "tripNamePlaceholder": "Example: Summer trip from Hanoi to Sapa",
+          "dateLabel": "Travel Dates:",
+          "startDatePlaceholder": "Choose start date",
+          "endDatePlaceholder": "Choose end date",
+          "destinationTitle": "Your Destination",
+          "destinationSearchLabel": "Search destination",
+          "destinationSearchPlaceholder": "Search a destination or choose on the map",
+          "mapLabel": "Illustrated Vietnam map for choosing a destination",
+          "notesTitle": "Notes:",
+          "notesBody": "Remember to check the weather!",
+          "continueAction": "Continue"
+        }
       },
       "createRootTitle": "Add root node",
       "createChildTitle": "Add child node",

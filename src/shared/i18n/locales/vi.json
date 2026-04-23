@@ -546,7 +546,22 @@
         },
         "createPlanAction": "Tạo kế hoạch",
         "returnToPlannerAction": "Quay lại planner",
-        "returnToPreviousPageAction": "Quay lại trang trước"
+        "returnToPreviousPageAction": "Quay lại trang trước",
+        "createSpread": {
+          "stepTitle": "Bước 1: Thông Tin Chung",
+          "tripNameLabel": "Tên Chuyến Đi:",
+          "tripNamePlaceholder": "Ví dụ: Chuyến đi Mùa Hè Hà Nội - Sapa",
+          "dateLabel": "Ngày Đi:",
+          "startDatePlaceholder": "Chọn ngày bắt đầu",
+          "endDatePlaceholder": "Chọn ngày kết thúc",
+          "destinationTitle": "Điểm Đến Của Bạn",
+          "destinationSearchLabel": "Tìm kiếm điểm đến",
+          "destinationSearchPlaceholder": "Tìm kiếm điểm đến hoặc chọn trên bản đồ",
+          "mapLabel": "Bản đồ Việt Nam minh họa để chọn điểm đến",
+          "notesTitle": "Notes:",
+          "notesBody": "Đừng quên kiểm tra thời tiết!",
+          "continueAction": "Tiếp Tục"
+        }
       },
       "createRootTitle": "Thêm node gốc",
       "createChildTitle": "Thêm node con",
