@@ -574,6 +574,18 @@ Làm cú lật của planner bớt thẳng và cứng bằng nhịp cong nhẹ, 
 - [x] dùng keyframe cho sheet và các lớp shadow/crease thay vì chỉ transition tuyến tính
 - [x] giữ nguyên flow create spread và URL state hiện tại
 
+### FR-B5P - Planner create spread settled-state fix
+
+### Mục tiêu
+
+Sửa lỗi sau khi lật xong thì sheet 3D vẫn còn đè lên spread tạo chuyến đi và làm nội dung trang thông tin chung hiển thị sai/ngược.
+
+### Scope của lượt triển khai này
+
+- [x] chỉ dùng sheet 3D trong lúc animation đang chạy hoặc ở intro ban đầu
+- [x] khi đã settle ở create spread thì render trực tiếp spread thật, không giữ lớp sheet flipped
+- [x] giữ nguyên animation tiến/lùi vừa tinh chỉnh
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu
