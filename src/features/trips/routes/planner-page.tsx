@@ -74,95 +74,103 @@ export function PlannerPage() {
               className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-4 sm:p-5 md:min-h-[31rem] md:w-1/2 md:border-b-0 md:border-r md:p-6 lg:p-7"
               style={pageDotStyle}
             >
-              <div className="relative z-30 mx-auto flex w-fit max-w-full flex-col items-center">
-                <h1 className="whitespace-nowrap font-title text-[2rem] leading-[0.92] tracking-[0.04em] text-gray-800 uppercase sm:text-[2.65rem] lg:text-[3rem]">
-                  <span className="block">{t('trips.planner.board.titleLine1')}</span>
-                </h1>
-                <p className="mt-1.5 self-start pl-1 font-cursive text-[1.55rem] leading-none text-gray-800 sm:text-[2rem]">
-                  {t('trips.planner.board.subtitle')}
-                </p>
+              <div className="relative z-30">
+                <div className="flex justify-center">
+                  <h1 className="whitespace-nowrap font-title text-[2rem] leading-[0.92] tracking-[0.04em] text-gray-800 uppercase sm:text-[2.65rem] lg:text-[3rem]">
+                    <span className="block">{t('trips.planner.board.titleLine1')}</span>
+                  </h1>
+                </div>
+                <div className="mt-1.5 ml-[12%] w-fit sm:ml-[10%] md:ml-[8%] lg:ml-[6%]">
+                  <p className="text-left font-cursive text-[1.55rem] leading-none text-gray-800 sm:text-[2rem]">
+                    {t('trips.planner.board.subtitle')}
+                  </p>
+                </div>
               </div>
 
-              <svg
-                className="pointer-events-none absolute inset-0 z-20 hidden h-full w-full opacity-80 sm:block"
-                style={{ filter: 'drop-shadow(1px 1px 1px rgba(0,0,0,0.1))' }}
-                viewBox="0 0 100 100"
-              >
-                <defs>
-                  <marker id="planner-arrowhead" markerHeight="7" markerWidth="10" orient="auto" refX="9" refY="3.5">
-                    <polygon fill="#444" points="0 0, 10 3.5, 0 7" />
-                  </marker>
-                </defs>
-                <path
-                  className="[stroke-dasharray:6_4]"
-                  d="M31,19 C27,24 25,29 25,34 C25,38 25,41 26,45"
-                  fill="none"
-                  markerEnd="url(#planner-arrowhead)"
-                  stroke="#444"
-                  strokeWidth="0.5"
-                />
-                <path
-                  className="[stroke-dasharray:6_4]"
-                  d="M34,45 C43,41 58,41 69,44"
-                  fill="none"
-                  markerEnd="url(#planner-arrowhead)"
-                  stroke="#444"
-                  strokeWidth="0.5"
-                />
-                <path
-                  className="[stroke-dasharray:6_4]"
-                  d="M71,47 C76,53 77,61 72,67 C66,73 53,76 39,77 C33,78 29,80 27,84"
-                  fill="none"
-                  markerEnd="url(#planner-arrowhead)"
-                  stroke="#444"
-                  strokeWidth="0.5"
-                />
-                <path
-                  className="[stroke-dasharray:6_4]"
-                  d="M35,84 C44,81 57,81 68,84"
-                  fill="none"
-                  markerEnd="url(#planner-arrowhead)"
-                  stroke="#444"
-                  strokeWidth="0.5"
-                />
-              </svg>
+              <div className="relative mt-4 min-h-[20rem] sm:mt-6 sm:min-h-[25rem] md:min-h-[27rem]">
+                <svg
+                  className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full opacity-80 sm:block"
+                  style={{ filter: 'drop-shadow(1px 1px 1px rgba(0,0,0,0.1))' }}
+                  viewBox="0 0 100 100"
+                >
+                  <defs>
+                    <marker id="planner-arrowhead" markerHeight="7" markerWidth="10" orient="auto" refX="9" refY="3.5">
+                      <polygon fill="#444" points="0 0, 10 3.5, 0 7" />
+                    </marker>
+                  </defs>
+                  <path
+                    className="[stroke-dasharray:6_4]"
+                    d="M18,4 C13,9 10,15 10,21 C10,25 11,28 13,30"
+                    fill="none"
+                    markerEnd="url(#planner-arrowhead)"
+                    stroke="#444"
+                    strokeWidth="0.5"
+                  />
+                  <path
+                    className="[stroke-dasharray:6_4]"
+                    d="M40,24 C46,16 55,13 63,14 C71,15 76,19 78,24"
+                    fill="none"
+                    markerEnd="url(#planner-arrowhead)"
+                    stroke="#444"
+                    strokeWidth="0.5"
+                  />
+                  <path
+                    className="[stroke-dasharray:6_4]"
+                    d="M84,31 C91,38 92,47 87,54 C79,62 61,66 34,67 C21,68 13,71 10,76"
+                    fill="none"
+                    markerEnd="url(#planner-arrowhead)"
+                    stroke="#444"
+                    strokeWidth="0.5"
+                  />
+                  <path
+                    className="[stroke-dasharray:6_4]"
+                    d="M40,90 C47,95 56,97 65,96 C73,95 79,92 83,88"
+                    fill="none"
+                    markerEnd="url(#planner-arrowhead)"
+                    stroke="#444"
+                    strokeWidth="0.5"
+                  />
+                </svg>
 
-              <div className="relative z-10 mt-4 grid min-h-[20rem] grid-cols-1 gap-4 sm:min-h-[22rem] sm:grid-cols-2 sm:gap-5 md:mt-6 md:min-h-[25rem]">
-                <PlannerPolaroid
-                  alt={t('trips.planner.board.cards.hanoi')}
-                  dayLabel={t('trips.planner.board.cards.hanoiDays')}
-                  imageUrl="https://images.unsplash.com/photo-1555944805-d835180442e7?auto=format&fit=crop&w=400"
-                  label={t('trips.planner.board.cards.hanoi')}
-                  tapeClassName="w-12 rotate-1 bg-orange-400/40"
-                  tiltClassName="-rotate-3"
-                />
+                <div className="relative z-10 px-1 pt-8 sm:px-3 sm:pt-10 sm:pb-6 md:px-4 md:pt-12">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-14 md:gap-x-10 md:gap-y-16">
+                    <PlannerPolaroid
+                      alt={t('trips.planner.board.cards.hanoi')}
+                      dayLabel={t('trips.planner.board.cards.hanoiDays')}
+                      imageUrl="https://images.unsplash.com/photo-1555944805-d835180442e7?auto=format&fit=crop&w=400"
+                      label={t('trips.planner.board.cards.hanoi')}
+                      tapeClassName="w-12 rotate-1 bg-orange-400/40"
+                      tiltClassName="-rotate-3"
+                    />
 
-                <PlannerPolaroid
-                  alt={t('trips.planner.board.cards.haLong')}
-                  dayLabel={t('trips.planner.board.cards.haLongDays')}
-                  imageUrl="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=400"
-                  label={t('trips.planner.board.cards.haLong')}
-                  tapeClassName="w-14 -rotate-2 bg-blue-400/40"
-                  tiltClassName="rotate-2 sm:translate-y-2"
-                />
+                    <PlannerPolaroid
+                      alt={t('trips.planner.board.cards.haLong')}
+                      dayLabel={t('trips.planner.board.cards.haLongDays')}
+                      imageUrl="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=400"
+                      label={t('trips.planner.board.cards.haLong')}
+                      tapeClassName="w-14 -rotate-2 bg-blue-400/40"
+                      tiltClassName="rotate-2 sm:translate-y-2"
+                    />
 
-                <PlannerPolaroid
-                  alt={t('trips.planner.board.cards.hoiAn')}
-                  dayLabel={t('trips.planner.board.cards.hoiAnDays')}
-                  imageUrl="https://images.unsplash.com/photo-1599708153386-62e2d366336e?auto=format&fit=crop&w=400"
-                  label={t('trips.planner.board.cards.hoiAn')}
-                  tapeClassName="w-14 rotate-3 bg-yellow-400/50"
-                  tiltClassName="rotate-1 sm:-translate-y-1"
-                />
+                    <PlannerPolaroid
+                      alt={t('trips.planner.board.cards.hoiAn')}
+                      dayLabel={t('trips.planner.board.cards.hoiAnDays')}
+                      imageUrl="https://images.unsplash.com/photo-1599708153386-62e2d366336e?auto=format&fit=crop&w=400"
+                      label={t('trips.planner.board.cards.hoiAn')}
+                      tapeClassName="w-14 rotate-3 bg-yellow-400/50"
+                      tiltClassName="rotate-1 sm:-translate-y-1"
+                    />
 
-                <PlannerPolaroid
-                  alt={t('trips.planner.board.cards.daNang')}
-                  dayLabel={t('trips.planner.board.cards.daNangDays')}
-                  imageUrl="https://images.unsplash.com/photo-1559592442-7e18ad73d63b?auto=format&fit=crop&w=400"
-                  label={t('trips.planner.board.cards.daNang')}
-                  tapeClassName="w-12 -rotate-1 bg-pink-400/40"
-                  tiltClassName="-rotate-1 sm:translate-y-1"
-                />
+                    <PlannerPolaroid
+                      alt={t('trips.planner.board.cards.daNang')}
+                      dayLabel={t('trips.planner.board.cards.daNangDays')}
+                      imageUrl="https://images.unsplash.com/photo-1559592442-7e18ad73d63b?auto=format&fit=crop&w=400"
+                      label={t('trips.planner.board.cards.daNang')}
+                      tapeClassName="w-12 -rotate-1 bg-pink-400/40"
+                      tiltClassName="-rotate-1 sm:translate-y-1"
+                    />
+                  </div>
+                </div>
               </div>
 
               <div className="pointer-events-none absolute bottom-8 left-6 hidden -rotate-[20deg] opacity-20 sm:block">

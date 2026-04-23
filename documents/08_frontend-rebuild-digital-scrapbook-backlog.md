@@ -258,6 +258,19 @@ Sửa lại heading và các đường nối trong planner board để typograph
 - [x] đưa lớp hiển thị của arrow lên trên cụm card để không bị che
 - [x] chỉnh lại path và toạ độ các arrow để nối đúng vị trí giữa subtitle và các card
 
+### FR-B3C - Planner subtitle separation and arrow gutter routing
+
+### Mục tiêu
+
+Tách subtitle khỏi cụm title để có offset trái rõ ràng, đồng thời chuyển toàn bộ arrow flow sang các khoảng trống giữa card thay vì đè lên ảnh.
+
+### Scope của lượt triển khai này
+
+- [x] tách `Travel Itinerary` khỏi thẻ cha căn giữa của heading chính
+- [x] dịch cụm subtitle sang trái bằng layout riêng thay vì chỉ dùng `text-left`
+- [x] tạo thêm khoảng trắng quanh và giữa các card để arrow có hành lang riêng
+- [x] vẽ lại các arrow path để chỉ chạm cạnh hoặc góc card, không chạy đè qua mặt card
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
