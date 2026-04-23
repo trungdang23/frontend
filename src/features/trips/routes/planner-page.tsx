@@ -35,21 +35,21 @@ function PlannerPolaroid({
     <div className="flex h-full flex-col items-center">
       <div
         className={cn(
-          'relative flex h-full w-full flex-col bg-white px-3 pb-5 pt-3 shadow-[0_8px_16px_rgba(0,0,0,0.08)] transition duration-300 hover:-translate-y-1 hover:rotate-0 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]',
+          'relative flex h-full w-full flex-col bg-white px-2.5 pb-4 pt-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.08)] transition duration-300 hover:-translate-y-1 hover:rotate-0 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]',
           tiltClassName,
         )}
       >
         <img
           alt={alt}
-          className="h-28 w-full object-cover sm:h-32 md:h-36 lg:h-40"
+          className="h-24 w-full object-cover sm:h-[6.5rem] md:h-28 lg:h-32"
           src={imageUrl}
         />
-        <p className="mt-2 text-center font-marker text-[1.2rem] text-gray-800 sm:text-[1.45rem]">
+        <p className="mt-1.5 text-center font-marker text-[1.1rem] text-gray-800 sm:text-[1.3rem]">
           {label}
         </p>
         <div className={cn('absolute left-1/2 top-[-0.85rem] h-6 -translate-x-1/2 backdrop-blur-[1px]', tapeClassName)} />
       </div>
-      <p className="mt-2 font-marker text-[1.15rem] font-bold text-gray-700 sm:text-[1.35rem]">
+      <p className="mt-1.5 font-marker text-[1.05rem] font-bold text-gray-700 sm:text-[1.2rem]">
         {dayLabel}
       </p>
     </div>
@@ -64,30 +64,30 @@ export function PlannerPage() {
       mainClassName={publicPageMainLayouts.planner}
       mainId="planner-content"
     >
-      <div className="flex h-full min-h-0 w-full items-start justify-center py-2 sm:py-3 lg:py-4">
-        <section className="relative w-full origin-top overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)] lg:scale-[0.94]">
+      <div className="flex h-full min-h-0 w-full items-start justify-center py-1 sm:py-2 lg:py-3">
+        <section className="relative w-full overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)]">
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 
           <div className="flex flex-col md:flex-row">
             <div
-              className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-4 sm:p-5 md:min-h-[29rem] md:w-1/2 md:border-b-0 md:border-r md:p-5 lg:p-6"
+              className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-3.5 sm:p-4 md:min-h-[26.5rem] md:w-1/2 md:border-b-0 md:border-r md:p-[1.125rem] lg:p-5"
               style={pageDotStyle}
             >
               <div className="relative z-30">
                 <div className="flex justify-center">
-                  <h1 className="whitespace-nowrap font-title text-[2rem] leading-[0.92] tracking-[0.04em] text-gray-800 uppercase sm:text-[2.65rem] lg:text-[3rem]">
+                  <h1 className="whitespace-nowrap font-title text-[1.85rem] leading-[0.92] tracking-[0.04em] text-gray-800 uppercase sm:text-[2.35rem] lg:text-[2.7rem]">
                     <span className="block">{t('trips.planner.board.titleLine1')}</span>
                   </h1>
                 </div>
                 <div className="mt-1.5 ml-[12%] w-fit sm:ml-[10%] md:ml-[8%] lg:ml-[6%]">
-                  <p className="text-left font-cursive text-[1.55rem] leading-none text-gray-800 sm:text-[2rem]">
+                  <p className="text-left font-cursive text-[1.4rem] leading-none text-gray-800 sm:text-[1.75rem]">
                     {t('trips.planner.board.subtitle')}
                   </p>
                 </div>
               </div>
 
-              <div className="relative mt-4 min-h-[19rem] sm:mt-5 sm:min-h-[23rem] md:min-h-[24.5rem]">
+              <div className="relative mt-3 min-h-[17rem] sm:mt-4 sm:min-h-[20.5rem] md:min-h-[22rem]">
                 <svg
                   className="pointer-events-none absolute inset-0 z-20 hidden h-full w-full opacity-90 sm:block"
                   style={{ filter: 'drop-shadow(1px 1px 1px rgba(0,0,0,0.1))' }}
@@ -109,7 +109,7 @@ export function PlannerPage() {
                   </defs>
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M18,6 C16,10 16,13 18,16 C20,18 22,20 24,22"
+                    d="M18,5 C16,8 16,11 18,13 C19,14.5 21,16 23,17"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
@@ -119,7 +119,7 @@ export function PlannerPage() {
                   />
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M31,18 C41,14 57,14 69,18"
+                    d="M31,13 C41,10 57,10 69,13"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
@@ -149,8 +149,8 @@ export function PlannerPage() {
                   />
                 </svg>
 
-                <div className="relative z-10 px-1 pt-7 sm:px-3 sm:pt-9 sm:pb-5 md:px-4 md:pt-10">
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-x-12 sm:gap-y-15 md:gap-x-14 md:gap-y-16">
+                <div className="relative z-10 px-1 pt-6 sm:px-2.5 sm:pt-8 sm:pb-4 md:px-3 md:pt-9">
+                  <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-x-11 sm:gap-y-[3.25rem] md:gap-x-12 md:gap-y-14">
                     <PlannerPolaroid
                       alt={t('trips.planner.board.cards.hanoi')}
                       dayLabel={t('trips.planner.board.cards.hanoiDays')}
@@ -198,7 +198,7 @@ export function PlannerPage() {
             </div>
 
             <div
-              className="relative overflow-hidden bg-[#fffdfa] p-4 sm:p-5 md:min-h-[31rem] md:w-1/2 md:p-6 lg:p-7"
+              className="relative overflow-hidden bg-[#fffdfa] p-3.5 sm:p-4 md:min-h-[26.5rem] md:w-1/2 md:p-[1.125rem] lg:p-5"
               style={pageDotStyle}
             >
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-10 opacity-[0.08]">
