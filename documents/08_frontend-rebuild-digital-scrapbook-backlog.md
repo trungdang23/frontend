@@ -357,6 +357,18 @@ Loại bỏ phụ thuộc vào ảnh ngoài cho planner board để các card lu
 - [x] thêm ảnh local mặc định cho bốn planner card trong `public/images/defaults`
 - [x] đổi planner page sang dùng asset local thay vì URL ngoài
 
+### FR-B4 - Footer density and spacing cleanup
+
+### Mục tiêu
+
+Giảm chiều cao footer và nới nhịp ba cụm link để footer gọn hơn nhưng vẫn dễ quét.
+
+### Scope của lượt triển khai này
+
+- [x] giảm chiều cao tổng thể của footer
+- [x] đổi label `Về chúng tôi` thành `Về tôi`
+- [x] tăng khoảng cách giữa ba link footer
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
