@@ -297,6 +297,19 @@ Giảm cảm giác arrow quá to và nắn lại path theo các gutter thật s�
 - [x] tăng khoảng cách ngang/dọc giữa các card trong desktop grid để có gutter rõ hơn
 - [x] dời các path vào các gutter ngoài card thay vì chạy sát vùng card
 
+### FR-B3F - Planner top crop and first-row arrow correction
+
+### Mục tiêu
+
+Loại bỏ tình trạng planner board bị đẩy lên trên viewport và neo lại hai đường đầu sao cho thật sự nối từ subtitle/cạnh trên card mà không đè lên card.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ cách canh dọc làm mép trên của planner board bị đẩy lên và che heading
+- [x] thêm top spacing để title và mép trên của sổ luôn nhìn thấy được
+- [x] neo lại đường `Travel -> 1-2` từ subtitle tới cạnh trên card đầu tiên
+- [x] neo lại đường `1-2 -> 3-4` để chạy ngoài card và nối giữa hai cạnh trên
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage

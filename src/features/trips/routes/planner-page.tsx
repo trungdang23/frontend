@@ -64,7 +64,7 @@ export function PlannerPage() {
       mainClassName={publicPageMainLayouts.planner}
       mainId="planner-content"
     >
-      <div className="flex h-full min-h-0 w-full items-start justify-center py-0 lg:items-center">
+      <div className="flex h-full min-h-0 w-full items-start justify-center py-4 sm:py-5 lg:py-6">
         <section className="relative w-full overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)]">
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
           <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
@@ -109,7 +109,7 @@ export function PlannerPage() {
                   </defs>
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M18,5 C13,10 11,15 11,20 C11,23 12,25 14,27"
+                    d="M18,8 C14,12 12,16 12,20 C12,22 13,24 15,26"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
@@ -119,7 +119,7 @@ export function PlannerPage() {
                   />
                   <path
                     className="[stroke-dasharray:6_4]"
-                    d="M35,19 C43,13 56,11 66,12 C74,13 80,15 84,19"
+                    d="M31,24 C40,19 56,19 69,24"
                     fill="none"
                     markerEnd="url(#planner-arrowhead)"
                     strokeLinecap="round"
