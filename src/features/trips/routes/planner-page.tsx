@@ -1,6 +1,4 @@
-import {
-  type CSSProperties,
-} from 'react';
+import { type CSSProperties } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   ArrowRight,
@@ -13,6 +11,7 @@ import {
 } from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
+import { PlannerActivitySpread } from '@/features/trips/planning/components/planner-activity-spread';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -516,7 +515,11 @@ function PlannerVietnamSketchMap() {
   );
 }
 
-function PlannerDestinationPage() {
+function PlannerDestinationPage({
+  onContinue,
+}: {
+  onContinue: () => void;
+}) {
   const { t } = useI18n();
 
   return (
@@ -558,6 +561,7 @@ function PlannerDestinationPage() {
 
         <button
           className="absolute bottom-0 right-0 inline-flex items-center gap-2 rounded-[1.25rem] border-2 border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.75rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 sm:px-6 sm:text-[2.1rem]"
+          onClick={onContinue}
           type="button"
         >
           {t('trips.planner.board.createSpread.continueAction')}
@@ -570,8 +574,10 @@ function PlannerDestinationPage() {
 
 function PlannerCreateSpread({
   onBack,
+  onContinue,
 }: {
   onBack: () => void;
+  onContinue: () => void;
 }) {
   return (
     <div className="flex h-full min-h-0 flex-col md:flex-row">
@@ -579,7 +585,7 @@ function PlannerCreateSpread({
         <PlannerCreateTripPage onBack={onBack} />
       </div>
       <div className="md:h-full md:w-1/2">
-        <PlannerDestinationPage />
+        <PlannerDestinationPage onContinue={onContinue} />
       </div>
     </div>
   );
@@ -587,7 +593,11 @@ function PlannerCreateSpread({
 
 export function PlannerPage() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const isCreatingPlan = searchParams.get('page') === 'next';
+  const plannerPage = searchParams.get('page');
+  const isCreatingPlan = plannerPage === 'next';
+  const isEditingActivities = plannerPage === 'activities';
+  const isPlannerFlowOpen = isCreatingPlan || isEditingActivities;
+  const activeNodeId = searchParams.get('nodeId');
 
   const openNextPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
@@ -601,11 +611,23 @@ export function PlannerPage() {
     setSearchParams(nextParams, { replace: true });
   };
 
+  const openActivityPlannerPage = () => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set('page', 'activities');
+    setSearchParams(nextParams, { replace: true });
+  };
+
+  const returnToGeneralInfoPage = () => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set('page', 'next');
+    setSearchParams(nextParams, { replace: true });
+  };
+
   return (
     <PublicPageShell
       mainClassName={publicPageMainLayouts.planner}
       mainId="planner-content"
-      scrollable={isCreatingPlan}
+      scrollable={isPlannerFlowOpen}
     >
       <div className="flex h-full min-h-0 w-full items-stretch justify-center">
         <div className="relative w-full px-2 py-1 sm:px-2.5 sm:py-1 md:flex md:h-full md:min-h-0 md:items-center md:px-2 md:py-1.5 lg:px-2.5 lg:py-2">
@@ -621,8 +643,16 @@ export function PlannerPage() {
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 
             <div className="flex flex-col md:hidden">
-              {isCreatingPlan ? (
-                <PlannerCreateSpread onBack={returnToIntroPlannerPage} />
+              {isEditingActivities ? (
+                <PlannerActivitySpread
+                  nodeId={activeNodeId}
+                  onBack={returnToGeneralInfoPage}
+                />
+              ) : isCreatingPlan ? (
+                <PlannerCreateSpread
+                  onBack={returnToIntroPlannerPage}
+                  onContinue={openActivityPlannerPage}
+                />
               ) : (
                 <>
                   <PlannerLeftPage />
@@ -632,8 +662,16 @@ export function PlannerPage() {
             </div>
 
             <div className="relative hidden h-full min-h-0 md:block">
-              {isCreatingPlan ? (
-                <PlannerCreateSpread onBack={returnToIntroPlannerPage} />
+              {isEditingActivities ? (
+                <PlannerActivitySpread
+                  nodeId={activeNodeId}
+                  onBack={returnToGeneralInfoPage}
+                />
+              ) : isCreatingPlan ? (
+                <PlannerCreateSpread
+                  onBack={returnToIntroPlannerPage}
+                  onContinue={openActivityPlannerPage}
+                />
               ) : (
                 <div className="absolute inset-0 flex">
                   <div className="w-1/2">

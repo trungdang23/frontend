@@ -2,6 +2,8 @@ import { request } from '@/shared/api/http-client';
 import {
   PlanNode,
   PlanNodeMutationPayload,
+  PlanNodeStickerPlacement,
+  SavePlanNodeStickersPayload,
   PlanNodeUpdatePayload,
   TripPlannerResult,
 } from '@/features/trips/planning/types/plan-node';
@@ -37,6 +39,30 @@ export async function updatePlanNode(
     auth: true,
     body: payload,
   });
+}
+
+export async function getPlanNodeStickers(
+  nodeId: string,
+  options: RequestOptions = {},
+) {
+  return request<PlanNodeStickerPlacement[]>(`/nodes/${nodeId}/stickers`, {
+    auth: true,
+    signal: options.signal,
+  });
+}
+
+export async function savePlanNodeStickers(
+  nodeId: string,
+  payload: SavePlanNodeStickersPayload,
+) {
+  return request<PlanNodeStickerPlacement[], SavePlanNodeStickersPayload>(
+    `/nodes/${nodeId}/stickers`,
+    {
+      method: 'PUT',
+      auth: true,
+      body: payload,
+    },
+  );
 }
 
 export async function deletePlanNode(nodeId: string) {

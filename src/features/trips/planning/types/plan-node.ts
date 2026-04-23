@@ -33,6 +33,33 @@ export type TripPlannerResult = {
   nodes: PlanNode[];
 };
 
+export type PlanNodeStickerPlacement = {
+  id: string;
+  nodeId: string;
+  stickerKey: string;
+  x: number;
+  y: number;
+  rotation: number;
+  scale: number;
+  zIndex: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PlanNodeStickerPlacementPayload = {
+  id?: string;
+  stickerKey: string;
+  x: number;
+  y: number;
+  rotation?: number;
+  scale?: number;
+  zIndex?: number;
+};
+
+export type SavePlanNodeStickersPayload = {
+  stickers: PlanNodeStickerPlacementPayload[];
+};
+
 export type PlanNodeMutationPayload = {
   tripId: string;
   parentId?: string | null;

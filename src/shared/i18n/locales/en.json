@@ -561,6 +561,55 @@
           "notesTitle": "Notes:",
           "notesBody": "Remember to check the weather!",
           "continueAction": "Continue"
+        },
+        "activitySpread": {
+          "stepTitle": "Step 2: Activities",
+          "backToGeneralAction": "Back to trip basics",
+          "fixedFieldsNote": "Fixed fields stay here, freeform stickers live on the next page.",
+          "canvasPageTitle": "Activity Frame",
+          "canvasTitle": "Activity notes",
+          "canvasPlaceholder": "Write a quick plan, reminder, or mood for this activity...",
+          "connectedApiNote": "Connected to the current PlanNode. Saving will sync sticker coordinates through the API.",
+          "localDraftApiNote": "There is no nodeId in the URL yet, so stickers are local draft only. Once the planning flow creates a real PlanNode, pass nodeId to persist coordinates.",
+          "stickerPaletteTitle": "Pick stickers",
+          "stickerPaletteDescription": "Tap to add a sticker, then drag it inside the frame. Coordinates are saved relative to the frame so they stay stable on responsive screens.",
+          "dragStickerLabel": "Drag the {{sticker}} sticker inside the activity frame",
+          "saveAction": "Save stickers",
+          "savingAction": "Saving...",
+          "clearAction": "Clear stickers",
+          "fields": {
+            "title": "Activity Name:",
+            "date": "Date:",
+            "time": "Time:",
+            "location": "Location:",
+            "budget": "Budget:",
+            "notes": "Notes:"
+          },
+          "placeholders": {
+            "title": "Example: Old town cafe stop",
+            "date": "Day 2",
+            "time": "08:30 - 10:00",
+            "location": "Hoi An",
+            "budget": "150,000 VND",
+            "notes": "Bring the camera, reserve a window seat..."
+          },
+          "stickers": {
+            "sun": "sun",
+            "camera": "camera",
+            "ticket": "ticket",
+            "spark": "spark"
+          },
+          "feedback": {
+            "localOnly": "Local draft: a nodeId is required to save through the API.",
+            "loading": "Loading saved stickers...",
+            "loaded": "Loaded stickers for this activity.",
+            "loadError": "Unable to load stickers for this activity.",
+            "added": "Added a sticker to the frame.",
+            "cleared": "Cleared stickers from the frame.",
+            "saving": "Saving sticker coordinates...",
+            "saved": "Sticker coordinates saved.",
+            "saveError": "Unable to save sticker coordinates right now."
+          }
         }
       },
       "createRootTitle": "Add root node",

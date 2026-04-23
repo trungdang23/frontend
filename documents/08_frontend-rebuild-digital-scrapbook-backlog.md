@@ -238,6 +238,26 @@ Làm phần hero board của route `planner` khớp hơn với planner page đã
 
 Siết lại cụm heading và flow dẫn mắt ở planner board để title rõ hơn và các card thể hiện một nhịp itinerary liên tục.
 
+### FR-B4 - Planner activity sticker canvas
+
+### Mục tiêu
+
+Thêm trang kế tiếp sau bước `Thông Tin Chung` trong planner để người dùng nhập hoạt động bằng các field cố định, đồng thời chọn sticker và kéo thả sticker tự do trong khung nhập hoạt động.
+
+### Scope của lượt triển khai này
+
+- [x] thêm bước `Hoạt Động` sau `createSpread`
+- [x] dựng palette sticker không cần dependency drag-drop mới
+- [x] dùng Pointer Events, `setPointerCapture`, `getBoundingClientRect`, và tọa độ chuẩn hóa để kéo thả sticker trong khung responsive
+- [x] thêm client API cho `PlanNodeSticker` để load/save tọa độ theo `nodeId`
+- [x] giữ màn hình hoạt động hoạt động được ở chế độ local draft khi route chưa có `nodeId`
+
+### Deferred
+
+- nối hoàn chỉnh bước `Thông Tin Chung` với tạo `Trip` thật
+- autosave/debounce theo session editor
+- resize/rotate sticker bằng handle riêng
+
 ### Scope của lượt triển khai này
 
 - [x] đổi font của heading `Lập kế hoạch` sang display font khác với card labels và căn giữa heading

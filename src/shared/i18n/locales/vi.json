@@ -561,6 +561,55 @@
           "notesTitle": "Notes:",
           "notesBody": "Đừng quên kiểm tra thời tiết!",
           "continueAction": "Tiếp Tục"
+        },
+        "activitySpread": {
+          "stepTitle": "Bước 2: Hoạt Động",
+          "backToGeneralAction": "Quay lại thông tin chung",
+          "fixedFieldsNote": "Thông tin cố định ở đây, sticker tự do ở trang bên cạnh.",
+          "canvasPageTitle": "Khung Hoạt Động",
+          "canvasTitle": "Mô tả hoạt động",
+          "canvasPlaceholder": "Viết nhanh kế hoạch, điều cần nhớ hoặc cảm xúc cho hoạt động này...",
+          "connectedApiNote": "Đang kết nối với PlanNode hiện tại. Khi lưu, tọa độ sticker sẽ được đồng bộ qua API.",
+          "localDraftApiNote": "Chưa có nodeId trong URL nên phần sticker đang là bản nháp local. Khi flow tạo kế hoạch gắn PlanNode thật, thêm nodeId để lưu tọa độ.",
+          "stickerPaletteTitle": "Chọn sticker",
+          "stickerPaletteDescription": "Chạm để thêm sticker, sau đó kéo trực tiếp trong khung. Tọa độ được lưu theo tỉ lệ khung để không lệch khi màn hình đổi kích thước.",
+          "dragStickerLabel": "Kéo sticker {{sticker}} trong khung hoạt động",
+          "saveAction": "Lưu sticker",
+          "savingAction": "Đang lưu...",
+          "clearAction": "Xóa sticker",
+          "fields": {
+            "title": "Tên Hoạt Động:",
+            "date": "Ngày:",
+            "time": "Thời Gian:",
+            "location": "Địa Điểm:",
+            "budget": "Chi Phí:",
+            "notes": "Ghi Chú:"
+          },
+          "placeholders": {
+            "title": "Ví dụ: Cafe ngắm phố cổ",
+            "date": "Ngày 2",
+            "time": "08:30 - 10:00",
+            "location": "Hội An",
+            "budget": "150.000 VND",
+            "notes": "Chuẩn bị máy ảnh, đặt chỗ gần cửa sổ..."
+          },
+          "stickers": {
+            "sun": "mặt trời",
+            "camera": "máy ảnh",
+            "ticket": "vé",
+            "spark": "ánh lấp lánh"
+          },
+          "feedback": {
+            "localOnly": "Bản nháp local: cần nodeId để lưu vào API.",
+            "loading": "Đang tải sticker đã lưu...",
+            "loaded": "Đã tải sticker của hoạt động này.",
+            "loadError": "Không tải được sticker của hoạt động này.",
+            "added": "Đã thêm sticker vào khung.",
+            "cleared": "Đã xóa sticker khỏi khung.",
+            "saving": "Đang lưu tọa độ sticker...",
+            "saved": "Đã lưu tọa độ sticker.",
+            "saveError": "Không thể lưu tọa độ sticker lúc này."
+          }
         }
       },
       "createRootTitle": "Thêm node gốc",
