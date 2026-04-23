@@ -245,6 +245,19 @@ Siết lại cụm heading và flow dẫn mắt ở planner board để title r�
 - [x] thêm chuỗi mũi tên uốn lượn nối lần lượt các card ngày `1-2`, `3-4`, `5-6`, `7-8`
 - [x] đồng bộ day label card theo đúng chuỗi ngày mới để flow mũi tên không bị lệch nhịp
 
+### FR-B3B - Planner heading and arrow placement correction
+
+### Mục tiêu
+
+Sửa lại heading và các đường nối trong planner board để typography rõ ràng hơn và arrow flow thật sự bám đúng vị trí card.
+
+### Scope của lượt triển khai này
+
+- [x] giữ `Lập kế hoạch` luôn trên một hàng ở planner heading
+- [x] căn trái dòng `Travel Itinerary` thay vì căn giữa
+- [x] đưa lớp hiển thị của arrow lên trên cụm card để không bị che
+- [x] chỉnh lại path và toạ độ các arrow để nối đúng vị trí giữa subtitle và các card
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage

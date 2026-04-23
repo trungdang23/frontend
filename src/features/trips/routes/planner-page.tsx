@@ -74,17 +74,17 @@ export function PlannerPage() {
               className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-4 sm:p-5 md:min-h-[31rem] md:w-1/2 md:border-b-0 md:border-r md:p-6 lg:p-7"
               style={pageDotStyle}
             >
-              <div className="relative z-30 mx-auto max-w-[22rem] text-center">
-                <h1 className="font-title text-[2.3rem] leading-[0.92] tracking-[0.04em] text-gray-800 uppercase sm:text-[3rem] lg:text-[3.35rem]">
+              <div className="relative z-30 mx-auto flex w-fit max-w-full flex-col items-center">
+                <h1 className="whitespace-nowrap font-title text-[2rem] leading-[0.92] tracking-[0.04em] text-gray-800 uppercase sm:text-[2.65rem] lg:text-[3rem]">
                   <span className="block">{t('trips.planner.board.titleLine1')}</span>
                 </h1>
-                <p className="mt-1.5 font-cursive text-[1.55rem] leading-none text-gray-800 sm:text-[2rem]">
+                <p className="mt-1.5 self-start pl-1 font-cursive text-[1.55rem] leading-none text-gray-800 sm:text-[2rem]">
                   {t('trips.planner.board.subtitle')}
                 </p>
               </div>
 
               <svg
-                className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full opacity-75 sm:block"
+                className="pointer-events-none absolute inset-0 z-20 hidden h-full w-full opacity-80 sm:block"
                 style={{ filter: 'drop-shadow(1px 1px 1px rgba(0,0,0,0.1))' }}
                 viewBox="0 0 100 100"
               >
@@ -95,7 +95,7 @@ export function PlannerPage() {
                 </defs>
                 <path
                   className="[stroke-dasharray:6_4]"
-                  d="M50,20 C48,26 42,31 36,35 C31,38 28,41 28,46"
+                  d="M31,19 C27,24 25,29 25,34 C25,38 25,41 26,45"
                   fill="none"
                   markerEnd="url(#planner-arrowhead)"
                   stroke="#444"
@@ -103,7 +103,7 @@ export function PlannerPage() {
                 />
                 <path
                   className="[stroke-dasharray:6_4]"
-                  d="M33,49 C41,45 57,44 68,47"
+                  d="M34,45 C43,41 58,41 69,44"
                   fill="none"
                   markerEnd="url(#planner-arrowhead)"
                   stroke="#444"
@@ -111,7 +111,7 @@ export function PlannerPage() {
                 />
                 <path
                   className="[stroke-dasharray:6_4]"
-                  d="M72,51 C76,61 69,68 58,72 C46,76 36,78 32,83"
+                  d="M71,47 C76,53 77,61 72,67 C66,73 53,76 39,77 C33,78 29,80 27,84"
                   fill="none"
                   markerEnd="url(#planner-arrowhead)"
                   stroke="#444"
@@ -119,7 +119,7 @@ export function PlannerPage() {
                 />
                 <path
                   className="[stroke-dasharray:6_4]"
-                  d="M36,86 C44,83 57,83 67,86"
+                  d="M35,84 C44,81 57,81 68,84"
                   fill="none"
                   markerEnd="url(#planner-arrowhead)"
                   stroke="#444"
@@ -127,7 +127,7 @@ export function PlannerPage() {
                 />
               </svg>
 
-              <div className="relative z-20 mt-4 grid min-h-[20rem] grid-cols-1 gap-4 sm:min-h-[22rem] sm:grid-cols-2 sm:gap-5 md:mt-6 md:min-h-[25rem]">
+              <div className="relative z-10 mt-4 grid min-h-[20rem] grid-cols-1 gap-4 sm:min-h-[22rem] sm:grid-cols-2 sm:gap-5 md:mt-6 md:min-h-[25rem]">
                 <PlannerPolaroid
                   alt={t('trips.planner.board.cards.hanoi')}
                   dayLabel={t('trips.planner.board.cards.hanoiDays')}
