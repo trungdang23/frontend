@@ -545,7 +545,8 @@
           "train": "Đặt vé tàu điện"
         },
         "createPlanAction": "Tạo kế hoạch",
-        "returnToPlannerAction": "Quay lại planner"
+        "returnToPlannerAction": "Quay lại planner",
+        "returnToPreviousPageAction": "Quay lại trang trước"
       },
       "createRootTitle": "Thêm node gốc",
       "createChildTitle": "Thêm node con",

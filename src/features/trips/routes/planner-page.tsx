@@ -100,25 +100,10 @@ function PlannerLeftPage() {
           style={{ filter: 'drop-shadow(1px 1px 1px rgba(0,0,0,0.1))' }}
           viewBox="0 0 100 100"
         >
-          <defs>
-            <marker
-              id="planner-arrowhead"
-              markerHeight="5"
-              markerWidth="5"
-              markerUnits="strokeWidth"
-              orient="auto"
-              refX="4.5"
-              refY="2.5"
-              viewBox="0 0 5 5"
-            >
-              <polygon fill="#444" points="0 0, 5 2.5, 0 5" />
-            </marker>
-          </defs>
           <path
             className="[stroke-dasharray:6_4]"
             d="M18,0.5 C15,3.5 15,6.5 17,8.5 C19,10 21,11.5 23,12.5"
             fill="none"
-            markerEnd="url(#planner-arrowhead)"
             stroke="#444"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -128,7 +113,6 @@ function PlannerLeftPage() {
             className="[stroke-dasharray:6_4]"
             d="M31,6.5 C41,4 57,4 69,6.5"
             fill="none"
-            markerEnd="url(#planner-arrowhead)"
             stroke="#444"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -138,7 +122,6 @@ function PlannerLeftPage() {
             className="[stroke-dasharray:6_4]"
             d="M59,40 C57,45 53,49 47,52 C40,55 33,56 29,60"
             fill="none"
-            markerEnd="url(#planner-arrowhead)"
             stroke="#444"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -148,12 +131,15 @@ function PlannerLeftPage() {
             className="[stroke-dasharray:6_4]"
             d="M41,61 C48,58 57,57 66,57 C73,58 79,59 83,61"
             fill="none"
-            markerEnd="url(#planner-arrowhead)"
             stroke="#444"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth="0.58"
           />
+          <polygon fill="#444" points="21.5,11.2 24,12.45 21.4,13.35" />
+          <polygon fill="#444" points="66.4,5.55 69.4,6.55 66.3,7.55" />
+          <polygon fill="#444" points="31.2,57.4 28.7,60.2 32.1,59.8" />
+          <polygon fill="#444" points="80,59.8 83.3,61 79.9,62.15" />
         </svg>
 
         <div className="relative z-10 px-1 pt-6 sm:px-2.5 sm:pt-7 sm:pb-3 md:px-2.5 md:pt-7">
@@ -300,17 +286,35 @@ function PlannerRightPageFront({
   );
 }
 
-function PlannerBlankPage() {
+function PlannerBlankPage({
+  actionLabel,
+  onAction,
+}: {
+  actionLabel?: string;
+  onAction?: () => void;
+}) {
   return (
     <div
       className="relative h-full min-h-0 overflow-hidden bg-[#fffdfa] p-3 sm:p-3.5 md:p-3.5 lg:p-4"
       style={pageDotStyle}
-    />
+    >
+      {actionLabel && onAction ? (
+        <button
+          className="absolute bottom-5 right-5 z-50 rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-5 py-2.5 font-hand text-[1.45rem] leading-none text-[#6b4938] shadow-[0_12px_20px_rgba(90,62,40,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/20"
+          onClick={onAction}
+          type="button"
+        >
+          {actionLabel}
+        </button>
+      ) : null}
+    </div>
   );
 }
 
 export function PlannerPage() {
+  const { t } = useI18n();
   const [isCreatingPlan, setIsCreatingPlan] = useState(false);
+  const returnToPreviousPageLabel = t('trips.planner.board.returnToPreviousPageAction');
 
   return (
     <PublicPageShell
@@ -334,7 +338,10 @@ export function PlannerPage() {
               {isCreatingPlan ? (
                 <>
                   <PlannerBlankPage />
-                  <PlannerBlankPage />
+                  <PlannerBlankPage
+                    actionLabel={returnToPreviousPageLabel}
+                    onAction={() => setIsCreatingPlan(false)}
+                  />
                 </>
               ) : (
                 <>
@@ -378,7 +385,10 @@ export function PlannerPage() {
                     <PlannerRightPageFront onCreatePlan={() => setIsCreatingPlan(true)} />
                   </div>
                   <div className="absolute inset-0 [transform:rotateY(180deg)]" style={bookFaceStyle}>
-                    <PlannerBlankPage />
+                    <PlannerBlankPage
+                      actionLabel={returnToPreviousPageLabel}
+                      onAction={() => setIsCreatingPlan(false)}
+                    />
                   </div>
                 </div>
               </div>

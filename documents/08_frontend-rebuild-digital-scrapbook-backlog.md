@@ -497,6 +497,19 @@ Chặn hẳn scroll của planner intro bằng giới hạn chiều cao theo vie
 - [x] giảm thêm một nhịp spacing desktop bên trong notebook nếu cần
 - [x] làm nav `Lập kế hoạch` đi thẳng vào `/app/planner` khi đã đăng nhập
 
+### FR-B5J - Planner arrowhead visibility and reverse flip
+
+### Mục tiêu
+
+Khôi phục arrowhead của planner board ở trạng thái đầu và thêm khả năng lật ngược từ trái sang phải bằng nút quay lại ở trang trắng.
+
+### Scope của lượt triển khai này
+
+- [x] làm arrowhead luôn hiển thị ngay cả trước khi bắt đầu flip
+- [x] tách state flip tiến/lùi để hỗ trợ hướng lật ngược
+- [x] thêm nút `Quay lại trang trước` trên trang trắng sau khi lật
+- [x] giữ nút tạo tiếp tục lật từ phải sang trái
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu

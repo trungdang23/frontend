@@ -545,7 +545,8 @@
           "train": "Book train tickets"
         },
         "createPlanAction": "Create plan",
-        "returnToPlannerAction": "Back to planner"
+        "returnToPlannerAction": "Back to planner",
+        "returnToPreviousPageAction": "Return to previous page"
       },
       "createRootTitle": "Add root node",
       "createChildTitle": "Add child node",
