@@ -1,4 +1,7 @@
 import {
+  useEffect,
+  useRef,
+  useState,
   type CSSProperties,
 } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -34,6 +37,10 @@ const bookFaceStyle: CSSProperties = {
   WebkitBackfaceVisibility: 'hidden',
   backfaceVisibility: 'hidden',
 };
+
+const plannerFlipDurationMs = 2600;
+
+type PlannerFlipPhase = 'intro' | 'forward' | 'created' | 'backward';
 
 type PlannerPolaroidProps = {
   alt: string;
@@ -602,6 +609,34 @@ function PlannerCreateSpread({
 export function PlannerPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const isCreatingPlan = searchParams.get('page') === 'next';
+  const [flipPhase, setFlipPhase] = useState<PlannerFlipPhase>(() => (
+    isCreatingPlan ? 'created' : 'intro'
+  ));
+  const previousIsCreatingPlan = useRef(isCreatingPlan);
+
+  useEffect(() => {
+    if (previousIsCreatingPlan.current === isCreatingPlan) {
+      return;
+    }
+
+    previousIsCreatingPlan.current = isCreatingPlan;
+    let timeoutId = 0;
+    const frameId = window.requestAnimationFrame(() => {
+      setFlipPhase(isCreatingPlan ? 'forward' : 'backward');
+
+      timeoutId = window.setTimeout(() => {
+        setFlipPhase(isCreatingPlan ? 'created' : 'intro');
+      }, plannerFlipDurationMs);
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.clearTimeout(timeoutId);
+    };
+  }, [isCreatingPlan]);
+
+  const hasCreatedSpreadVisible = flipPhase === 'created' || flipPhase === 'forward' || flipPhase === 'backward';
+  const hasIntroLeftVisible = flipPhase === 'intro' || flipPhase === 'forward' || flipPhase === 'backward';
 
   const openNextPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
@@ -650,9 +685,10 @@ export function PlannerPage() {
                 aria-hidden={!isCreatingPlan}
                 className={cn(
                   'absolute inset-0',
-                  isCreatingPlan ? 'pointer-events-auto' : 'pointer-events-none',
+                  hasCreatedSpreadVisible ? 'opacity-100' : 'opacity-0',
+                  flipPhase === 'created' ? 'pointer-events-auto' : 'pointer-events-none',
                 )}
-                inert={!isCreatingPlan}
+                inert={flipPhase !== 'created'}
               >
                 <PlannerCreateSpread onBack={returnToIntroPlannerPage} />
               </div>
@@ -660,7 +696,8 @@ export function PlannerPage() {
               <div
                 className={cn(
                   'absolute inset-y-0 left-0 z-10 w-1/2 transition-opacity duration-[900ms]',
-                  isCreatingPlan ? 'pointer-events-none opacity-0 delay-[1650ms]' : 'opacity-100 delay-0',
+                  hasIntroLeftVisible ? 'opacity-100' : 'pointer-events-none opacity-0',
+                  flipPhase === 'forward' ? 'delay-[1650ms]' : 'delay-0',
                 )}
               >
                 <PlannerLeftPage />
@@ -669,23 +706,30 @@ export function PlannerPage() {
               <div className="absolute inset-y-0 right-0 z-20 w-1/2 overflow-visible" style={bookPerspectiveStyle}>
                 <div
                   className={cn(
-                    'relative h-full transition-[transform,box-shadow,filter] duration-[2600ms] will-change-transform [transition-timing-function:cubic-bezier(0.17,0.84,0.2,1)]',
-                    isCreatingPlan
-                      ? '[transform:rotateY(-180deg)_translateX(-0.12rem)] shadow-[-34px_18px_42px_rgba(32,25,22,0.24)]'
-                      : '[transform:rotateY(0deg)_rotateZ(0deg)_translateX(0)] shadow-[-8px_6px_16px_rgba(32,25,22,0.1)]',
+                    'planner-page-turn-sheet relative h-full will-change-transform',
+                    flipPhase === 'intro' ? 'planner-page-turn-sheet--intro' : null,
+                    flipPhase === 'forward' ? 'planner-page-turn-sheet--forward' : null,
+                    flipPhase === 'created' ? 'planner-page-turn-sheet--created' : null,
+                    flipPhase === 'backward' ? 'planner-page-turn-sheet--backward' : null,
                   )}
                   style={bookSpreadStyle}
                 >
                   <div
                     className={cn(
-                      'pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(to_right,rgba(34,25,22,0.24),rgba(34,25,22,0.08),transparent)] transition-opacity duration-[2600ms]',
-                      isCreatingPlan ? 'opacity-80' : 'opacity-35',
+                      'planner-page-turn-spine pointer-events-none absolute inset-y-0 left-0 z-30 w-10 bg-[linear-gradient(to_right,rgba(34,25,22,0.24),rgba(34,25,22,0.08),transparent)]',
+                      flipPhase === 'intro' ? 'planner-page-turn-spine--intro' : null,
+                      flipPhase === 'forward' ? 'planner-page-turn-spine--forward' : null,
+                      flipPhase === 'created' ? 'planner-page-turn-spine--created' : null,
+                      flipPhase === 'backward' ? 'planner-page-turn-spine--backward' : null,
                     )}
                   />
                   <div
                     className={cn(
-                      'pointer-events-none absolute inset-y-[6%] right-0 z-20 w-8 rounded-l-full bg-[radial-gradient(circle_at_right,rgba(88,59,39,0.26)_0%,rgba(88,59,39,0.12)_40%,rgba(88,59,39,0)_78%)] blur-[1.5px] transition-all duration-[2600ms]',
-                      isCreatingPlan ? 'translate-x-1 opacity-90' : 'opacity-45',
+                      'planner-page-turn-curl pointer-events-none absolute inset-y-[6%] right-0 z-20 w-10 rounded-l-full bg-[radial-gradient(circle_at_right,rgba(88,59,39,0.34)_0%,rgba(88,59,39,0.16)_42%,rgba(88,59,39,0)_78%)] blur-[1.5px]',
+                      flipPhase === 'intro' ? 'planner-page-turn-curl--intro' : null,
+                      flipPhase === 'forward' ? 'planner-page-turn-curl--forward' : null,
+                      flipPhase === 'created' ? 'planner-page-turn-curl--created' : null,
+                      flipPhase === 'backward' ? 'planner-page-turn-curl--backward' : null,
                     )}
                   />
                   <div className="absolute inset-0" style={bookFaceStyle}>

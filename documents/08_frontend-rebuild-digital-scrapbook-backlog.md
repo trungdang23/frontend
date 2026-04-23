@@ -562,6 +562,18 @@ Khôi phục lại hiệu ứng lật trang của planner sau khi `create spread
 - [x] giữ URL/query param hiện tại để navigation planner vẫn dùng lại được
 - [x] không thay đổi flow mobile ngoài nội dung hiện có
 
+### FR-B5O - Planner page curl softness pass
+
+### Mục tiêu
+
+Làm cú lật của planner bớt thẳng và cứng bằng nhịp cong nhẹ, shadow sâu hơn ở giữa cú lật và trạng thái settle tự nhiên hơn.
+
+### Scope của lượt triển khai này
+
+- [x] thêm phase riêng cho flip desktop để điều khiển animation tiến/lùi mượt hơn
+- [x] dùng keyframe cho sheet và các lớp shadow/crease thay vì chỉ transition tuyến tính
+- [x] giữ nguyên flow create spread và URL state hiện tại
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu
