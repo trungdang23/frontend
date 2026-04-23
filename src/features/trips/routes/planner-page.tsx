@@ -16,9 +16,7 @@ const pageDotStyle: CSSProperties = {
 
 type PlannerPolaroidProps = {
   alt: string;
-  className: string;
   dayLabel: string;
-  imageClassName: string;
   imageUrl: string;
   label: string;
   tapeClassName: string;
@@ -27,25 +25,23 @@ type PlannerPolaroidProps = {
 
 function PlannerPolaroid({
   alt,
-  className,
   dayLabel,
-  imageClassName,
   imageUrl,
   label,
   tapeClassName,
   tiltClassName,
 }: PlannerPolaroidProps) {
   return (
-    <div className={cn('absolute z-20 flex flex-col items-center', className)}>
+    <div className="flex h-full flex-col items-center">
       <div
         className={cn(
-          'relative bg-white px-2.5 pb-6 pt-2.5 shadow-[0_8px_16px_rgba(0,0,0,0.08)] transition duration-300 hover:scale-[1.05] hover:rotate-0 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]',
+          'relative flex h-full w-full flex-col bg-white px-3 pb-5 pt-3 shadow-[0_8px_16px_rgba(0,0,0,0.08)] transition duration-300 hover:-translate-y-1 hover:rotate-0 hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)]',
           tiltClassName,
         )}
       >
         <img
           alt={alt}
-          className={cn('w-full object-cover', imageClassName)}
+          className="h-28 w-full object-cover sm:h-32 md:h-36 lg:h-40"
           src={imageUrl}
         />
         <p className="mt-2 text-center font-marker text-[1.2rem] text-gray-800 sm:text-[1.45rem]">
@@ -81,7 +77,6 @@ export function PlannerPage() {
               <div className="relative z-30 max-w-[20rem]">
                 <h1 className="font-marker text-[1.9rem] leading-[0.9] tracking-tight text-gray-800 uppercase sm:text-[2.45rem] lg:text-[2.8rem]">
                   <span className="block">{t('trips.planner.board.titleLine1')}</span>
-                  <span className="block">{t('trips.planner.board.titleLine2')}</span>
                 </h1>
                 <p className="mt-2 font-cursive text-[1.55rem] leading-none text-gray-800 sm:text-[2rem]">
                   {t('trips.planner.board.subtitle')}
@@ -124,12 +119,10 @@ export function PlannerPage() {
                 />
               </svg>
 
-              <div className="relative z-20 mt-4 h-[20rem] sm:h-[22rem] md:mt-6 md:h-[25rem]">
+              <div className="relative z-20 mt-4 grid min-h-[20rem] grid-cols-1 gap-4 sm:min-h-[22rem] sm:grid-cols-2 sm:gap-5 md:mt-6 md:min-h-[25rem]">
                 <PlannerPolaroid
                   alt={t('trips.planner.board.cards.hanoi')}
-                  className="left-[3%] top-[2%] w-[36%]"
                   dayLabel={t('trips.planner.board.cards.hanoiDays')}
-                  imageClassName="h-20 sm:h-24 md:h-28 lg:h-[7.5rem]"
                   imageUrl="https://images.unsplash.com/photo-1555944805-d835180442e7?auto=format&fit=crop&w=400"
                   label={t('trips.planner.board.cards.hanoi')}
                   tapeClassName="w-12 rotate-1 bg-orange-400/40"
@@ -138,35 +131,29 @@ export function PlannerPage() {
 
                 <PlannerPolaroid
                   alt={t('trips.planner.board.cards.haLong')}
-                  className="right-[3%] top-[0%] w-[39%]"
                   dayLabel={t('trips.planner.board.cards.haLongDays')}
-                  imageClassName="h-24 sm:h-28 md:h-32 lg:h-[8.5rem]"
                   imageUrl="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=400"
                   label={t('trips.planner.board.cards.haLong')}
                   tapeClassName="w-14 -rotate-2 bg-blue-400/40"
-                  tiltClassName="rotate-2"
+                  tiltClassName="rotate-2 sm:translate-y-2"
                 />
 
                 <PlannerPolaroid
                   alt={t('trips.planner.board.cards.hoiAn')}
-                  className="left-[8%] top-[45%] w-[42%]"
                   dayLabel={t('trips.planner.board.cards.hoiAnDays')}
-                  imageClassName="h-24 sm:h-28 md:h-32 lg:h-[8.5rem]"
                   imageUrl="https://images.unsplash.com/photo-1599708153386-62e2d366336e?auto=format&fit=crop&w=400"
                   label={t('trips.planner.board.cards.hoiAn')}
                   tapeClassName="w-14 rotate-3 bg-yellow-400/50"
-                  tiltClassName="rotate-1"
+                  tiltClassName="rotate-1 sm:-translate-y-1"
                 />
 
                 <PlannerPolaroid
                   alt={t('trips.planner.board.cards.daNang')}
-                  className="bottom-[1%] right-[6%] w-[36%]"
                   dayLabel={t('trips.planner.board.cards.daNangDays')}
-                  imageClassName="h-20 sm:h-24 md:h-28 lg:h-[7.5rem]"
                   imageUrl="https://images.unsplash.com/photo-1559592442-7e18ad73d63b?auto=format&fit=crop&w=400"
                   label={t('trips.planner.board.cards.daNang')}
                   tapeClassName="w-12 -rotate-1 bg-pink-400/40"
-                  tiltClassName="-rotate-2"
+                  tiltClassName="-rotate-1 sm:translate-y-1"
                 />
               </div>
 

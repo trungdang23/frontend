@@ -219,6 +219,19 @@ Mở route `community` thật đầu tiên sau homepage, dùng body bám sát m�
 - [x] derive `region`, `rotation`, `tapeColor` ở frontend cho phase đầu
 - [x] giữ `likes/comments` ở mức visual decoration, chưa đòi backend field mới
 
+### FR-B3 - Planner board card alignment cleanup
+
+### Mục tiêu
+
+Làm phần hero board của route `planner` khớp hơn với planner page đã chốt, ưu tiên clarity thay vì dàn card tự do dễ chồng lấn.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ cụm heading phụ kiểu `creative journey/chuyến đi sáng tạo`, chỉ giữ tiêu đề `Lập kế hoạch`
+- [x] đổi cụm polaroid card bên trái từ layout absolute sang layout có cấu trúc, card đồng kích thước
+- [x] căn card trải đều trong cột trái và loại bỏ tình trạng card che nhau trên desktop
+- [x] giữ scrapbook tone nhưng không làm phần phải đổi quá nhiều
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
