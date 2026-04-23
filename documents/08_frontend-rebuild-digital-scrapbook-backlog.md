@@ -406,6 +406,19 @@ Thêm hành động `Tạo kế hoạch` với hiệu ứng lật sách mềm v�
 - [x] hiển thị mặt sau là spread trắng của quyển sổ, chưa có nội dung
 - [x] thêm nút quay lại từ spread trắng để test/lặp lại hiệu ứng
 
+### FR-B5C - Planner half-page 3D flip correction
+
+### Mục tiêu
+
+Sửa hiệu ứng lật để chỉ lật đúng nửa trang phải như lật sách thật, thay vì xoay cả spread.
+
+### Scope của lượt triển khai này
+
+- [x] giữ nửa trái ở trạng thái tĩnh
+- [x] tách nửa phải thành một sheet 3D riêng có mặt trước và mặt sau
+- [x] xoay sheet phải quanh gáy ở giữa quyển sổ
+- [x] tăng cảm giác cong/mềm của cú lật bằng timing và shadow phù hợp hơn
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
