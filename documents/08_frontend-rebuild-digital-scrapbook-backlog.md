@@ -471,6 +471,19 @@ Thu nhỏ thêm phần bìa và wrapper của quyển sổ planner để desktop
 - [x] bỏ toàn bộ nút/CTA ở trang trắng mặt sau
 - [x] giữ nguyên hiệu ứng 3D flip hiện có
 
+### FR-B5H - Planner flip timing and body fit
+
+### Mục tiêu
+
+Làm hiệu ứng lật trang chậm/mượt hơn và thu nhỏ toàn bộ quyển sổ thêm một nhịp để phần body không phải scroll.
+
+### Scope của lượt triển khai này
+
+- [x] tăng thời lượng flip của nửa trang phải
+- [x] giảm chiều cao section notebook so với body khả dụng
+- [x] giảm nhẹ phần bìa/lớp giấy và padding liên quan
+- [x] giữ trang trắng sau khi lật không có nội dung
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu
