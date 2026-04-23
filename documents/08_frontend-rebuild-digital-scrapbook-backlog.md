@@ -381,6 +381,18 @@ Làm planner board giống một quyển sổ thật hơn bằng cách thêm bì
 - [x] thêm nhiều lớp giấy phía dưới để tạo cảm giác quyển sổ dày hơn
 - [x] giữ layout bên trong planner board không đổi đáng kể
 
+### FR-B5A - Planner notebook depth visibility pass
+
+### Mục tiêu
+
+Làm hiệu ứng bìa và độ dày của quyển sổ nhìn ra ngay thay vì quá chìm dưới thân sổ.
+
+### Scope của lượt triển khai này
+
+- [x] tăng phần bìa chìa ra ở hai cạnh trái/phải
+- [x] làm các lớp giấy lộ rõ hơn ở cạnh dưới và cạnh phải
+- [x] tăng tương phản giữa bìa và các lớp giấy để hiệu ứng dày nhìn rõ
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
