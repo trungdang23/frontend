@@ -78,7 +78,7 @@ function PlannerLeftPage() {
 
   return (
     <div
-      className="relative h-full overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-3.5 sm:p-4 md:border-b-0 md:border-r md:p-[1.125rem] lg:p-5"
+      className="relative h-full overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-3.5 sm:p-4 md:min-h-[33rem] md:border-b-0 md:border-r md:p-[1.125rem] lg:min-h-[34rem] lg:p-5"
       style={pageDotStyle}
     >
       <div className="relative z-30">
@@ -215,7 +215,7 @@ function PlannerRightPageFront({
 
   return (
     <div
-      className="relative h-full overflow-hidden bg-[#fffdfa] p-3.5 sm:p-4 md:p-[1.125rem] lg:p-5"
+      className="relative h-full overflow-hidden bg-[#fffdfa] p-3.5 sm:p-4 md:min-h-[33rem] md:p-[1.125rem] lg:min-h-[34rem] lg:p-5"
       style={pageDotStyle}
     >
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center p-10 opacity-[0.08]">
@@ -309,7 +309,7 @@ function PlannerBlankPage({
 }) {
   return (
     <div
-      className="relative h-full overflow-hidden bg-[#fffdfa] p-3.5 sm:p-4 md:p-[1.125rem] lg:p-5"
+      className="relative h-full overflow-hidden bg-[#fffdfa] p-3.5 sm:p-4 md:min-h-[33rem] md:p-[1.125rem] lg:min-h-[34rem] lg:p-5"
       style={pageDotStyle}
     >
       {actionLabel && onAction ? (
@@ -364,7 +364,7 @@ export function PlannerPage() {
               )}
             </div>
 
-            <div className="relative hidden min-h-[26.5rem] md:block">
+            <div className="relative hidden min-h-[33rem] md:block lg:min-h-[34rem]">
               <div className="absolute inset-0 flex">
                 <div className="w-1/2">
                   <PlannerBlankPage />

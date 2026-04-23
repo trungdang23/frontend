@@ -419,6 +419,18 @@ Sửa hiệu ứng lật để chỉ lật đúng nửa trang phải như lật 
 - [x] xoay sheet phải quanh gáy ở giữa quyển sổ
 - [x] tăng cảm giác cong/mềm của cú lật bằng timing và shadow phù hợp hơn
 
+### FR-B5D - Planner spread height recovery
+
+### Mục tiêu
+
+Khôi phục đủ chiều cao của spread desktop sau khi chuyển sang half-page flip để phần nửa dưới của quyển sổ không bị cắt mất.
+
+### Scope của lượt triển khai này
+
+- [x] tăng lại chiều cao desktop của spread container
+- [x] tăng chiều cao tối thiểu của từng page trong spread
+- [x] đảm bảo card ngày `5-6` và `7-8` hiển thị trở lại
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
