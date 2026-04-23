@@ -523,6 +523,19 @@ Cho navigation `Lập kế hoạch` tự kéo planner về trang giới thiệu 
 - [x] chỉ áp dụng logic này cho intro planner, không ảnh hưởng các route khác
 - [x] làm transform/shadow của flip mềm và lả lướt hơn
 
+### FR-B5L - Planner reverse page alignment cleanup
+
+### Mục tiêu
+
+Làm mặt trái đứng thẳng sau khi lật sang trang kế tiếp và căn nút quay lại về mép trái của trang trái.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ độ nghiêng còn sót lại của mặt trái ở trạng thái đã lật xong
+- [x] giữ cảm giác cong/mềm bằng shadow thay vì để trang bị xiên
+- [x] căn nút `Quay lại trang trước` về lề trái của trang trái
+- [x] giữ nguyên logic lật ngược qua navigation planner
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu

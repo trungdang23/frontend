@@ -288,9 +288,11 @@ function PlannerRightPageFront({
 
 function PlannerBlankPage({
   actionLabel,
+  actionPosition = 'right',
   onAction,
 }: {
   actionLabel?: string;
+  actionPosition?: 'left' | 'right';
   onAction?: () => void;
 }) {
   return (
@@ -300,7 +302,10 @@ function PlannerBlankPage({
     >
       {actionLabel && onAction ? (
         <button
-          className="absolute bottom-5 right-5 z-50 rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-5 py-2.5 font-hand text-[1.45rem] leading-none text-[#6b4938] shadow-[0_12px_20px_rgba(90,62,40,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/20"
+          className={cn(
+            'absolute bottom-5 z-50 rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-5 py-2.5 font-hand text-[1.45rem] leading-none text-[#6b4938] shadow-[0_12px_20px_rgba(90,62,40,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/20',
+            actionPosition === 'left' ? 'left-5' : 'right-5',
+          )}
           onClick={onAction}
           type="button"
         >
@@ -352,6 +357,7 @@ export function PlannerPage() {
                 <>
                   <PlannerBlankPage />
                   <PlannerBlankPage
+                    actionPosition="left"
                     actionLabel={returnToPreviousPageLabel}
                     onAction={returnToIntroPlannerPage}
                   />
@@ -383,7 +389,7 @@ export function PlannerPage() {
                   className={cn(
                     'relative h-full transition-[transform,box-shadow,filter] duration-[2600ms] will-change-transform [transition-timing-function:cubic-bezier(0.17,0.84,0.2,1)]',
                     isCreatingPlan
-                      ? '[transform:rotateY(-180deg)_rotateZ(-2.35deg)_translateX(-0.28rem)] shadow-[-34px_18px_42px_rgba(32,25,22,0.24)]'
+                      ? '[transform:rotateY(-180deg)_translateX(-0.12rem)] shadow-[-34px_18px_42px_rgba(32,25,22,0.24)]'
                       : '[transform:rotateY(0deg)_rotateZ(0deg)_translateX(0)] shadow-[-8px_6px_16px_rgba(32,25,22,0.1)]',
                   )}
                   style={bookSpreadStyle}
@@ -405,6 +411,7 @@ export function PlannerPage() {
                   </div>
                   <div className="absolute inset-0 [transform:rotateY(180deg)]" style={bookFaceStyle}>
                     <PlannerBlankPage
+                      actionPosition="left"
                       actionLabel={returnToPreviousPageLabel}
                       onAction={returnToIntroPlannerPage}
                     />
