@@ -74,17 +74,17 @@ export function PlannerPage() {
               className="relative overflow-hidden border-b border-gray-100 bg-[#fffdfa] p-4 sm:p-5 md:min-h-[31rem] md:w-1/2 md:border-b-0 md:border-r md:p-6 lg:p-7"
               style={pageDotStyle}
             >
-              <div className="relative z-30 max-w-[20rem]">
-                <h1 className="font-marker text-[1.9rem] leading-[0.9] tracking-tight text-gray-800 uppercase sm:text-[2.45rem] lg:text-[2.8rem]">
+              <div className="relative z-30 mx-auto max-w-[22rem] text-center">
+                <h1 className="font-title text-[2.3rem] leading-[0.92] tracking-[0.04em] text-gray-800 uppercase sm:text-[3rem] lg:text-[3.35rem]">
                   <span className="block">{t('trips.planner.board.titleLine1')}</span>
                 </h1>
-                <p className="mt-2 font-cursive text-[1.55rem] leading-none text-gray-800 sm:text-[2rem]">
+                <p className="mt-1.5 font-cursive text-[1.55rem] leading-none text-gray-800 sm:text-[2rem]">
                   {t('trips.planner.board.subtitle')}
                 </p>
               </div>
 
               <svg
-                className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full opacity-70 sm:block"
+                className="pointer-events-none absolute inset-0 z-10 hidden h-full w-full opacity-75 sm:block"
                 style={{ filter: 'drop-shadow(1px 1px 1px rgba(0,0,0,0.1))' }}
                 viewBox="0 0 100 100"
               >
@@ -95,7 +95,7 @@ export function PlannerPage() {
                 </defs>
                 <path
                   className="[stroke-dasharray:6_4]"
-                  d="M28,34 Q42,20 67,21"
+                  d="M50,20 C48,26 42,31 36,35 C31,38 28,41 28,46"
                   fill="none"
                   markerEnd="url(#planner-arrowhead)"
                   stroke="#444"
@@ -103,7 +103,7 @@ export function PlannerPage() {
                 />
                 <path
                   className="[stroke-dasharray:6_4]"
-                  d="M73,39 Q77,58 54,70"
+                  d="M33,49 C41,45 57,44 68,47"
                   fill="none"
                   markerEnd="url(#planner-arrowhead)"
                   stroke="#444"
@@ -111,7 +111,15 @@ export function PlannerPage() {
                 />
                 <path
                   className="[stroke-dasharray:6_4]"
-                  d="M33,76 Q33,88 56,92"
+                  d="M72,51 C76,61 69,68 58,72 C46,76 36,78 32,83"
+                  fill="none"
+                  markerEnd="url(#planner-arrowhead)"
+                  stroke="#444"
+                  strokeWidth="0.5"
+                />
+                <path
+                  className="[stroke-dasharray:6_4]"
+                  d="M36,86 C44,83 57,83 67,86"
                   fill="none"
                   markerEnd="url(#planner-arrowhead)"
                   stroke="#444"

@@ -232,6 +232,19 @@ Làm phần hero board của route `planner` khớp hơn với planner page đã
 - [x] căn card trải đều trong cột trái và loại bỏ tình trạng card che nhau trên desktop
 - [x] giữ scrapbook tone nhưng không làm phần phải đổi quá nhiều
 
+### FR-B3A - Planner heading and arrow flow polish
+
+### Mục tiêu
+
+Siết lại cụm heading và flow dẫn mắt ở planner board để title rõ hơn và các card thể hiện một nhịp itinerary liên tục.
+
+### Scope của lượt triển khai này
+
+- [x] đổi font của heading `Lập kế hoạch` sang display font khác với card labels và căn giữa heading
+- [x] thêm mũi tên uốn lượn nối `Travel Itinerary` với card đầu tiên trong desktop layout
+- [x] thêm chuỗi mũi tên uốn lượn nối lần lượt các card ngày `1-2`, `3-4`, `5-6`, `7-8`
+- [x] đồng bộ day label card theo đúng chuỗi ngày mới để flow mũi tên không bị lệch nhịp
+
 ### Acceptance criteria
 
 - `/community` dùng chung header/footer với homepage
