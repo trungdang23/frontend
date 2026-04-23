@@ -445,6 +445,19 @@ Làm khối nội dung của quyển sổ khớp mép và bo góc với phần b
 - [x] thay CTA ở trang trắng từ `Quay lại planner` sang `Tạo chuyến đi`
 - [x] giữ nguyên hiệu ứng lật nửa trang phải
 
+### FR-B5F - Planner notebook scale reduction
+
+### Mục tiêu
+
+Thu nhỏ thêm phần bìa và wrapper của quyển sổ planner để desktop không còn phải scroll, nhưng vẫn giữ rõ hiệu ứng bìa và các lớp giấy.
+
+### Scope của lượt triển khai này
+
+- [x] giảm phần chìa xuống của các lớp bìa phía dưới
+- [x] giảm nhẹ padding dọc của notebook wrapper
+- [x] giữ nguyên bố cục nội dung và hiệu ứng lật trang
+- [x] xác nhận quyển sổ fit gọn hơn trong body
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu

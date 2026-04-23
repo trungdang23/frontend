@@ -336,12 +336,12 @@ export function PlannerPage() {
       mainId="planner-content"
     >
       <div className="flex h-full min-h-0 w-full items-stretch justify-center">
-        <div className="relative w-full px-2 py-2 sm:px-3 sm:py-3 md:flex md:h-full md:min-h-0 md:items-center md:px-4 md:py-4 lg:px-5 lg:py-5">
-          <div className="pointer-events-none absolute inset-x-0 top-2 bottom-[-0.35rem] z-0 md:top-4 md:bottom-[-0.55rem]">
-            <div className="absolute -left-3 -right-3 top-0 bottom-0 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_26px_54px_rgba(76,51,33,0.22)] sm:-left-4 sm:-right-4 md:-left-5 md:-right-5" />
-            <div className="absolute left-1.5 right-1 top-0 bottom-[0.2rem] rounded-[1rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_18px_32px_rgba(76,51,33,0.14)] sm:left-2.5 sm:right-1.5 sm:bottom-[0.35rem] md:left-3 md:right-2 md:bottom-[0.45rem]" />
-            <div className="absolute left-3 right-0.5 top-0 bottom-[0.45rem] rounded-[1rem] border border-[#efe5d2] bg-[#f5ebd8] shadow-[0_16px_28px_rgba(76,51,33,0.12)] sm:left-4 sm:right-1 sm:bottom-[0.7rem] md:left-5 md:right-1.5 md:bottom-[0.9rem]" />
-            <div className="absolute left-4.5 right-0 top-0 bottom-[0.7rem] rounded-[1rem] border border-[#f6efe1] bg-[#fbf5ea] shadow-[0_14px_22px_rgba(76,51,33,0.1)] sm:left-6 sm:bottom-[1rem] md:left-7 md:bottom-[1.15rem]" />
+        <div className="relative w-full px-2 py-1.5 sm:px-3 sm:py-2 md:flex md:h-full md:min-h-0 md:items-center md:px-3 md:py-2.5 lg:px-4 lg:py-3">
+          <div className="pointer-events-none absolute inset-x-0 top-1.5 bottom-[-0.15rem] z-0 md:top-2.5 md:bottom-[-0.25rem]">
+            <div className="absolute -left-2.5 -right-2.5 top-0 bottom-0 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_22px_44px_rgba(76,51,33,0.2)] sm:-left-3 sm:-right-3 md:-left-4 md:-right-4" />
+            <div className="absolute left-1.5 right-1 top-0 bottom-[0.15rem] rounded-[1rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_16px_28px_rgba(76,51,33,0.13)] sm:left-2 sm:right-1.5 sm:bottom-[0.25rem] md:left-2.5 md:right-2 md:bottom-[0.3rem]" />
+            <div className="absolute left-2.5 right-0.5 top-0 bottom-[0.35rem] rounded-[1rem] border border-[#efe5d2] bg-[#f5ebd8] shadow-[0_14px_24px_rgba(76,51,33,0.11)] sm:left-3.5 sm:right-1 sm:bottom-[0.5rem] md:left-4 md:right-1.5 md:bottom-[0.65rem]" />
+            <div className="absolute left-4 right-0 top-0 bottom-[0.55rem] rounded-[1rem] border border-[#f6efe1] bg-[#fbf5ea] shadow-[0_12px_18px_rgba(76,51,33,0.09)] sm:left-5 sm:bottom-[0.75rem] md:left-6 md:bottom-[0.85rem]" />
           </div>
 
           <section className="relative w-full overflow-hidden rounded-[1rem] border border-[#efe2ca] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)] md:h-full md:min-h-0">
