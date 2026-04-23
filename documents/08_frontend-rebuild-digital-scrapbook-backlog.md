@@ -432,6 +432,19 @@ Làm quyển sổ planner chiếm gần hết chiều cao phần body khả dụ
 - [x] giữ lại một nhịp khoảng trống nhỏ với header/footer để notebook không bị dính mép
 - [x] xác nhận lại các card hàng dưới không còn bị cắt
 
+### FR-B5E - Planner cover edge alignment and CTA copy correction
+
+### Mục tiêu
+
+Làm khối nội dung của quyển sổ khớp mép và bo góc với phần bìa, đồng thời bỏ copy thử nghiệm `Quay lại planner` trên trang trắng của hiệu ứng lật.
+
+### Scope của lượt triển khai này
+
+- [x] chỉnh mép dưới của khối nội dung để không dài hơn phần bìa nhìn thấy
+- [x] đồng bộ bán kính bo góc của khối nội dung với bìa quyển sổ
+- [x] thay CTA ở trang trắng từ `Quay lại planner` sang `Tạo chuyến đi`
+- [x] giữ nguyên hiệu ứng lật nửa trang phải
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu

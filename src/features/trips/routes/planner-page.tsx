@@ -328,6 +328,7 @@ function PlannerBlankPage({
 export function PlannerPage() {
   const { t } = useI18n();
   const [isCreatingPlan, setIsCreatingPlan] = useState(false);
+  const flippedPageActionLabel = t('trips.actions.create');
 
   return (
     <PublicPageShell
@@ -336,14 +337,14 @@ export function PlannerPage() {
     >
       <div className="flex h-full min-h-0 w-full items-stretch justify-center">
         <div className="relative w-full px-2 py-2 sm:px-3 sm:py-3 md:flex md:h-full md:min-h-0 md:items-center md:px-4 md:py-4 lg:px-5 lg:py-5">
-          <div className="pointer-events-none absolute inset-x-0 top-2 bottom-0 z-0 md:top-4 md:bottom-4">
-            <div className="absolute -left-3 -right-3 top-0 bottom-2 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_26px_54px_rgba(76,51,33,0.22)] sm:-left-4 sm:-right-4 sm:bottom-2.5 md:-left-5 md:-right-5 md:bottom-3" />
-            <div className="absolute left-1.5 right-1 top-0 bottom-3 rounded-[0.8rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_18px_32px_rgba(76,51,33,0.14)] sm:left-2.5 sm:right-1.5 sm:bottom-4 md:left-3 md:right-2 md:bottom-5" />
-            <div className="absolute left-3 right-0.5 top-0 bottom-4 rounded-[0.8rem] border border-[#efe5d2] bg-[#f5ebd8] shadow-[0_16px_28px_rgba(76,51,33,0.12)] sm:left-4 sm:right-1 sm:bottom-5 md:left-5 md:right-1.5 md:bottom-6" />
-            <div className="absolute left-4.5 right-0 top-0 bottom-5 rounded-[0.8rem] border border-[#f6efe1] bg-[#fbf5ea] shadow-[0_14px_22px_rgba(76,51,33,0.1)] sm:left-6 sm:bottom-6 md:left-7 md:bottom-7" />
+          <div className="pointer-events-none absolute inset-x-0 top-2 bottom-[-0.35rem] z-0 md:top-4 md:bottom-[-0.55rem]">
+            <div className="absolute -left-3 -right-3 top-0 bottom-0 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_26px_54px_rgba(76,51,33,0.22)] sm:-left-4 sm:-right-4 md:-left-5 md:-right-5" />
+            <div className="absolute left-1.5 right-1 top-0 bottom-[0.2rem] rounded-[1rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_18px_32px_rgba(76,51,33,0.14)] sm:left-2.5 sm:right-1.5 sm:bottom-[0.35rem] md:left-3 md:right-2 md:bottom-[0.45rem]" />
+            <div className="absolute left-3 right-0.5 top-0 bottom-[0.45rem] rounded-[1rem] border border-[#efe5d2] bg-[#f5ebd8] shadow-[0_16px_28px_rgba(76,51,33,0.12)] sm:left-4 sm:right-1 sm:bottom-[0.7rem] md:left-5 md:right-1.5 md:bottom-[0.9rem]" />
+            <div className="absolute left-4.5 right-0 top-0 bottom-[0.7rem] rounded-[1rem] border border-[#f6efe1] bg-[#fbf5ea] shadow-[0_14px_22px_rgba(76,51,33,0.1)] sm:left-6 sm:bottom-[1rem] md:left-7 md:bottom-[1.15rem]" />
           </div>
 
-          <section className="relative w-full overflow-hidden rounded-[0.35rem] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)] md:h-full md:min-h-0">
+          <section className="relative w-full overflow-hidden rounded-[1rem] border border-[#efe2ca] bg-[#fffdf9] shadow-[0_24px_50px_rgba(0,0,0,0.11),0_12px_22px_rgba(0,0,0,0.08)] md:h-full md:min-h-0">
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 
@@ -352,7 +353,7 @@ export function PlannerPage() {
                 <>
                   <PlannerBlankPage />
                   <PlannerBlankPage
-                    actionLabel={t('trips.planner.board.returnToPlannerAction')}
+                    actionLabel={flippedPageActionLabel}
                     onAction={() => setIsCreatingPlan(false)}
                   />
                 </>
@@ -371,7 +372,7 @@ export function PlannerPage() {
                 </div>
                 <div className="w-1/2">
                   <PlannerBlankPage
-                    actionLabel={t('trips.planner.board.returnToPlannerAction')}
+                    actionLabel={flippedPageActionLabel}
                     onAction={() => setIsCreatingPlan(false)}
                   />
                 </div>
@@ -402,7 +403,7 @@ export function PlannerPage() {
                   </div>
                   <div className="absolute inset-0 [transform:rotateY(180deg)]" style={bookFaceStyle}>
                     <PlannerBlankPage
-                      actionLabel={t('trips.planner.board.returnToPlannerAction')}
+                      actionLabel={flippedPageActionLabel}
                       onAction={() => setIsCreatingPlan(false)}
                     />
                   </div>
