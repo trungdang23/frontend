@@ -3,7 +3,6 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type FormEvent,
   type PointerEvent as ReactPointerEvent,
 } from 'react';
 import { ChevronLeft } from 'lucide-react';
@@ -11,7 +10,6 @@ import {
   getPlanNodeStickers,
   savePlanNodeStickers,
 } from '@/features/trips/planning/api/planner-api';
-import type { PlanNode } from '@/features/trips/planning/types/plan-node';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -76,45 +74,6 @@ type PlannerStickerDragState = {
   offsetY: number;
 };
 
-export type PlannerActivityFormValues = {
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-  budget: string;
-  notes: string;
-};
-
-const initialActivityFormValues: PlannerActivityFormValues = {
-  title: '',
-  date: '',
-  time: '',
-  location: '',
-  budget: '',
-  notes: '',
-};
-
-const draftPlannerActivityStickers: PlannerActivitySticker[] = [
-  {
-    id: 'draft-sun',
-    stickerKey: 'sun',
-    x: 1700,
-    y: 1900,
-    rotation: -8,
-    scale: 108,
-    zIndex: 0,
-  },
-  {
-    id: 'draft-ticket',
-    stickerKey: 'ticket',
-    x: 7900,
-    y: 7400,
-    rotation: 7,
-    scale: 96,
-    zIndex: 1,
-  },
-];
-
 function PlannerTapeTitle({
   children,
   className,
@@ -174,15 +133,11 @@ function isPlannerActivityStickerKey(
 
 function PlannerActivityField({
   label,
-  onChange,
   placeholder,
-  value,
   multiline = false,
 }: {
   label: string;
-  onChange: (value: string) => void;
   placeholder: string;
-  value: string;
   multiline?: boolean;
 }) {
   return (
@@ -193,17 +148,13 @@ function PlannerActivityField({
       {multiline ? (
         <textarea
           className="mt-2 min-h-24 w-full resize-none rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 px-4 py-3 font-marker text-[1.05rem] leading-tight text-[#3d332b] outline-none placeholder:text-[#71675c] focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]"
-          onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder}
-          value={value}
         />
       ) : (
         <input
           className="mt-2 w-full rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 px-4 py-3 font-marker text-[1.05rem] text-[#3d332b] outline-none placeholder:text-[#71675c] focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]"
-          onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder}
           type="text"
-          value={value}
         />
       )}
     </label>
@@ -211,55 +162,15 @@ function PlannerActivityField({
 }
 
 function PlannerActivityDetailsPage({
-  isSavingActivity,
-  onCreateActivity,
   onBack,
 }: {
-  isSavingActivity: boolean;
-  onCreateActivity: (values: PlannerActivityFormValues) => Promise<void>;
   onBack: () => void;
 }) {
   const { t } = useI18n();
-  const [formValues, setFormValues] = useState<PlannerActivityFormValues>(
-    initialActivityFormValues,
-  );
-  const [feedback, setFeedback] = useState<string | null>(null);
-  const [feedbackTone, setFeedbackTone] = useState<'error' | 'success'>('success');
-
-  const updateFormValue = (
-    field: keyof PlannerActivityFormValues,
-    value: string,
-  ) => {
-    setFormValues((currentValues) => ({
-      ...currentValues,
-      [field]: value,
-    }));
-  };
-
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    if (!formValues.title.trim()) {
-      setFeedbackTone('error');
-      setFeedback(t('trips.planner.validation.titleRequired'));
-      return;
-    }
-
-    try {
-      await onCreateActivity(formValues);
-      setFormValues(initialActivityFormValues);
-      setFeedbackTone('success');
-      setFeedback(t('trips.planner.board.activitySpread.feedback.activitySaved'));
-    } catch {
-      setFeedbackTone('error');
-      setFeedback(t('trips.planner.board.activitySpread.feedback.activitySaveError'));
-    }
-  };
 
   return (
-    <form
+    <div
       className="relative flex h-full min-h-[33rem] flex-col overflow-hidden border-b border-gray-100 bg-[#fffdfa] px-5 py-5 sm:px-7 sm:py-6 md:min-h-0 md:border-r md:border-b-0 lg:px-8"
-      onSubmit={handleSubmit}
       style={pageDotStyle}
     >
       <button
@@ -279,76 +190,38 @@ function PlannerActivityDetailsPage({
         <div className="sm:col-span-2">
           <PlannerActivityField
             label={t('trips.planner.board.activitySpread.fields.title')}
-            onChange={(value) => updateFormValue('title', value)}
             placeholder={t('trips.planner.board.activitySpread.placeholders.title')}
-            value={formValues.title}
           />
         </div>
         <PlannerActivityField
           label={t('trips.planner.board.activitySpread.fields.date')}
-          onChange={(value) => updateFormValue('date', value)}
           placeholder={t('trips.planner.board.activitySpread.placeholders.date')}
-          value={formValues.date}
         />
         <PlannerActivityField
           label={t('trips.planner.board.activitySpread.fields.time')}
-          onChange={(value) => updateFormValue('time', value)}
           placeholder={t('trips.planner.board.activitySpread.placeholders.time')}
-          value={formValues.time}
         />
         <PlannerActivityField
           label={t('trips.planner.board.activitySpread.fields.location')}
-          onChange={(value) => updateFormValue('location', value)}
           placeholder={t('trips.planner.board.activitySpread.placeholders.location')}
-          value={formValues.location}
         />
         <PlannerActivityField
           label={t('trips.planner.board.activitySpread.fields.budget')}
-          onChange={(value) => updateFormValue('budget', value)}
           placeholder={t('trips.planner.board.activitySpread.placeholders.budget')}
-          value={formValues.budget}
         />
         <div className="sm:col-span-2">
           <PlannerActivityField
             label={t('trips.planner.board.activitySpread.fields.notes')}
             multiline
-            onChange={(value) => updateFormValue('notes', value)}
             placeholder={t('trips.planner.board.activitySpread.placeholders.notes')}
-            value={formValues.notes}
           />
         </div>
-      </div>
-
-      {feedback ? (
-        <p
-          className={cn(
-            'relative z-10 mt-4 rounded-[0.8rem] px-4 py-3 text-sm font-semibold',
-            feedbackTone === 'error'
-              ? 'border border-[#f1a69b] bg-[#fff1ef] text-[#b42318]'
-              : 'border border-[#b7d88a] bg-[#f1f8df] text-[#315c24]',
-          )}
-          role="status"
-        >
-          {feedback}
-        </p>
-      ) : null}
-
-      <div className="relative z-10 mt-auto flex justify-end pt-5">
-        <button
-          className="inline-flex items-center rounded-full border border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.65rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:cursor-wait disabled:opacity-70 sm:px-6 sm:text-[1.9rem]"
-          disabled={isSavingActivity}
-          type="submit"
-        >
-          {isSavingActivity
-            ? t('trips.actions.addingActivity')
-            : t('trips.actions.addActivity')}
-        </button>
       </div>
 
       <div className="pointer-events-none absolute bottom-7 left-8 hidden rotate-[-8deg] rounded-[1rem] border border-[#c7b58f] bg-[#fff8e6] px-4 py-3 font-hand text-[1.2rem] font-bold text-[#6b4938] shadow-[0_12px_20px_rgba(93,70,45,0.12)] lg:block">
         {t('trips.planner.board.activitySpread.fixedFieldsNote')}
       </div>
-    </form>
+    </div>
   );
 }
 
@@ -360,9 +233,26 @@ function PlannerActivityStickerCanvas({
   const { t } = useI18n();
   const frameRef = useRef<HTMLDivElement | null>(null);
   const dragStateRef = useRef<PlannerStickerDragState | null>(null);
-  const [stickers, setStickers] = useState<PlannerActivitySticker[]>(
-    draftPlannerActivityStickers,
-  );
+  const [stickers, setStickers] = useState<PlannerActivitySticker[]>([
+    {
+      id: 'draft-sun',
+      stickerKey: 'sun',
+      x: 1700,
+      y: 1900,
+      rotation: -8,
+      scale: 108,
+      zIndex: 0,
+    },
+    {
+      id: 'draft-ticket',
+      stickerKey: 'ticket',
+      x: 7900,
+      y: 7400,
+      rotation: 7,
+      scale: 96,
+      zIndex: 1,
+    },
+  ]);
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
   const [syncStatus, setSyncStatus] = useState<
     'idle' | 'loading' | 'saving' | 'saved' | 'error'
@@ -687,16 +577,11 @@ function PlannerActivityStickerCanvas({
 }
 
 function PlannerActivityStickerPage({
-  activityNodes,
   nodeId,
-  onSelectActivity,
 }: {
-  activityNodes: PlanNode[];
   nodeId: string | null;
-  onSelectActivity: (nodeId: string | null) => void;
 }) {
   const { t } = useI18n();
-  const selectedActivity = activityNodes.find((activityNode) => activityNode.id === nodeId);
 
   return (
     <div
@@ -713,91 +598,25 @@ function PlannerActivityStickerPage({
           : t('trips.planner.board.activitySpread.localDraftApiNote')}
       </div>
 
-      <section className="relative z-10 mt-4 rounded-[1rem] border border-[#d5c5a9] bg-white/62 px-4 py-3 shadow-[0_10px_20px_rgba(93,70,45,0.08)]">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <h3 className="font-hand text-[1.4rem] font-bold leading-none text-[#251b15] sm:text-[1.65rem]">
-            {t('trips.planner.board.activitySpread.activitiesTitle')}
-          </h3>
-          <button
-            className="rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-3 py-1.5 text-xs font-bold text-[#6b4938] transition hover:-translate-y-0.5"
-            onClick={() => onSelectActivity(null)}
-            type="button"
-          >
-            {t('trips.actions.addAnotherActivity')}
-          </button>
-        </div>
-
-        {selectedActivity ? (
-          <p className="mt-2 text-xs font-semibold text-[#6f6258]">
-            {t('trips.planner.board.activitySpread.selectedActivity', {
-              title: selectedActivity.title,
-            })}
-          </p>
-        ) : null}
-
-        {activityNodes.length === 0 ? (
-          <p className="mt-3 text-sm leading-6 text-[#6f6258]">
-            {t('trips.planner.board.activitySpread.activitiesEmpty')}
-          </p>
-        ) : (
-          <div className="mt-3 flex max-h-32 flex-wrap gap-2 overflow-y-auto pr-1">
-            {activityNodes.map((activityNode) => (
-              <button
-                className={cn(
-                  'rounded-full border px-3 py-1.5 text-xs font-bold transition hover:-translate-y-0.5',
-                  activityNode.id === nodeId
-                    ? 'border-[#315c42] bg-[#b9e177] text-[#172612]'
-                    : 'border-[#8b6244]/30 bg-[#fffaf0] text-[#6b4938]',
-                )}
-                key={activityNode.id}
-                onClick={() => onSelectActivity(activityNode.id)}
-                type="button"
-              >
-                {activityNode.title}
-              </button>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <PlannerActivityStickerCanvas
-        key={nodeId ?? 'draft-activity-stickers'}
-        nodeId={nodeId}
-      />
+      <PlannerActivityStickerCanvas nodeId={nodeId} />
     </div>
   );
 }
 
 export function PlannerActivitySpread({
-  activityNodes,
-  isSavingActivity,
   nodeId,
-  onCreateActivity,
-  onSelectActivity,
   onBack,
 }: {
-  activityNodes: PlanNode[];
-  isSavingActivity: boolean;
   nodeId: string | null;
-  onCreateActivity: (values: PlannerActivityFormValues) => Promise<void>;
-  onSelectActivity: (nodeId: string | null) => void;
   onBack: () => void;
 }) {
   return (
     <div className="flex h-full min-h-0 flex-col md:flex-row">
       <div className="md:h-full md:w-1/2">
-        <PlannerActivityDetailsPage
-          isSavingActivity={isSavingActivity}
-          onBack={onBack}
-          onCreateActivity={onCreateActivity}
-        />
+        <PlannerActivityDetailsPage onBack={onBack} />
       </div>
       <div className="md:h-full md:w-1/2">
-        <PlannerActivityStickerPage
-          activityNodes={activityNodes}
-          nodeId={nodeId}
-          onSelectActivity={onSelectActivity}
-        />
+        <PlannerActivityStickerPage nodeId={nodeId} />
       </div>
     </div>
   );

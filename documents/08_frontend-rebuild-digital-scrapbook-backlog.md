@@ -258,28 +258,6 @@ Thêm trang kế tiếp sau bước `Thông Tin Chung` trong planner để ngư�
 - autosave/debounce theo session editor
 - resize/rotate sticker bằng handle riêng
 
-### FR-B5 - Trip hub and trip-aware planner cutover
-
-### Mục tiêu
-
-Tách rõ `Trips` khỏi `Planner`: người dùng tạo hoặc chọn một chuyến đi trước, sau đó planner làm việc bên trong `tripId` thật và có thể thêm nhiều hoạt động cho cùng chuyến đi.
-
-### Scope của lượt triển khai này
-
-- [x] thêm route `/app/trips` làm trip hub đọc danh sách trip thật
-- [x] thêm route `/app/trips/new` để tạo trip container trước khi vào planner
-- [x] đổi route planner sang `/app/trips/:tripId/planner`
-- [x] giữ `/app/trips/:tripId` redirect về planner để tương thích route map đã chốt
-- [x] cập nhật nav/post-auth default khỏi `/app/planner`
-- [x] nối bước `Hoạt Động` với API `POST /nodes` để tạo nhiều `activity` node trong cùng trip
-- [x] sau khi tạo activity, giữ người dùng trong planner để có thể thêm activity tiếp hoặc chọn activity vừa tạo để lưu sticker
-
-### Deferred
-
-- form edit trip đầy đủ tại `/app/trips/:tripId/edit`
-- nested day/location builder cho activity parent
-- drag reorder activity list
-
 ### Scope của lượt triển khai này
 
 - [x] đổi font của heading `Lập kế hoạch` sang display font khác với card labels và căn giữa heading
