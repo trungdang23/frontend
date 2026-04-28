@@ -197,6 +197,15 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] click ra ngoài popup lịch thì tự đóng
 - [x] đảm bảo popup lịch hiển thị trên nút quay lại trang trước
 
+### Follow-up activity step refinement
+
+- [x] hiển thị số bước bên dưới ở bước 2 và làm nổi bật số 2
+- [x] bỏ note "Thông tin cố định..." khỏi trang trái bước hoạt động
+- [x] đổi ngày hoạt động sang calendar picker thay vì nhập text
+- [x] đổi giờ hoạt động sang picker chọn giờ bắt đầu/kết thúc
+- [x] bỏ palette sticker, canvas sticker và ghi chú nodeId khỏi trang phải
+- [x] dùng trang phải cho thông tin bổ sung của hoạt động: ghi chú, loại hoạt động, trạng thái đặt chỗ, độ ưu tiên, link tham khảo và ảnh minh họa
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

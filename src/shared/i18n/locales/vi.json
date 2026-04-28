@@ -568,6 +568,7 @@
           "stepTitle": "Bước 2: Hoạt Động",
           "backToGeneralAction": "Quay lại thông tin chung",
           "fixedFieldsNote": "Thông tin cố định ở đây, sticker tự do ở trang bên cạnh.",
+          "detailsTitle": "Chi Tiết Hoạt Động",
           "canvasPageTitle": "Khung Hoạt Động",
           "canvasTitle": "Mô tả hoạt động",
           "canvasPlaceholder": "Viết nhanh kế hoạch, điều cần nhớ hoặc cảm xúc cho hoạt động này...",
@@ -585,7 +586,12 @@
             "time": "Thời Gian:",
             "location": "Địa Điểm:",
             "budget": "Chi Phí:",
-            "notes": "Ghi Chú:"
+            "notes": "Ghi Chú:",
+            "activityType": "Loại Hoạt Động:",
+            "bookingStatus": "Trạng Thái Đặt Chỗ:",
+            "priority": "Độ Ưu Tiên:",
+            "referenceUrl": "Link Tham Khảo:",
+            "imageUrl": "Ảnh Minh Họa:"
           },
           "placeholders": {
             "title": "Ví dụ: Cafe ngắm phố cổ",
@@ -593,8 +599,29 @@
             "time": "08:30 - 10:00",
             "location": "Hội An",
             "budget": "150.000 VND",
-            "notes": "Chuẩn bị máy ảnh, đặt chỗ gần cửa sổ..."
+            "notes": "Chuẩn bị máy ảnh, đặt chỗ gần cửa sổ...",
+            "referenceUrl": "https://example.com/booking",
+            "imageUrl": "https://example.com/activity.jpg"
           },
+          "activityTypes": {
+            "food": "Ăn uống",
+            "sightseeing": "Tham quan",
+            "transport": "Di chuyển",
+            "shopping": "Mua sắm",
+            "rest": "Nghỉ ngơi",
+            "other": "Khác"
+          },
+          "bookingStatuses": {
+            "notNeeded": "Không cần",
+            "needBooking": "Cần đặt",
+            "booked": "Đã đặt"
+          },
+          "priorities": {
+            "flexible": "Linh hoạt",
+            "preferred": "Nên đi",
+            "mustDo": "Bắt buộc"
+          },
+          "imagePreviewAlt": "Ảnh minh họa hoạt động",
           "stickers": {
             "sun": "mặt trời",
             "camera": "máy ảnh",

@@ -568,6 +568,7 @@
           "stepTitle": "Step 2: Activities",
           "backToGeneralAction": "Back to trip basics",
           "fixedFieldsNote": "Fixed fields stay here, freeform stickers live on the next page.",
+          "detailsTitle": "Activity Details",
           "canvasPageTitle": "Activity Frame",
           "canvasTitle": "Activity notes",
           "canvasPlaceholder": "Write a quick plan, reminder, or mood for this activity...",
@@ -585,7 +586,12 @@
             "time": "Time:",
             "location": "Location:",
             "budget": "Budget:",
-            "notes": "Notes:"
+            "notes": "Notes:",
+            "activityType": "Activity Type:",
+            "bookingStatus": "Booking Status:",
+            "priority": "Priority:",
+            "referenceUrl": "Reference Link:",
+            "imageUrl": "Activity Image:"
           },
           "placeholders": {
             "title": "Example: Old town cafe stop",
@@ -593,8 +599,29 @@
             "time": "08:30 - 10:00",
             "location": "Hoi An",
             "budget": "150,000 VND",
-            "notes": "Bring the camera, reserve a window seat..."
+            "notes": "Bring the camera, reserve a window seat...",
+            "referenceUrl": "https://example.com/booking",
+            "imageUrl": "https://example.com/activity.jpg"
           },
+          "activityTypes": {
+            "food": "Food",
+            "sightseeing": "Sightseeing",
+            "transport": "Transit",
+            "shopping": "Shopping",
+            "rest": "Rest",
+            "other": "Other"
+          },
+          "bookingStatuses": {
+            "notNeeded": "No booking",
+            "needBooking": "Need booking",
+            "booked": "Booked"
+          },
+          "priorities": {
+            "flexible": "Flexible",
+            "preferred": "Preferred",
+            "mustDo": "Must-do"
+          },
+          "imagePreviewAlt": "Activity image preview",
           "stickers": {
             "sun": "sun",
             "camera": "camera",
