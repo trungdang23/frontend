@@ -1,4 +1,4 @@
-const DEFAULT_POST_AUTH_PATH = '/app/planner';
+const DEFAULT_POST_AUTH_PATH = '/app/trips';
 
 type AuthLocationState = {
   from?: {
@@ -21,4 +21,3 @@ export function readPostAuthPathFromState(state: unknown) {
 
   return resolvePostAuthPath((state as AuthLocationState).from?.pathname);
 }
-

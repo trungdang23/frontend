@@ -47,7 +47,7 @@ export const homeNavItems: HomeNavItem[] = [
     yOffset: -4,
   },
   {
-    href: '/app/planner',
+    href: '/app/trips',
     labelKey: 'home.navigation.planner',
     rotate: -2,
     shape: 'notebook',
@@ -55,7 +55,7 @@ export const homeNavItems: HomeNavItem[] = [
     yOffset: 6,
   },
   {
-    href: '/app/journal',
+    href: '/app/trips?intent=journal',
     labelKey: 'home.navigation.journal',
     rotate: 5,
     shape: 'straight',

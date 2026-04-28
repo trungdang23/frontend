@@ -1,5 +1,6 @@
 import { type CSSProperties } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   ArrowRight,
   CalendarDays,
@@ -11,7 +12,13 @@ import {
 } from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
-import { PlannerActivitySpread } from '@/features/trips/planning/components/planner-activity-spread';
+import { createPlanNode, getTripPlanner } from '@/features/trips/planning/api/planner-api';
+import {
+  PlannerActivitySpread,
+  type PlannerActivityFormValues,
+} from '@/features/trips/planning/components/planner-activity-spread';
+import { plannerQueryKeys } from '@/features/trips/planning/lib/planner-query-keys';
+import type { PlanNode } from '@/features/trips/planning/types/plan-node';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -19,6 +26,42 @@ const pageDotStyle: CSSProperties = {
   backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)',
   backgroundSize: '28px 28px',
 };
+
+function parseActivityBudget(value: string) {
+  const trimmedValue = value.trim();
+
+  if (!trimmedValue) {
+    return {
+      costAmount: null,
+      costCurrency: null,
+    };
+  }
+
+  const costAmount = Number.parseInt(trimmedValue.replace(/[^\d]/g, ''), 10);
+  const currencyMatch = trimmedValue.toUpperCase().match(/[A-Z]{3}/);
+
+  return {
+    costAmount: Number.isNaN(costAmount) ? null : costAmount,
+    costCurrency: currencyMatch?.[0] ?? 'VND',
+  };
+}
+
+function buildActivityNotes(values: PlannerActivityFormValues) {
+  return [
+    values.date.trim() ? `Ngay: ${values.date.trim()}` : null,
+    values.time.trim() ? `Thoi gian: ${values.time.trim()}` : null,
+    values.location.trim() ? `Dia diem: ${values.location.trim()}` : null,
+    values.notes.trim() || null,
+  ]
+    .filter(Boolean)
+    .join('\n') || null;
+}
+
+function sortPlannerActivities(nodes: PlanNode[]) {
+  return [...nodes]
+    .filter((node) => node.type === 'activity')
+    .sort((firstNode, secondNode) => firstNode.sortOrder - secondNode.sortOrder);
+}
 
 type PlannerPolaroidProps = {
   alt: string;
@@ -268,7 +311,7 @@ function PlannerRightPageFront({
           onClick={onCreatePlan}
           type="button"
         >
-          {t('trips.actions.create')}
+          {t('trips.actions.addActivity')}
         </button>
       ) : null}
     </div>
@@ -592,22 +635,76 @@ function PlannerCreateSpread({
 }
 
 export function PlannerPage() {
+  const { tripId } = useParams<{ tripId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
+  const queryClient = useQueryClient();
   const plannerPage = searchParams.get('page');
   const isCreatingPlan = plannerPage === 'next';
   const isEditingActivities = plannerPage === 'activities';
   const isPlannerFlowOpen = isCreatingPlan || isEditingActivities;
   const activeNodeId = searchParams.get('nodeId');
+  const { t } = useI18n();
+
+  const plannerQuery = useQuery({
+    enabled: Boolean(tripId),
+    queryFn: ({ signal }) => getTripPlanner(tripId as string, { signal }),
+    queryKey: tripId ? plannerQueryKeys.detail(tripId) : ['trips', 'planner', 'missing'],
+  });
+  const activityNodes = sortPlannerActivities(plannerQuery.data?.nodes || []);
+  const createActivityMutation = useMutation({
+    mutationFn: async (values: PlannerActivityFormValues) => {
+      if (!tripId) {
+        throw new Error('Missing trip id.');
+      }
+
+      const budget = parseActivityBudget(values.budget);
+      const highestSortOrder = (plannerQuery.data?.nodes || []).reduce(
+        (highestOrder, node) => Math.max(highestOrder, node.sortOrder),
+        -1,
+      );
+
+      return createPlanNode({
+        tripId,
+        parentId: null,
+        type: 'activity',
+        title: values.title.trim(),
+        notes: buildActivityNotes(values),
+        startAt: null,
+        endAt: null,
+        costAmount: budget.costAmount,
+        costCurrency: budget.costCurrency,
+        imageUrl: null,
+        sortOrder: highestSortOrder + 1,
+      });
+    },
+    onSuccess: (node) => {
+      if (tripId) {
+        void queryClient.invalidateQueries({
+          queryKey: plannerQueryKeys.detail(tripId),
+        });
+      }
+
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.set('page', 'activities');
+      nextParams.set('nodeId', node.id);
+      setSearchParams(nextParams, { replace: true });
+    },
+  });
+
+  if (!tripId) {
+    return <Navigate replace to="/app/trips" />;
+  }
 
   const openNextPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
-    nextParams.set('page', 'next');
+    nextParams.set('page', 'activities');
     setSearchParams(nextParams, { replace: true });
   };
 
   const returnToIntroPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.delete('page');
+    nextParams.delete('nodeId');
     setSearchParams(nextParams, { replace: true });
   };
 
@@ -619,7 +716,21 @@ export function PlannerPage() {
 
   const returnToGeneralInfoPage = () => {
     const nextParams = new URLSearchParams(searchParams);
-    nextParams.set('page', 'next');
+    nextParams.delete('page');
+    nextParams.delete('nodeId');
+    setSearchParams(nextParams, { replace: true });
+  };
+
+  const selectActivityNode = (nodeId: string | null) => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.set('page', 'activities');
+
+    if (nodeId) {
+      nextParams.set('nodeId', nodeId);
+    } else {
+      nextParams.delete('nodeId');
+    }
+
     setSearchParams(nextParams, { replace: true });
   };
 
@@ -629,8 +740,49 @@ export function PlannerPage() {
       mainId="planner-content"
       scrollable={isPlannerFlowOpen}
     >
-      <div className="flex h-full min-h-0 w-full items-stretch justify-center">
-        <div className="relative w-full px-2 py-1 sm:px-2.5 sm:py-1 md:flex md:h-full md:min-h-0 md:items-center md:px-2 md:py-1.5 lg:px-2.5 lg:py-2">
+      <div className="flex h-full min-h-0 w-full flex-col">
+        <div className="flex flex-none flex-wrap items-center justify-between gap-3 px-2 py-2">
+          <div className="min-w-0">
+            <Link
+              className="inline-flex items-center gap-2 rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-3 py-1.5 text-xs font-bold text-[#6b4938] transition hover:-translate-y-0.5"
+              to="/app/trips"
+            >
+              <ChevronLeft className="h-4 w-4" />
+              {t('trips.actions.backToTrips')}
+            </Link>
+            <h1 className="mt-2 truncate font-display text-[1.45rem] leading-tight text-[#261b15] sm:text-[1.8rem]">
+              {plannerQuery.data?.trip.name || t('trips.planner.title')}
+            </h1>
+          </div>
+          <Link
+            className="inline-flex items-center gap-2 rounded-full border border-[#315c42] bg-[#b9e177] px-4 py-2 text-sm font-bold text-[#172612] shadow-[0_7px_0_#6f9e44] transition hover:-translate-y-0.5"
+            to={`/app/trips/${tripId}/planner?page=activities`}
+          >
+            <CalendarDays className="h-4 w-4" />
+            {t('trips.actions.addActivity')}
+          </Link>
+        </div>
+
+        {plannerQuery.isLoading ? (
+          <div className="m-auto rounded-[1rem] border border-[#d8c5a7] bg-[#fffdf7] px-6 py-5 text-sm font-semibold text-[#66594d] shadow-[0_16px_28px_rgba(92,66,43,0.12)]">
+            {t('trips.states.loading')}
+          </div>
+        ) : null}
+
+        {!plannerQuery.isLoading && plannerQuery.isError ? (
+          <div className="m-auto max-w-xl rounded-[1rem] border border-[#d8c5a7] bg-[#fffdf7] px-6 py-8 text-center shadow-[0_16px_28px_rgba(92,66,43,0.12)]">
+            <h2 className="font-display text-[2rem] text-[#261b15]">
+              {t('trips.loadErrorTitle')}
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-[#66594d]">
+              {t('trips.planner.feedback.loadError')}
+            </p>
+          </div>
+        ) : null}
+
+        {!plannerQuery.isLoading && !plannerQuery.isError ? (
+          <div className="flex min-h-0 flex-1 items-stretch justify-center">
+            <div className="relative w-full px-2 py-1 sm:px-2.5 sm:py-1 md:flex md:h-full md:min-h-0 md:items-center md:px-2 md:py-1.5 lg:px-2.5 lg:py-2">
           <div className="pointer-events-none absolute inset-x-0 top-1 bottom-0 z-0 md:top-1.5 md:bottom-0">
             <div className="absolute -left-1.5 -right-1.5 top-0 bottom-0 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_16px_30px_rgba(76,51,33,0.16)] sm:-left-2 sm:-right-2 md:-left-2.5 md:-right-2.5" />
             <div className="absolute left-1 right-1 top-0 bottom-[0.06rem] rounded-[1rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_12px_20px_rgba(76,51,33,0.11)] sm:left-1.5 sm:right-[1.25rem] sm:bottom-[0.12rem] md:left-[1.75rem] md:right-[1.25rem] md:bottom-[0.16rem]" />
@@ -645,7 +797,11 @@ export function PlannerPage() {
             <div className="flex flex-col md:hidden">
               {isEditingActivities ? (
                 <PlannerActivitySpread
+                  activityNodes={activityNodes}
+                  isSavingActivity={createActivityMutation.isPending}
                   nodeId={activeNodeId}
+                  onCreateActivity={(values) => createActivityMutation.mutateAsync(values).then(() => undefined)}
+                  onSelectActivity={selectActivityNode}
                   onBack={returnToGeneralInfoPage}
                 />
               ) : isCreatingPlan ? (
@@ -664,7 +820,11 @@ export function PlannerPage() {
             <div className="relative hidden h-full min-h-0 md:block">
               {isEditingActivities ? (
                 <PlannerActivitySpread
+                  activityNodes={activityNodes}
+                  isSavingActivity={createActivityMutation.isPending}
                   nodeId={activeNodeId}
+                  onCreateActivity={(values) => createActivityMutation.mutateAsync(values).then(() => undefined)}
+                  onSelectActivity={selectActivityNode}
                   onBack={returnToGeneralInfoPage}
                 />
               ) : isCreatingPlan ? (
@@ -684,8 +844,10 @@ export function PlannerPage() {
               )}
             </div>
           </section>
+            </div>
+          </div>
+        ) : null}
         </div>
-      </div>
     </PublicPageShell>
   );
 }

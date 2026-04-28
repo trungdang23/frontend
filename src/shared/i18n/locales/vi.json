@@ -481,6 +481,7 @@
       "viewList": "Xem danh sách chuyến đi",
       "viewDetails": "Xem chi tiết",
       "create": "Tạo chuyến đi",
+      "createNewTrip": "Tạo chuyến đi mới",
       "creating": "Đang tạo chuyến đi...",
       "save": "Lưu thay đổi",
       "saving": "Đang lưu thay đổi...",
@@ -489,7 +490,14 @@
       "deleting": "Đang xoá chuyến đi...",
       "retry": "Thử lại",
       "backToList": "Quay lại danh sách chuyến đi",
-      "cancel": "Huỷ"
+      "cancel": "Huỷ",
+      "openPlanner": "Mở planner",
+      "openJournal": "Mở nhật ký",
+      "addActivity": "Thêm hoạt động",
+      "addingActivity": "Đang thêm hoạt động...",
+      "addAnotherActivity": "Thêm hoạt động khác",
+      "selectActivityStickers": "Chọn sticker",
+      "backToTrips": "Quay lại chuyến đi"
     },
     "feedback": {
       "createSuccess": "Chuyến đi mới đã được tạo thành công.",
@@ -518,6 +526,9 @@
       "modeManual": "Thủ công",
       "autoLabel": "Tự động tính từ planner",
       "autoDescription": "Chế độ tự động sẽ để planner tính ngân sách ở phase sau. Ở giai đoạn hiện tại, bạn chưa cần nhập ngân sách thủ công."
+    },
+    "states": {
+      "loading": "Đang tải danh sách chuyến đi..."
     },
     "notesEmpty": "Bạn chưa thêm ghi chú tổng quan cho chuyến đi này.",
     "planner": {
@@ -571,6 +582,9 @@
           "canvasPlaceholder": "Viết nhanh kế hoạch, điều cần nhớ hoặc cảm xúc cho hoạt động này...",
           "connectedApiNote": "Đang kết nối với PlanNode hiện tại. Khi lưu, tọa độ sticker sẽ được đồng bộ qua API.",
           "localDraftApiNote": "Chưa có nodeId trong URL nên phần sticker đang là bản nháp local. Khi flow tạo kế hoạch gắn PlanNode thật, thêm nodeId để lưu tọa độ.",
+          "activitiesTitle": "Hoạt động đã thêm",
+          "activitiesEmpty": "Chưa có hoạt động nào. Lưu form bên trái để thêm hoạt động đầu tiên, sau đó bạn có thể thêm tiếp bao nhiêu hoạt động tuỳ ý.",
+          "selectedActivity": "Sticker đang gắn với: {{title}}",
           "stickerPaletteTitle": "Chọn sticker",
           "stickerPaletteDescription": "Chạm để thêm sticker, sau đó kéo trực tiếp trong khung. Tọa độ được lưu theo tỉ lệ khung để không lệch khi màn hình đổi kích thước.",
           "dragStickerLabel": "Kéo sticker {{sticker}} trong khung hoạt động",
@@ -608,7 +622,9 @@
             "cleared": "Đã xóa sticker khỏi khung.",
             "saving": "Đang lưu tọa độ sticker...",
             "saved": "Đã lưu tọa độ sticker.",
-            "saveError": "Không thể lưu tọa độ sticker lúc này."
+            "saveError": "Không thể lưu tọa độ sticker lúc này.",
+            "activitySaved": "Đã thêm hoạt động. Bạn có thể tiếp tục thêm hoạt động khác hoặc lưu sticker cho hoạt động vừa tạo.",
+            "activitySaveError": "Không thể thêm hoạt động lúc này."
           }
         }
       },

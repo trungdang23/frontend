@@ -6,6 +6,7 @@ export const publicPageMainLayouts = {
   journal: 'h-full w-full px-4 py-2 sm:px-6 lg:px-8',
   planner: 'relative mx-auto h-full min-h-0 w-full max-w-[84rem] px-3 py-0 sm:px-4 lg:px-6',
   profile: 'h-full w-full px-4 py-1 sm:px-6 sm:py-2 lg:px-8',
+  trips: 'relative mx-auto w-full max-w-[78rem] px-4 pb-24 pt-2 sm:px-6 lg:px-8',
 } as const;
 
 export type PublicPageLayoutKey = keyof typeof publicPageMainLayouts;

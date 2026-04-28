@@ -481,6 +481,7 @@
       "viewList": "Open trips list",
       "viewDetails": "View details",
       "create": "Create trip",
+      "createNewTrip": "Create new trip",
       "creating": "Creating trip...",
       "save": "Save changes",
       "saving": "Saving changes...",
@@ -489,7 +490,14 @@
       "deleting": "Deleting trip...",
       "retry": "Try again",
       "backToList": "Back to trips list",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "openPlanner": "Open planner",
+      "openJournal": "Open journal",
+      "addActivity": "Add activity",
+      "addingActivity": "Adding activity...",
+      "addAnotherActivity": "Add another activity",
+      "selectActivityStickers": "Select stickers",
+      "backToTrips": "Back to trips"
     },
     "feedback": {
       "createSuccess": "The new trip was created successfully.",
@@ -518,6 +526,9 @@
       "modeManual": "Manual",
       "autoLabel": "Calculated from planner later",
       "autoDescription": "Auto mode defers the actual budget calculation to the planner phase. You do not need to enter a manual budget right now."
+    },
+    "states": {
+      "loading": "Loading trips..."
     },
     "notesEmpty": "This trip does not have summary notes yet.",
     "planner": {
@@ -571,6 +582,9 @@
           "canvasPlaceholder": "Write a quick plan, reminder, or mood for this activity...",
           "connectedApiNote": "Connected to the current PlanNode. Saving will sync sticker coordinates through the API.",
           "localDraftApiNote": "There is no nodeId in the URL yet, so stickers are local draft only. Once the planning flow creates a real PlanNode, pass nodeId to persist coordinates.",
+          "activitiesTitle": "Added activities",
+          "activitiesEmpty": "No activities yet. Save the form on the left to add the first activity, then add as many more as you need.",
+          "selectedActivity": "Stickers are attached to: {{title}}",
           "stickerPaletteTitle": "Pick stickers",
           "stickerPaletteDescription": "Tap to add a sticker, then drag it inside the frame. Coordinates are saved relative to the frame so they stay stable on responsive screens.",
           "dragStickerLabel": "Drag the {{sticker}} sticker inside the activity frame",
@@ -608,7 +622,9 @@
             "cleared": "Cleared stickers from the frame.",
             "saving": "Saving sticker coordinates...",
             "saved": "Sticker coordinates saved.",
-            "saveError": "Unable to save sticker coordinates right now."
+            "saveError": "Unable to save sticker coordinates right now.",
+            "activitySaved": "Activity added. You can keep adding another activity or save stickers for the activity you just created.",
+            "activitySaveError": "Unable to add the activity right now."
           }
         }
       },
