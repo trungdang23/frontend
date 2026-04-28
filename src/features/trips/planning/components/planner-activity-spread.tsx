@@ -275,7 +275,7 @@ function PlannerActivityDetailsPage({
         {t('trips.planner.board.activitySpread.stepTitle')}
       </PlannerTapeTitle>
 
-      <div className="relative z-10 mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 sm:gap-5">
+      <div className="relative z-10 mt-5 grid gap-3 sm:mt-6 sm:grid-cols-2 sm:gap-4">
         <div className="sm:col-span-2">
           <PlannerActivityField
             label={t('trips.planner.board.activitySpread.fields.title')}
@@ -343,10 +343,6 @@ function PlannerActivityDetailsPage({
             ? t('trips.actions.addingActivity')
             : t('trips.actions.addActivity')}
         </button>
-      </div>
-
-      <div className="pointer-events-none absolute bottom-7 left-8 hidden rotate-[-8deg] rounded-[1rem] border border-[#c7b58f] bg-[#fff8e6] px-4 py-3 font-hand text-[1.2rem] font-bold text-[#6b4938] shadow-[0_12px_20px_rgba(93,70,45,0.12)] lg:block">
-        {t('trips.planner.board.activitySpread.fixedFieldsNote')}
       </div>
     </form>
   );
@@ -569,14 +565,11 @@ function PlannerActivityStickerCanvas({
   };
 
   return (
-    <div className="relative z-10 mt-5 flex min-h-0 flex-1 flex-col">
+    <div className="relative z-10 mt-3 flex min-h-0 flex-1 flex-col">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p className="font-hand text-[1.25rem] font-bold leading-none text-[#6b4938] sm:text-[1.45rem]">
             {t('trips.planner.board.activitySpread.stickerPaletteTitle')}
-          </p>
-          <p className="mt-1 max-w-md text-xs leading-relaxed text-[#6f6258] sm:text-sm">
-            {t('trips.planner.board.activitySpread.stickerPaletteDescription')}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -598,22 +591,11 @@ function PlannerActivityStickerCanvas({
       </div>
 
       <div
-        className="relative mt-4 min-h-[23rem] flex-1 overflow-hidden rounded-[1.4rem] border-[3px] border-[#6d4a37] bg-[#fff7df] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.7),0_15px_28px_rgba(93,70,45,0.18)]"
+        className="relative mt-3 min-h-[16rem] flex-1 overflow-hidden rounded-[1.4rem] border-[3px] border-[#6d4a37] bg-[#fff7df] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.7),0_15px_28px_rgba(93,70,45,0.18)]"
         ref={frameRef}
       >
         <div className="absolute inset-0 bg-[linear-gradient(#e9d8b6_1px,transparent_1px)] bg-[length:100%_2.2rem] opacity-70" />
         <div className="absolute left-8 top-0 bottom-0 w-px bg-red-300/55" />
-        <div className="relative z-10 h-full p-6 sm:p-7">
-          <label className="block">
-            <span className="font-cursive text-[1.6rem] font-bold leading-none text-[#2f241e] sm:text-[1.95rem]">
-              {t('trips.planner.board.activitySpread.canvasTitle')}
-            </span>
-            <textarea
-              className="mt-4 h-44 w-full resize-none rounded-[0.9rem] border border-[#d6bf94]/70 bg-white/50 px-4 py-3 font-marker text-[1.1rem] leading-relaxed text-[#2f241e] shadow-[inset_0_1px_0_rgba(255,255,255,0.75)] outline-none placeholder:text-[#7a6d60] focus:border-[#9f7e51] focus:bg-white/75 focus:ring-2 focus:ring-[#f4cf8f]/35 sm:text-[1.25rem]"
-              placeholder={t('trips.planner.board.activitySpread.canvasPlaceholder')}
-            />
-          </label>
-        </div>
 
         {stickers.map((sticker) => {
           const option =
@@ -652,7 +634,7 @@ function PlannerActivityStickerCanvas({
         })}
       </div>
 
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p
           className={cn(
             'min-h-5 text-sm font-medium',
@@ -707,13 +689,7 @@ function PlannerActivityStickerPage({
         {t('trips.planner.board.activitySpread.canvasPageTitle')}
       </PlannerTapeTitle>
 
-      <div className="relative z-10 mt-4 rounded-[1rem] border border-[#d5c5a9] bg-[#fff8e6]/80 px-4 py-3 text-sm leading-relaxed text-[#5f5146] shadow-[0_10px_20px_rgba(93,70,45,0.1)]">
-        {nodeId
-          ? t('trips.planner.board.activitySpread.connectedApiNote')
-          : t('trips.planner.board.activitySpread.localDraftApiNote')}
-      </div>
-
-      <section className="relative z-10 mt-4 rounded-[1rem] border border-[#d5c5a9] bg-white/62 px-4 py-3 shadow-[0_10px_20px_rgba(93,70,45,0.08)]">
+      <section className="relative z-10 mt-3 rounded-[1rem] border border-[#d5c5a9] bg-white/62 px-4 py-3 shadow-[0_10px_20px_rgba(93,70,45,0.08)]">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h3 className="font-hand text-[1.4rem] font-bold leading-none text-[#251b15] sm:text-[1.65rem]">
             {t('trips.planner.board.activitySpread.activitiesTitle')}

@@ -1,6 +1,6 @@
 import { type CSSProperties } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
+import { Navigate, useParams, useSearchParams } from 'react-router-dom';
 import {
   ArrowRight,
   CalendarDays,
@@ -740,29 +740,7 @@ export function PlannerPage() {
       mainId="planner-content"
       scrollable={isPlannerFlowOpen}
     >
-      <div className="flex h-full min-h-0 w-full flex-col">
-        <div className="flex flex-none flex-wrap items-center justify-between gap-3 px-2 py-2">
-          <div className="min-w-0">
-            <Link
-              className="inline-flex items-center gap-2 rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-3 py-1.5 text-xs font-bold text-[#6b4938] transition hover:-translate-y-0.5"
-              to="/app/trips"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              {t('trips.actions.backToTrips')}
-            </Link>
-            <h1 className="mt-2 truncate font-display text-[1.45rem] leading-tight text-[#261b15] sm:text-[1.8rem]">
-              {plannerQuery.data?.trip.name || t('trips.planner.title')}
-            </h1>
-          </div>
-          <Link
-            className="inline-flex items-center gap-2 rounded-full border border-[#315c42] bg-[#b9e177] px-4 py-2 text-sm font-bold text-[#172612] shadow-[0_7px_0_#6f9e44] transition hover:-translate-y-0.5"
-            to={`/app/trips/${tripId}/planner?page=activities`}
-          >
-            <CalendarDays className="h-4 w-4" />
-            {t('trips.actions.addActivity')}
-          </Link>
-        </div>
-
+      <div className="flex h-full min-h-0 w-full items-stretch justify-center">
         {plannerQuery.isLoading ? (
           <div className="m-auto rounded-[1rem] border border-[#d8c5a7] bg-[#fffdf7] px-6 py-5 text-sm font-semibold text-[#66594d] shadow-[0_16px_28px_rgba(92,66,43,0.12)]">
             {t('trips.states.loading')}
@@ -781,8 +759,7 @@ export function PlannerPage() {
         ) : null}
 
         {!plannerQuery.isLoading && !plannerQuery.isError ? (
-          <div className="flex min-h-0 flex-1 items-stretch justify-center">
-            <div className="relative w-full px-2 py-1 sm:px-2.5 sm:py-1 md:flex md:h-full md:min-h-0 md:items-center md:px-2 md:py-1.5 lg:px-2.5 lg:py-2">
+          <div className="relative w-full px-2 py-1 sm:px-2.5 sm:py-1 md:flex md:h-full md:min-h-0 md:items-center md:px-2 md:py-1.5 lg:px-2.5 lg:py-2">
           <div className="pointer-events-none absolute inset-x-0 top-1 bottom-0 z-0 md:top-1.5 md:bottom-0">
             <div className="absolute -left-1.5 -right-1.5 top-0 bottom-0 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_16px_30px_rgba(76,51,33,0.16)] sm:-left-2 sm:-right-2 md:-left-2.5 md:-right-2.5" />
             <div className="absolute left-1 right-1 top-0 bottom-[0.06rem] rounded-[1rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_12px_20px_rgba(76,51,33,0.11)] sm:left-1.5 sm:right-[1.25rem] sm:bottom-[0.12rem] md:left-[1.75rem] md:right-[1.25rem] md:bottom-[0.16rem]" />
@@ -793,6 +770,12 @@ export function PlannerPage() {
           <section className="relative w-full overflow-hidden rounded-[1rem] border border-[#efe2ca] bg-[#fffdf9] shadow-[0_20px_36px_rgba(0,0,0,0.09),0_8px_16px_rgba(0,0,0,0.06)] md:h-[min(100%,calc(100dvh-10.9rem))] md:min-h-0 lg:h-[min(100%,calc(100dvh-11.25rem))]">
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
+            {isEditingActivities ? (
+              <div
+                aria-hidden="true"
+                className="planner-page-turn-overlay"
+              />
+            ) : null}
 
             <div className="flex flex-col md:hidden">
               {isEditingActivities ? (
@@ -844,10 +827,9 @@ export function PlannerPage() {
               )}
             </div>
           </section>
-            </div>
           </div>
         ) : null}
-        </div>
+      </div>
     </PublicPageShell>
   );
 }
