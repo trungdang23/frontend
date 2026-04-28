@@ -557,6 +557,7 @@
           "destinationTitle": "Your Destination",
           "destinationSearchLabel": "Search destination",
           "destinationSearchPlaceholder": "Search a destination or choose on the map",
+          "visibilityLabel": "Sharing mode",
           "mapLabel": "Illustrated Vietnam map for choosing a destination",
           "notesTitle": "Notes:",
           "notesBody": "Remember to check the weather!",

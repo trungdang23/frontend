@@ -173,6 +173,14 @@ Giai đoạn rebuild này chưa xử lý:
 - giá trị đã nhập không mất khi quay lại từ bước hoạt động về bước 1 trong cùng phiên planner
 - UI không bị che bởi nội dung mô tả hoặc note trang trí không cần thiết
 
+### Follow-up refinement
+
+- [x] tăng khoảng thở trên/dưới của quyển sổ để action cuối trang không bị che
+- [x] đổi popup ngày thành native date picker mở ngay khi bấm vào lịch
+- [x] thay map preview bằng khung ảnh bìa lấy từ link ảnh bìa nếu có
+- [x] đổi nhãn visibility trong bước 1 sang ngôn ngữ tự nhiên hơn
+- [x] làm số bước hiện tại nổi bật hơn và có animation
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

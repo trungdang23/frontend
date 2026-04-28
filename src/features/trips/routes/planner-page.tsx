@@ -383,12 +383,12 @@ function PlannerDateInput({
   onChange: (value: string) => void;
   value: string;
 }) {
-  const [isPickerOpen, setIsPickerOpen] = useState(false);
   const displayValue = formatPlannerDate(value);
   const errorId = error ? `${label.replace(/\W+/g, '-').toLowerCase()}-error` : undefined;
 
   return (
-    <div className="group relative block flex-1 min-w-[10.75rem]">
+    <label className="group relative block flex-1 min-w-[10.75rem]">
+      <span className="sr-only">{label}</span>
       <span className="absolute -top-2 left-5 right-5 z-10 flex h-5 items-start justify-between">
         {Array.from({ length: 9 }).map((_, index) => (
           <span
@@ -397,15 +397,12 @@ function PlannerDateInput({
           />
         ))}
       </span>
-      <button
+      <span
         aria-describedby={errorId}
-        aria-expanded={isPickerOpen}
         className={cn(
-          'relative flex min-h-[5.45rem] w-full items-center rounded-[0.75rem] border bg-[#fffdf6] px-4 py-3 text-left shadow-[0_6px_0_#b9b2a5,0_12px_18px_rgba(59,44,32,0.14)] transition duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
-          error ? 'border-[#d92d20]' : 'border-[#8d8073] hover:border-[#6d5b4a]',
+          'relative flex min-h-[5.45rem] w-full cursor-pointer items-center rounded-[0.75rem] border bg-[#fffdf6] px-4 py-3 text-left shadow-[0_6px_0_#b9b2a5,0_12px_18px_rgba(59,44,32,0.14)] transition duration-300 group-hover:-translate-y-0.5 group-focus-within:-translate-y-0.5 group-focus-within:ring-2 group-focus-within:ring-[#8b6244]/25',
+          error ? 'border-[#d92d20]' : 'border-[#8d8073] group-hover:border-[#6d5b4a]',
         )}
-        onClick={() => setIsPickerOpen((current) => !current)}
-        type="button"
       >
         {iconSide === 'left' ? (
           <CalendarDays className="mr-3 h-5 w-5 shrink-0 text-[#6d5b4a]" strokeWidth={1.7} />
@@ -416,25 +413,55 @@ function PlannerDateInput({
         {iconSide === 'right' ? (
           <CalendarDays className="ml-3 h-5 w-5 shrink-0 text-[#6d5b4a]" strokeWidth={1.7} />
         ) : null}
-      </button>
-
-      {isPickerOpen ? (
-        <div className="absolute left-0 right-0 top-full z-50 mt-3 rounded-[0.9rem] border border-[#b8a58e] bg-[#fffaf0] p-3 shadow-[0_18px_32px_rgba(59,44,32,0.2)]">
-          <input
-            aria-label={label}
-            autoFocus
-            className="h-11 w-full rounded-[0.55rem] border border-[#9b8c7b] bg-white px-3 font-marker text-[1.08rem] text-[#2f241e] outline-none focus:ring-2 focus:ring-[#b88a56]/25"
-            onChange={(event) => {
-              onChange(event.target.value);
-              setIsPickerOpen(false);
-            }}
-            type="date"
-            value={value}
-          />
-        </div>
-      ) : null}
+        <input
+          aria-describedby={errorId}
+          aria-invalid={Boolean(error)}
+          className="absolute inset-0 z-20 h-full w-full cursor-pointer opacity-0"
+          onChange={(event) => onChange(event.target.value)}
+          type="date"
+          value={value}
+        />
+      </span>
 
       <PlannerFieldError id={errorId} message={error} />
+    </label>
+  );
+}
+
+function PlannerStepProgress({
+  currentStep,
+}: {
+  currentStep: number;
+}) {
+  const stepClassNames = [
+    'bg-[#a7d76f] ring-[#70a849]',
+    'bg-[#99cde8] ring-[#6aa7c7]',
+    'bg-[#f2cc6f] ring-[#c79a37]',
+    'bg-[#f2a088] ring-[#c56d54]',
+  ];
+
+  return (
+    <div className="flex min-h-16 items-center justify-center gap-4 sm:gap-6">
+      {stepClassNames.map((className, index) => {
+        const stepNumber = index + 1;
+        const isCurrentStep = stepNumber === currentStep;
+
+        return (
+          <span
+            aria-current={isCurrentStep ? 'step' : undefined}
+            className={cn(
+              'grid place-items-center rounded-full font-marker font-bold text-[#1e251d] ring-2 ring-offset-2 ring-offset-[#fffdfa] transition-all duration-500',
+              isCurrentStep
+                ? 'h-14 w-14 -translate-y-1 animate-pulse text-[1.55rem] shadow-[0_13px_22px_rgba(67,92,38,0.25)] ring-4'
+                : 'h-10 w-10 text-[1.2rem] opacity-70 shadow-[0_6px_12px_rgba(80,62,42,0.12)]',
+              className,
+            )}
+            key={className}
+          >
+            {stepNumber}
+          </span>
+        );
+      })}
     </div>
   );
 }
@@ -578,132 +605,37 @@ function PlannerCreateTripPage({
       </div>
 
       <div className="relative z-10 mt-auto pt-5">
-        <div className="flex items-center justify-center gap-6 sm:gap-8">
-          {[
-            'bg-[#a7d76f] ring-[#70a849]',
-            'bg-[#99cde8] ring-[#6aa7c7]',
-            'bg-[#f2cc6f] ring-[#c79a37]',
-            'bg-[#f2a088] ring-[#c56d54]',
-          ].map((className, index) => (
-            <span
-              className={cn(
-                'grid h-12 w-12 place-items-center rounded-full font-marker text-[1.4rem] font-bold text-[#1e251d] shadow-[0_7px_14px_rgba(80,62,42,0.16)] ring-2 ring-offset-2 ring-offset-[#fffdfa]',
-                index === 0 ? 'scale-110' : 'opacity-85',
-                className,
-              )}
-              key={className}
-            >
-              {index + 1}
-            </span>
-          ))}
-        </div>
+        <PlannerStepProgress currentStep={1} />
       </div>
     </div>
   );
 }
 
-function PlannerVietnamSketchMap() {
+function PlannerCoverPreview({
+  imageUrl,
+}: {
+  imageUrl: string;
+}) {
   const { t } = useI18n();
+  const coverImageUrl = imageUrl.trim();
+  const shouldShowCoverImage = coverImageUrl && isValidHttpUrl(coverImageUrl);
 
   return (
-    <svg
-      aria-label={t('trips.planner.board.createSpread.mapLabel')}
-      className="h-full min-h-[20rem] w-full"
-      role="img"
-      viewBox="0 0 520 430"
+    <div
+      aria-hidden={!shouldShowCoverImage}
+      className="relative h-full min-h-[7rem] overflow-hidden rounded-[1.1rem] border border-dashed border-[#b9aea0] bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
     >
-      <rect fill="#d7edf0" height="430" rx="26" width="520" />
-      <path d="M0 0H520V430H0Z" fill="#d7edf0" />
-      <path
-        d="M6 70 C50 32 97 12 151 30 C193 44 217 34 249 18 C284 1 327 7 359 34 C397 67 434 57 514 35 L520 0 H0 Z"
-        fill="#eef0c5"
-      />
-      <path
-        d="M0 85 C35 80 58 98 81 128 C107 161 141 169 166 149 C199 122 232 118 258 146 C288 179 320 177 356 159 C401 136 440 156 520 191 V430 H0 Z"
-        fill="#f2dfb8"
-      />
-      <path
-        d="M121 47 C159 50 192 71 207 101 C220 126 208 154 232 181 C256 210 301 222 315 256 C329 291 307 317 333 344 C355 367 396 373 431 397 L386 430 H111 C123 395 119 360 91 330 C62 298 46 262 61 223 C78 177 63 137 32 101 C52 66 83 44 121 47Z"
-        fill="#f2dfb8"
-        stroke="#a88d70"
-        strokeWidth="2"
-      />
-      <path
-        d="M190 69 C213 78 230 92 236 112 C242 131 228 146 239 164 C254 188 292 192 305 218 C319 247 290 265 303 291 C316 318 352 321 371 346 C387 368 376 394 356 418 L330 427 C342 398 342 373 319 351 C294 326 265 313 264 284 C263 253 286 238 266 214 C248 191 211 184 206 154 C202 130 216 116 200 99 C190 89 174 84 156 81 C163 72 173 67 190 69Z"
-        fill="#b6d78b"
-        stroke="#637f55"
-        strokeLinejoin="round"
-        strokeWidth="2.5"
-      />
-      <path
-        d="M196 82 C218 98 218 118 207 137 C195 158 208 175 231 184"
-        fill="none"
-        stroke="#6b8c5d"
-        strokeDasharray="5 5"
-        strokeWidth="2"
-      />
-      <path
-        d="M275 238 C298 255 304 279 294 304 C287 323 301 337 323 348"
-        fill="none"
-        stroke="#6b8c5d"
-        strokeDasharray="5 5"
-        strokeWidth="2"
-      />
-      <path
-        d="M438 49 C463 61 471 86 458 110 C443 137 450 168 486 190"
-        fill="#d5e2ac"
-        stroke="#789164"
-        strokeWidth="2"
-      />
-      <path
-        d="M350 155 C377 150 398 158 414 181 C432 207 456 209 490 198"
-        fill="none"
-        stroke="#86a9b1"
-        strokeLinecap="round"
-        strokeWidth="2"
-      />
-      <g fill="#8e4d38" stroke="#693323" strokeWidth="2">
-        <circle cx="179" cy="88" r="5" />
-        <circle cx="213" cy="116" r="5" />
-        <circle cx="305" cy="220" r="5" />
-        <circle cx="319" cy="246" r="5" />
-        <circle cx="314" cy="349" r="5" />
-      </g>
-      <g fill="#1f2a24" fontFamily="Patrick Hand, cursive" fontSize="18" fontWeight="700">
-        <text x="190" y="80">Sapa</text>
-        <text x="224" y="112">Hanoi</text>
-        <text x="322" y="126">Ha Long Bay</text>
-        <text x="321" y="219">Da Nang</text>
-        <text x="334" y="249">Hoi An</text>
-        <text x="330" y="353">Ho Chi Minh City</text>
-      </g>
-      <g transform="translate(67 239)">
-        <circle cx="0" cy="0" fill="#f4ead6" r="28" stroke="#5f6f68" strokeWidth="2" />
-        <path d="M0 -36L7 -7L36 0L7 7L0 36L-7 7L-36 0L-7 -7Z" fill="#86a9a0" stroke="#3d514a" strokeWidth="2" />
-        <path d="M0 -26V26M-26 0H26" stroke="#3d514a" strokeWidth="2" />
-        <text fill="#3d514a" fontFamily="Patrick Hand, cursive" fontSize="12" x="-4" y="-40">N</text>
-        <text fill="#3d514a" fontFamily="Patrick Hand, cursive" fontSize="12" x="-4" y="49">S</text>
-        <text fill="#3d514a" fontFamily="Patrick Hand, cursive" fontSize="12" x="-49" y="4">W</text>
-        <text fill="#3d514a" fontFamily="Patrick Hand, cursive" fontSize="12" x="42" y="4">E</text>
-      </g>
-      <g transform="translate(353 152) rotate(-10)">
-        <path d="M0 24H60L50 38H13Z" fill="#9a704f" stroke="#6b4938" strokeWidth="2" />
-        <path d="M28 4V25" stroke="#6b4938" strokeWidth="2" />
-        <path d="M30 8L52 25H31Z" fill="#f5f0e2" stroke="#6b4938" strokeWidth="2" />
-      </g>
-      <g transform="translate(438 292) rotate(-8)">
-        <path d="M0 20H58L46 34H12Z" fill="#9a704f" stroke="#6b4938" strokeWidth="2" />
-        <path d="M30 2V22" stroke="#6b4938" strokeWidth="2" />
-        <path d="M32 7L51 22H33Z" fill="#f5f0e2" stroke="#6b4938" strokeWidth="2" />
-      </g>
-      <path
-        d="M72 376 C89 364 106 365 122 376 M392 376 C410 361 431 361 449 376"
-        fill="none"
-        stroke="#6b8c95"
-        strokeLinecap="round"
-        strokeWidth="2"
-      />
-    </svg>
+      {shouldShowCoverImage ? (
+        <>
+          <img
+            alt={t('trips.preview.coverAltFallback')}
+            className="h-full w-full object-cover"
+            src={coverImageUrl}
+          />
+          <span className="pointer-events-none absolute left-1/2 top-0 h-7 w-24 -translate-x-1/2 -translate-y-2 rotate-2 bg-[#f4cf8f]/55 shadow-[0_4px_8px_rgba(90,62,40,0.12)] backdrop-blur-[1px]" />
+        </>
+      ) : null}
+    </div>
   );
 }
 
@@ -784,7 +716,7 @@ function PlannerDestinationPage({
 
         <div>
           <p className="font-cursive text-[1.55rem] font-bold leading-none text-[#201916] sm:text-[1.9rem]">
-            {t('trips.fields.visibility')}
+            {t('trips.planner.board.createSpread.visibilityLabel')}
           </p>
           <div className="mt-2 grid grid-cols-2 gap-2 rounded-[0.85rem] border border-[#b9aea0] bg-white/45 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
             {(['private', 'public'] as const).map((visibility) => (
@@ -806,11 +738,8 @@ function PlannerDestinationPage({
           </div>
         </div>
 
-        <div className="relative mt-auto hidden min-h-[8.5rem] overflow-hidden rounded-[1.25rem] bg-[#d7edf0] shadow-[inset_0_0_0_1px_rgba(95,111,104,0.16)] sm:block lg:min-h-[9.5rem]">
-          <div className="absolute inset-0 opacity-90">
-            <PlannerVietnamSketchMap />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#fffdfa]/65 via-transparent to-transparent" />
+        <div className="mt-auto min-h-[7rem] sm:min-h-[8rem]">
+          <PlannerCoverPreview imageUrl={draft.coverImageUrl} />
         </div>
 
         <button
@@ -991,15 +920,15 @@ export function PlannerPage() {
       scrollable={isPlannerFlowOpen}
     >
       <div className="flex h-full min-h-0 w-full items-stretch justify-center">
-        <div className="relative w-full px-2 py-1 sm:px-2.5 sm:py-1 md:flex md:h-full md:min-h-0 md:items-center md:px-2 md:py-1.5 lg:px-2.5 lg:py-2">
-          <div className="pointer-events-none absolute inset-x-0 top-1 bottom-0 z-0 md:top-1.5 md:bottom-0">
+        <div className="relative w-full px-2 py-3 sm:px-2.5 sm:py-3 md:flex md:h-full md:min-h-0 md:items-center md:px-3 md:py-4 lg:px-3.5 lg:py-5">
+          <div className="pointer-events-none absolute inset-x-0 top-3 bottom-3 z-0 md:top-4 md:bottom-4 lg:top-5 lg:bottom-5">
             <div className="absolute -left-1.5 -right-1.5 top-0 bottom-0 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_16px_30px_rgba(76,51,33,0.16)] sm:-left-2 sm:-right-2 md:-left-2.5 md:-right-2.5" />
             <div className="absolute left-1 right-1 top-0 bottom-[0.06rem] rounded-[1rem] border border-[#e6d8bd] bg-[#efe2ca] shadow-[0_12px_20px_rgba(76,51,33,0.11)] sm:left-1.5 sm:right-[1.25rem] sm:bottom-[0.12rem] md:left-[1.75rem] md:right-[1.25rem] md:bottom-[0.16rem]" />
             <div className="absolute left-2 right-0.5 top-0 bottom-[0.16rem] rounded-[1rem] border border-[#efe5d2] bg-[#f5ebd8] shadow-[0_10px_16px_rgba(76,51,33,0.09)] sm:left-2.5 sm:right-[0.75rem] sm:bottom-[0.26rem] md:left-[2.75rem] md:right-[0.9rem] md:bottom-[0.34rem]" />
             <div className="absolute left-3 right-0 top-0 bottom-[0.28rem] rounded-[1rem] border border-[#f6efe1] bg-[#fbf5ea] shadow-[0_8px_14px_rgba(76,51,33,0.07)] sm:left-3.5 sm:bottom-[0.42rem] md:left-[4.25rem] md:bottom-[0.5rem]" />
           </div>
 
-          <section className="relative w-full overflow-hidden rounded-[1rem] border border-[#efe2ca] bg-[#fffdf9] shadow-[0_20px_36px_rgba(0,0,0,0.09),0_8px_16px_rgba(0,0,0,0.06)] md:h-[min(100%,calc(100dvh-10.9rem))] md:min-h-0 lg:h-[min(100%,calc(100dvh-11.25rem))]">
+          <section className="relative w-full overflow-hidden rounded-[1rem] border border-[#efe2ca] bg-[#fffdf9] shadow-[0_20px_36px_rgba(0,0,0,0.09),0_8px_16px_rgba(0,0,0,0.06)] md:h-[min(100%,calc(100dvh-13.4rem))] md:min-h-[36rem] lg:h-[min(100%,calc(100dvh-14rem))]">
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-40 hidden w-20 -translate-x-1/2 bg-[linear-gradient(to_right,rgba(0,0,0,0)_0%,rgba(0,0,0,0.03)_20%,rgba(0,0,0,0.08)_40%,rgba(0,0,0,0.15)_50%,rgba(0,0,0,0.08)_60%,rgba(0,0,0,0.03)_80%,rgba(0,0,0,0)_100%)] md:block" />
             <div className="pointer-events-none absolute bottom-0 left-1/2 top-0 z-[41] hidden w-px -translate-x-1/2 bg-black/10 md:block" />
 
