@@ -15,6 +15,7 @@ type TripFormState = {
   coverImageUrl: string;
   startDate: string;
   endDate: string;
+  timezone: string;
   budgetMode: TripBudgetMode;
   manualBudgetAmount: string;
   manualBudgetCurrency: string;
@@ -28,6 +29,7 @@ const initialTripFormState: TripFormState = {
   coverImageUrl: '',
   startDate: '',
   endDate: '',
+  timezone: 'Asia/Ho_Chi_Minh',
   budgetMode: 'auto',
   manualBudgetAmount: '',
   manualBudgetCurrency: 'VND',
@@ -67,7 +69,7 @@ function buildTripPayload(formState: TripFormState): TripUpsertPayload {
     coverImageUrl: normalizeOptionalText(formState.coverImageUrl),
     startDate: formState.startDate,
     endDate: formState.endDate,
-    timezone: null,
+    timezone: normalizeOptionalText(formState.timezone),
     budgetMode: formState.budgetMode,
     manualBudgetAmount,
     manualBudgetCurrency,
@@ -218,6 +220,12 @@ export function TripCreatePage() {
               onChange={(value) => updateField('destination', value)}
               placeholder={t('trips.planner.board.createSpread.destinationSearchPlaceholder')}
               value={formState.destination}
+            />
+            <TripInput
+              label={t('trips.fields.timezone')}
+              onChange={(value) => updateField('timezone', value)}
+              placeholder="Asia/Ho_Chi_Minh"
+              value={formState.timezone}
             />
             <TripInput
               label={t('trips.fields.startDate')}

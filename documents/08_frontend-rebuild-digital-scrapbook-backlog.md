@@ -280,19 +280,6 @@ Tách rõ `Trips` khỏi `Planner`: người dùng tạo hoặc chọn một chu
 - nested day/location builder cho activity parent
 - drag reorder activity list
 
-### FR-B5A - Planner activity page density and page turn correction
-
-### Mục tiêu
-
-Làm flow thêm hoạt động rõ hơn sau khi đã tách `Trips` và `Planner`: form tạo trip không hỏi múi giờ, quyển sổ planner không bị đẩy thấp bởi chrome phụ, và khi bấm thêm hoạt động phải có cảm giác lật sang trang hoạt động.
-
-### Scope của lượt triển khai này
-
-- [x] bỏ ô nhập múi giờ khỏi `/app/trips/new`
-- [x] rút gọn chrome planner để không chiếm chiều cao của quyển sổ
-- [x] bỏ các note/mô tả phụ trong activity spread không phục vụ thao tác trực tiếp
-- [x] thêm hiệu ứng page-turn khi mở bước `Hoạt Động`
-
 ### Scope của lượt triển khai này
 
 - [x] đổi font của heading `Lập kế hoạch` sang display font khác với card labels và căn giữa heading
