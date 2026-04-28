@@ -584,42 +584,24 @@
             "title": "Tên Hoạt Động:",
             "date": "Ngày:",
             "time": "Thời Gian:",
+            "startTime": "Giờ bắt đầu",
+            "endTime": "Giờ kết thúc",
             "location": "Địa Điểm:",
-            "budget": "Chi Phí:",
+            "costAmount": "Chi Phí:",
+            "costCurrency": "Tiền Tệ:",
             "notes": "Ghi Chú:",
-            "activityType": "Loại Hoạt Động:",
-            "bookingStatus": "Trạng Thái Đặt Chỗ:",
-            "priority": "Độ Ưu Tiên:",
-            "referenceUrl": "Link Tham Khảo:",
             "imageUrl": "Ảnh Minh Họa:"
           },
           "placeholders": {
             "title": "Ví dụ: Cafe ngắm phố cổ",
             "date": "Ngày 2",
-            "time": "08:30 - 10:00",
+            "startTime": "Bắt đầu",
+            "endTime": "Kết thúc",
             "location": "Hội An",
-            "budget": "150.000 VND",
+            "costAmount": "150000",
+            "costCurrency": "VND",
             "notes": "Chuẩn bị máy ảnh, đặt chỗ gần cửa sổ...",
-            "referenceUrl": "https://example.com/booking",
             "imageUrl": "https://example.com/activity.jpg"
-          },
-          "activityTypes": {
-            "food": "Ăn uống",
-            "sightseeing": "Tham quan",
-            "transport": "Di chuyển",
-            "shopping": "Mua sắm",
-            "rest": "Nghỉ ngơi",
-            "other": "Khác"
-          },
-          "bookingStatuses": {
-            "notNeeded": "Không cần",
-            "needBooking": "Cần đặt",
-            "booked": "Đã đặt"
-          },
-          "priorities": {
-            "flexible": "Linh hoạt",
-            "preferred": "Nên đi",
-            "mustDo": "Bắt buộc"
           },
           "imagePreviewAlt": "Ảnh minh họa hoạt động",
           "stickers": {

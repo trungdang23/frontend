@@ -19,12 +19,9 @@ type PlannerActivityDraft = {
   startTime: string;
   endTime: string;
   location: string;
-  budget: string;
+  costAmount: string;
+  costCurrency: string;
   notes: string;
-  activityType: string;
-  bookingStatus: string;
-  priority: string;
-  referenceUrl: string;
   imageUrl: string;
 };
 
@@ -34,29 +31,15 @@ type PlannerActivityDraftChangeHandler = <Field extends PlannerActivityDraftFiel
   value: PlannerActivityDraft[Field],
 ) => void;
 
-const activityTypeOptions = [
-  'food',
-  'sightseeing',
-  'transport',
-  'shopping',
-  'rest',
-  'other',
-] as const;
-const bookingStatusOptions = ['notNeeded', 'needBooking', 'booked'] as const;
-const priorityOptions = ['flexible', 'preferred', 'mustDo'] as const;
-
 const createDefaultActivityDraft = (): PlannerActivityDraft => ({
   title: '',
   date: '',
   startTime: '',
   endTime: '',
   location: '',
-  budget: '',
+  costAmount: '',
+  costCurrency: 'VND',
   notes: '',
-  activityType: 'sightseeing',
-  bookingStatus: 'notNeeded',
-  priority: 'preferred',
-  referenceUrl: '',
   imageUrl: '',
 });
 
@@ -207,16 +190,22 @@ function PlannerStepProgress({
 }
 
 function PlannerActivityTextField({
+  inputMode,
   label,
+  maxLength,
   multiline = false,
   onChange,
   placeholder,
+  transformValue,
   value,
 }: {
+  inputMode?: 'decimal' | 'numeric' | 'text';
   label: string;
+  maxLength?: number;
   multiline?: boolean;
   onChange: (value: string) => void;
   placeholder: string;
+  transformValue?: (value: string) => string;
   value: string;
 }) {
   return (
@@ -234,7 +223,15 @@ function PlannerActivityTextField({
       ) : (
         <input
           className="mt-2 w-full rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 px-4 py-3 font-marker text-[1.05rem] text-[#3d332b] outline-none placeholder:text-[#71675c] focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]"
-          onChange={(event) => onChange(event.target.value)}
+          inputMode={inputMode}
+          maxLength={maxLength}
+          onChange={(event) => {
+            const nextValue = transformValue
+              ? transformValue(event.target.value)
+              : event.target.value;
+
+            onChange(nextValue);
+          }}
           placeholder={placeholder}
           type="text"
           value={value}
@@ -365,7 +362,7 @@ function PlannerActivityTimePicker({
   onChange: (field: 'endTime' | 'startTime', value: string) => void;
   startTime: string;
 }) {
-  const timeOptions = getTimeOptions();
+  const { t } = useI18n();
 
   return (
     <div>
@@ -373,86 +370,114 @@ function PlannerActivityTimePicker({
         {label}
       </span>
       <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
-        <label className="relative block">
-          <span className="sr-only">Giờ bắt đầu</span>
-          <Clock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6d5b4a]" />
-          <select
-            className="h-12 w-full appearance-none rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 pl-9 pr-3 font-marker text-[1.02rem] text-[#3d332b] outline-none focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20"
-            onChange={(event) => onChange('startTime', event.target.value)}
-            value={startTime}
-          >
-            <option value="">Bắt đầu</option>
-            {timeOptions.map((time) => (
-              <option key={time} value={time}>
-                {time}
-              </option>
-            ))}
-          </select>
-        </label>
+        <PlannerActivityTimeSelect
+          ariaLabel={t('trips.planner.board.activitySpread.fields.startTime')}
+          onChange={(value) => onChange('startTime', value)}
+          placeholder={t('trips.planner.board.activitySpread.placeholders.startTime')}
+          value={startTime}
+        />
         <span className="font-marker text-[1.25rem] text-[#4f4138]">→</span>
-        <label className="relative block">
-          <span className="sr-only">Giờ kết thúc</span>
-          <Clock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#6d5b4a]" />
-          <select
-            className="h-12 w-full appearance-none rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 pl-9 pr-3 font-marker text-[1.02rem] text-[#3d332b] outline-none focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20"
-            onChange={(event) => onChange('endTime', event.target.value)}
-            value={endTime}
-          >
-            <option value="">Kết thúc</option>
-            {timeOptions.map((time) => (
-              <option key={time} value={time}>
-                {time}
-              </option>
-            ))}
-          </select>
-        </label>
+        <PlannerActivityTimeSelect
+          ariaLabel={t('trips.planner.board.activitySpread.fields.endTime')}
+          onChange={(value) => onChange('endTime', value)}
+          placeholder={t('trips.planner.board.activitySpread.placeholders.endTime')}
+          value={endTime}
+        />
       </div>
     </div>
   );
 }
 
-function PlannerSegmentedField({
-  label,
+function PlannerActivityTimeSelect({
+  ariaLabel,
   onChange,
-  options,
-  translationPrefix,
+  placeholder,
   value,
 }: {
-  label: string;
+  ariaLabel: string;
   onChange: (value: string) => void;
-  options: readonly string[];
-  translationPrefix: string;
+  placeholder: string;
   value: string;
 }) {
-  const { t } = useI18n();
+  const pickerRef = useRef<HTMLDivElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const timeOptions = getTimeOptions();
+
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined;
+    }
+
+    const closeOnOutsidePointer = (event: PointerEvent) => {
+      if (!pickerRef.current?.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', closeOnOutsidePointer);
+
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsidePointer);
+    };
+  }, [isOpen]);
 
   return (
-    <div>
-      <p className="font-cursive text-[1.45rem] font-bold leading-none text-[#251b15] sm:text-[1.75rem]">
-        {label}
-      </p>
-      <div className="mt-2 grid gap-2 rounded-[0.85rem] border border-[#b9aea0] bg-white/45 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] sm:grid-cols-3">
-        {options.map((option) => {
-          const isSelected = value === option;
+    <div className="relative" ref={pickerRef}>
+      <button
+        aria-expanded={isOpen}
+        aria-label={ariaLabel}
+        className="flex h-12 w-full items-center rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 pl-3 pr-2 text-left font-marker text-[1rem] text-[#3d332b] outline-none transition hover:bg-white/75 focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.06rem]"
+        onClick={() => setIsOpen((current) => !current)}
+        type="button"
+      >
+        <Clock className="mr-2 h-4 w-4 shrink-0 text-[#6d5b4a]" strokeWidth={1.7} />
+        <span className={cn('min-w-0 truncate', value ? undefined : 'text-[#71675c]')}>
+          {value || placeholder}
+        </span>
+      </button>
 
-          return (
-            <button
-              aria-pressed={isSelected}
-              className={cn(
-                'rounded-[0.65rem] px-2.5 py-2 font-marker text-[1rem] leading-none transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
-                isSelected
-                  ? 'bg-[#a8dfd5] text-[#1f2a24] shadow-[0_5px_0_rgba(80,115,104,0.2)]'
-                  : 'text-[#65584b] hover:bg-[#fff7e8]',
-              )}
-              key={option}
-              onClick={() => onChange(option)}
-              type="button"
-            >
-              {t(`${translationPrefix}.${option}`)}
-            </button>
-          );
-        })}
-      </div>
+      {isOpen ? (
+        <div className="absolute left-0 right-0 top-full z-[90] mt-2 max-h-44 overflow-y-auto rounded-[0.85rem] border border-[#b8a58e] bg-[#fffaf0] p-1.5 shadow-[0_16px_28px_rgba(59,44,32,0.2)]">
+          <button
+            className={cn(
+              'w-full rounded-[0.6rem] px-3 py-2 text-left font-marker text-[0.98rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+              value
+                ? 'text-[#70665d] hover:bg-white/80'
+                : 'bg-[#a8dfd5] font-bold text-[#1f2a24]',
+            )}
+            onClick={() => {
+              onChange('');
+              setIsOpen(false);
+            }}
+            type="button"
+          >
+            {placeholder}
+          </button>
+          {timeOptions.map((time) => {
+            const isSelected = value === time;
+
+            return (
+              <button
+                aria-pressed={isSelected}
+                className={cn(
+                  'w-full rounded-[0.6rem] px-3 py-2 text-left font-marker text-[0.98rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                  isSelected
+                    ? 'bg-[#b9e177] font-bold text-[#172612] shadow-[0_3px_0_#6f9e44]'
+                    : 'text-[#3d332b] hover:bg-white/80',
+                )}
+                key={time}
+                onClick={() => {
+                  onChange(time);
+                  setIsOpen(false);
+                }}
+                type="button"
+              >
+                {time}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -512,12 +537,24 @@ function PlannerActivityDetailsPage({
           placeholder={t('trips.planner.board.activitySpread.placeholders.location')}
           value={draft.location}
         />
-        <PlannerActivityTextField
-          label={t('trips.planner.board.activitySpread.fields.budget')}
-          onChange={(value) => onDraftChange('budget', value)}
-          placeholder={t('trips.planner.board.activitySpread.placeholders.budget')}
-          value={draft.budget}
-        />
+        <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_7rem]">
+          <PlannerActivityTextField
+            inputMode="decimal"
+            label={t('trips.planner.board.activitySpread.fields.costAmount')}
+            onChange={(value) => onDraftChange('costAmount', value)}
+            placeholder={t('trips.planner.board.activitySpread.placeholders.costAmount')}
+            value={draft.costAmount}
+          />
+          <PlannerActivityTextField
+            inputMode="text"
+            label={t('trips.planner.board.activitySpread.fields.costCurrency')}
+            maxLength={3}
+            onChange={(value) => onDraftChange('costCurrency', value)}
+            placeholder={t('trips.planner.board.activitySpread.placeholders.costCurrency')}
+            transformValue={(value) => value.toUpperCase()}
+            value={draft.costCurrency}
+          />
+        </div>
       </div>
 
       <div className="relative z-10 mt-auto pt-5">
@@ -549,56 +586,30 @@ function PlannerActivitySupportPage({
 
       <div className="relative z-10 mt-6 flex flex-1 flex-col gap-4">
         <PlannerActivityTextField
+          label={t('trips.planner.board.activitySpread.fields.imageUrl')}
+          onChange={(value) => onDraftChange('imageUrl', value)}
+          placeholder={t('trips.planner.board.activitySpread.placeholders.imageUrl')}
+          value={draft.imageUrl}
+        />
+        <div className="relative h-40 shrink-0 overflow-hidden rounded-[1.1rem] border border-dashed border-[#b9aea0] bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] sm:h-44 lg:h-48">
+          {shouldShowImage ? (
+            <>
+              <img
+                alt={t('trips.planner.board.activitySpread.imagePreviewAlt')}
+                className="absolute inset-0 h-full w-full object-cover"
+                src={imageUrl}
+              />
+              <span className="pointer-events-none absolute left-1/2 top-0 h-7 w-24 -translate-x-1/2 -translate-y-2 -rotate-2 bg-[#f4cf8f]/55 shadow-[0_4px_8px_rgba(90,62,40,0.12)] backdrop-blur-[1px]" />
+            </>
+          ) : null}
+        </div>
+        <PlannerActivityTextField
           label={t('trips.planner.board.activitySpread.fields.notes')}
           multiline
           onChange={(value) => onDraftChange('notes', value)}
           placeholder={t('trips.planner.board.activitySpread.placeholders.notes')}
           value={draft.notes}
         />
-        <PlannerSegmentedField
-          label={t('trips.planner.board.activitySpread.fields.activityType')}
-          onChange={(value) => onDraftChange('activityType', value)}
-          options={activityTypeOptions}
-          translationPrefix="trips.planner.board.activitySpread.activityTypes"
-          value={draft.activityType}
-        />
-        <PlannerSegmentedField
-          label={t('trips.planner.board.activitySpread.fields.bookingStatus')}
-          onChange={(value) => onDraftChange('bookingStatus', value)}
-          options={bookingStatusOptions}
-          translationPrefix="trips.planner.board.activitySpread.bookingStatuses"
-          value={draft.bookingStatus}
-        />
-        <PlannerSegmentedField
-          label={t('trips.planner.board.activitySpread.fields.priority')}
-          onChange={(value) => onDraftChange('priority', value)}
-          options={priorityOptions}
-          translationPrefix="trips.planner.board.activitySpread.priorities"
-          value={draft.priority}
-        />
-        <div className="grid gap-3 sm:grid-cols-2">
-          <PlannerActivityTextField
-            label={t('trips.planner.board.activitySpread.fields.referenceUrl')}
-            onChange={(value) => onDraftChange('referenceUrl', value)}
-            placeholder={t('trips.planner.board.activitySpread.placeholders.referenceUrl')}
-            value={draft.referenceUrl}
-          />
-          <PlannerActivityTextField
-            label={t('trips.planner.board.activitySpread.fields.imageUrl')}
-            onChange={(value) => onDraftChange('imageUrl', value)}
-            placeholder={t('trips.planner.board.activitySpread.placeholders.imageUrl')}
-            value={draft.imageUrl}
-          />
-        </div>
-        <div className="relative h-24 shrink-0 overflow-hidden rounded-[1.1rem] border border-dashed border-[#b9aea0] bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] sm:h-28">
-          {shouldShowImage ? (
-            <img
-              alt={t('trips.planner.board.activitySpread.imagePreviewAlt')}
-              className="absolute inset-0 h-full w-full object-cover"
-              src={imageUrl}
-            />
-          ) : null}
-        </div>
       </div>
     </div>
   );

@@ -204,7 +204,14 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] đổi ngày hoạt động sang calendar picker thay vì nhập text
 - [x] đổi giờ hoạt động sang picker chọn giờ bắt đầu/kết thúc
 - [x] bỏ palette sticker, canvas sticker và ghi chú nodeId khỏi trang phải
-- [x] dùng trang phải cho thông tin bổ sung của hoạt động: ghi chú, loại hoạt động, trạng thái đặt chỗ, độ ưu tiên, link tham khảo và ảnh minh họa
+- [x] dùng trang phải cho thông tin bổ sung của hoạt động: ghi chú và ảnh minh họa
+
+### Follow-up activity payload alignment
+
+- [x] bỏ các trường không nằm trong payload activity hiện tại: loại hoạt động, trạng thái đặt chỗ, độ ưu tiên, link tham khảo
+- [x] đổi chi phí thành `costAmount` và `costCurrency` để bám API
+- [x] thay native time select bằng popup chọn giờ custom, giới hạn chiều cao trong quyển sổ
+- [x] cân lại hai trang để khung ảnh minh họa hiển thị rõ và không bị nội dung khác che
 
 ## FR-A - Documentation reset và route map
 
