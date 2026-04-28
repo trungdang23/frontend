@@ -554,6 +554,7 @@
           "dateLabel": "Travel Dates:",
           "startDatePlaceholder": "Choose start date",
           "endDatePlaceholder": "Choose end date",
+          "detailsTitle": "Cover & Notes",
           "destinationTitle": "Your Destination",
           "destinationSearchLabel": "Search destination",
           "destinationSearchPlaceholder": "Search a destination or choose on the map",

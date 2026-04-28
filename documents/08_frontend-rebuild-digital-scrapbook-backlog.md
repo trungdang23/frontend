@@ -181,6 +181,13 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] đổi nhãn visibility trong bước 1 sang ngôn ngữ tự nhiên hơn
 - [x] làm số bước hiện tại nổi bật hơn và có animation
 
+### Follow-up fix
+
+- [x] đưa nút `Tiếp Tục` lên khỏi mép dưới của quyển sổ
+- [x] cố định chiều cao preview ảnh bìa để ảnh không đẩy layout
+- [x] bỏ khối tìm kiếm điểm đến trên trang phải của bước 1
+- [x] đổi date control thành popup lịch custom mở ngay khi bấm vào ô lịch
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

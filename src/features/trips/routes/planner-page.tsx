@@ -7,7 +7,6 @@ import {
   Compass,
   MapPinned,
   Plane,
-  Search,
 } from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
@@ -66,6 +65,62 @@ function formatPlannerDate(value: string) {
   }
 
   return `${day}/${month}/${year}`;
+}
+
+function formatPlannerMonthTitle(monthKey: string) {
+  const [year, month] = monthKey.split('-').map(Number);
+
+  if (!year || !month) {
+    return monthKey;
+  }
+
+  return `Tháng ${month}/${year}`;
+}
+
+function getCurrentPlannerMonthKey() {
+  const today = new Date();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+
+  return `${today.getFullYear()}-${month}`;
+}
+
+function getPlannerMonthKey(value: string) {
+  return value ? value.slice(0, 7) : getCurrentPlannerMonthKey();
+}
+
+function shiftPlannerMonth(monthKey: string, offset: number) {
+  const [year, month] = monthKey.split('-').map(Number);
+  const nextMonth = new Date(year, month - 1 + offset, 1);
+  const nextMonthNumber = String(nextMonth.getMonth() + 1).padStart(2, '0');
+
+  return `${nextMonth.getFullYear()}-${nextMonthNumber}`;
+}
+
+function toPlannerIsoDate(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+function buildPlannerCalendarDays(monthKey: string) {
+  const [year, month] = monthKey.split('-').map(Number);
+  const firstDayOfMonth = new Date(year, month - 1, 1);
+  const leadingDays = (firstDayOfMonth.getDay() + 6) % 7;
+  const firstVisibleDay = new Date(year, month - 1, 1 - leadingDays);
+
+  return Array.from({ length: 42 }, (_, index) => {
+    const date = new Date(firstVisibleDay);
+
+    date.setDate(firstVisibleDay.getDate() + index);
+
+    return {
+      date: toPlannerIsoDate(date),
+      dayOfMonth: date.getDate(),
+      isCurrentMonth: date.getMonth() === month - 1,
+    };
+  });
 }
 
 function isValidHttpUrl(value: string) {
@@ -383,12 +438,20 @@ function PlannerDateInput({
   onChange: (value: string) => void;
   value: string;
 }) {
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [visibleMonth, setVisibleMonth] = useState(() => getPlannerMonthKey(value));
   const displayValue = formatPlannerDate(value);
   const errorId = error ? `${label.replace(/\W+/g, '-').toLowerCase()}-error` : undefined;
+  const calendarDays = buildPlannerCalendarDays(visibleMonth);
+  const weekdayLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+
+  const openPicker = () => {
+    setVisibleMonth(getPlannerMonthKey(value));
+    setIsPickerOpen(true);
+  };
 
   return (
-    <label className="group relative block flex-1 min-w-[10.75rem]">
-      <span className="sr-only">{label}</span>
+    <div className="group relative block flex-1 min-w-[10.75rem]">
       <span className="absolute -top-2 left-5 right-5 z-10 flex h-5 items-start justify-between">
         {Array.from({ length: 9 }).map((_, index) => (
           <span
@@ -397,12 +460,16 @@ function PlannerDateInput({
           />
         ))}
       </span>
-      <span
+      <button
         aria-describedby={errorId}
+        aria-expanded={isPickerOpen}
+        aria-label={label}
         className={cn(
-          'relative flex min-h-[5.45rem] w-full cursor-pointer items-center rounded-[0.75rem] border bg-[#fffdf6] px-4 py-3 text-left shadow-[0_6px_0_#b9b2a5,0_12px_18px_rgba(59,44,32,0.14)] transition duration-300 group-hover:-translate-y-0.5 group-focus-within:-translate-y-0.5 group-focus-within:ring-2 group-focus-within:ring-[#8b6244]/25',
-          error ? 'border-[#d92d20]' : 'border-[#8d8073] group-hover:border-[#6d5b4a]',
+          'relative flex min-h-[5.45rem] w-full cursor-pointer items-center rounded-[0.75rem] border bg-[#fffdf6] px-4 py-3 text-left shadow-[0_6px_0_#b9b2a5,0_12px_18px_rgba(59,44,32,0.14)] transition duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+          error ? 'border-[#d92d20]' : 'border-[#8d8073] hover:border-[#6d5b4a]',
         )}
+        onClick={openPicker}
+        type="button"
       >
         {iconSide === 'left' ? (
           <CalendarDays className="mr-3 h-5 w-5 shrink-0 text-[#6d5b4a]" strokeWidth={1.7} />
@@ -413,18 +480,67 @@ function PlannerDateInput({
         {iconSide === 'right' ? (
           <CalendarDays className="ml-3 h-5 w-5 shrink-0 text-[#6d5b4a]" strokeWidth={1.7} />
         ) : null}
-        <input
-          aria-describedby={errorId}
-          aria-invalid={Boolean(error)}
-          className="absolute inset-0 z-20 h-full w-full cursor-pointer opacity-0"
-          onChange={(event) => onChange(event.target.value)}
-          type="date"
-          value={value}
-        />
-      </span>
+      </button>
+
+      {isPickerOpen ? (
+        <div className="absolute left-0 right-0 top-full z-[70] mt-3 rounded-[0.9rem] border border-[#b8a58e] bg-[#fffaf0] p-3 shadow-[0_18px_32px_rgba(59,44,32,0.22)]">
+          <div className="flex items-center justify-between gap-3">
+            <button
+              aria-label="Tháng trước"
+              className="grid h-8 w-8 place-items-center rounded-full border border-[#b8a58e] bg-white/70 font-marker text-[1.2rem] text-[#3d332b] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25"
+              onClick={() => setVisibleMonth((currentMonth) => shiftPlannerMonth(currentMonth, -1))}
+              type="button"
+            >
+              ‹
+            </button>
+            <p className="font-marker text-[1.05rem] font-bold text-[#3d332b]">
+              {formatPlannerMonthTitle(visibleMonth)}
+            </p>
+            <button
+              aria-label="Tháng sau"
+              className="grid h-8 w-8 place-items-center rounded-full border border-[#b8a58e] bg-white/70 font-marker text-[1.2rem] text-[#3d332b] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25"
+              onClick={() => setVisibleMonth((currentMonth) => shiftPlannerMonth(currentMonth, 1))}
+              type="button"
+            >
+              ›
+            </button>
+          </div>
+
+          <div className="mt-3 grid grid-cols-7 gap-1 text-center font-marker text-[0.82rem] font-bold text-[#75685b]">
+            {weekdayLabels.map((weekday) => (
+              <span key={weekday}>{weekday}</span>
+            ))}
+          </div>
+          <div className="mt-1 grid grid-cols-7 gap-1">
+            {calendarDays.map((calendarDay) => {
+              const isSelectedDate = calendarDay.date === value;
+
+              return (
+                <button
+                  className={cn(
+                    'grid h-8 place-items-center rounded-[0.45rem] font-marker text-[0.95rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                    calendarDay.isCurrentMonth ? 'text-[#342820]' : 'text-[#b7a99a]',
+                    isSelectedDate
+                      ? 'bg-[#b9e177] font-bold text-[#172612] shadow-[0_4px_0_#6f9e44]'
+                      : 'hover:bg-white/80',
+                  )}
+                  key={calendarDay.date}
+                  onClick={() => {
+                    onChange(calendarDay.date);
+                    setIsPickerOpen(false);
+                  }}
+                  type="button"
+                >
+                  {calendarDay.dayOfMonth}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
 
       <PlannerFieldError id={errorId} message={error} />
-    </label>
+    </div>
   );
 }
 
@@ -484,7 +600,7 @@ function PlannerCreateTripPage({
 
   return (
     <div
-      className="relative flex h-full min-h-[33rem] flex-col overflow-hidden border-b border-gray-100 bg-[#fffdfa] px-5 py-5 sm:px-7 sm:py-6 md:min-h-0 md:border-r md:border-b-0 lg:px-8"
+      className="relative flex h-full min-h-[33rem] flex-col overflow-visible border-b border-gray-100 bg-[#fffdfa] px-5 py-5 sm:px-7 sm:py-6 md:min-h-0 md:border-r md:border-b-0 lg:px-8"
       style={pageDotStyle}
     >
       <button
@@ -623,13 +739,13 @@ function PlannerCoverPreview({
   return (
     <div
       aria-hidden={!shouldShowCoverImage}
-      className="relative h-full min-h-[7rem] overflow-hidden rounded-[1.1rem] border border-dashed border-[#b9aea0] bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]"
+      className="relative h-24 overflow-hidden rounded-[1.1rem] border border-dashed border-[#b9aea0] bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] sm:h-28"
     >
       {shouldShowCoverImage ? (
         <>
           <img
             alt={t('trips.preview.coverAltFallback')}
-            className="h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
             src={coverImageUrl}
           />
           <span className="pointer-events-none absolute left-1/2 top-0 h-7 w-24 -translate-x-1/2 -translate-y-2 rotate-2 bg-[#f4cf8f]/55 shadow-[0_4px_8px_rgba(90,62,40,0.12)] backdrop-blur-[1px]" />
@@ -656,29 +772,14 @@ function PlannerDestinationPage({
 
   return (
     <div
-      className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 py-5 sm:px-7 sm:py-6 md:min-h-0 lg:px-8"
+      className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-8 pt-5 sm:px-7 sm:pb-9 sm:pt-6 md:min-h-0 lg:px-8"
       style={pageDotStyle}
     >
       <PlannerTapeTitle className="mt-1">
-        {t('trips.planner.board.createSpread.destinationTitle')}
+        {t('trips.planner.board.createSpread.detailsTitle')}
       </PlannerTapeTitle>
 
-      <div className="relative z-20 mx-auto mt-5 w-full max-w-[25rem]">
-        <label className="relative block rounded-[0.9rem] border-[3px] border-[#693a22] bg-[#b86f3f] p-2 shadow-[0_8px_0_rgba(80,47,31,0.25),0_16px_24px_rgba(80,47,31,0.16)]">
-          <span className="sr-only">{t('trips.planner.board.createSpread.destinationSearchLabel')}</span>
-          <input
-            className="h-11 w-full rounded-[0.55rem] border border-[#7a4b39]/35 bg-[#fffaf3] pl-4 pr-11 font-marker text-[1.05rem] text-[#2f241e] outline-none placeholder:text-[#766c62] focus:ring-2 focus:ring-[#f4cf8f] sm:text-[1.18rem]"
-            onChange={(event) => onDraftChange('destination', event.target.value)}
-            placeholder={t('trips.planner.board.createSpread.destinationSearchPlaceholder')}
-            type="search"
-            value={draft.destination}
-          />
-          <Search className="absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#2f241e]" strokeWidth={2.2} />
-        </label>
-        <span className="absolute -left-9 top-5 hidden h-5 w-11 rounded-full border-2 border-[#6d5b4a] border-r-0 md:block" />
-      </div>
-
-      <div className="relative z-10 mt-5 flex flex-1 flex-col gap-4">
+      <div className="relative z-10 mt-6 flex flex-1 flex-col gap-3.5">
         <label className="block">
           <span className="block font-cursive text-[1.55rem] font-bold leading-none text-[#201916] sm:text-[1.9rem]">
             {t('trips.fields.coverImageUrl')}
@@ -714,7 +815,7 @@ function PlannerDestinationPage({
           <PlannerFieldError id={summaryNotesErrorId} message={errors.summaryNotes} />
         </label>
 
-        <div>
+        <div className="shrink-0">
           <p className="font-cursive text-[1.55rem] font-bold leading-none text-[#201916] sm:text-[1.9rem]">
             {t('trips.planner.board.createSpread.visibilityLabel')}
           </p>
@@ -738,12 +839,12 @@ function PlannerDestinationPage({
           </div>
         </div>
 
-        <div className="mt-auto min-h-[7rem] sm:min-h-[8rem]">
+        <div className="shrink-0">
           <PlannerCoverPreview imageUrl={draft.coverImageUrl} />
         </div>
 
         <button
-          className="self-end inline-flex items-center gap-2 rounded-[1.25rem] border-2 border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.75rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 sm:px-6 sm:text-[2.1rem]"
+          className="mb-3 mt-1 self-end inline-flex shrink-0 items-center gap-2 rounded-[1.25rem] border-2 border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.75rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 sm:mb-4 sm:px-6 sm:text-[2.1rem]"
           onClick={onContinue}
           type="button"
         >
