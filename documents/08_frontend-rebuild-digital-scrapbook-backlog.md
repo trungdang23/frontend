@@ -195,6 +195,7 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] click vào tiêu đề tháng/năm chuyển sang chọn tháng, click tiếp chuyển sang chọn năm
 - [x] chọn tháng quay lại màn ngày, chọn năm quay lại màn tháng
 - [x] click ra ngoài popup lịch thì tự đóng
+- [x] đảm bảo popup lịch hiển thị trên nút quay lại trang trước
 
 ## FR-A - Documentation reset và route map
 

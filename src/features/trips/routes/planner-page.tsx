@@ -782,7 +782,7 @@ function PlannerCreateTripPage({
         {t('trips.planner.board.createSpread.stepTitle')}
       </PlannerTapeTitle>
 
-      <div className="relative z-10 mt-7 flex-1 space-y-5 sm:mt-9">
+      <div className="relative mt-7 flex-1 space-y-5 sm:mt-9">
         <label className="block">
           <span className="block font-cursive text-[1.75rem] font-bold leading-none text-[#201916] sm:text-[2.2rem]">
             {t('trips.planner.board.createSpread.tripNameLabel')}
