@@ -1,4 +1,4 @@
-import { type CSSProperties } from 'react';
+import { type CSSProperties, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   ArrowRight,
@@ -12,6 +12,7 @@ import {
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { PlannerActivitySpread } from '@/features/trips/planning/components/planner-activity-spread';
+import type { TripBudgetMode, TripVisibility } from '@/features/trips/types/trip';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -19,6 +20,63 @@ const pageDotStyle: CSSProperties = {
   backgroundImage: 'radial-gradient(#d1d5db 1px, transparent 1px)',
   backgroundSize: '28px 28px',
 };
+
+type PlannerTripDraft = {
+  name: string;
+  destination: string;
+  summaryNotes: string;
+  coverImageUrl: string;
+  startDate: string;
+  endDate: string;
+  budgetMode: TripBudgetMode;
+  manualBudgetAmount: string;
+  manualBudgetCurrency: string;
+  visibility: TripVisibility;
+};
+
+type PlannerTripDraftField = keyof PlannerTripDraft;
+type PlannerTripDraftErrors = Partial<Record<PlannerTripDraftField, string>>;
+type PlannerTripDraftChangeHandler = <Field extends PlannerTripDraftField>(
+  field: Field,
+  value: PlannerTripDraft[Field],
+) => void;
+
+const createDefaultPlannerTripDraft = (): PlannerTripDraft => ({
+  name: '',
+  destination: '',
+  summaryNotes: '',
+  coverImageUrl: '',
+  startDate: '',
+  endDate: '',
+  budgetMode: 'auto',
+  manualBudgetAmount: '',
+  manualBudgetCurrency: 'VND',
+  visibility: 'private',
+});
+
+function formatPlannerDate(value: string) {
+  if (!value) {
+    return '';
+  }
+
+  const [year, month, day] = value.split('-');
+
+  if (!year || !month || !day) {
+    return value;
+  }
+
+  return `${day}/${month}/${year}`;
+}
+
+function isValidHttpUrl(value: string) {
+  try {
+    const url = new URL(value);
+
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
 
 type PlannerPolaroidProps = {
   alt: string;
@@ -294,16 +352,43 @@ function PlannerTapeTitle({
   );
 }
 
+function PlannerFieldError({
+  id,
+  message,
+}: {
+  id?: string;
+  message?: string;
+}) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <p className="mt-2 font-marker text-[0.98rem] leading-tight text-[#b42318]" id={id} role="alert">
+      {message}
+    </p>
+  );
+}
+
 function PlannerDateInput({
+  error,
   iconSide,
   label,
+  onChange,
+  value,
 }: {
+  error?: string;
   iconSide: 'left' | 'right';
   label: string;
+  onChange: (value: string) => void;
+  value: string;
 }) {
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const displayValue = formatPlannerDate(value);
+  const errorId = error ? `${label.replace(/\W+/g, '-').toLowerCase()}-error` : undefined;
+
   return (
-    <label className="group relative block flex-1 min-w-[12rem]">
-      <span className="sr-only">{label}</span>
+    <div className="group relative block flex-1 min-w-[10.75rem]">
       <span className="absolute -top-2 left-5 right-5 z-10 flex h-5 items-start justify-between">
         {Array.from({ length: 9 }).map((_, index) => (
           <span
@@ -312,30 +397,63 @@ function PlannerDateInput({
           />
         ))}
       </span>
-      <span className="relative flex min-h-[5.6rem] items-center rounded-[0.75rem] border border-[#8d8073] bg-[#fffdf6] px-4 py-3 shadow-[0_6px_0_#b9b2a5,0_12px_18px_rgba(59,44,32,0.14)] transition duration-300 group-focus-within:-translate-y-0.5 group-focus-within:border-[#6d5b4a]">
+      <button
+        aria-describedby={errorId}
+        aria-expanded={isPickerOpen}
+        className={cn(
+          'relative flex min-h-[5.45rem] w-full items-center rounded-[0.75rem] border bg-[#fffdf6] px-4 py-3 text-left shadow-[0_6px_0_#b9b2a5,0_12px_18px_rgba(59,44,32,0.14)] transition duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+          error ? 'border-[#d92d20]' : 'border-[#8d8073] hover:border-[#6d5b4a]',
+        )}
+        onClick={() => setIsPickerOpen((current) => !current)}
+        type="button"
+      >
         {iconSide === 'left' ? (
           <CalendarDays className="mr-3 h-5 w-5 shrink-0 text-[#6d5b4a]" strokeWidth={1.7} />
         ) : null}
-        <input
-          aria-label={label}
-          className="w-full min-w-0 border-b border-dashed border-[#9c9286] bg-transparent pb-1 text-center font-marker text-[1.05rem] text-[#3d332b] outline-none placeholder:text-[#6f685f] sm:text-[1.25rem]"
-          placeholder={label}
-          type="text"
-        />
+        <span className="w-full min-w-0 border-b border-dashed border-[#9c9286] pb-1 text-center font-marker text-[1.05rem] text-[#3d332b] sm:text-[1.2rem]">
+          {displayValue || <span className="text-[#6f685f]">{label}</span>}
+        </span>
         {iconSide === 'right' ? (
           <CalendarDays className="ml-3 h-5 w-5 shrink-0 text-[#6d5b4a]" strokeWidth={1.7} />
         ) : null}
-      </span>
-    </label>
+      </button>
+
+      {isPickerOpen ? (
+        <div className="absolute left-0 right-0 top-full z-50 mt-3 rounded-[0.9rem] border border-[#b8a58e] bg-[#fffaf0] p-3 shadow-[0_18px_32px_rgba(59,44,32,0.2)]">
+          <input
+            aria-label={label}
+            autoFocus
+            className="h-11 w-full rounded-[0.55rem] border border-[#9b8c7b] bg-white px-3 font-marker text-[1.08rem] text-[#2f241e] outline-none focus:ring-2 focus:ring-[#b88a56]/25"
+            onChange={(event) => {
+              onChange(event.target.value);
+              setIsPickerOpen(false);
+            }}
+            type="date"
+            value={value}
+          />
+        </div>
+      ) : null}
+
+      <PlannerFieldError id={errorId} message={error} />
+    </div>
   );
 }
 
 function PlannerCreateTripPage({
+  draft,
+  errors,
+  onDraftChange,
   onBack,
 }: {
+  draft: PlannerTripDraft;
+  errors: PlannerTripDraftErrors;
+  onDraftChange: PlannerTripDraftChangeHandler;
   onBack: () => void;
 }) {
   const { t } = useI18n();
+  const tripNameErrorId = errors.name ? 'planner-trip-name-error' : undefined;
+  const manualBudgetAmountErrorId = errors.manualBudgetAmount ? 'planner-manual-budget-amount-error' : undefined;
+  const manualBudgetCurrencyErrorId = errors.manualBudgetCurrency ? 'planner-manual-budget-currency-error' : undefined;
 
   return (
     <div
@@ -351,41 +469,115 @@ function PlannerCreateTripPage({
         {t('trips.planner.board.returnToPreviousPageAction')}
       </button>
 
-      <PlannerTapeTitle className="mt-4">
+      <PlannerTapeTitle className="mt-3">
         {t('trips.planner.board.createSpread.stepTitle')}
       </PlannerTapeTitle>
 
-      <div className="relative z-10 mt-14 space-y-8 sm:mt-16 lg:mt-20">
+      <div className="relative z-10 mt-7 flex-1 space-y-5 sm:mt-9">
         <label className="block">
           <span className="block font-cursive text-[1.75rem] font-bold leading-none text-[#201916] sm:text-[2.2rem]">
             {t('trips.planner.board.createSpread.tripNameLabel')}
           </span>
           <input
-            className="mt-4 w-full rounded-[0.7rem] border border-dashed border-[#b9aea0] bg-white/55 px-4 py-3 font-marker text-[1.15rem] text-[#3d332b] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] outline-none placeholder:text-[#6e655b] focus:border-[#7c6a58] focus:bg-white/75 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.35rem]"
+            aria-describedby={tripNameErrorId}
+            className={cn(
+              'mt-3 w-full rounded-[0.7rem] border border-dashed bg-white/55 px-4 py-3 font-marker text-[1.1rem] text-[#3d332b] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] outline-none placeholder:text-[#6e655b] focus:bg-white/75 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.28rem]',
+              errors.name ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+            )}
+            onChange={(event) => onDraftChange('name', event.target.value)}
             placeholder={t('trips.planner.board.createSpread.tripNamePlaceholder')}
             type="text"
+            value={draft.name}
           />
+          <PlannerFieldError id={tripNameErrorId} message={errors.name} />
         </label>
 
         <div>
-          <p className="font-cursive text-[1.75rem] font-bold leading-none text-[#201916] sm:text-[2.2rem]">
+          <p className="font-cursive text-[1.75rem] font-bold leading-none text-[#201916] sm:text-[2.1rem]">
             {t('trips.planner.board.createSpread.dateLabel')}
           </p>
-          <div className="mt-6 flex flex-col items-stretch gap-5 sm:flex-row sm:items-center sm:gap-8">
+          <div className="mt-5 flex flex-col items-stretch gap-4 sm:flex-row sm:items-start sm:gap-5">
             <PlannerDateInput
+              error={errors.startDate}
               iconSide="right"
               label={t('trips.planner.board.createSpread.startDatePlaceholder')}
+              onChange={(value) => onDraftChange('startDate', value)}
+              value={draft.startDate}
             />
-            <span className="hidden font-marker text-[1.8rem] text-[#302720] sm:block">→</span>
+            <span className="hidden pt-8 font-marker text-[1.8rem] text-[#302720] sm:block">→</span>
             <PlannerDateInput
+              error={errors.endDate}
               iconSide="right"
               label={t('trips.planner.board.createSpread.endDatePlaceholder')}
+              onChange={(value) => onDraftChange('endDate', value)}
+              value={draft.endDate}
             />
           </div>
         </div>
+
+        <div>
+          <p className="font-cursive text-[1.65rem] font-bold leading-none text-[#201916] sm:text-[2rem]">
+            {t('trips.fields.budgetMode')}
+          </p>
+          <div className="mt-3 grid grid-cols-2 gap-2 rounded-[0.85rem] border border-[#b9aea0] bg-white/45 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
+            {(['auto', 'manual'] as const).map((mode) => (
+              <button
+                aria-pressed={draft.budgetMode === mode}
+                className={cn(
+                  'rounded-[0.65rem] px-3 py-2 font-marker text-[1.05rem] leading-none transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:text-[1.2rem]',
+                  draft.budgetMode === mode
+                    ? 'bg-[#f4cf8f] text-[#3f2819] shadow-[0_5px_0_rgba(139,98,68,0.2)]'
+                    : 'text-[#65584b] hover:bg-[#fff7e8]',
+                )}
+                key={mode}
+                onClick={() => onDraftChange('budgetMode', mode)}
+                type="button"
+              >
+                {t(mode === 'auto' ? 'trips.budget.modeAuto' : 'trips.budget.modeManual')}
+              </button>
+            ))}
+          </div>
+
+          {draft.budgetMode === 'manual' ? (
+            <div className="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_7rem]">
+              <label className="block">
+                <span className="sr-only">{t('trips.fields.manualBudgetAmount')}</span>
+                <input
+                  aria-describedby={manualBudgetAmountErrorId}
+                  className={cn(
+                    'w-full rounded-[0.65rem] border border-dashed bg-white/60 px-3 py-2.5 font-marker text-[1.05rem] text-[#3d332b] outline-none placeholder:text-[#6e655b] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.16rem]',
+                    errors.manualBudgetAmount ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+                  )}
+                  inputMode="numeric"
+                  onChange={(event) => onDraftChange('manualBudgetAmount', event.target.value.replace(/\D/g, ''))}
+                  placeholder={t('trips.fields.manualBudgetAmount')}
+                  type="text"
+                  value={draft.manualBudgetAmount}
+                />
+                <PlannerFieldError id={manualBudgetAmountErrorId} message={errors.manualBudgetAmount} />
+              </label>
+              <label className="block">
+                <span className="sr-only">{t('trips.fields.manualBudgetCurrency')}</span>
+                <input
+                  aria-describedby={manualBudgetCurrencyErrorId}
+                  className={cn(
+                    'w-full rounded-[0.65rem] border border-dashed bg-white/60 px-3 py-2.5 text-center font-marker text-[1.05rem] uppercase text-[#3d332b] outline-none placeholder:text-[#6e655b] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.16rem]',
+                    errors.manualBudgetCurrency ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+                  )}
+                  maxLength={3}
+                  onChange={(event) => onDraftChange('manualBudgetCurrency', event.target.value.toUpperCase())}
+                  placeholder={t('trips.placeholders.manualBudgetCurrency')}
+                  type="text"
+                  value={draft.manualBudgetCurrency}
+                />
+                <PlannerFieldError id={manualBudgetCurrencyErrorId} message={errors.manualBudgetCurrency} />
+              </label>
+            </div>
+          ) : null}
+        </div>
       </div>
 
-      <div className="relative z-10 mt-auto pt-9">
+      <div className="relative z-10 mt-auto pt-5">
         <div className="flex items-center justify-center gap-6 sm:gap-8">
           {[
             'bg-[#a7d76f] ring-[#70a849]',
@@ -516,11 +708,19 @@ function PlannerVietnamSketchMap() {
 }
 
 function PlannerDestinationPage({
+  draft,
+  errors,
+  onDraftChange,
   onContinue,
 }: {
+  draft: PlannerTripDraft;
+  errors: PlannerTripDraftErrors;
+  onDraftChange: PlannerTripDraftChangeHandler;
   onContinue: () => void;
 }) {
   const { t } = useI18n();
+  const coverImageUrlErrorId = errors.coverImageUrl ? 'planner-cover-image-url-error' : undefined;
+  const summaryNotesErrorId = errors.summaryNotes ? 'planner-summary-notes-error' : undefined;
 
   return (
     <div
@@ -531,36 +731,90 @@ function PlannerDestinationPage({
         {t('trips.planner.board.createSpread.destinationTitle')}
       </PlannerTapeTitle>
 
-      <div className="relative z-20 mx-auto mt-6 w-full max-w-[23rem]">
+      <div className="relative z-20 mx-auto mt-5 w-full max-w-[25rem]">
         <label className="relative block rounded-[0.9rem] border-[3px] border-[#693a22] bg-[#b86f3f] p-2 shadow-[0_8px_0_rgba(80,47,31,0.25),0_16px_24px_rgba(80,47,31,0.16)]">
           <span className="sr-only">{t('trips.planner.board.createSpread.destinationSearchLabel')}</span>
           <input
             className="h-11 w-full rounded-[0.55rem] border border-[#7a4b39]/35 bg-[#fffaf3] pl-4 pr-11 font-marker text-[1.05rem] text-[#2f241e] outline-none placeholder:text-[#766c62] focus:ring-2 focus:ring-[#f4cf8f] sm:text-[1.18rem]"
+            onChange={(event) => onDraftChange('destination', event.target.value)}
             placeholder={t('trips.planner.board.createSpread.destinationSearchPlaceholder')}
             type="search"
+            value={draft.destination}
           />
           <Search className="absolute right-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#2f241e]" strokeWidth={2.2} />
         </label>
         <span className="absolute -left-9 top-5 hidden h-5 w-11 rounded-full border-2 border-[#6d5b4a] border-r-0 md:block" />
       </div>
 
-      <div className="relative z-10 mt-4 flex-1 min-h-[21rem]">
-        <div className="absolute inset-x-0 top-0 bottom-11 overflow-hidden rounded-[1.4rem] bg-[#d7edf0] shadow-[inset_0_0_0_1px_rgba(95,111,104,0.16)]">
-          <PlannerVietnamSketchMap />
+      <div className="relative z-10 mt-5 flex flex-1 flex-col gap-4">
+        <label className="block">
+          <span className="block font-cursive text-[1.55rem] font-bold leading-none text-[#201916] sm:text-[1.9rem]">
+            {t('trips.fields.coverImageUrl')}
+          </span>
+          <input
+            aria-describedby={coverImageUrlErrorId}
+            className={cn(
+              'mt-2 w-full rounded-[0.7rem] border border-dashed bg-white/55 px-4 py-2.5 font-marker text-[1.02rem] text-[#3d332b] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] outline-none placeholder:text-[#6e655b] focus:bg-white/75 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.14rem]',
+              errors.coverImageUrl ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+            )}
+            onChange={(event) => onDraftChange('coverImageUrl', event.target.value)}
+            placeholder={t('trips.placeholders.coverImageUrl')}
+            type="url"
+            value={draft.coverImageUrl}
+          />
+          <PlannerFieldError id={coverImageUrlErrorId} message={errors.coverImageUrl} />
+        </label>
+
+        <label className="block">
+          <span className="block font-cursive text-[1.55rem] font-bold leading-none text-[#201916] sm:text-[1.9rem]">
+            {t('trips.fields.summaryNotes')}
+          </span>
+          <textarea
+            aria-describedby={summaryNotesErrorId}
+            className={cn(
+              'mt-2 min-h-24 w-full resize-none rounded-[0.7rem] border border-dashed bg-white/55 px-4 py-3 font-marker text-[1.02rem] leading-tight text-[#3d332b] shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] outline-none placeholder:text-[#6e655b] focus:bg-white/75 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.14rem]',
+              errors.summaryNotes ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+            )}
+            onChange={(event) => onDraftChange('summaryNotes', event.target.value)}
+            placeholder={t('trips.placeholders.summaryNotes')}
+            value={draft.summaryNotes}
+          />
+          <PlannerFieldError id={summaryNotesErrorId} message={errors.summaryNotes} />
+        </label>
+
+        <div>
+          <p className="font-cursive text-[1.55rem] font-bold leading-none text-[#201916] sm:text-[1.9rem]">
+            {t('trips.fields.visibility')}
+          </p>
+          <div className="mt-2 grid grid-cols-2 gap-2 rounded-[0.85rem] border border-[#b9aea0] bg-white/45 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
+            {(['private', 'public'] as const).map((visibility) => (
+              <button
+                aria-pressed={draft.visibility === visibility}
+                className={cn(
+                  'rounded-[0.65rem] px-3 py-2 font-marker text-[1.05rem] leading-none transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:text-[1.16rem]',
+                  draft.visibility === visibility
+                    ? 'bg-[#a8dfd5] text-[#1f2a24] shadow-[0_5px_0_rgba(80,115,104,0.2)]'
+                    : 'text-[#65584b] hover:bg-[#fff7e8]',
+                )}
+                key={visibility}
+                onClick={() => onDraftChange('visibility', visibility)}
+                type="button"
+              >
+                {t(`trips.visibility.${visibility}`)}
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div className="absolute bottom-12 left-2 w-[9.5rem] -rotate-1 border border-[#c7b58f] bg-[#fff8e6] p-3 shadow-[6px_8px_0_rgba(93,70,45,0.16),0_16px_20px_rgba(93,70,45,0.12)] sm:left-4 sm:w-44 sm:p-4">
-          <span className="absolute -left-2 -top-4 h-12 w-4 rotate-[-8deg] rounded-full border-2 border-[#6d6a63] border-b-0" />
-          <p className="font-cursive text-[1.4rem] font-bold leading-none text-[#201916] sm:text-[1.75rem]">
-            {t('trips.planner.board.createSpread.notesTitle')}
-          </p>
-          <p className="mt-2 border-t border-dashed border-[#c7b58f] pt-2 font-marker text-[1rem] leading-tight text-[#2e241d] sm:text-[1.2rem]">
-            {t('trips.planner.board.createSpread.notesBody')}
-          </p>
+        <div className="relative mt-auto hidden min-h-[8.5rem] overflow-hidden rounded-[1.25rem] bg-[#d7edf0] shadow-[inset_0_0_0_1px_rgba(95,111,104,0.16)] sm:block lg:min-h-[9.5rem]">
+          <div className="absolute inset-0 opacity-90">
+            <PlannerVietnamSketchMap />
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#fffdfa]/65 via-transparent to-transparent" />
         </div>
 
         <button
-          className="absolute bottom-0 right-0 inline-flex items-center gap-2 rounded-[1.25rem] border-2 border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.75rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 sm:px-6 sm:text-[2.1rem]"
+          className="self-end inline-flex items-center gap-2 rounded-[1.25rem] border-2 border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.75rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 sm:px-6 sm:text-[2.1rem]"
           onClick={onContinue}
           type="button"
         >
@@ -573,31 +827,126 @@ function PlannerDestinationPage({
 }
 
 function PlannerCreateSpread({
+  draft,
+  errors,
   onBack,
   onContinue,
+  onDraftChange,
 }: {
+  draft: PlannerTripDraft;
+  errors: PlannerTripDraftErrors;
   onBack: () => void;
   onContinue: () => void;
+  onDraftChange: PlannerTripDraftChangeHandler;
 }) {
   return (
     <div className="flex h-full min-h-0 flex-col md:flex-row">
       <div className="md:h-full md:w-1/2">
-        <PlannerCreateTripPage onBack={onBack} />
+        <PlannerCreateTripPage
+          draft={draft}
+          errors={errors}
+          onBack={onBack}
+          onDraftChange={onDraftChange}
+        />
       </div>
       <div className="md:h-full md:w-1/2">
-        <PlannerDestinationPage onContinue={onContinue} />
+        <PlannerDestinationPage
+          draft={draft}
+          errors={errors}
+          onContinue={onContinue}
+          onDraftChange={onDraftChange}
+        />
       </div>
     </div>
   );
 }
 
 export function PlannerPage() {
+  const { t } = useI18n();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [tripDraft, setTripDraft] = useState(createDefaultPlannerTripDraft);
+  const [tripDraftErrors, setTripDraftErrors] = useState<PlannerTripDraftErrors>({});
   const plannerPage = searchParams.get('page');
   const isCreatingPlan = plannerPage === 'next';
   const isEditingActivities = plannerPage === 'activities';
   const isPlannerFlowOpen = isCreatingPlan || isEditingActivities;
   const activeNodeId = searchParams.get('nodeId');
+
+  const updateTripDraft: PlannerTripDraftChangeHandler = (field, value) => {
+    setTripDraft((currentDraft) => ({
+      ...currentDraft,
+      [field]: value,
+    }));
+    setTripDraftErrors((currentErrors) => {
+      const nextErrors = { ...currentErrors };
+
+      delete nextErrors[field];
+
+      if (field === 'startDate' || field === 'endDate') {
+        delete nextErrors.startDate;
+        delete nextErrors.endDate;
+      }
+
+      if (
+        field === 'budgetMode' ||
+        field === 'manualBudgetAmount' ||
+        field === 'manualBudgetCurrency'
+      ) {
+        delete nextErrors.manualBudgetAmount;
+        delete nextErrors.manualBudgetCurrency;
+      }
+
+      return nextErrors;
+    });
+  };
+
+  const validateTripDraft = () => {
+    const nextErrors: PlannerTripDraftErrors = {};
+    const coverImageUrl = tripDraft.coverImageUrl.trim();
+    const summaryNotes = tripDraft.summaryNotes.trim();
+    const manualBudgetAmount = tripDraft.manualBudgetAmount.trim();
+    const manualBudgetCurrency = tripDraft.manualBudgetCurrency.trim();
+
+    if (!tripDraft.name.trim()) {
+      nextErrors.name = t('trips.validation.nameRequired');
+    }
+
+    if (!tripDraft.startDate) {
+      nextErrors.startDate = t('trips.validation.startDateRequired');
+    }
+
+    if (!tripDraft.endDate) {
+      nextErrors.endDate = t('trips.validation.endDateRequired');
+    }
+
+    if (tripDraft.startDate && tripDraft.endDate && tripDraft.endDate < tripDraft.startDate) {
+      nextErrors.endDate = t('trips.validation.dateRangeInvalid');
+    }
+
+    if (summaryNotes.length > 2000) {
+      nextErrors.summaryNotes = t('trips.validation.summaryNotesLength');
+    }
+
+    if (coverImageUrl && !isValidHttpUrl(coverImageUrl)) {
+      nextErrors.coverImageUrl = t('trips.validation.coverImageUrlInvalid');
+    }
+
+    if (tripDraft.budgetMode === 'manual') {
+      if (!manualBudgetAmount) {
+        nextErrors.manualBudgetAmount = t('trips.validation.manualBudgetAmountRequired');
+      } else if (Number(manualBudgetAmount) < 0) {
+        nextErrors.manualBudgetAmount = t('trips.validation.manualBudgetAmountPositive');
+      }
+
+      if (!manualBudgetCurrency) {
+        nextErrors.manualBudgetCurrency = t('trips.validation.manualBudgetCurrencyRequired');
+      } else if (manualBudgetCurrency.length !== 3) {
+        nextErrors.manualBudgetCurrency = t('trips.validation.manualBudgetCurrencyLength');
+      }
+    }
+
+    return nextErrors;
+  };
 
   const openNextPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
@@ -615,6 +964,18 @@ export function PlannerPage() {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set('page', 'activities');
     setSearchParams(nextParams, { replace: true });
+  };
+
+  const continueWithTripDraft = () => {
+    const nextErrors = validateTripDraft();
+
+    setTripDraftErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    openActivityPlannerPage();
   };
 
   const returnToGeneralInfoPage = () => {
@@ -650,8 +1011,11 @@ export function PlannerPage() {
                 />
               ) : isCreatingPlan ? (
                 <PlannerCreateSpread
+                  draft={tripDraft}
+                  errors={tripDraftErrors}
                   onBack={returnToIntroPlannerPage}
-                  onContinue={openActivityPlannerPage}
+                  onContinue={continueWithTripDraft}
+                  onDraftChange={updateTripDraft}
                 />
               ) : (
                 <>
@@ -669,8 +1033,11 @@ export function PlannerPage() {
                 />
               ) : isCreatingPlan ? (
                 <PlannerCreateSpread
+                  draft={tripDraft}
+                  errors={tripDraftErrors}
                   onBack={returnToIntroPlannerPage}
-                  onContinue={openActivityPlannerPage}
+                  onContinue={continueWithTripDraft}
+                  onDraftChange={updateTripDraft}
                 />
               ) : (
                 <div className="absolute inset-0 flex">

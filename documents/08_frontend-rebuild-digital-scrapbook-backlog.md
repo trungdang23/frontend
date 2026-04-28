@@ -151,6 +151,28 @@ Giai đoạn rebuild này chưa xử lý:
 
 ## Slice implementation đề xuất
 
+## FR-PL1 - Planner step 1 local trip draft
+
+### Mục tiêu
+
+Đưa các trường cần thiết cho payload tạo chuyến đi vào bước 1 của quyển sổ planner hiện tại, nhưng chưa gọi API tạo chuyến đi.
+
+### Scope của lượt triển khai này
+
+- [x] giữ flow tạo chuyến đi trong `/app/planner?page=next`, không tạo route tạo trip mới
+- [x] thêm local draft state cho thông tin chuyến đi ở bước 1
+- [x] thêm các trường `name`, `destination`, `summaryNotes`, `coverImageUrl`, `startDate`, `endDate`, `budgetMode`, ngân sách thủ công, tiền tệ và `visibility`
+- [x] bỏ trường `timezone` khỏi UI bước 1
+- [x] đổi ô ngày đi thành control dạng lịch trong notebook, bấm để mở popup chọn ngày
+- [x] khi bấm `Tiếp Tục`, chỉ validate và giữ draft tạm trong state trước khi chuyển sang bước hoạt động
+
+### Acceptance criteria
+
+- bước 1 vẫn nằm trong spread quyển sổ hiện tại
+- không có request `POST /trips` khi bấm `Tiếp Tục`
+- giá trị đã nhập không mất khi quay lại từ bước hoạt động về bước 1 trong cùng phiên planner
+- UI không bị che bởi nội dung mô tả hoặc note trang trí không cần thiết
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu
