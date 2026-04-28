@@ -1,4 +1,4 @@
-import { type CSSProperties, useState } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   ArrowRight,
@@ -39,6 +39,7 @@ type PlannerTripDraftChangeHandler = <Field extends PlannerTripDraftField>(
   field: Field,
   value: PlannerTripDraft[Field],
 ) => void;
+type PlannerCalendarView = 'day' | 'month' | 'year';
 
 const createDefaultPlannerTripDraft = (): PlannerTripDraft => ({
   name: '',
@@ -94,6 +95,26 @@ function shiftPlannerMonth(monthKey: string, offset: number) {
   const nextMonthNumber = String(nextMonth.getMonth() + 1).padStart(2, '0');
 
   return `${nextMonth.getFullYear()}-${nextMonthNumber}`;
+}
+
+function setPlannerMonth(monthKey: string, nextMonth: number) {
+  const [year] = monthKey.split('-').map(Number);
+  const month = String(nextMonth).padStart(2, '0');
+
+  return `${year}-${month}`;
+}
+
+function setPlannerYear(monthKey: string, nextYear: number) {
+  const [, month] = monthKey.split('-');
+
+  return `${nextYear}-${month || '01'}`;
+}
+
+function getPlannerYearRange(monthKey: string) {
+  const [year] = monthKey.split('-').map(Number);
+  const startYear = year - 5;
+
+  return Array.from({ length: 12 }, (_, index) => startYear + index);
 }
 
 function toPlannerIsoDate(date: Date) {
@@ -438,20 +459,98 @@ function PlannerDateInput({
   onChange: (value: string) => void;
   value: string;
 }) {
+  const datePickerRef = useRef<HTMLDivElement | null>(null);
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const [calendarView, setCalendarView] = useState<PlannerCalendarView>('day');
   const [visibleMonth, setVisibleMonth] = useState(() => getPlannerMonthKey(value));
+  const [visibleYear, visibleMonthNumber] = visibleMonth.split('-').map(Number);
   const displayValue = formatPlannerDate(value);
   const errorId = error ? `${label.replace(/\W+/g, '-').toLowerCase()}-error` : undefined;
   const calendarDays = buildPlannerCalendarDays(visibleMonth);
   const weekdayLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+  const monthLabels = ['Th1', 'Th2', 'Th3', 'Th4', 'Th5', 'Th6', 'Th7', 'Th8', 'Th9', 'Th10', 'Th11', 'Th12'];
+  const yearRange = getPlannerYearRange(visibleMonth);
+
+  useEffect(() => {
+    if (!isPickerOpen) {
+      return undefined;
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!datePickerRef.current?.contains(event.target as Node)) {
+        setIsPickerOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsPickerOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isPickerOpen]);
 
   const openPicker = () => {
     setVisibleMonth(getPlannerMonthKey(value));
+    setCalendarView('day');
     setIsPickerOpen(true);
   };
 
+  const moveCalendarBackward = () => {
+    if (calendarView === 'year') {
+      setVisibleMonth((currentMonth) => shiftPlannerMonth(currentMonth, -144));
+      return;
+    }
+
+    if (calendarView === 'month') {
+      setVisibleMonth((currentMonth) => shiftPlannerMonth(currentMonth, -12));
+      return;
+    }
+
+    setVisibleMonth((currentMonth) => shiftPlannerMonth(currentMonth, -1));
+  };
+
+  const moveCalendarForward = () => {
+    if (calendarView === 'year') {
+      setVisibleMonth((currentMonth) => shiftPlannerMonth(currentMonth, 144));
+      return;
+    }
+
+    if (calendarView === 'month') {
+      setVisibleMonth((currentMonth) => shiftPlannerMonth(currentMonth, 12));
+      return;
+    }
+
+    setVisibleMonth((currentMonth) => shiftPlannerMonth(currentMonth, 1));
+  };
+
+  const openNextCalendarView = () => {
+    if (calendarView === 'day') {
+      setCalendarView('month');
+      return;
+    }
+
+    if (calendarView === 'month') {
+      setCalendarView('year');
+    }
+  };
+
+  const calendarTitle =
+    calendarView === 'year'
+      ? `${yearRange[0]} - ${yearRange[yearRange.length - 1]}`
+      : calendarView === 'month'
+        ? `Năm ${visibleYear}`
+        : formatPlannerMonthTitle(visibleMonth);
+
   return (
-    <div className="group relative block flex-1 min-w-[10.75rem]">
+    <div className="group relative block flex-1 min-w-[10.75rem]" ref={datePickerRef}>
       <span className="absolute -top-2 left-5 right-5 z-10 flex h-5 items-start justify-between">
         {Array.from({ length: 9 }).map((_, index) => (
           <span
@@ -483,59 +582,126 @@ function PlannerDateInput({
       </button>
 
       {isPickerOpen ? (
-        <div className="absolute left-0 right-0 top-full z-[70] mt-3 rounded-[0.9rem] border border-[#b8a58e] bg-[#fffaf0] p-3 shadow-[0_18px_32px_rgba(59,44,32,0.22)]">
+        <div className="absolute bottom-full left-1/2 z-[100] mb-4 w-[18rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-[0.9rem] border border-[#b8a58e] bg-[#fffaf0] p-3 shadow-[0_18px_32px_rgba(59,44,32,0.22)]">
           <div className="flex items-center justify-between gap-3">
             <button
-              aria-label="Tháng trước"
+              aria-label="Lùi lịch"
               className="grid h-8 w-8 place-items-center rounded-full border border-[#b8a58e] bg-white/70 font-marker text-[1.2rem] text-[#3d332b] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25"
-              onClick={() => setVisibleMonth((currentMonth) => shiftPlannerMonth(currentMonth, -1))}
+              onClick={moveCalendarBackward}
               type="button"
             >
               ‹
             </button>
-            <p className="font-marker text-[1.05rem] font-bold text-[#3d332b]">
-              {formatPlannerMonthTitle(visibleMonth)}
-            </p>
             <button
-              aria-label="Tháng sau"
+              className={cn(
+                'min-w-0 rounded-full px-3 py-1.5 font-marker text-[1.05rem] font-bold text-[#3d332b] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                calendarView === 'year' ? 'cursor-default' : 'hover:bg-white/75',
+              )}
+              disabled={calendarView === 'year'}
+              onClick={openNextCalendarView}
+              type="button"
+            >
+              {calendarTitle}
+            </button>
+            <button
+              aria-label="Tiến lịch"
               className="grid h-8 w-8 place-items-center rounded-full border border-[#b8a58e] bg-white/70 font-marker text-[1.2rem] text-[#3d332b] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25"
-              onClick={() => setVisibleMonth((currentMonth) => shiftPlannerMonth(currentMonth, 1))}
+              onClick={moveCalendarForward}
               type="button"
             >
               ›
             </button>
           </div>
 
-          <div className="mt-3 grid grid-cols-7 gap-1 text-center font-marker text-[0.82rem] font-bold text-[#75685b]">
-            {weekdayLabels.map((weekday) => (
-              <span key={weekday}>{weekday}</span>
-            ))}
-          </div>
-          <div className="mt-1 grid grid-cols-7 gap-1">
-            {calendarDays.map((calendarDay) => {
-              const isSelectedDate = calendarDay.date === value;
+          {calendarView === 'day' ? (
+            <>
+              <div className="mt-3 grid grid-cols-7 gap-1 text-center font-marker text-[0.82rem] font-bold text-[#75685b]">
+                {weekdayLabels.map((weekday) => (
+                  <span key={weekday}>{weekday}</span>
+                ))}
+              </div>
+              <div className="mt-1 grid grid-cols-7 gap-1">
+                {calendarDays.map((calendarDay) => {
+                  const isSelectedDate = calendarDay.date === value;
 
-              return (
-                <button
-                  className={cn(
-                    'grid h-8 place-items-center rounded-[0.45rem] font-marker text-[0.95rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
-                    calendarDay.isCurrentMonth ? 'text-[#342820]' : 'text-[#b7a99a]',
-                    isSelectedDate
-                      ? 'bg-[#b9e177] font-bold text-[#172612] shadow-[0_4px_0_#6f9e44]'
-                      : 'hover:bg-white/80',
-                  )}
-                  key={calendarDay.date}
-                  onClick={() => {
-                    onChange(calendarDay.date);
-                    setIsPickerOpen(false);
-                  }}
-                  type="button"
-                >
-                  {calendarDay.dayOfMonth}
-                </button>
-              );
-            })}
-          </div>
+                  return (
+                    <button
+                      className={cn(
+                        'grid h-8 place-items-center rounded-[0.45rem] font-marker text-[0.95rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                        calendarDay.isCurrentMonth ? 'text-[#342820]' : 'text-[#b7a99a]',
+                        isSelectedDate
+                          ? 'bg-[#b9e177] font-bold text-[#172612] shadow-[0_4px_0_#6f9e44]'
+                          : 'hover:bg-white/80',
+                      )}
+                      key={calendarDay.date}
+                      onClick={() => {
+                        onChange(calendarDay.date);
+                        setIsPickerOpen(false);
+                      }}
+                      type="button"
+                    >
+                      {calendarDay.dayOfMonth}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          ) : null}
+
+          {calendarView === 'month' ? (
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {monthLabels.map((monthLabel, index) => {
+                const monthNumber = index + 1;
+                const isSelectedMonth = monthNumber === visibleMonthNumber;
+
+                return (
+                  <button
+                    className={cn(
+                      'rounded-[0.6rem] px-2 py-2.5 font-marker text-[1rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                      isSelectedMonth
+                        ? 'bg-[#b9e177] font-bold text-[#172612] shadow-[0_4px_0_#6f9e44]'
+                        : 'bg-white/50 text-[#3d332b] hover:bg-white/80',
+                    )}
+                    key={monthLabel}
+                    onClick={() => {
+                      setVisibleMonth((currentMonth) => setPlannerMonth(currentMonth, monthNumber));
+                      setCalendarView('day');
+                    }}
+                    type="button"
+                  >
+                    {monthLabel}
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
+
+          {calendarView === 'year' ? (
+            <div className="mt-3 grid grid-cols-3 gap-2">
+              {yearRange.map((year) => {
+                const isSelectedYear = year === visibleYear;
+
+                return (
+                  <button
+                    className={cn(
+                      'rounded-[0.6rem] px-2 py-2.5 font-marker text-[1rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                      isSelectedYear
+                        ? 'bg-[#b9e177] font-bold text-[#172612] shadow-[0_4px_0_#6f9e44]'
+                        : 'bg-white/50 text-[#3d332b] hover:bg-white/80',
+                    )}
+                    key={year}
+                    onClick={() => {
+                      setVisibleMonth((currentMonth) => setPlannerYear(currentMonth, year));
+                      setCalendarView('month');
+                    }}
+                    type="button"
+                  >
+                    {year}
+                  </button>
+                );
+              })}
+            </div>
+          ) : null}
         </div>
       ) : null}
 

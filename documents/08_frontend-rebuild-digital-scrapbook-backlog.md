@@ -188,6 +188,14 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] bỏ khối tìm kiếm điểm đến trên trang phải của bước 1
 - [x] đổi date control thành popup lịch custom mở ngay khi bấm vào ô lịch
 
+### Follow-up calendar refinement
+
+- [x] mở popup lịch lên phía trên ô ngày để không bị che bởi cụm số bước
+- [x] thêm chế độ chọn ngày, chọn tháng và chọn năm ngay trong popup lịch
+- [x] click vào tiêu đề tháng/năm chuyển sang chọn tháng, click tiếp chuyển sang chọn năm
+- [x] chọn tháng quay lại màn ngày, chọn năm quay lại màn tháng
+- [x] click ra ngoài popup lịch thì tự đóng
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu
