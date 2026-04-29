@@ -654,10 +654,13 @@
         "savedSpread": {
           "stepTitle": "Saved Planner",
           "createNewAction": "Create a new trip",
+          "editPlanAction": "Edit plan",
+          "doneEditingAction": "Done",
           "addActivityAction": "Add activity",
           "editActivityAction": "Edit",
           "deleteActivityAction": "Delete",
           "backToSavedPlannerAction": "Back to planner",
+          "backToEditPlannerAction": "Back to editing",
           "saveActivityAction": "Save",
           "savingActivityAction": "Saving...",
           "deleteConfirm": "Delete this activity from the trip?",

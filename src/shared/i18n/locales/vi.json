@@ -654,10 +654,13 @@
         "savedSpread": {
           "stepTitle": "Planner Đã Lưu",
           "createNewAction": "Tạo chuyến mới",
+          "editPlanAction": "Chỉnh sửa kế hoạch",
+          "doneEditingAction": "Xong",
           "addActivityAction": "Thêm hoạt động",
           "editActivityAction": "Sửa",
           "deleteActivityAction": "Xóa",
           "backToSavedPlannerAction": "Quay lại planner",
+          "backToEditPlannerAction": "Quay lại chỉnh sửa",
           "saveActivityAction": "Lưu",
           "savingActivityAction": "Đang lưu...",
           "deleteConfirm": "Xóa hoạt động này khỏi chuyến đi?",
