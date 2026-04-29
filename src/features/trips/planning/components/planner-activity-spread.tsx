@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { CalendarDays, Check, ChevronLeft, Clock, Plus } from 'lucide-react';
+import { CalendarDays, Check, ChevronLeft, Clock, Plus, Trash2 } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -59,6 +59,19 @@ const createDefaultActivityDraft = (): PlannerActivityDraft => ({
   notes: '',
   imageUrl: '',
 });
+
+function isEmptyActivityDraft(draft: PlannerActivityDraft) {
+  return (
+    !draft.title.trim() &&
+    !draft.date &&
+    !draft.startTime &&
+    !draft.endTime &&
+    !draft.location.trim() &&
+    !draft.costAmount.trim() &&
+    !draft.notes.trim() &&
+    !draft.imageUrl.trim()
+  );
+}
 
 function formatPlannerDate(value: string) {
   if (!value) {
@@ -683,6 +696,7 @@ function PlannerActivityDetailsPage({
 }
 
 function PlannerActivitySupportPage({
+  canRemoveActivity,
   createError,
   createProgressMessage,
   createSuccessMessage,
@@ -693,10 +707,12 @@ function PlannerActivitySupportPage({
   onAddActivity,
   onCreate,
   onDraftChange,
+  onRemoveActivity,
   showAddActivityAction,
   submitActionLabel,
   submittingActionLabel,
 }: {
+  canRemoveActivity: boolean;
   createError: string | null;
   createProgressMessage: string | null;
   createSuccessMessage: string | null;
@@ -707,6 +723,7 @@ function PlannerActivitySupportPage({
   onAddActivity: () => void;
   onCreate: () => void;
   onDraftChange: PlannerActivityDraftChangeHandler;
+  onRemoveActivity: () => void;
   showAddActivityAction: boolean;
   submitActionLabel: string;
   submittingActionLabel: string;
@@ -720,19 +737,40 @@ function PlannerActivitySupportPage({
       className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-8 pt-5 sm:px-7 sm:pb-9 sm:pt-6 md:min-h-0 lg:px-8"
       style={pageDotStyle}
     >
-      <div className={cn('relative z-20 min-h-14', showAddActivityAction ? 'pr-14 sm:pr-36' : undefined)}>
+      <div
+        className={cn(
+          'relative z-20 min-h-14',
+          showAddActivityAction || canRemoveActivity ? 'pr-14 sm:pr-48' : undefined,
+        )}
+      >
         <PlannerTapeTitle className="mt-1">{t('trips.planner.board.activitySpread.detailsTitle')}</PlannerTapeTitle>
-        {showAddActivityAction ? (
-          <button
-            aria-label={t('trips.planner.board.activitySpread.addActivityAction')}
-            className="absolute right-0 top-0 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
-            disabled={disabled}
-            onClick={onAddActivity}
-            type="button"
-          >
-            <Plus className="h-4 w-4" strokeWidth={2.5} />
-            <span className="hidden sm:inline">{t('trips.planner.board.activitySpread.addActivityAction')}</span>
-          </button>
+        {showAddActivityAction || canRemoveActivity ? (
+          <div className="absolute right-0 top-0 flex items-center gap-2">
+            {canRemoveActivity ? (
+              <button
+                aria-label={t('trips.planner.board.activitySpread.deleteDraftAction')}
+                className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#b42318] shadow-[0_6px_0_#f0b8b0,0_12px_20px_rgba(185,44,28,0.12)] transition duration-300 hover:-translate-y-0.5 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#d92d20]/20 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
+                disabled={disabled}
+                onClick={onRemoveActivity}
+                type="button"
+              >
+                <Trash2 className="h-4 w-4" strokeWidth={2.4} />
+                <span className="hidden sm:inline">{t('trips.planner.board.activitySpread.deleteDraftAction')}</span>
+              </button>
+            ) : null}
+            {showAddActivityAction ? (
+              <button
+                aria-label={t('trips.planner.board.activitySpread.addActivityAction')}
+                className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
+                disabled={disabled}
+                onClick={onAddActivity}
+                type="button"
+              >
+                <Plus className="h-4 w-4" strokeWidth={2.5} />
+                <span className="hidden sm:inline">{t('trips.planner.board.activitySpread.addActivityAction')}</span>
+              </button>
+            ) : null}
+          </div>
         ) : null}
       </div>
 
@@ -850,6 +888,8 @@ export function PlannerActivitySpread({
   const activityDraft = activityDrafts[activeActivityIndex] ?? createDefaultActivityDraft();
   const currentActivityErrors = activityDraftErrors[activeActivityIndex] ?? {};
   const isLocked = isCreating || Boolean(createSuccessMessage);
+  const protectedDraftCount = initialDrafts?.length ?? 0;
+  const canRemoveActiveActivity = activityDrafts.length > 1 && activeActivityIndex >= protectedDraftCount;
 
   useEffect(() => {
     return () => {
@@ -966,8 +1006,8 @@ export function PlannerActivitySpread({
     return nextErrors;
   };
 
-  const validateActivityDrafts = () => {
-    const nextErrors = activityDrafts.reduce<Record<number, PlannerActivityDraftErrors>>(
+  const validateActivityDrafts = (drafts = activityDrafts) => {
+    const nextErrors = drafts.reduce<Record<number, PlannerActivityDraftErrors>>(
       (errorsByIndex, draft, index) => {
         const errors = validateActivityDraft(draft);
 
@@ -980,8 +1020,8 @@ export function PlannerActivitySpread({
       {},
     );
 
-    activityDrafts.forEach((currentDraft, currentIndex) => {
-      activityDrafts.forEach((otherDraft, otherIndex) => {
+    drafts.forEach((currentDraft, currentIndex) => {
+      drafts.forEach((otherDraft, otherIndex) => {
         if (currentIndex >= otherIndex) {
           return;
         }
@@ -1021,14 +1061,69 @@ export function PlannerActivitySpread({
     return nextErrors;
   };
 
+  const removeActivityDraftIndexes = (indexesToRemove: number[]) => {
+    const removableIndexes = indexesToRemove.filter((index) => index >= protectedDraftCount);
+
+    if (removableIndexes.length === 0 || activityDrafts.length - removableIndexes.length < 1) {
+      return activityDrafts;
+    }
+
+    const removeSet = new Set(removableIndexes);
+    const nextDrafts = activityDrafts.filter((_, index) => !removeSet.has(index));
+
+    setActivityDrafts(nextDrafts);
+    setActivityDraftErrors((currentErrors) => {
+      const nextErrors: Record<number, PlannerActivityDraftErrors> = {};
+      let removedBefore = 0;
+
+      activityDrafts.forEach((_, index) => {
+        if (removeSet.has(index)) {
+          removedBefore += 1;
+          return;
+        }
+
+        if (currentErrors[index]) {
+          nextErrors[index - removedBefore] = currentErrors[index];
+        }
+      });
+
+      return nextErrors;
+    });
+    setActiveActivityIndex((currentIndex) => {
+      const removedBeforeOrAt = removableIndexes.filter((index) => index <= currentIndex).length;
+      const nextIndex = Math.max(0, currentIndex - removedBeforeOrAt);
+
+      return Math.min(nextIndex, nextDrafts.length - 1);
+    });
+
+    return nextDrafts;
+  };
+
   const addActivityDraft = () => {
     if (isLocked) {
+      return;
+    }
+
+    const nextErrors = validateActivityDrafts();
+
+    if (nextErrors[activeActivityIndex]) {
+      setActivityDraftErrors(nextErrors);
       return;
     }
 
     startPageTurn('next', () => {
       setActivityDrafts((currentDrafts) => [...currentDrafts, createDefaultActivityDraft()]);
       setActiveActivityIndex(activityDrafts.length);
+    });
+  };
+
+  const removeActivityDraft = () => {
+    if (isLocked || !canRemoveActiveActivity) {
+      return;
+    }
+
+    startPageTurn('previous', () => {
+      removeActivityDraftIndexes([activeActivityIndex]);
     });
   };
 
@@ -1048,7 +1143,30 @@ export function PlannerActivitySpread({
       return;
     }
 
-    const nextErrors = validateActivityDrafts();
+    const emptyDraftIndexes = activityDrafts
+      .map((draft, index) => ({ draft, index }))
+      .filter(({ draft, index }) => index >= protectedDraftCount && isEmptyActivityDraft(draft))
+      .map(({ index }) => index);
+    const canRemoveEmptyDrafts = emptyDraftIndexes.length > 0 && activityDrafts.length - emptyDraftIndexes.length > 0;
+    let draftsToSubmit = activityDrafts;
+
+    if (canRemoveEmptyDrafts) {
+      const shouldRemoveEmptyDrafts = window.confirm(
+        t('trips.planner.board.activitySpread.validation.removeEmptyDraftsConfirm', {
+          count: emptyDraftIndexes.length,
+        }),
+      );
+
+      if (!shouldRemoveEmptyDrafts) {
+        setActiveActivityIndex(emptyDraftIndexes[0]);
+        setActivityDraftErrors(validateActivityDrafts());
+        return;
+      }
+
+      draftsToSubmit = removeActivityDraftIndexes(emptyDraftIndexes);
+    }
+
+    const nextErrors = validateActivityDrafts(draftsToSubmit);
     const firstErrorIndex = Number(Object.keys(nextErrors)[0]);
 
     setActivityDraftErrors(nextErrors);
@@ -1058,7 +1176,7 @@ export function PlannerActivitySpread({
       return;
     }
 
-    const createResult = await onCreateActivities(activityDrafts);
+    const createResult = await onCreateActivities(draftsToSubmit);
 
     if (!createResult.ok && createResult.activityError) {
       const { activityError } = createResult;
@@ -1094,6 +1212,7 @@ export function PlannerActivitySpread({
         </div>
         <div className="md:h-full md:w-1/2">
           <PlannerActivitySupportPage
+            canRemoveActivity={canRemoveActiveActivity}
             createError={createError}
             createProgressMessage={createProgressMessage}
             createSuccessMessage={createSuccessMessage}
@@ -1104,6 +1223,7 @@ export function PlannerActivitySpread({
             onAddActivity={addActivityDraft}
             onCreate={createActivities}
             onDraftChange={updateActivityDraft}
+            onRemoveActivity={removeActivityDraft}
             showAddActivityAction={showAddActivityAction}
             submitActionLabel={submitActionLabel ?? t('trips.planner.board.activitySpread.createAction')}
             submittingActionLabel={submittingActionLabel ?? t('trips.planner.board.activitySpread.creatingAction')}

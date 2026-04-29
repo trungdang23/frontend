@@ -6,9 +6,12 @@ import {
 } from '@/features/profile/content/profile-sample-content';
 
 export type ProfileGridEntry = {
+  actionHref?: string;
+  actionLabel?: string;
   image: string;
   metadata: string;
   rotationClass: string;
+  summary?: string;
   title: string;
 };
 
@@ -55,11 +58,14 @@ export function buildProfilePostEntries(
   }));
 }
 
-export function buildProfileTripEntries(trips: Trip[]): ProfileGridEntry[] {
+export function buildProfileTripEntries(trips: Trip[], actionLabel?: string): ProfileGridEntry[] {
   return trips.map((trip, index) => ({
+    actionHref: `/app/planner?tripId=${encodeURIComponent(trip.id)}`,
+    actionLabel,
     image: trip.coverImageUrl || resolveFallbackImage(index),
     metadata: `${formatProfileDate(trip.startDate)} • ${formatTripDuration(trip.startDate, trip.endDate)}`,
     rotationClass: resolveRotationClass(index),
+    summary: trip.destination || trip.summaryNotes || undefined,
     title: trip.name,
   }));
 }

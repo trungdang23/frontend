@@ -19,27 +19,28 @@ export function ProfileSampleCard({
   summary,
 }: ProfileSampleCardProps) {
   return (
-    <div className="mx-auto w-full max-w-[18rem] rotate-1 rounded-lg border-2 border-amber-200 bg-amber-50 p-5 shadow-[4px_4px_0px_0px_rgba(217,119,6,0.2)]">
+    <div className="relative mx-auto w-full max-w-[18rem] rotate-1 rounded-[0.75rem] border-2 border-[#e8d4b7] bg-[#fff7e8] p-5 shadow-[8px_10px_0_rgba(185,126,66,0.16),0_18px_28px_rgba(76,51,33,0.12)]">
+      <span className="pointer-events-none absolute left-1/2 top-0 h-8 w-28 -translate-x-1/2 -translate-y-4 -rotate-2 bg-[#a8dfd5]/75 shadow-[0_5px_10px_rgba(80,115,104,0.16)]" />
       <div className="mb-3 flex justify-center -rotate-3">
         <img
           alt={name}
-          className="h-28 w-28 -rotate-2 rounded-lg border-4 border-white object-cover shadow-md"
+          className="h-28 w-28 -rotate-2 rounded-[0.55rem] border-4 border-white object-cover shadow-md"
           loading="lazy"
           src={image}
         />
       </div>
 
-      <h2 className="mb-2 text-center font-serif text-xl font-bold text-gray-900">
+      <h2 className="mb-2 text-center font-cursive text-[1.85rem] font-bold leading-none text-[#251b15]">
         {name}
       </h2>
 
       <div className="mb-4 flex justify-center">
-        <span className="rounded-full border border-amber-300 bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-900">
+        <span className="rounded-full border border-[#d7b17a] bg-[#fff1d9] px-2.5 py-0.5 font-marker text-[0.85rem] font-bold text-[#6b4938]">
           {badge}
         </span>
       </div>
 
-      <p className="mb-5 text-center font-serif text-sm italic text-gray-700">
+      <p className="mb-5 text-center font-marker text-[1rem] leading-tight text-[#6b4938]">
         {summary}
       </p>
 
@@ -52,8 +53,8 @@ export function ProfileSampleCard({
             )}
             key={`${stat.labelLines.join('-')}-${index}`}
           >
-            <div className="font-serif text-2xl font-bold text-amber-900">{stat.value}</div>
-            <div className="text-[10px] font-bold uppercase tracking-tighter text-gray-600">
+            <div className="font-cursive text-[1.85rem] font-bold leading-none text-[#6b4938]">{stat.value}</div>
+            <div className="font-marker text-[0.72rem] font-bold uppercase leading-tight text-[#4f4138]">
               {stat.labelLines[0]}
               <br />
               {stat.labelLines[1]}

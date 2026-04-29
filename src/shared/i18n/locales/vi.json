@@ -397,6 +397,7 @@
       "plansEmpty": "Bạn chưa tạo kế hoạch nào."
     },
     "actions": {
+      "openPlanner": "MỞ PLANNER",
       "viewMoreJournal": "XEM THÊM KÝ ỨC",
       "viewMorePlans": "XEM THÊM KẾ HOẠCH"
     }
@@ -570,6 +571,7 @@
           "backToPreviousActivityAction": "Quay lại hành động trước",
           "activityNumber": "Hành động {{index}}",
           "addActivityAction": "Thêm hành động",
+          "deleteDraftAction": "Xóa hành động",
           "createAction": "Tạo",
           "creatingAction": "Đang tạo...",
           "fixedFieldsNote": "Thông tin cố định ở đây, sticker tự do ở trang bên cạnh.",
@@ -619,6 +621,7 @@
             "timeRangeInvalid": "Giờ kết thúc phải sau giờ bắt đầu.",
             "timeOverlap": "Thời gian bị trùng với hành động {{index}}.",
             "timeOverlapExisting": "Thời gian bị trùng với hoạt động đã lưu: {{title}}.",
+            "removeEmptyDraftsConfirm": "Có {{count}} hành động trống do bấm thêm. Bạn muốn xóa các hành động trống đó và tiếp tục lưu không?",
             "timeOverlapServer": "Thời gian bị trùng với một hoạt động khác trong chuyến đi.",
             "costAmountInvalid": "Chi phí phải lớn hơn hoặc bằng 0.",
             "costCurrencyRequired": "Tiền tệ là bắt buộc khi nhập chi phí.",

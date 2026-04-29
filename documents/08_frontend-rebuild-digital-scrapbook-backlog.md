@@ -263,6 +263,14 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] form sửa một activity cụ thể có nút thêm activity để bổ sung hoạt động mới
 - [x] khi lưu form sửa, cập nhật activity đang sửa và tạo thêm các activity mới nếu có
 
+### Follow-up profile saved planner handoff
+
+- [x] mở planner đã lưu từ tab kế hoạch trong trang cá nhân bằng `tripId`
+- [x] chỉnh card kế hoạch trong profile để có CTA mở/chỉnh planner
+- [x] đồng bộ giao diện profile với concept scrapbook hiện tại
+- [x] chặn thêm activity mới khi activity hiện tại còn thiếu thông tin bắt buộc
+- [x] cho phép xóa bản nháp activity được thêm thừa trong form activity
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

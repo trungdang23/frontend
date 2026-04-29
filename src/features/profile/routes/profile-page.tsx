@@ -16,6 +16,7 @@ import { publicPageMainLayouts } from '@/features/shell/content/public-page-layo
 import { listTrips } from '@/features/trips/api/trips-api';
 import { useAuth } from '@/features/auth/session/use-auth';
 import { useI18n } from '@/shared/i18n/use-i18n';
+import { cn } from '@/shared/lib/cn';
 
 const PROFILE_POST_QUERY = {
   page: 0,
@@ -33,8 +34,8 @@ type ProfileTab = 'journal' | 'plans';
 
 function ProfileStateCard({ message }: { message: string }) {
   return (
-    <article className="rounded-lg border border-gray-200 bg-white/80 px-5 py-10 text-center shadow-sm sm:col-span-2">
-      <p className="text-sm text-gray-600">{message}</p>
+    <article className="rounded-[0.85rem] border border-[#eadbc5] bg-[#fffdfa]/90 px-5 py-10 text-center shadow-[0_12px_22px_rgba(76,51,33,0.1)] sm:col-span-2">
+      <p className="font-marker text-[1rem] leading-tight text-[#6b4938]">{message}</p>
     </article>
   );
 }
@@ -57,7 +58,7 @@ export function ProfilePage() {
     postsQuery.data?.data || [],
     t('profile.meta.posted'),
   );
-  const tripEntries = buildProfileTripEntries(tripsQuery.data?.data || []);
+  const tripEntries = buildProfileTripEntries(tripsQuery.data?.data || [], t('profile.actions.openPlanner'));
   const activeEntries = activeTab === 'journal' ? postEntries : tripEntries;
   const activeQuery = activeTab === 'journal' ? postsQuery : tripsQuery;
   const visibleEntries = activeEntries.slice(0, visibleCount);
@@ -73,7 +74,7 @@ export function ProfilePage() {
       mainClassName={publicPageMainLayouts.profile}
       mainId="profile-content"
     >
-      <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-6 lg:flex-row lg:items-start">
+      <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-6 rounded-[1rem] border border-[#efe2ca] bg-[#fff8ea]/70 p-4 shadow-[0_18px_36px_rgba(76,51,33,0.1)] sm:p-5 lg:flex-row lg:items-start">
         <aside className="lg:w-[20rem] lg:flex-none">
           <ProfileSampleCard
             badge={t('profile.badge')}
@@ -98,11 +99,14 @@ export function ProfilePage() {
         </aside>
 
         <section className="min-w-0 flex-1">
-          <div className="mb-6 flex flex-wrap gap-8 border-b border-gray-200">
+          <div className="mb-6 flex flex-wrap gap-3 border-b border-dashed border-[#d8c5ab] pb-3">
             <button
-              className={activeTab === 'journal'
-                ? 'border-b-2 border-gray-900 pb-2 font-bold text-gray-900'
-                : 'pb-2 font-medium text-gray-400 hover:text-gray-600'}
+              className={cn(
+                'rounded-full border px-4 py-2 font-marker text-[1rem] font-bold leading-none transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                activeTab === 'journal'
+                  ? 'border-[#8b6244]/35 bg-[#fff1d9] text-[#6b4938] shadow-[0_5px_0_#d7b17a]'
+                  : 'border-[#d8c5ab] bg-white/55 text-[#7b6b5c]',
+              )}
               onClick={() => {
                 setActiveTab('journal');
                 setVisibleCount(2);
@@ -112,9 +116,12 @@ export function ProfilePage() {
               {t('profile.tabs.journal')}
             </button>
             <button
-              className={activeTab === 'plans'
-                ? 'border-b-2 border-gray-900 pb-2 font-bold text-gray-900'
-                : 'pb-2 font-medium text-gray-400 hover:text-gray-600'}
+              className={cn(
+                'rounded-full border px-4 py-2 font-marker text-[1rem] font-bold leading-none transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                activeTab === 'plans'
+                  ? 'border-[#3a5d25]/40 bg-[#b9e177] text-[#172612] shadow-[0_5px_0_#6f9e44]'
+                  : 'border-[#d8c5ab] bg-white/55 text-[#7b6b5c]',
+              )}
               onClick={() => {
                 setActiveTab('plans');
                 setVisibleCount(2);
@@ -148,7 +155,10 @@ export function ProfilePage() {
                     image={entry.image}
                     key={`${activeTab}-${entry.title}-${entry.metadata}`}
                     metadata={entry.metadata}
+                    actionHref={entry.actionHref}
+                    actionLabel={entry.actionLabel}
                     rotationClass={entry.rotationClass}
+                    summary={entry.summary}
                     title={entry.title}
                   />
                 ))
@@ -158,7 +168,7 @@ export function ProfilePage() {
           {visibleEntries.length < activeEntries.length ? (
             <div className="mt-8 flex justify-center">
               <button
-                className="rounded-full bg-amber-800 px-8 py-3 font-bold text-white"
+                className="rounded-full border border-[#6b4938]/30 bg-[#8b6244] px-8 py-3 font-marker font-bold leading-none text-white shadow-[0_6px_0_#5a3e28] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25"
                 onClick={() => setVisibleCount((current) => current + 4)}
                 type="button"
               >

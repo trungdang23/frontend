@@ -397,6 +397,7 @@
       "plansEmpty": "You have not created any plans yet."
     },
     "actions": {
+      "openPlanner": "OPEN PLANNER",
       "viewMoreJournal": "VIEW MORE MEMORIES",
       "viewMorePlans": "VIEW MORE PLANS"
     }
@@ -570,6 +571,7 @@
           "backToPreviousActivityAction": "Back to previous activity",
           "activityNumber": "Activity {{index}}",
           "addActivityAction": "Add activity",
+          "deleteDraftAction": "Delete activity",
           "createAction": "Create",
           "creatingAction": "Creating...",
           "fixedFieldsNote": "Fixed fields stay here, freeform stickers live on the next page.",
@@ -619,6 +621,7 @@
             "timeRangeInvalid": "End time must be after start time.",
             "timeOverlap": "This time overlaps activity {{index}}.",
             "timeOverlapExisting": "This time overlaps a saved activity: {{title}}.",
+            "removeEmptyDraftsConfirm": "There are {{count}} empty activities from extra add clicks. Delete those empty activities and continue saving?",
             "timeOverlapServer": "This time overlaps another activity in the trip.",
             "costAmountInvalid": "Cost must be greater than or equal to 0.",
             "costCurrencyRequired": "Currency is required when a cost is entered.",

@@ -46,27 +46,30 @@ describe('profile presenters', () => {
       ],
       'Đã đăng',
     );
-    const tripEntries = buildProfileTripEntries([
-      {
-        budgetAmount: 0,
-        budgetCurrency: 'VND',
-        budgetMode: 'auto',
-        coverImageUrl: null,
-        createdAt: '2026-04-22T10:30:00.000Z',
-        destination: null,
-        endDate: '2026-04-25',
-        id: 'trip-1',
-        manualBudgetAmount: null,
-        manualBudgetCurrency: null,
-        name: 'Đà Lạt',
-        startDate: '2026-04-22',
-        summaryNotes: null,
-        timezone: null,
-        updatedAt: '2026-04-22T10:30:00.000Z',
-        userId: 'user-1',
-        visibility: 'private',
-      },
-    ]);
+    const tripEntries = buildProfileTripEntries(
+      [
+        {
+          budgetAmount: 0,
+          budgetCurrency: 'VND',
+          budgetMode: 'auto',
+          coverImageUrl: null,
+          createdAt: '2026-04-22T10:30:00.000Z',
+          destination: null,
+          endDate: '2026-04-25',
+          id: 'trip-1',
+          manualBudgetAmount: null,
+          manualBudgetCurrency: null,
+          name: 'Đà Lạt',
+          startDate: '2026-04-22',
+          summaryNotes: null,
+          timezone: null,
+          updatedAt: '2026-04-22T10:30:00.000Z',
+          userId: 'user-1',
+          visibility: 'private',
+        },
+      ],
+      'MỞ PLANNER',
+    );
 
     expect(postEntries[0]).toMatchObject({
       image: 'https://example.com/trip-cover.jpg',
@@ -74,6 +77,8 @@ describe('profile presenters', () => {
       title: 'Nhật ký Hội An',
     });
     expect(tripEntries[0]).toMatchObject({
+      actionHref: '/app/planner?tripId=trip-1',
+      actionLabel: 'MỞ PLANNER',
       metadata: '22 Tháng 4, 2026 • 4 ngày',
       title: 'Đà Lạt',
     });
