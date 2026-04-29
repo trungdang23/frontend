@@ -1,16 +1,5 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type CSSProperties,
-} from 'react';
-import {
-  CalendarDays,
-  Check,
-  ChevronLeft,
-  Clock,
-  Plus,
-} from 'lucide-react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { CalendarDays, Check, ChevronLeft, Clock, Plus } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -33,7 +22,18 @@ export type PlannerActivityDraft = {
 
 type PlannerActivityDraftField = keyof PlannerActivityDraft;
 type PlannerActivityDraftErrorField = PlannerActivityDraftField | 'time';
-type PlannerActivityDraftErrors = Partial<Record<PlannerActivityDraftErrorField, string>>;
+export type PlannerActivityDraftErrors = Partial<Record<PlannerActivityDraftErrorField, string>>;
+export type PlannerActivityCreateResult =
+  | {
+      ok: true;
+    }
+  | {
+      activityError?: {
+        activityIndex: number;
+        errors: PlannerActivityDraftErrors;
+      };
+      ok: false;
+    };
 type PlannerActivityPageTurnDirection = 'next' | 'previous';
 type PlannerActivityTripDateRange = {
   endDate: string;
@@ -146,10 +146,7 @@ function getPlannerTimeInMinutes(value: string) {
   return hour * 60 + minute;
 }
 
-function doPlannerActivityTimesOverlap(
-  firstActivity: PlannerActivityDraft,
-  secondActivity: PlannerActivityDraft,
-) {
+function doPlannerActivityTimesOverlap(firstActivity: PlannerActivityDraft, secondActivity: PlannerActivityDraft) {
   if (
     firstActivity.date !== secondActivity.date ||
     !firstActivity.startTime ||
@@ -165,12 +162,7 @@ function doPlannerActivityTimesOverlap(
   const secondStart = getPlannerTimeInMinutes(secondActivity.startTime);
   const secondEnd = getPlannerTimeInMinutes(secondActivity.endTime);
 
-  if (
-    firstStart === null ||
-    firstEnd === null ||
-    secondStart === null ||
-    secondEnd === null
-  ) {
+  if (firstStart === null || firstEnd === null || secondStart === null || secondEnd === null) {
     return false;
   }
 
@@ -186,13 +178,7 @@ function getTimeOptions() {
   });
 }
 
-function PlannerTapeTitle({
-  children,
-  className,
-}: {
-  children: string;
-  className?: string;
-}) {
+function PlannerTapeTitle({ children, className }: { children: string; className?: string }) {
   return (
     <div className={cn('relative mx-auto w-fit px-7 py-2 text-center', className)}>
       <span className="absolute inset-0 -skew-x-6 rounded-[0.2rem] bg-[#a8dfd5]/85 shadow-[0_4px_0_rgba(80,115,104,0.18)]" />
@@ -205,11 +191,7 @@ function PlannerTapeTitle({
   );
 }
 
-function PlannerStepProgress({
-  currentStep,
-}: {
-  currentStep: number;
-}) {
+function PlannerStepProgress({ currentStep }: { currentStep: number }) {
   const stepClassNames = [
     'bg-[#a7d76f] ring-[#70a849]',
     'bg-[#99cde8] ring-[#6aa7c7]',
@@ -243,13 +225,7 @@ function PlannerStepProgress({
   );
 }
 
-function PlannerActivityFieldError({
-  id,
-  message,
-}: {
-  id?: string;
-  message?: string;
-}) {
+function PlannerActivityFieldError({ id, message }: { id?: string; message?: string }) {
   if (!message) {
     return null;
   }
@@ -310,9 +286,7 @@ function PlannerActivityTextField({
           inputMode={inputMode}
           maxLength={maxLength}
           onChange={(event) => {
-            const nextValue = transformValue
-              ? transformValue(event.target.value)
-              : event.target.value;
+            const nextValue = transformValue ? transformValue(event.target.value) : event.target.value;
 
             onChange(nextValue);
           }}
@@ -531,9 +505,7 @@ function PlannerActivityTimeSelect({
         type="button"
       >
         <Clock className="mr-2 h-4 w-4 shrink-0 text-[#6d5b4a]" strokeWidth={1.7} />
-        <span className={cn('min-w-0 truncate', value ? undefined : 'text-[#71675c]')}>
-          {value || placeholder}
-        </span>
+        <span className={cn('min-w-0 truncate', value ? undefined : 'text-[#71675c]')}>{value || placeholder}</span>
       </button>
 
       {isOpen ? (
@@ -541,9 +513,7 @@ function PlannerActivityTimeSelect({
           <button
             className={cn(
               'w-full rounded-[0.6rem] px-3 py-2 text-left font-marker text-[0.98rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
-              value
-                ? 'text-[#70665d] hover:bg-white/80'
-                : 'bg-[#a8dfd5] font-bold text-[#1f2a24]',
+              value ? 'text-[#70665d] hover:bg-white/80' : 'bg-[#a8dfd5] font-bold text-[#1f2a24]',
             )}
             onClick={() => {
               onChange('');
@@ -613,9 +583,7 @@ function PlannerActivityDetailsPage({
         {backLabel}
       </button>
 
-      <PlannerTapeTitle className="mt-4">
-        {t('trips.planner.board.activitySpread.stepTitle')}
-      </PlannerTapeTitle>
+      <PlannerTapeTitle className="mt-4">{t('trips.planner.board.activitySpread.stepTitle')}</PlannerTapeTitle>
       <p className="mt-3 text-center font-marker text-[1.05rem] font-bold text-[#6b4938] sm:text-[1.2rem]">
         {t('trips.planner.board.activitySpread.activityNumber', {
           index: activityNumber,
@@ -711,9 +679,7 @@ function PlannerActivitySupportPage({
       style={pageDotStyle}
     >
       <div className="relative z-20 min-h-14 pr-14 sm:pr-36">
-        <PlannerTapeTitle className="mt-1">
-          {t('trips.planner.board.activitySpread.detailsTitle')}
-        </PlannerTapeTitle>
+        <PlannerTapeTitle className="mt-1">{t('trips.planner.board.activitySpread.detailsTitle')}</PlannerTapeTitle>
         <button
           aria-label={t('trips.planner.board.activitySpread.addActivityAction')}
           className="absolute right-0 top-0 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 sm:h-11 sm:px-4 sm:text-[1.08rem]"
@@ -758,12 +724,18 @@ function PlannerActivitySupportPage({
 
         <div className="flex shrink-0 flex-col items-end gap-3 pt-4">
           {createError ? (
-            <p className="w-full rounded-[0.85rem] border border-[#d92d20]/25 bg-[#fff1f0] px-4 py-3 font-marker text-[1rem] leading-tight text-[#b42318]" role="alert">
+            <p
+              className="w-full rounded-[0.85rem] border border-[#d92d20]/25 bg-[#fff1f0] px-4 py-3 font-marker text-[1rem] leading-tight text-[#b42318]"
+              role="alert"
+            >
               {createError}
             </p>
           ) : null}
           {createSuccessMessage ? (
-            <p className="w-full rounded-[0.85rem] border border-[#6f9e44]/35 bg-[#f1ffd8] px-4 py-3 font-marker text-[1rem] leading-tight text-[#31521c]" role="status">
+            <p
+              className="w-full rounded-[0.85rem] border border-[#6f9e44]/35 bg-[#f1ffd8] px-4 py-3 font-marker text-[1rem] leading-tight text-[#31521c]"
+              role="status"
+            >
               {createSuccessMessage}
             </p>
           ) : null}
@@ -797,18 +769,13 @@ export function PlannerActivitySpread({
   isCreating: boolean;
   nodeId: string | null;
   onBack: () => void;
-  onCreateActivities: (drafts: PlannerActivityDraft[]) => Promise<boolean>;
+  onCreateActivities: (drafts: PlannerActivityDraft[]) => Promise<PlannerActivityCreateResult>;
   tripDateRange: PlannerActivityTripDateRange;
 }) {
-  const [activityDrafts, setActivityDrafts] = useState<PlannerActivityDraft[]>(() => [
-    createDefaultActivityDraft(),
-  ]);
+  const [activityDrafts, setActivityDrafts] = useState<PlannerActivityDraft[]>(() => [createDefaultActivityDraft()]);
   const [activeActivityIndex, setActiveActivityIndex] = useState(0);
-  const [activityDraftErrors, setActivityDraftErrors] = useState<
-    Record<number, PlannerActivityDraftErrors>
-  >({});
-  const [pageTurnDirection, setPageTurnDirection] =
-    useState<PlannerActivityPageTurnDirection | null>(null);
+  const [activityDraftErrors, setActivityDraftErrors] = useState<Record<number, PlannerActivityDraftErrors>>({});
+  const [pageTurnDirection, setPageTurnDirection] = useState<PlannerActivityPageTurnDirection | null>(null);
   const pageTurnTimeoutRef = useRef<number | null>(null);
   const { t } = useI18n();
   const activityDraft = activityDrafts[activeActivityIndex] ?? createDefaultActivityDraft();
@@ -822,10 +789,7 @@ export function PlannerActivitySpread({
     };
   }, []);
 
-  const startPageTurn = (
-    direction: PlannerActivityPageTurnDirection,
-    updateActivePage: () => void,
-  ) => {
+  const startPageTurn = (direction: PlannerActivityPageTurnDirection, updateActivePage: () => void) => {
     if (pageTurnTimeoutRef.current !== null) {
       window.clearTimeout(pageTurnTimeoutRef.current);
     }
@@ -855,7 +819,7 @@ export function PlannerActivitySpread({
 
       delete nextActiveErrors[field];
 
-      if (field === 'startTime' || field === 'endTime') {
+      if (field === 'date' || field === 'startTime' || field === 'endTime') {
         delete nextActiveErrors.time;
       }
 
@@ -1003,7 +967,20 @@ export function PlannerActivitySpread({
       return;
     }
 
-    await onCreateActivities(activityDrafts);
+    const createResult = await onCreateActivities(activityDrafts);
+
+    if (!createResult.ok && createResult.activityError) {
+      const { activityError } = createResult;
+
+      setActivityDraftErrors((currentErrors) => ({
+        ...currentErrors,
+        [activityError.activityIndex]: {
+          ...(currentErrors[activityError.activityIndex] ?? {}),
+          ...activityError.errors,
+        },
+      }));
+      setActiveActivityIndex(activityError.activityIndex);
+    }
   };
 
   return (
@@ -1041,11 +1018,7 @@ export function PlannerActivitySpread({
   );
 }
 
-function PlannerActivityPageTurnOverlay({
-  direction,
-}: {
-  direction: PlannerActivityPageTurnDirection | null;
-}) {
+function PlannerActivityPageTurnOverlay({ direction }: { direction: PlannerActivityPageTurnDirection | null }) {
   if (!direction) {
     return null;
   }
@@ -1055,9 +1028,7 @@ function PlannerActivityPageTurnOverlay({
       <div
         className={cn(
           'h-full w-full origin-left border-l border-[#dacdb6] bg-[#fffdfa] shadow-[0_18px_32px_rgba(69,48,34,0.18)] [backface-visibility:hidden] [transform-style:preserve-3d]',
-          direction === 'next'
-            ? 'planner-activity-page-turn-next'
-            : 'planner-activity-page-turn-previous',
+          direction === 'next' ? 'planner-activity-page-turn-next' : 'planner-activity-page-turn-previous',
         )}
         style={pageDotStyle}
       />

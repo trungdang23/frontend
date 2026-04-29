@@ -230,6 +230,14 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] chặn các hoạt động trong cùng ngày có khoảng thời gian giao nhau
 - [x] khi có lỗi ở hoạt động khác, tự chuyển về trang hoạt động đầu tiên cần sửa
 
+### Follow-up activity backend error mapping
+
+- [x] map lỗi backend về đúng field của activity đang lỗi
+- [x] khi backend từ chối một activity, tự lật về activity đó để người dùng sửa
+- [x] giữ thông báo tổng ở nút `Tạo` để người dùng biết chuyến đi chưa lưu trọn vẹn
+- [x] tạo activity tuần tự để không mất index activity lỗi trong quá trình lưu
+- [x] bổ sung test nhỏ cho mapping lỗi backend của activity
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

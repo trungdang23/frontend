@@ -1,21 +1,20 @@
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-  ArrowRight,
-  CalendarDays,
-  ChevronLeft,
-  Compass,
-  MapPinned,
-  Plane,
-} from 'lucide-react';
+import { ArrowRight, CalendarDays, ChevronLeft, Compass, MapPinned, Plane } from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
-import { createTrip } from '@/features/trips/api/trips-api';
+import { createTrip, deleteTrip } from '@/features/trips/api/trips-api';
 import { createPlanNode } from '@/features/trips/planning/api/planner-api';
 import {
   PlannerActivitySpread,
+  type PlannerActivityCreateResult,
   type PlannerActivityDraft,
+  type PlannerActivityDraftErrors,
 } from '@/features/trips/planning/components/planner-activity-spread';
+import {
+  resolvePlannerActivityServerError,
+  type PlannerActivityServerError,
+} from '@/features/trips/planning/lib/activity-server-errors';
 import type { PlanNodeMutationPayload } from '@/features/trips/planning/types/plan-node';
 import type { TripBudgetMode, TripUpsertPayload, TripVisibility } from '@/features/trips/types/trip';
 import { cn } from '@/shared/lib/cn';
@@ -218,14 +217,7 @@ type PlannerPolaroidProps = {
   tiltClassName: string;
 };
 
-function PlannerPolaroid({
-  alt,
-  dayLabel,
-  imageUrl,
-  label,
-  tapeClassName,
-  tiltClassName,
-}: PlannerPolaroidProps) {
+function PlannerPolaroid({ alt, dayLabel, imageUrl, label, tapeClassName, tiltClassName }: PlannerPolaroidProps) {
   return (
     <div className="flex h-full flex-col items-center">
       <div
@@ -234,19 +226,13 @@ function PlannerPolaroid({
           tiltClassName,
         )}
       >
-        <img
-          alt={alt}
-          className="h-24 w-full object-cover sm:h-[6.5rem] md:h-28 lg:h-32"
-          src={imageUrl}
+        <img alt={alt} className="h-24 w-full object-cover sm:h-[6.5rem] md:h-28 lg:h-32" src={imageUrl} />
+        <p className="mt-1.5 text-center font-marker text-[1.1rem] text-gray-800 sm:text-[1.3rem]">{label}</p>
+        <div
+          className={cn('absolute left-1/2 top-[-0.85rem] h-6 -translate-x-1/2 backdrop-blur-[1px]', tapeClassName)}
         />
-        <p className="mt-1.5 text-center font-marker text-[1.1rem] text-gray-800 sm:text-[1.3rem]">
-          {label}
-        </p>
-        <div className={cn('absolute left-1/2 top-[-0.85rem] h-6 -translate-x-1/2 backdrop-blur-[1px]', tapeClassName)} />
       </div>
-      <p className="mt-1.5 font-marker text-[1.05rem] font-bold text-gray-700 sm:text-[1.2rem]">
-        {dayLabel}
-      </p>
+      <p className="mt-1.5 font-marker text-[1.05rem] font-bold text-gray-700 sm:text-[1.2rem]">{dayLabel}</p>
     </div>
   );
 }
@@ -370,11 +356,7 @@ function PlannerLeftPage() {
   );
 }
 
-function PlannerRightPageFront({
-  onCreatePlan,
-}: {
-  onCreatePlan?: () => void;
-}) {
+function PlannerRightPageFront({ onCreatePlan }: { onCreatePlan?: () => void }) {
   const { t } = useI18n();
 
   return (
@@ -393,18 +375,8 @@ function PlannerRightPageFront({
       </div>
 
       <svg className="pointer-events-none absolute inset-0 z-10 h-full w-full" fill="none" viewBox="0 0 100 100">
-        <path
-          d="M64 15 C83 10 96 30 88 46"
-          stroke="#444"
-          strokeDasharray="5 5"
-          strokeWidth="0.5"
-        />
-        <path
-          d="M74 50 C83 64 86 80 74 92"
-          stroke="#444"
-          strokeDasharray="5 5"
-          strokeWidth="0.5"
-        />
+        <path d="M64 15 C83 10 96 30 88 46" stroke="#444" strokeDasharray="5 5" strokeWidth="0.5" />
+        <path d="M74 50 C83 64 86 80 74 92" stroke="#444" strokeDasharray="5 5" strokeWidth="0.5" />
       </svg>
 
       <div className="absolute right-[10%] top-[10%] z-20 text-[#5b4b43]">
@@ -464,13 +436,7 @@ function PlannerRightPageFront({
   );
 }
 
-function PlannerTapeTitle({
-  children,
-  className,
-}: {
-  children: string;
-  className?: string;
-}) {
+function PlannerTapeTitle({ children, className }: { children: string; className?: string }) {
   return (
     <div className={cn('relative mx-auto w-fit px-7 py-2 text-center', className)}>
       <span className="absolute inset-0 -skew-x-6 rounded-[0.2rem] bg-[#a8dfd5]/85 shadow-[0_4px_0_rgba(80,115,104,0.18)]" />
@@ -483,13 +449,7 @@ function PlannerTapeTitle({
   );
 }
 
-function PlannerFieldError({
-  id,
-  message,
-}: {
-  id?: string;
-  message?: string;
-}) {
+function PlannerFieldError({ id, message }: { id?: string; message?: string }) {
   if (!message) {
     return null;
   }
@@ -765,11 +725,7 @@ function PlannerDateInput({
   );
 }
 
-function PlannerStepProgress({
-  currentStep,
-}: {
-  currentStep: number;
-}) {
+function PlannerStepProgress({ currentStep }: { currentStep: number }) {
   const stepClassNames = [
     'bg-[#a7d76f] ring-[#70a849]',
     'bg-[#99cde8] ring-[#6aa7c7]',
@@ -833,9 +789,7 @@ function PlannerCreateTripPage({
         {t('trips.planner.board.returnToPreviousPageAction')}
       </button>
 
-      <PlannerTapeTitle className="mt-3">
-        {t('trips.planner.board.createSpread.stepTitle')}
-      </PlannerTapeTitle>
+      <PlannerTapeTitle className="mt-3">{t('trips.planner.board.createSpread.stepTitle')}</PlannerTapeTitle>
 
       <div className="relative mt-7 flex-1 space-y-5 sm:mt-9">
         <label className="block">
@@ -948,11 +902,7 @@ function PlannerCreateTripPage({
   );
 }
 
-function PlannerCoverPreview({
-  imageUrl,
-}: {
-  imageUrl: string;
-}) {
+function PlannerCoverPreview({ imageUrl }: { imageUrl: string }) {
   const { t } = useI18n();
   const coverImageUrl = imageUrl.trim();
   const shouldShowCoverImage = coverImageUrl && isValidHttpUrl(coverImageUrl);
@@ -996,9 +946,7 @@ function PlannerDestinationPage({
       className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-8 pt-5 sm:px-7 sm:pb-9 sm:pt-6 md:min-h-0 lg:px-8"
       style={pageDotStyle}
     >
-      <PlannerTapeTitle className="mt-1">
-        {t('trips.planner.board.createSpread.detailsTitle')}
-      </PlannerTapeTitle>
+      <PlannerTapeTitle className="mt-1">{t('trips.planner.board.createSpread.detailsTitle')}</PlannerTapeTitle>
 
       <div className="relative z-10 mt-6 flex flex-1 flex-col gap-3.5">
         <label className="block">
@@ -1093,20 +1041,10 @@ function PlannerCreateSpread({
   return (
     <div className="flex h-full min-h-0 flex-col md:flex-row">
       <div className="md:h-full md:w-1/2">
-        <PlannerCreateTripPage
-          draft={draft}
-          errors={errors}
-          onBack={onBack}
-          onDraftChange={onDraftChange}
-        />
+        <PlannerCreateTripPage draft={draft} errors={errors} onBack={onBack} onDraftChange={onDraftChange} />
       </div>
       <div className="md:h-full md:w-1/2">
-        <PlannerDestinationPage
-          draft={draft}
-          errors={errors}
-          onContinue={onContinue}
-          onDraftChange={onDraftChange}
-        />
+        <PlannerDestinationPage draft={draft} errors={errors} onContinue={onContinue} onDraftChange={onDraftChange} />
       </div>
     </div>
   );
@@ -1143,11 +1081,7 @@ export function PlannerPage() {
         delete nextErrors.endDate;
       }
 
-      if (
-        field === 'budgetMode' ||
-        field === 'manualBudgetAmount' ||
-        field === 'manualBudgetCurrency'
-      ) {
+      if (field === 'budgetMode' || field === 'manualBudgetAmount' || field === 'manualBudgetCurrency') {
         delete nextErrors.manualBudgetAmount;
         delete nextErrors.manualBudgetCurrency;
       }
@@ -1239,9 +1173,68 @@ export function PlannerPage() {
     openActivityPlannerPage();
   };
 
-  const createTripWithActivities = async (activityDrafts: PlannerActivityDraft[]) => {
+  const getActivityServerErrorMessage = (serverError: PlannerActivityServerError) => {
+    if (serverError.kind === 'missingTime') {
+      return t('trips.planner.board.activitySpread.validation.serverTimeRequired');
+    }
+
+    if (serverError.kind === 'outsideTripRange') {
+      return t('trips.planner.board.activitySpread.validation.dateOutsideTripRange', {
+        endDate: formatPlannerDate(tripDraft.endDate),
+        startDate: formatPlannerDate(tripDraft.startDate),
+      });
+    }
+
+    if (serverError.kind === 'timeOverlap') {
+      return t('trips.planner.board.activitySpread.validation.timeOverlapServer');
+    }
+
+    return t('trips.planner.board.activitySpread.validation.timeRangeInvalid');
+  };
+
+  const buildActivityCreateFailure = (activityIndex: number, error: unknown): PlannerActivityCreateResult => {
+    const serverError = resolvePlannerActivityServerError(error);
+
+    if (!serverError) {
+      return {
+        ok: false,
+      };
+    }
+
+    const message = getActivityServerErrorMessage(serverError);
+    const errors: PlannerActivityDraftErrors = {
+      [serverError.field]: message,
+    };
+
+    setCreateTripWithActivitiesError(
+      t('trips.planner.board.activitySpread.feedback.activityCreateError', {
+        index: activityIndex + 1,
+        message,
+      }),
+    );
+
+    return {
+      activityError: {
+        activityIndex,
+        errors,
+      },
+      ok: false,
+    };
+  };
+
+  const rollbackCreatedTrip = async (tripId: string) => {
+    try {
+      await deleteTrip(tripId);
+    } catch {
+      // The create flow should not hide the original activity error if cleanup fails.
+    }
+  };
+
+  const createTripWithActivities = async (
+    activityDrafts: PlannerActivityDraft[],
+  ): Promise<PlannerActivityCreateResult> => {
     if (isCreatingTripWithActivities || createTripWithActivitiesSuccess) {
-      return false;
+      return { ok: false };
     }
 
     const nextErrors = validateTripDraft();
@@ -1251,7 +1244,7 @@ export function PlannerPage() {
     if (Object.keys(nextErrors).length > 0) {
       setCreateTripWithActivitiesError(t('trips.planner.board.activitySpread.feedback.tripDraftInvalid'));
 
-      return false;
+      return { ok: false };
     }
 
     setIsCreatingTripWithActivities(true);
@@ -1261,11 +1254,22 @@ export function PlannerPage() {
     try {
       const trip = await createTrip(buildTripCreatePayload(tripDraft));
 
-      await Promise.all(
-        activityDrafts.map((activityDraft, index) =>
-          createPlanNode(buildActivityPlanNodePayload(trip.id, activityDraft, index)),
-        ),
-      );
+      for (const [index, activityDraft] of activityDrafts.entries()) {
+        try {
+          await createPlanNode(buildActivityPlanNodePayload(trip.id, activityDraft, index));
+        } catch (error) {
+          await rollbackCreatedTrip(trip.id);
+
+          const createFailure = buildActivityCreateFailure(index, error);
+
+          if (!('activityError' in createFailure) || !createFailure.activityError) {
+            setCreateTripWithActivitiesError(t('trips.planner.board.activitySpread.feedback.createError'));
+          }
+
+          return createFailure;
+        }
+      }
+
       setCreateTripWithActivitiesSuccess(
         t('trips.planner.board.activitySpread.feedback.createSuccess', {
           count: activityDrafts.length,
@@ -1273,11 +1277,11 @@ export function PlannerPage() {
         }),
       );
 
-      return true;
+      return { ok: true };
     } catch {
       setCreateTripWithActivitiesError(t('trips.planner.board.activitySpread.feedback.createError'));
 
-      return false;
+      return { ok: false };
     } finally {
       setIsCreatingTripWithActivities(false);
     }
