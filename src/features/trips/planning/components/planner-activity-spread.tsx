@@ -4,7 +4,13 @@ import {
   useState,
   type CSSProperties,
 } from 'react';
-import { CalendarDays, ChevronLeft, Clock } from 'lucide-react';
+import {
+  CalendarDays,
+  Check,
+  ChevronLeft,
+  Clock,
+  Plus,
+} from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -13,7 +19,7 @@ const pageDotStyle: CSSProperties = {
   backgroundSize: '28px 28px',
 };
 
-type PlannerActivityDraft = {
+export type PlannerActivityDraft = {
   title: string;
   date: string;
   startTime: string;
@@ -26,6 +32,8 @@ type PlannerActivityDraft = {
 };
 
 type PlannerActivityDraftField = keyof PlannerActivityDraft;
+type PlannerActivityDraftErrorField = PlannerActivityDraftField | 'time';
+type PlannerActivityDraftErrors = Partial<Record<PlannerActivityDraftErrorField, string>>;
 type PlannerActivityDraftChangeHandler = <Field extends PlannerActivityDraftField>(
   field: Field,
   value: PlannerActivityDraft[Field],
@@ -189,7 +197,26 @@ function PlannerStepProgress({
   );
 }
 
+function PlannerActivityFieldError({
+  id,
+  message,
+}: {
+  id?: string;
+  message?: string;
+}) {
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <p className="mt-2 font-marker text-[0.98rem] leading-tight text-[#b42318]" id={id} role="alert">
+      {message}
+    </p>
+  );
+}
+
 function PlannerActivityTextField({
+  error,
   inputMode,
   label,
   maxLength,
@@ -199,6 +226,7 @@ function PlannerActivityTextField({
   transformValue,
   value,
 }: {
+  error?: string;
   inputMode?: 'decimal' | 'numeric' | 'text';
   label: string;
   maxLength?: number;
@@ -208,6 +236,8 @@ function PlannerActivityTextField({
   transformValue?: (value: string) => string;
   value: string;
 }) {
+  const errorId = error ? `${label.replace(/\W+/g, '-').toLowerCase()}-error` : undefined;
+
   return (
     <label className="block">
       <span className="block font-cursive text-[1.45rem] font-bold leading-none text-[#251b15] sm:text-[1.75rem]">
@@ -215,14 +245,22 @@ function PlannerActivityTextField({
       </span>
       {multiline ? (
         <textarea
-          className="mt-2 min-h-24 w-full resize-none rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 px-4 py-3 font-marker text-[1.05rem] leading-tight text-[#3d332b] outline-none placeholder:text-[#71675c] focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]"
+          aria-describedby={errorId}
+          className={cn(
+            'mt-2 min-h-24 w-full resize-none rounded-[0.8rem] border border-dashed bg-white/60 px-4 py-3 font-marker text-[1.05rem] leading-tight text-[#3d332b] outline-none placeholder:text-[#71675c] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]',
+            error ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+          )}
           onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder}
           value={value}
         />
       ) : (
         <input
-          className="mt-2 w-full rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 px-4 py-3 font-marker text-[1.05rem] text-[#3d332b] outline-none placeholder:text-[#71675c] focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]"
+          aria-describedby={errorId}
+          className={cn(
+            'mt-2 w-full rounded-[0.8rem] border border-dashed bg-white/60 px-4 py-3 font-marker text-[1.05rem] text-[#3d332b] outline-none placeholder:text-[#71675c] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]',
+            error ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+          )}
           inputMode={inputMode}
           maxLength={maxLength}
           onChange={(event) => {
@@ -237,15 +275,18 @@ function PlannerActivityTextField({
           value={value}
         />
       )}
+      <PlannerActivityFieldError id={errorId} message={error} />
     </label>
   );
 }
 
 function PlannerActivityDatePicker({
+  error,
   label,
   onChange,
   value,
 }: {
+  error?: string;
   label: string;
   onChange: (value: string) => void;
   value: string;
@@ -255,6 +296,7 @@ function PlannerActivityDatePicker({
   const [visibleMonth, setVisibleMonth] = useState(() => getPlannerMonthKey(value));
   const calendarDays = buildPlannerCalendarDays(visibleMonth);
   const weekdayLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+  const errorId = error ? `${label.replace(/\W+/g, '-').toLowerCase()}-error` : undefined;
 
   useEffect(() => {
     if (!isOpen) {
@@ -280,8 +322,12 @@ function PlannerActivityDatePicker({
         {label}
       </span>
       <button
+        aria-describedby={errorId}
         aria-expanded={isOpen}
-        className="mt-2 flex min-h-12 w-full items-center rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 px-4 py-3 text-left font-marker text-[1.05rem] text-[#3d332b] outline-none transition hover:bg-white/75 focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]"
+        className={cn(
+          'mt-2 flex min-h-12 w-full items-center rounded-[0.8rem] border border-dashed bg-white/60 px-4 py-3 text-left font-marker text-[1.05rem] text-[#3d332b] outline-none transition hover:bg-white/75 focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]',
+          error ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+        )}
         onClick={() => {
           setVisibleMonth(getPlannerMonthKey(value));
           setIsOpen((current) => !current);
@@ -347,29 +393,36 @@ function PlannerActivityDatePicker({
           </div>
         </div>
       ) : null}
+      <PlannerActivityFieldError id={errorId} message={error} />
     </div>
   );
 }
 
 function PlannerActivityTimePicker({
   endTime,
+  error,
   label,
   onChange,
   startTime,
 }: {
   endTime: string;
+  error?: string;
   label: string;
   onChange: (field: 'endTime' | 'startTime', value: string) => void;
   startTime: string;
 }) {
   const { t } = useI18n();
+  const errorId = error ? `${label.replace(/\W+/g, '-').toLowerCase()}-error` : undefined;
 
   return (
     <div>
       <span className="block font-cursive text-[1.45rem] font-bold leading-none text-[#251b15] sm:text-[1.75rem]">
         {label}
       </span>
-      <div className="mt-2 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">
+      <div
+        aria-describedby={errorId}
+        className="mt-2 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2"
+      >
         <PlannerActivityTimeSelect
           ariaLabel={t('trips.planner.board.activitySpread.fields.startTime')}
           onChange={(value) => onChange('startTime', value)}
@@ -384,6 +437,7 @@ function PlannerActivityTimePicker({
           value={endTime}
         />
       </div>
+      <PlannerActivityFieldError id={errorId} message={error} />
     </div>
   );
 }
@@ -483,11 +537,15 @@ function PlannerActivityTimeSelect({
 }
 
 function PlannerActivityDetailsPage({
+  backLabel,
   draft,
+  errors,
   onBack,
   onDraftChange,
 }: {
+  backLabel?: string;
   draft: PlannerActivityDraft;
+  errors: PlannerActivityDraftErrors;
   onBack: () => void;
   onDraftChange: PlannerActivityDraftChangeHandler;
 }) {
@@ -504,7 +562,7 @@ function PlannerActivityDetailsPage({
         type="button"
       >
         <ChevronLeft className="h-4 w-4" strokeWidth={2.2} />
-        {t('trips.planner.board.activitySpread.backToGeneralAction')}
+        {backLabel || t('trips.planner.board.activitySpread.backToGeneralAction')}
       </button>
 
       <PlannerTapeTitle className="mt-4">
@@ -514,6 +572,7 @@ function PlannerActivityDetailsPage({
       <div className="mt-7 grid gap-4 sm:mt-9 sm:grid-cols-2 sm:gap-5">
         <div className="sm:col-span-2">
           <PlannerActivityTextField
+            error={errors.title}
             label={t('trips.planner.board.activitySpread.fields.title')}
             onChange={(value) => onDraftChange('title', value)}
             placeholder={t('trips.planner.board.activitySpread.placeholders.title')}
@@ -521,17 +580,20 @@ function PlannerActivityDetailsPage({
           />
         </div>
         <PlannerActivityDatePicker
+          error={errors.date}
           label={t('trips.planner.board.activitySpread.fields.date')}
           onChange={(value) => onDraftChange('date', value)}
           value={draft.date}
         />
         <PlannerActivityTimePicker
           endTime={draft.endTime}
+          error={errors.time}
           label={t('trips.planner.board.activitySpread.fields.time')}
           onChange={onDraftChange}
           startTime={draft.startTime}
         />
         <PlannerActivityTextField
+          error={errors.location}
           label={t('trips.planner.board.activitySpread.fields.location')}
           onChange={(value) => onDraftChange('location', value)}
           placeholder={t('trips.planner.board.activitySpread.placeholders.location')}
@@ -539,13 +601,16 @@ function PlannerActivityDetailsPage({
         />
         <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_7rem]">
           <PlannerActivityTextField
+            error={errors.costAmount}
             inputMode="decimal"
             label={t('trips.planner.board.activitySpread.fields.costAmount')}
             onChange={(value) => onDraftChange('costAmount', value)}
             placeholder={t('trips.planner.board.activitySpread.placeholders.costAmount')}
+            transformValue={(value) => value.replace(/\D/g, '')}
             value={draft.costAmount}
           />
           <PlannerActivityTextField
+            error={errors.costCurrency}
             inputMode="text"
             label={t('trips.planner.board.activitySpread.fields.costCurrency')}
             maxLength={3}
@@ -566,10 +631,20 @@ function PlannerActivityDetailsPage({
 
 function PlannerActivitySupportPage({
   draft,
+  errors,
+  isCreating,
   onDraftChange,
+  onSubmit,
+  submitError,
+  submitSuccessMessage,
 }: {
   draft: PlannerActivityDraft;
+  errors: PlannerActivityDraftErrors;
+  isCreating: boolean;
   onDraftChange: PlannerActivityDraftChangeHandler;
+  onSubmit: () => void;
+  submitError: string | null;
+  submitSuccessMessage: string | null;
 }) {
   const { t } = useI18n();
   const imageUrl = draft.imageUrl.trim();
@@ -584,14 +659,15 @@ function PlannerActivitySupportPage({
         {t('trips.planner.board.activitySpread.detailsTitle')}
       </PlannerTapeTitle>
 
-      <div className="relative z-10 mt-6 flex flex-1 flex-col gap-4">
+      <div className="relative z-10 mt-5 flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-1">
         <PlannerActivityTextField
+          error={errors.imageUrl}
           label={t('trips.planner.board.activitySpread.fields.imageUrl')}
           onChange={(value) => onDraftChange('imageUrl', value)}
           placeholder={t('trips.planner.board.activitySpread.placeholders.imageUrl')}
           value={draft.imageUrl}
         />
-        <div className="relative h-40 shrink-0 overflow-hidden rounded-[1.1rem] border border-dashed border-[#b9aea0] bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] sm:h-44 lg:h-48">
+        <div className="relative h-32 shrink-0 overflow-hidden rounded-[1.1rem] border border-dashed border-[#b9aea0] bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] sm:h-36 lg:h-40">
           {shouldShowImage ? (
             <>
               <img
@@ -604,11 +680,179 @@ function PlannerActivitySupportPage({
           ) : null}
         </div>
         <PlannerActivityTextField
+          error={errors.notes}
           label={t('trips.planner.board.activitySpread.fields.notes')}
           multiline
           onChange={(value) => onDraftChange('notes', value)}
           placeholder={t('trips.planner.board.activitySpread.placeholders.notes')}
           value={draft.notes}
+        />
+
+        <div className="mt-auto flex flex-col items-end gap-3 pt-2">
+          {submitError ? (
+            <p className="w-full rounded-[0.85rem] border border-[#d92d20]/25 bg-[#fff1f0] px-4 py-3 font-marker text-[1rem] leading-tight text-[#b42318]" role="alert">
+              {submitError}
+            </p>
+          ) : null}
+          {submitSuccessMessage ? (
+            <p className="w-full rounded-[0.85rem] border border-[#6f9e44]/35 bg-[#f1ffd8] px-4 py-3 font-marker text-[1rem] leading-tight text-[#31521c]" role="status">
+              {submitSuccessMessage}
+            </p>
+          ) : null}
+          <button
+            className="inline-flex shrink-0 items-center gap-2 rounded-[1.25rem] border-2 border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.75rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:px-6 sm:text-[2.1rem]"
+            disabled={isCreating || Boolean(submitSuccessMessage)}
+            onClick={onSubmit}
+            type="button"
+          >
+            <Check className="h-5 w-5" strokeWidth={2.5} />
+            {isCreating
+              ? t('trips.planner.board.activitySpread.creatingAction')
+              : t('trips.planner.board.activitySpread.createAction')}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PlannerActivityIntroPage({
+  onBack,
+}: {
+  onBack: () => void;
+}) {
+  const { t } = useI18n();
+
+  return (
+    <div
+      className="relative flex h-full min-h-[33rem] flex-col overflow-hidden border-b border-gray-100 bg-[#fffdfa] px-5 py-5 sm:px-7 sm:py-6 md:min-h-0 md:border-r md:border-b-0 lg:px-8"
+      style={pageDotStyle}
+    >
+      <button
+        className="relative z-40 inline-flex w-fit items-center gap-1.5 rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-4 py-2 font-hand text-[1.25rem] leading-none text-[#6b4938] shadow-[0_10px_18px_rgba(90,62,40,0.12)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:text-[1.45rem]"
+        onClick={onBack}
+        type="button"
+      >
+        <ChevronLeft className="h-4 w-4" strokeWidth={2.2} />
+        {t('trips.planner.board.activitySpread.backToGeneralAction')}
+      </button>
+
+      <PlannerTapeTitle className="mt-4">
+        {t('trips.planner.board.activitySpread.stepTitle')}
+      </PlannerTapeTitle>
+
+      <div className="flex flex-1 items-center justify-center">
+        <div className="grid h-32 w-32 place-items-center rounded-full border border-[#8b6244]/25 bg-[#fff1d9] font-marker text-[4rem] font-bold leading-none text-[#4d2d1b] shadow-[0_16px_28px_rgba(90,62,40,0.12)]">
+          2
+        </div>
+      </div>
+
+      <div className="relative z-10 mt-auto pt-5">
+        <PlannerStepProgress currentStep={2} />
+      </div>
+    </div>
+  );
+}
+
+function PlannerActivityAddPage({
+  onAddActivity,
+}: {
+  onAddActivity: () => void;
+}) {
+  const { t } = useI18n();
+
+  return (
+    <div
+      className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-8 pt-5 sm:px-7 sm:pb-9 sm:pt-6 md:min-h-0 lg:px-8"
+      style={pageDotStyle}
+    >
+      <PlannerTapeTitle className="mt-1">
+        {t('trips.planner.board.activitySpread.addPageTitle')}
+      </PlannerTapeTitle>
+
+      <div className="flex flex-1 items-center justify-center">
+        <button
+          className="inline-flex items-center gap-3 rounded-[1.35rem] border-2 border-[#3a5d25] bg-[#b9e177] px-6 py-3 font-cursive text-[1.9rem] font-bold leading-none text-[#172612] shadow-[0_8px_0_#6f9e44,0_16px_26px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 sm:text-[2.25rem]"
+          onClick={onAddActivity}
+          type="button"
+        >
+          <Plus className="h-6 w-6" strokeWidth={2.5} />
+          {t('trips.planner.board.activitySpread.addActivityAction')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function PlannerActivityBlankPage() {
+  return (
+    <div
+      className="h-full min-h-[33rem] bg-[#fffdfa] md:min-h-0"
+      style={pageDotStyle}
+    />
+  );
+}
+
+function PlannerActivityIntroSpread({
+  onAddActivity,
+  onBack,
+}: {
+  onAddActivity: () => void;
+  onBack: () => void;
+}) {
+  return (
+    <div className="flex h-full min-h-0 flex-col md:flex-row">
+      <div className="md:h-full md:w-1/2">
+        <PlannerActivityIntroPage onBack={onBack} />
+      </div>
+      <div className="md:h-full md:w-1/2">
+        <PlannerActivityAddPage onAddActivity={onAddActivity} />
+      </div>
+    </div>
+  );
+}
+
+function PlannerActivityFormSpread({
+  activityDraft,
+  activityDraftErrors,
+  createError,
+  createSuccessMessage,
+  isCreating,
+  onBack,
+  onDraftChange,
+  onSubmit,
+}: {
+  activityDraft: PlannerActivityDraft;
+  activityDraftErrors: PlannerActivityDraftErrors;
+  createError: string | null;
+  createSuccessMessage: string | null;
+  isCreating: boolean;
+  onBack: () => void;
+  onDraftChange: PlannerActivityDraftChangeHandler;
+  onSubmit: () => void;
+}) {
+  const { t } = useI18n();
+
+  return (
+    <div className="flex h-full min-h-0 flex-col md:flex-row">
+      <div className="md:h-full md:w-1/2">
+        <PlannerActivityDetailsPage
+          backLabel={t('trips.planner.board.activitySpread.backToActivityIntroAction')}
+          draft={activityDraft}
+          errors={activityDraftErrors}
+          onBack={onBack}
+          onDraftChange={onDraftChange}
+        />
+      </div>
+      <div className="md:h-full md:w-1/2">
+        <PlannerActivitySupportPage
+          draft={activityDraft}
+          errors={activityDraftErrors}
+          isCreating={isCreating}
+          onDraftChange={onDraftChange}
+          onSubmit={onSubmit}
+          submitError={createError}
+          submitSuccessMessage={createSuccessMessage}
         />
       </div>
     </div>
@@ -616,35 +860,170 @@ function PlannerActivitySupportPage({
 }
 
 export function PlannerActivitySpread({
+  createError,
+  createSuccessMessage,
+  isCreating,
   onBack,
+  onCreateActivity,
 }: {
+  createError: string | null;
+  createSuccessMessage: string | null;
+  isCreating: boolean;
   nodeId: string | null;
   onBack: () => void;
+  onCreateActivity: (draft: PlannerActivityDraft) => Promise<boolean>;
 }) {
   const [activityDraft, setActivityDraft] = useState(createDefaultActivityDraft);
+  const [activityDraftErrors, setActivityDraftErrors] = useState<PlannerActivityDraftErrors>({});
+  const [isActivityFormOpen, setIsActivityFormOpen] = useState(false);
+  const { t } = useI18n();
 
   const updateActivityDraft: PlannerActivityDraftChangeHandler = (field, value) => {
     setActivityDraft((currentDraft) => ({
       ...currentDraft,
       [field]: value,
     }));
+    setActivityDraftErrors((currentErrors) => {
+      const nextErrors = { ...currentErrors };
+
+      delete nextErrors[field];
+
+      if (field === 'startTime' || field === 'endTime') {
+        delete nextErrors.time;
+      }
+
+      if (field === 'costAmount' || field === 'costCurrency') {
+        delete nextErrors.costAmount;
+        delete nextErrors.costCurrency;
+      }
+
+      return nextErrors;
+    });
   };
 
+  const validateActivityDraft = () => {
+    const nextErrors: PlannerActivityDraftErrors = {};
+    const title = activityDraft.title.trim();
+    const costAmount = activityDraft.costAmount.trim();
+    const costCurrency = activityDraft.costCurrency.trim();
+    const notes = activityDraft.notes.trim();
+    const imageUrl = activityDraft.imageUrl.trim();
+
+    if (!title) {
+      nextErrors.title = t('trips.planner.board.activitySpread.validation.titleRequired');
+    }
+
+    if (!activityDraft.date) {
+      nextErrors.date = t('trips.planner.board.activitySpread.validation.dateRequired');
+    }
+
+    if (
+      activityDraft.startTime &&
+      activityDraft.endTime &&
+      activityDraft.endTime < activityDraft.startTime
+    ) {
+      nextErrors.time = t('trips.planner.board.activitySpread.validation.timeRangeInvalid');
+    }
+
+    if (costAmount && Number(costAmount) < 0) {
+      nextErrors.costAmount = t('trips.planner.board.activitySpread.validation.costAmountInvalid');
+    }
+
+    if (costAmount && !costCurrency) {
+      nextErrors.costCurrency = t('trips.planner.board.activitySpread.validation.costCurrencyRequired');
+    } else if (costAmount && costCurrency.length !== 3) {
+      nextErrors.costCurrency = t('trips.planner.board.activitySpread.validation.costCurrencyLength');
+    }
+
+    if (notes.length > 4000) {
+      nextErrors.notes = t('trips.planner.board.activitySpread.validation.notesLength');
+    }
+
+    if (imageUrl && !isValidHttpUrl(imageUrl)) {
+      nextErrors.imageUrl = t('trips.planner.board.activitySpread.validation.imageUrlInvalid');
+    }
+
+    return nextErrors;
+  };
+
+  const submitActivity = async () => {
+    if (isCreating || createSuccessMessage) {
+      return;
+    }
+
+    const nextErrors = validateActivityDraft();
+
+    setActivityDraftErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    await onCreateActivity(activityDraft);
+  };
+
+  const formSpread = (
+    <PlannerActivityFormSpread
+      activityDraft={activityDraft}
+      activityDraftErrors={activityDraftErrors}
+      createError={createError}
+      createSuccessMessage={createSuccessMessage}
+      isCreating={isCreating}
+      onBack={() => setIsActivityFormOpen(false)}
+      onDraftChange={updateActivityDraft}
+      onSubmit={submitActivity}
+    />
+  );
+
+  const introSpread = (
+    <PlannerActivityIntroSpread
+      onAddActivity={() => setIsActivityFormOpen(true)}
+      onBack={onBack}
+    />
+  );
+
   return (
-    <div className="flex h-full min-h-0 flex-col md:flex-row">
-      <div className="md:h-full md:w-1/2">
-        <PlannerActivityDetailsPage
-          draft={activityDraft}
-          onBack={onBack}
-          onDraftChange={updateActivityDraft}
-        />
+    <>
+      <div className="flex h-full min-h-0 flex-col md:hidden">
+        {isActivityFormOpen ? formSpread : introSpread}
       </div>
-      <div className="md:h-full md:w-1/2">
-        <PlannerActivitySupportPage
-          draft={activityDraft}
-          onDraftChange={updateActivityDraft}
-        />
+      <div className="relative hidden h-full min-h-0 md:block" style={{ perspective: '1800px' }}>
+        <div
+          className={cn(
+            'absolute inset-0 transition-opacity duration-300',
+            isActivityFormOpen ? 'pointer-events-none opacity-0 delay-300' : 'opacity-100',
+          )}
+        >
+          {introSpread}
+        </div>
+        <div
+          className={cn(
+            'absolute inset-0 transition-opacity duration-300',
+            isActivityFormOpen ? 'opacity-100 delay-300' : 'pointer-events-none opacity-0',
+          )}
+        >
+          {formSpread}
+        </div>
+        <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-50 w-1/2">
+          <div
+            className="relative h-full w-full transition-transform duration-700 [transform-style:preserve-3d]"
+            style={{
+              transform: isActivityFormOpen ? 'rotateY(-180deg)' : 'rotateY(0deg)',
+              transformOrigin: 'left center',
+            }}
+          >
+            <div className="absolute inset-0 overflow-hidden [backface-visibility:hidden]">
+              <PlannerActivityAddPage onAddActivity={() => undefined} />
+            </div>
+            <div
+              className="absolute inset-0 overflow-hidden [backface-visibility:hidden]"
+              style={{ transform: 'rotateY(180deg)' }}
+            >
+              <PlannerActivityBlankPage />
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
