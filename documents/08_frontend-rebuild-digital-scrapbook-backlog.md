@@ -222,6 +222,14 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] thêm nút quay lại hành động trước khi đang ở hành động thứ hai trở đi
 - [x] giữ nút `Tạo` luôn hiển thị ở mỗi trang hành động và lưu toàn bộ hành động cùng chuyến đi
 
+### Follow-up activity time constraints
+
+- [x] giới hạn ngày của từng hoạt động nằm trong khoảng ngày bắt đầu/kết thúc của chuyến đi
+- [x] bắt buộc hoạt động có đủ giờ bắt đầu và giờ kết thúc
+- [x] chặn giờ kết thúc bằng hoặc sớm hơn giờ bắt đầu
+- [x] chặn các hoạt động trong cùng ngày có khoảng thời gian giao nhau
+- [x] khi có lỗi ở hoạt động khác, tự chuyển về trang hoạt động đầu tiên cần sửa
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

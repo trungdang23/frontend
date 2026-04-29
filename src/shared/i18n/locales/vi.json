@@ -612,7 +612,11 @@
           "validation": {
             "titleRequired": "Bạn cần nhập tên hoạt động.",
             "dateRequired": "Bạn cần chọn ngày cho hoạt động.",
-            "timeRangeInvalid": "Giờ kết thúc không thể sớm hơn giờ bắt đầu.",
+            "dateOutsideTripRange": "Ngày hoạt động phải nằm trong khoảng {{startDate}} - {{endDate}} của chuyến đi.",
+            "startTimeRequired": "Bạn cần chọn giờ bắt đầu.",
+            "endTimeRequired": "Bạn cần chọn giờ kết thúc.",
+            "timeRangeInvalid": "Giờ kết thúc phải sau giờ bắt đầu.",
+            "timeOverlap": "Thời gian bị trùng với hành động {{index}}.",
             "costAmountInvalid": "Chi phí phải lớn hơn hoặc bằng 0.",
             "costCurrencyRequired": "Tiền tệ là bắt buộc khi nhập chi phí.",
             "costCurrencyLength": "Tiền tệ cần đúng 3 ký tự.",

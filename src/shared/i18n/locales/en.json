@@ -612,7 +612,11 @@
           "validation": {
             "titleRequired": "Enter the activity name first.",
             "dateRequired": "Choose a date for the activity.",
-            "timeRangeInvalid": "End time cannot be earlier than start time.",
+            "dateOutsideTripRange": "Activity date must stay within the trip range {{startDate}} - {{endDate}}.",
+            "startTimeRequired": "Choose a start time.",
+            "endTimeRequired": "Choose an end time.",
+            "timeRangeInvalid": "End time must be after start time.",
+            "timeOverlap": "This time overlaps activity {{index}}.",
             "costAmountInvalid": "Cost must be greater than or equal to 0.",
             "costCurrencyRequired": "Currency is required when a cost is entered.",
             "costCurrencyLength": "Currency must be exactly 3 characters.",

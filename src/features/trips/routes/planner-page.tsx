@@ -1319,6 +1319,10 @@ export function PlannerPage() {
                   nodeId={activeNodeId}
                   onBack={returnToGeneralInfoPage}
                   onCreateActivities={createTripWithActivities}
+                  tripDateRange={{
+                    endDate: tripDraft.endDate,
+                    startDate: tripDraft.startDate,
+                  }}
                 />
               ) : isCreatingPlan ? (
                 <PlannerCreateSpread
@@ -1345,6 +1349,10 @@ export function PlannerPage() {
                   nodeId={activeNodeId}
                   onBack={returnToGeneralInfoPage}
                   onCreateActivities={createTripWithActivities}
+                  tripDateRange={{
+                    endDate: tripDraft.endDate,
+                    startDate: tripDraft.startDate,
+                  }}
                 />
               ) : isCreatingPlan ? (
                 <PlannerCreateSpread

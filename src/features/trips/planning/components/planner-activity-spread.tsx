@@ -35,6 +35,10 @@ type PlannerActivityDraftField = keyof PlannerActivityDraft;
 type PlannerActivityDraftErrorField = PlannerActivityDraftField | 'time';
 type PlannerActivityDraftErrors = Partial<Record<PlannerActivityDraftErrorField, string>>;
 type PlannerActivityPageTurnDirection = 'next' | 'previous';
+type PlannerActivityTripDateRange = {
+  endDate: string;
+  startDate: string;
+};
 type PlannerActivityDraftChangeHandler = <Field extends PlannerActivityDraftField>(
   field: Field,
   value: PlannerActivityDraft[Field],
@@ -130,6 +134,47 @@ function isValidHttpUrl(value: string) {
   } catch {
     return false;
   }
+}
+
+function getPlannerTimeInMinutes(value: string) {
+  const [hour, minute] = value.split(':').map(Number);
+
+  if (!Number.isInteger(hour) || !Number.isInteger(minute)) {
+    return null;
+  }
+
+  return hour * 60 + minute;
+}
+
+function doPlannerActivityTimesOverlap(
+  firstActivity: PlannerActivityDraft,
+  secondActivity: PlannerActivityDraft,
+) {
+  if (
+    firstActivity.date !== secondActivity.date ||
+    !firstActivity.startTime ||
+    !firstActivity.endTime ||
+    !secondActivity.startTime ||
+    !secondActivity.endTime
+  ) {
+    return false;
+  }
+
+  const firstStart = getPlannerTimeInMinutes(firstActivity.startTime);
+  const firstEnd = getPlannerTimeInMinutes(firstActivity.endTime);
+  const secondStart = getPlannerTimeInMinutes(secondActivity.startTime);
+  const secondEnd = getPlannerTimeInMinutes(secondActivity.endTime);
+
+  if (
+    firstStart === null ||
+    firstEnd === null ||
+    secondStart === null ||
+    secondEnd === null
+  ) {
+    return false;
+  }
+
+  return firstStart < secondEnd && secondStart < firstEnd;
 }
 
 function getTimeOptions() {
@@ -595,7 +640,7 @@ function PlannerActivityDetailsPage({
         />
         <PlannerActivityTimePicker
           endTime={draft.endTime}
-          error={errors.time}
+          error={errors.time ?? errors.startTime ?? errors.endTime}
           label={t('trips.planner.board.activitySpread.fields.time')}
           onChange={onDraftChange}
           startTime={draft.startTime}
@@ -745,6 +790,7 @@ export function PlannerActivitySpread({
   isCreating,
   onBack,
   onCreateActivities,
+  tripDateRange,
 }: {
   createError: string | null;
   createSuccessMessage: string | null;
@@ -752,6 +798,7 @@ export function PlannerActivitySpread({
   nodeId: string | null;
   onBack: () => void;
   onCreateActivities: (drafts: PlannerActivityDraft[]) => Promise<boolean>;
+  tripDateRange: PlannerActivityTripDateRange;
 }) {
   const [activityDrafts, setActivityDrafts] = useState<PlannerActivityDraft[]>(() => [
     createDefaultActivityDraft(),
@@ -837,9 +884,26 @@ export function PlannerActivitySpread({
 
     if (!draft.date) {
       nextErrors.date = t('trips.planner.board.activitySpread.validation.dateRequired');
+    } else if (
+      tripDateRange.startDate &&
+      tripDateRange.endDate &&
+      (draft.date < tripDateRange.startDate || draft.date > tripDateRange.endDate)
+    ) {
+      nextErrors.date = t('trips.planner.board.activitySpread.validation.dateOutsideTripRange', {
+        endDate: formatPlannerDate(tripDateRange.endDate),
+        startDate: formatPlannerDate(tripDateRange.startDate),
+      });
     }
 
-    if (draft.startTime && draft.endTime && draft.endTime < draft.startTime) {
+    if (!draft.startTime) {
+      nextErrors.startTime = t('trips.planner.board.activitySpread.validation.startTimeRequired');
+    }
+
+    if (!draft.endTime) {
+      nextErrors.endTime = t('trips.planner.board.activitySpread.validation.endTimeRequired');
+    }
+
+    if (draft.startTime && draft.endTime && draft.endTime <= draft.startTime) {
       nextErrors.time = t('trips.planner.board.activitySpread.validation.timeRangeInvalid');
     }
 
@@ -860,6 +924,48 @@ export function PlannerActivitySpread({
     if (imageUrl && !isValidHttpUrl(imageUrl)) {
       nextErrors.imageUrl = t('trips.planner.board.activitySpread.validation.imageUrlInvalid');
     }
+
+    return nextErrors;
+  };
+
+  const validateActivityDrafts = () => {
+    const nextErrors = activityDrafts.reduce<Record<number, PlannerActivityDraftErrors>>(
+      (errorsByIndex, draft, index) => {
+        const errors = validateActivityDraft(draft);
+
+        if (Object.keys(errors).length > 0) {
+          errorsByIndex[index] = errors;
+        }
+
+        return errorsByIndex;
+      },
+      {},
+    );
+
+    activityDrafts.forEach((currentDraft, currentIndex) => {
+      activityDrafts.forEach((otherDraft, otherIndex) => {
+        if (currentIndex >= otherIndex) {
+          return;
+        }
+
+        if (!doPlannerActivityTimesOverlap(currentDraft, otherDraft)) {
+          return;
+        }
+
+        nextErrors[currentIndex] = {
+          ...(nextErrors[currentIndex] ?? {}),
+          time: t('trips.planner.board.activitySpread.validation.timeOverlap', {
+            index: otherIndex + 1,
+          }),
+        };
+        nextErrors[otherIndex] = {
+          ...(nextErrors[otherIndex] ?? {}),
+          time: t('trips.planner.board.activitySpread.validation.timeOverlap', {
+            index: currentIndex + 1,
+          }),
+        };
+      });
+    });
 
     return nextErrors;
   };
@@ -887,18 +993,7 @@ export function PlannerActivitySpread({
       return;
     }
 
-    const nextErrors = activityDrafts.reduce<Record<number, PlannerActivityDraftErrors>>(
-      (errorsByIndex, draft, index) => {
-        const errors = validateActivityDraft(draft);
-
-        if (Object.keys(errors).length > 0) {
-          errorsByIndex[index] = errors;
-        }
-
-        return errorsByIndex;
-      },
-      {},
-    );
+    const nextErrors = validateActivityDrafts();
     const firstErrorIndex = Number(Object.keys(nextErrors)[0]);
 
     setActivityDraftErrors(nextErrors);
