@@ -213,13 +213,6 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] thay native time select bằng popup chọn giờ custom, giới hạn chiều cao trong quyển sổ
 - [x] cân lại hai trang để khung ảnh minh họa hiển thị rõ và không bị nội dung khác che
 
-### Follow-up activity create flow
-
-- [x] thêm nút `Thêm hoạt động` ở bước 2 trước khi mở form nhập hoạt động
-- [x] khi bấm `Thêm hoạt động`, lật sách sang trang nhập hoạt động mới
-- [x] thêm nút `Tạo` để lưu chuyến đi từ draft bước 1 và lưu hoạt động đầu tiên vào planner của chuyến đi đó
-- [x] hiển thị trạng thái đang lưu, lỗi validate và lỗi API ngay trong bước 2
-
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

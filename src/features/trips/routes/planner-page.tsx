@@ -10,14 +10,8 @@ import {
 } from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
-import { createTrip } from '@/features/trips/api/trips-api';
-import { createPlanNode } from '@/features/trips/planning/api/planner-api';
-import {
-  PlannerActivitySpread,
-  type PlannerActivityDraft,
-} from '@/features/trips/planning/components/planner-activity-spread';
-import type { PlanNodeMutationPayload } from '@/features/trips/planning/types/plan-node';
-import type { TripBudgetMode, TripUpsertPayload, TripVisibility } from '@/features/trips/types/trip';
+import { PlannerActivitySpread } from '@/features/trips/planning/components/planner-activity-spread';
+import type { TripBudgetMode, TripVisibility } from '@/features/trips/types/trip';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -59,54 +53,6 @@ const createDefaultPlannerTripDraft = (): PlannerTripDraft => ({
   manualBudgetCurrency: 'VND',
   visibility: 'private',
 });
-
-function toNullableTrimmedValue(value: string) {
-  const trimmedValue = value.trim();
-
-  return trimmedValue || null;
-}
-
-function buildTripCreatePayload(draft: PlannerTripDraft): TripUpsertPayload {
-  const isManualBudget = draft.budgetMode === 'manual';
-
-  return {
-    name: draft.name.trim(),
-    destination: toNullableTrimmedValue(draft.destination),
-    summaryNotes: toNullableTrimmedValue(draft.summaryNotes),
-    coverImageUrl: toNullableTrimmedValue(draft.coverImageUrl),
-    startDate: draft.startDate,
-    endDate: draft.endDate,
-    budgetMode: draft.budgetMode,
-    manualBudgetAmount: isManualBudget ? Number(draft.manualBudgetAmount.trim()) : null,
-    manualBudgetCurrency: isManualBudget ? draft.manualBudgetCurrency.trim().toUpperCase() : null,
-    visibility: draft.visibility,
-  };
-}
-
-function buildActivityDateTime(date: string, time: string) {
-  return `${date}T${time || '00:00'}`;
-}
-
-function buildActivityPlanNodePayload(
-  tripId: string,
-  draft: PlannerActivityDraft,
-): PlanNodeMutationPayload {
-  const costAmount = draft.costAmount.trim() ? Number(draft.costAmount.trim()) : null;
-
-  return {
-    tripId,
-    parentId: null,
-    type: 'activity',
-    title: draft.title.trim(),
-    notes: toNullableTrimmedValue(draft.notes),
-    startAt: buildActivityDateTime(draft.date, draft.startTime),
-    endAt: draft.endTime ? buildActivityDateTime(draft.date, draft.endTime) : null,
-    costAmount,
-    costCurrency: costAmount === null ? null : draft.costCurrency.trim().toUpperCase(),
-    imageUrl: toNullableTrimmedValue(draft.imageUrl),
-    sortOrder: 0,
-  };
-}
 
 function formatPlannerDate(value: string) {
   if (!value) {
@@ -1116,9 +1062,6 @@ export function PlannerPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [tripDraft, setTripDraft] = useState(createDefaultPlannerTripDraft);
   const [tripDraftErrors, setTripDraftErrors] = useState<PlannerTripDraftErrors>({});
-  const [isCreatingTripWithActivity, setIsCreatingTripWithActivity] = useState(false);
-  const [createTripWithActivityError, setCreateTripWithActivityError] = useState<string | null>(null);
-  const [createTripWithActivitySuccess, setCreateTripWithActivitySuccess] = useState<string | null>(null);
   const plannerPage = searchParams.get('page');
   const isCreatingPlan = plannerPage === 'next';
   const isEditingActivities = plannerPage === 'activities';
@@ -1130,8 +1073,6 @@ export function PlannerPage() {
       ...currentDraft,
       [field]: value,
     }));
-    setCreateTripWithActivityError(null);
-    setCreateTripWithActivitySuccess(null);
     setTripDraftErrors((currentErrors) => {
       const nextErrors = { ...currentErrors };
 
@@ -1207,23 +1148,18 @@ export function PlannerPage() {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set('page', 'next');
     setSearchParams(nextParams, { replace: true });
-    setCreateTripWithActivityError(null);
-    setCreateTripWithActivitySuccess(null);
   };
 
   const returnToIntroPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.delete('page');
     setSearchParams(nextParams, { replace: true });
-    setCreateTripWithActivityError(null);
-    setCreateTripWithActivitySuccess(null);
   };
 
   const openActivityPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set('page', 'activities');
     setSearchParams(nextParams, { replace: true });
-    setCreateTripWithActivityError(null);
   };
 
   const continueWithTripDraft = () => {
@@ -1238,51 +1174,10 @@ export function PlannerPage() {
     openActivityPlannerPage();
   };
 
-  const createTripWithActivity = async (activityDraft: PlannerActivityDraft) => {
-    if (isCreatingTripWithActivity || createTripWithActivitySuccess) {
-      return false;
-    }
-
-    const nextErrors = validateTripDraft();
-
-    setTripDraftErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
-      setCreateTripWithActivityError(t('trips.planner.board.activitySpread.feedback.tripDraftInvalid'));
-
-      return false;
-    }
-
-    setIsCreatingTripWithActivity(true);
-    setCreateTripWithActivityError(null);
-    setCreateTripWithActivitySuccess(null);
-
-    try {
-      const trip = await createTrip(buildTripCreatePayload(tripDraft));
-
-      await createPlanNode(buildActivityPlanNodePayload(trip.id, activityDraft));
-      setCreateTripWithActivitySuccess(
-        t('trips.planner.board.activitySpread.feedback.createSuccess', {
-          tripName: trip.name,
-        }),
-      );
-
-      return true;
-    } catch {
-      setCreateTripWithActivityError(t('trips.planner.board.activitySpread.feedback.createError'));
-
-      return false;
-    } finally {
-      setIsCreatingTripWithActivity(false);
-    }
-  };
-
   const returnToGeneralInfoPage = () => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set('page', 'next');
     setSearchParams(nextParams, { replace: true });
-    setCreateTripWithActivityError(null);
-    setCreateTripWithActivitySuccess(null);
   };
 
   return (
@@ -1307,12 +1202,8 @@ export function PlannerPage() {
             <div className="flex flex-col md:hidden">
               {isEditingActivities ? (
                 <PlannerActivitySpread
-                  createError={createTripWithActivityError}
-                  createSuccessMessage={createTripWithActivitySuccess}
-                  isCreating={isCreatingTripWithActivity}
                   nodeId={activeNodeId}
                   onBack={returnToGeneralInfoPage}
-                  onCreateActivity={createTripWithActivity}
                 />
               ) : isCreatingPlan ? (
                 <PlannerCreateSpread
@@ -1333,12 +1224,8 @@ export function PlannerPage() {
             <div className="relative hidden h-full min-h-0 md:block">
               {isEditingActivities ? (
                 <PlannerActivitySpread
-                  createError={createTripWithActivityError}
-                  createSuccessMessage={createTripWithActivitySuccess}
-                  isCreating={isCreatingTripWithActivity}
                   nodeId={activeNodeId}
                   onBack={returnToGeneralInfoPage}
-                  onCreateActivity={createTripWithActivity}
                 />
               ) : isCreatingPlan ? (
                 <PlannerCreateSpread

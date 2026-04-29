@@ -567,11 +567,6 @@
         "activitySpread": {
           "stepTitle": "Bước 2: Hoạt Động",
           "backToGeneralAction": "Quay lại thông tin chung",
-          "backToActivityIntroAction": "Quay lại hoạt động",
-          "addPageTitle": "Hoạt Động Mới",
-          "addActivityAction": "Thêm hoạt động",
-          "createAction": "Tạo",
-          "creatingAction": "Đang tạo...",
           "fixedFieldsNote": "Thông tin cố định ở đây, sticker tự do ở trang bên cạnh.",
           "detailsTitle": "Chi Tiết Hoạt Động",
           "canvasPageTitle": "Khung Hoạt Động",
@@ -609,16 +604,6 @@
             "imageUrl": "https://example.com/activity.jpg"
           },
           "imagePreviewAlt": "Ảnh minh họa hoạt động",
-          "validation": {
-            "titleRequired": "Bạn cần nhập tên hoạt động.",
-            "dateRequired": "Bạn cần chọn ngày cho hoạt động.",
-            "timeRangeInvalid": "Giờ kết thúc không thể sớm hơn giờ bắt đầu.",
-            "costAmountInvalid": "Chi phí phải lớn hơn hoặc bằng 0.",
-            "costCurrencyRequired": "Tiền tệ là bắt buộc khi nhập chi phí.",
-            "costCurrencyLength": "Tiền tệ cần đúng 3 ký tự.",
-            "notesLength": "Ghi chú hoạt động không được vượt quá 4000 ký tự.",
-            "imageUrlInvalid": "Ảnh minh họa phải là URL http hoặc https hợp lệ."
-          },
           "stickers": {
             "sun": "mặt trời",
             "camera": "máy ảnh",
@@ -634,10 +619,7 @@
             "cleared": "Đã xóa sticker khỏi khung.",
             "saving": "Đang lưu tọa độ sticker...",
             "saved": "Đã lưu tọa độ sticker.",
-            "saveError": "Không thể lưu tọa độ sticker lúc này.",
-            "tripDraftInvalid": "Thông tin chung chưa hợp lệ. Hãy quay lại bước 1 để kiểm tra.",
-            "createSuccess": "Đã tạo chuyến đi \"{{tripName}}\" và lưu hoạt động đầu tiên.",
-            "createError": "Không thể tạo chuyến đi và lưu hoạt động lúc này."
+            "saveError": "Không thể lưu tọa độ sticker lúc này."
           }
         }
       },

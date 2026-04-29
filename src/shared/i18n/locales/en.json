@@ -567,11 +567,6 @@
         "activitySpread": {
           "stepTitle": "Step 2: Activities",
           "backToGeneralAction": "Back to trip basics",
-          "backToActivityIntroAction": "Back to activities",
-          "addPageTitle": "New Activity",
-          "addActivityAction": "Add activity",
-          "createAction": "Create",
-          "creatingAction": "Creating...",
           "fixedFieldsNote": "Fixed fields stay here, freeform stickers live on the next page.",
           "detailsTitle": "Activity Details",
           "canvasPageTitle": "Activity Frame",
@@ -609,16 +604,6 @@
             "imageUrl": "https://example.com/activity.jpg"
           },
           "imagePreviewAlt": "Activity image preview",
-          "validation": {
-            "titleRequired": "Enter the activity name first.",
-            "dateRequired": "Choose a date for the activity.",
-            "timeRangeInvalid": "End time cannot be earlier than start time.",
-            "costAmountInvalid": "Cost must be greater than or equal to 0.",
-            "costCurrencyRequired": "Currency is required when a cost is entered.",
-            "costCurrencyLength": "Currency must be exactly 3 characters.",
-            "notesLength": "Activity notes must be at most 4000 characters.",
-            "imageUrlInvalid": "Activity image must be a valid http or https URL."
-          },
           "stickers": {
             "sun": "sun",
             "camera": "camera",
@@ -634,10 +619,7 @@
             "cleared": "Cleared stickers from the frame.",
             "saving": "Saving sticker coordinates...",
             "saved": "Sticker coordinates saved.",
-            "saveError": "Unable to save sticker coordinates right now.",
-            "tripDraftInvalid": "Trip basics are not valid yet. Return to step 1 and check the fields.",
-            "createSuccess": "Created \"{{tripName}}\" and saved the first activity.",
-            "createError": "Unable to create the trip and save the activity right now."
+            "saveError": "Unable to save sticker coordinates right now."
           }
         }
       },
