@@ -575,6 +575,8 @@
           "stepTitle": "Step 2: Activities",
           "backToGeneralAction": "Back to trip basics",
           "backToPreviousActivityAction": "Back to previous activity",
+          "previousActivityAction": "Previous activity",
+          "nextActivityAction": "Next activity",
           "activityNumber": "Activity {{index}}",
           "addActivityAction": "Add activity",
           "deleteDraftAction": "Delete activity",

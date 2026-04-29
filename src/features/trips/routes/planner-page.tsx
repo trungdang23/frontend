@@ -288,6 +288,20 @@ function buildActivityDraftFromPlanNode(node: PlanNode): PlannerActivityDraft {
   };
 }
 
+function createEmptyActivityDraft(): PlannerActivityDraft {
+  return {
+    title: '',
+    date: '',
+    startTime: '',
+    endTime: '',
+    location: '',
+    costAmount: '',
+    costCurrency: 'VND',
+    notes: '',
+    imageUrl: '',
+  };
+}
+
 function formatPlannerDate(value: string) {
   if (!value) {
     return '';
@@ -1326,15 +1340,11 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
 
       return left.sortOrder - right.sortOrder;
     });
-  const editedActivityNode =
-    activityMode.kind === 'edit' ? activityNodes.find((node) => node.id === activityMode.nodeId) : null;
-  const reservedActivityTimes: PlannerActivityReservedTime[] = activityNodes
-    .filter((node) => activityMode.kind !== 'edit' || node.id !== activityMode.nodeId)
-    .map((node, index) => ({
-      draft: buildActivityDraftFromPlanNode(node),
-      label: node.title || t('trips.planner.board.activitySpread.activityNumber', { index: index + 1 }),
-    }));
-  const isActivityFormOpen = Boolean(trip) && (activityMode.kind === 'add' || Boolean(editedActivityNode));
+  const editedActivityIndex =
+    activityMode.kind === 'edit' ? activityNodes.findIndex((node) => node.id === activityMode.nodeId) : -1;
+  const editedActivityNode = editedActivityIndex >= 0 ? activityNodes[editedActivityIndex] : null;
+  const reservedActivityTimes: PlannerActivityReservedTime[] = [];
+  const isActivityFormOpen = Boolean(trip) && (activityMode.kind === 'add' || editedActivityIndex >= 0);
   const isSavedPlannerActionDisabled = isSavingActivity || isSavingTrip || Boolean(deletingNodeId);
 
   const clearActivityMutationState = () => {
@@ -1473,89 +1483,52 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
     await queryClient.invalidateQueries({ queryKey: plannerQueryKeys.detail(tripId) });
   };
 
-  const createSavedActivities = async (activityDrafts: PlannerActivityDraft[]): Promise<PlannerActivityCreateResult> => {
+  const saveSavedActivityDrafts = async (
+    activityDrafts: PlannerActivityDraft[],
+  ): Promise<PlannerActivityCreateResult> => {
     if (!trip || isSavingActivity) {
       return { ok: false };
     }
 
-    setIsSavingActivity(true);
-    setActivityMutationError(null);
-    setSavedPlannerFeedback(null);
-
-    try {
-      const createdNodes: PlanNode[] = [];
-
-      for (const [activityIndex, activityDraft] of activityDrafts.entries()) {
-        setActivityMutationProgress(
-          t('trips.planner.board.savedSpread.feedback.createProgress', {
-            current: activityIndex + 1,
-            total: activityDrafts.length,
-          }),
-        );
-
-        try {
-          const createdNode = await createPlanNode(
-            buildActivityPlanNodePayload(trip.id, activityDraft, activityNodes.length + activityIndex),
-          );
-
-          createdNodes.push(createdNode);
-        } catch (error) {
-          const createFailure = buildSavedActivityFailure(
-            activityIndex,
-            error,
-            'trips.planner.board.savedSpread.feedback.activityCreateError',
-          );
-
-          if (!('activityError' in createFailure) || !createFailure.activityError) {
-            setActivityMutationError(t('trips.planner.board.savedSpread.feedback.createError'));
-          }
-
-          return createFailure;
-        }
-      }
-
-      queryClient.setQueryData<TripPlannerResult>(plannerQueryKeys.detail(trip.id), (currentPlanner) => ({
-        trip: currentPlanner?.trip ?? trip,
-        nodes: currentPlanner ? [...currentPlanner.nodes, ...createdNodes] : createdNodes,
-      }));
-      await invalidateSavedPlanner();
-      setSavedPlannerFeedback({
-        kind: 'success',
-        message: t('trips.planner.board.savedSpread.feedback.createSuccess', {
-          count: createdNodes.length,
-        }),
-      });
-      setActivityMode({ kind: 'list' });
-
-      return { ok: true };
-    } finally {
-      setIsSavingActivity(false);
-      setActivityMutationProgress(null);
-    }
-  };
-
-  const updateSavedActivity = async (activityDrafts: PlannerActivityDraft[]): Promise<PlannerActivityCreateResult> => {
-    if (!trip || !editedActivityNode || isSavingActivity) {
-      return { ok: false };
-    }
-
-    const [activityDraft, ...newActivityDrafts] = activityDrafts;
-
-    if (!activityDraft) {
-      return { ok: false };
-    }
-
+    const existingActivityDrafts = activityDrafts.slice(0, activityNodes.length);
+    const newActivityDrafts = activityDrafts.slice(activityNodes.length);
     setIsSavingActivity(true);
     setActivityMutationError(null);
     setSavedPlannerFeedback(null);
     setActivityMutationProgress(t('trips.planner.board.savedSpread.feedback.updateProgress'));
 
     try {
-      const updatedNode = await updatePlanNode(editedActivityNode.id, buildActivityPlanNodeUpdatePayload(activityDraft));
+      const updatedNodes: PlanNode[] = [];
       const createdNodes: PlanNode[] = [];
 
+      for (const [activityIndex, activityDraft] of existingActivityDrafts.entries()) {
+        const activityNode = activityNodes[activityIndex];
+
+        if (!activityNode) {
+          continue;
+        }
+
+        try {
+          const updatedNode = await updatePlanNode(activityNode.id, buildActivityPlanNodeUpdatePayload(activityDraft));
+
+          updatedNodes.push(updatedNode);
+        } catch (error) {
+          const updateFailure = buildSavedActivityFailure(
+            activityIndex,
+            error,
+            'trips.planner.board.savedSpread.feedback.activityUpdateError',
+          );
+
+          if (!('activityError' in updateFailure) || !updateFailure.activityError) {
+            setActivityMutationError(t('trips.planner.board.savedSpread.feedback.updateError'));
+          }
+
+          return updateFailure;
+        }
+      }
+
       for (const [newActivityIndex, newActivityDraft] of newActivityDrafts.entries()) {
-        const activityIndex = newActivityIndex + 1;
+        const activityIndex = activityNodes.length + newActivityIndex;
 
         setActivityMutationProgress(
           t('trips.planner.board.savedSpread.feedback.createProgress', {
@@ -1585,40 +1558,36 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
         }
       }
 
+      const updatedNodeById = new Map(updatedNodes.map((node) => [node.id, node]));
+
       queryClient.setQueryData<TripPlannerResult>(plannerQueryKeys.detail(trip.id), (currentPlanner) => ({
         trip: currentPlanner?.trip ?? trip,
         nodes: currentPlanner
           ? [
-              ...currentPlanner.nodes.map((node) => (node.id === updatedNode.id ? updatedNode : node)),
+              ...currentPlanner.nodes.map((node) => updatedNodeById.get(node.id) ?? node),
               ...createdNodes,
             ]
-          : [updatedNode, ...createdNodes],
+          : [...updatedNodes, ...createdNodes],
       }));
       await invalidateSavedPlanner();
-      setSavedPlannerFeedback({
-        kind: 'success',
-        message:
-          createdNodes.length > 0
+      const successMessage =
+        updatedNodes.length === 0
+          ? t('trips.planner.board.savedSpread.feedback.createSuccess', {
+              count: createdNodes.length,
+            })
+          : createdNodes.length > 0
             ? t('trips.planner.board.savedSpread.feedback.updateWithCreateSuccess', {
                 count: createdNodes.length,
               })
-            : t('trips.planner.board.savedSpread.feedback.updateSuccess'),
+            : t('trips.planner.board.savedSpread.feedback.updateSuccess');
+
+      setSavedPlannerFeedback({
+        kind: 'success',
+        message: successMessage,
       });
       setActivityMode({ kind: 'list' });
 
       return { ok: true };
-    } catch (error) {
-      const updateFailure = buildSavedActivityFailure(
-        0,
-        error,
-        'trips.planner.board.savedSpread.feedback.activityUpdateError',
-      );
-
-      if (!('activityError' in updateFailure) || !updateFailure.activityError) {
-        setActivityMutationError(t('trips.planner.board.savedSpread.feedback.updateError'));
-      }
-
-      return updateFailure;
     } finally {
       setIsSavingActivity(false);
       setActivityMutationProgress(null);
@@ -1626,11 +1595,7 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
   };
 
   const saveActivityForm = (activityDrafts: PlannerActivityDraft[]) => {
-    if (activityMode.kind === 'add') {
-      return createSavedActivities(activityDrafts);
-    }
-
-    return updateSavedActivity(activityDrafts);
+    return saveSavedActivityDrafts(activityDrafts);
   };
 
   const saveSavedTripDetails = async () => {
@@ -1749,20 +1714,32 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
   }
 
   if (trip && isActivityFormOpen) {
-    const initialDrafts = editedActivityNode ? [buildActivityDraftFromPlanNode(editedActivityNode)] : undefined;
+    const savedActivityDrafts = activityNodes.map(buildActivityDraftFromPlanNode);
+    const initialDrafts =
+      activityMode.kind === 'add'
+        ? [...savedActivityDrafts, createEmptyActivityDraft()]
+        : savedActivityDrafts;
+    const initialActiveActivityIndex =
+      activityMode.kind === 'add' ? savedActivityDrafts.length : Math.max(editedActivityIndex, 0);
 
     return (
       <PlannerActivitySpread
-        key={activityMode.kind === 'add' ? `add-${trip.id}` : `edit-${editedActivityNode?.id}`}
+        key={
+          activityMode.kind === 'add'
+            ? `add-${trip.id}-${activityNodes.length}`
+            : `edit-${editedActivityNode?.id}-${activityNodes.length}`
+        }
         createError={activityMutationError}
         createProgressMessage={activityMutationProgress}
         createSuccessMessage={null}
         firstBackLabel={t('trips.planner.board.savedSpread.backToSavedPlannerAction')}
+        initialActiveActivityIndex={initialActiveActivityIndex}
         initialDrafts={initialDrafts}
         isCreating={isSavingActivity}
         nodeId={editedActivityNode?.id ?? null}
         onBack={closeActivityForm}
         onCreateActivities={saveActivityForm}
+        protectedDraftCount={activityNodes.length}
         reservedActivityTimes={reservedActivityTimes}
         showAddActivityAction
         submitActionLabel={t('trips.planner.board.savedSpread.saveActivityAction')}

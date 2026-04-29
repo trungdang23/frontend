@@ -184,7 +184,7 @@ export function ProfilePage() {
             </p>
           ) : null}
 
-          <div className="min-h-0 flex-1 overflow-y-auto px-1 pb-3 pr-2">
+          <div className="shell-scroll-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-2 pb-3">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               {activeQuery.isLoading ? (
                 <ProfileStateCard message={t('profile.states.loading')} />

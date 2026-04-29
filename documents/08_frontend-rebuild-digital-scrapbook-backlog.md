@@ -279,6 +279,13 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] đổi CTA kế hoạch ở profile thành `Chỉnh sửa` và thêm xóa cả planner/chuyến đi
 - [x] giữ danh sách kế hoạch trong profile scroll bên trong thẻ chứa, không làm body hoặc layout ngoài bị tràn
 
+### Follow-up activity paging and profile overflow cleanup
+
+- [x] ẩn scrollbar trong thẻ profile và chặn scroll ngang do card xoay/tràn
+- [x] thêm nút lật sang hoạt động trước/sau trong form activity
+- [x] khi thêm hoặc sửa activity ở planner đã lưu, nạp toàn bộ activity đã lưu để chỉnh nhiều activity trong một lượt
+- [x] khi lưu form nhiều activity, cập nhật các activity đã lưu và tạo thêm draft mới nếu có
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

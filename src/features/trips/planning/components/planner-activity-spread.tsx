@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { CalendarDays, Check, ChevronLeft, Clock, Plus, Trash2 } from 'lucide-react';
+import { CalendarDays, Check, ChevronLeft, ChevronRight, Clock, Plus, Trash2 } from 'lucide-react';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -696,6 +696,8 @@ function PlannerActivityDetailsPage({
 }
 
 function PlannerActivitySupportPage({
+  canGoToNextActivity,
+  canGoToPreviousActivity,
   canRemoveActivity,
   createError,
   createProgressMessage,
@@ -707,11 +709,15 @@ function PlannerActivitySupportPage({
   onAddActivity,
   onCreate,
   onDraftChange,
+  onGoToNextActivity,
+  onGoToPreviousActivity,
   onRemoveActivity,
   showAddActivityAction,
   submitActionLabel,
   submittingActionLabel,
 }: {
+  canGoToNextActivity: boolean;
+  canGoToPreviousActivity: boolean;
   canRemoveActivity: boolean;
   createError: string | null;
   createProgressMessage: string | null;
@@ -723,6 +729,8 @@ function PlannerActivitySupportPage({
   onAddActivity: () => void;
   onCreate: () => void;
   onDraftChange: PlannerActivityDraftChangeHandler;
+  onGoToNextActivity: () => void;
+  onGoToPreviousActivity: () => void;
   onRemoveActivity: () => void;
   showAddActivityAction: boolean;
   submitActionLabel: string;
@@ -799,6 +807,32 @@ function PlannerActivitySupportPage({
               {createSuccessMessage}
             </p>
           ) : null}
+          {canGoToPreviousActivity || canGoToNextActivity ? (
+            <div className="flex w-full flex-wrap justify-end gap-2">
+              {canGoToPreviousActivity ? (
+                <button
+                  className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-4 font-marker text-[0.98rem] font-bold leading-none text-[#6b4938] shadow-[0_5px_0_rgba(139,98,68,0.18)] transition hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:text-[1.08rem]"
+                  disabled={disabled}
+                  onClick={onGoToPreviousActivity}
+                  type="button"
+                >
+                  <ChevronLeft className="h-4 w-4" strokeWidth={2.3} />
+                  {t('trips.planner.board.activitySpread.previousActivityAction')}
+                </button>
+              ) : null}
+              {canGoToNextActivity ? (
+                <button
+                  className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-4 font-marker text-[0.98rem] font-bold leading-none text-[#6b4938] shadow-[0_5px_0_rgba(139,98,68,0.18)] transition hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:text-[1.08rem]"
+                  disabled={disabled}
+                  onClick={onGoToNextActivity}
+                  type="button"
+                >
+                  {t('trips.planner.board.activitySpread.nextActivityAction')}
+                  <ChevronRight className="h-4 w-4" strokeWidth={2.3} />
+                </button>
+              ) : null}
+            </div>
+          ) : null}
           {showAddActivityAction || canRemoveActivity ? (
             <div className="flex w-full flex-wrap justify-end gap-2">
               {canRemoveActivity ? (
@@ -845,10 +879,12 @@ export function PlannerActivitySpread({
   createProgressMessage,
   createSuccessMessage,
   firstBackLabel,
+  initialActiveActivityIndex = 0,
   initialDrafts,
   isCreating,
   onBack,
   onCreateActivities,
+  protectedDraftCount: initialProtectedDraftCount,
   reservedActivityTimes = [],
   showAddActivityAction = true,
   submitActionLabel,
@@ -859,11 +895,13 @@ export function PlannerActivitySpread({
   createProgressMessage: string | null;
   createSuccessMessage: string | null;
   firstBackLabel?: string;
+  initialActiveActivityIndex?: number;
   initialDrafts?: PlannerActivityDraft[];
   isCreating: boolean;
   nodeId: string | null;
   onBack: () => void;
   onCreateActivities: (drafts: PlannerActivityDraft[]) => Promise<PlannerActivityCreateResult>;
+  protectedDraftCount?: number;
   reservedActivityTimes?: PlannerActivityReservedTime[];
   showAddActivityAction?: boolean;
   submitActionLabel?: string;
@@ -873,7 +911,12 @@ export function PlannerActivitySpread({
   const [activityDrafts, setActivityDrafts] = useState<PlannerActivityDraft[]>(() =>
     initialDrafts?.length ? initialDrafts : [createDefaultActivityDraft()],
   );
-  const [activeActivityIndex, setActiveActivityIndex] = useState(0);
+  const [activeActivityIndex, setActiveActivityIndex] = useState(() => {
+    const draftCount = initialDrafts?.length || 1;
+    const clampedIndex = Math.min(Math.max(initialActiveActivityIndex, 0), draftCount - 1);
+
+    return clampedIndex;
+  });
   const [activityDraftErrors, setActivityDraftErrors] = useState<Record<number, PlannerActivityDraftErrors>>({});
   const [pageTurnDirection, setPageTurnDirection] = useState<PlannerActivityPageTurnDirection | null>(null);
   const pageTurnTimeoutRef = useRef<number | null>(null);
@@ -881,8 +924,13 @@ export function PlannerActivitySpread({
   const activityDraft = activityDrafts[activeActivityIndex] ?? createDefaultActivityDraft();
   const currentActivityErrors = activityDraftErrors[activeActivityIndex] ?? {};
   const isLocked = isCreating || Boolean(createSuccessMessage);
-  const protectedDraftCount = initialDrafts?.length ?? 0;
+  const protectedDraftCount = Math.min(
+    initialProtectedDraftCount ?? initialDrafts?.length ?? 0,
+    activityDrafts.length,
+  );
   const canRemoveActiveActivity = activityDrafts.length > 1 && activeActivityIndex >= protectedDraftCount;
+  const canGoToPreviousActivity = activeActivityIndex > 0;
+  const canGoToNextActivity = activeActivityIndex < activityDrafts.length - 1;
 
   useEffect(() => {
     return () => {
@@ -1120,6 +1168,26 @@ export function PlannerActivitySpread({
     });
   };
 
+  const goToNextActivityDraft = () => {
+    if (isLocked || !canGoToNextActivity) {
+      return;
+    }
+
+    startPageTurn('next', () => {
+      setActiveActivityIndex((currentIndex) => Math.min(activityDrafts.length - 1, currentIndex + 1));
+    });
+  };
+
+  const goToPreviousExistingActivityDraft = () => {
+    if (isLocked || !canGoToPreviousActivity) {
+      return;
+    }
+
+    startPageTurn('previous', () => {
+      setActiveActivityIndex((currentIndex) => Math.max(0, currentIndex - 1));
+    });
+  };
+
   const goToPreviousActivityDraft = () => {
     if (activeActivityIndex === 0) {
       onBack();
@@ -1205,6 +1273,8 @@ export function PlannerActivitySpread({
         </div>
         <div className="md:h-full md:w-1/2">
           <PlannerActivitySupportPage
+            canGoToNextActivity={canGoToNextActivity}
+            canGoToPreviousActivity={canGoToPreviousActivity}
             canRemoveActivity={canRemoveActiveActivity}
             createError={createError}
             createProgressMessage={createProgressMessage}
@@ -1216,6 +1286,8 @@ export function PlannerActivitySpread({
             onAddActivity={addActivityDraft}
             onCreate={createActivities}
             onDraftChange={updateActivityDraft}
+            onGoToNextActivity={goToNextActivityDraft}
+            onGoToPreviousActivity={goToPreviousExistingActivityDraft}
             onRemoveActivity={removeActivityDraft}
             showAddActivityAction={showAddActivityAction}
             submitActionLabel={submitActionLabel ?? t('trips.planner.board.activitySpread.createAction')}

@@ -575,6 +575,8 @@
           "stepTitle": "Bước 2: Hoạt Động",
           "backToGeneralAction": "Quay lại thông tin chung",
           "backToPreviousActivityAction": "Quay lại hành động trước",
+          "previousActivityAction": "Hoạt động trước",
+          "nextActivityAction": "Hoạt động sau",
           "activityNumber": "Hành động {{index}}",
           "addActivityAction": "Thêm hành động",
           "deleteDraftAction": "Xóa hành động",
