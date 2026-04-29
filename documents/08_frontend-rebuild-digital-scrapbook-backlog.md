@@ -213,6 +213,15 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] thay native time select bằng popup chọn giờ custom, giới hạn chiều cao trong quyển sổ
 - [x] cân lại hai trang để khung ảnh minh họa hiển thị rõ và không bị nội dung khác che
 
+### Follow-up multi-activity page turn create flow
+
+- [x] revert flow tạo hoạt động lỗi làm trống trang đầu bước 2
+- [x] giữ form hành động đầu tiên hiển thị ngay ở bước 2
+- [x] thêm nút `Thêm hành động` ở góc trên phải của trang hành động
+- [x] khi thêm hành động, lật trang sang form hành động mới với đầy đủ field như hành động hiện tại
+- [x] thêm nút quay lại hành động trước khi đang ở hành động thứ hai trở đi
+- [x] giữ nút `Tạo` luôn hiển thị ở mỗi trang hành động và lưu toàn bộ hành động cùng chuyến đi
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

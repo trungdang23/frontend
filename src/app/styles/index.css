@@ -859,6 +859,48 @@
   .text-ink-soft {
     color: var(--color-ink-soft);
   }
+
+  .planner-activity-page-turn-next {
+    animation: planner-activity-page-turn-next 720ms ease-in-out both;
+  }
+
+  .planner-activity-page-turn-previous {
+    animation: planner-activity-page-turn-previous 720ms ease-in-out both;
+  }
+}
+
+@keyframes planner-activity-page-turn-next {
+  0% {
+    opacity: 0.92;
+    transform: rotateY(0deg) translateX(0);
+  }
+
+  55% {
+    opacity: 1;
+    transform: rotateY(-116deg) translateX(-0.35rem);
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotateY(-178deg) translateX(-0.75rem);
+  }
+}
+
+@keyframes planner-activity-page-turn-previous {
+  0% {
+    opacity: 0;
+    transform: rotateY(-178deg) translateX(-0.75rem);
+  }
+
+  45% {
+    opacity: 1;
+    transform: rotateY(-86deg) translateX(-0.25rem);
+  }
+
+  100% {
+    opacity: 0.92;
+    transform: rotateY(0deg) translateX(0);
+  }
 }
 
 @keyframes note-drop {
