@@ -286,6 +286,12 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] khi thêm hoặc sửa activity ở planner đã lưu, nạp toàn bộ activity đã lưu để chỉnh nhiều activity trong một lượt
 - [x] khi lưu form nhiều activity, cập nhật các activity đã lưu và tạo thêm draft mới nếu có
 
+### Follow-up activity page navigation placement
+
+- [x] bỏ vùng scroll riêng ở nửa trang phải của form activity
+- [x] đưa nút `Hoạt động sau` lên góc trên phải trang phải
+- [x] dùng cùng nút góc trên trái cho `Quay lại planner/thông tin chung` ở activity đầu tiên và `Hoạt động trước` ở các activity sau
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

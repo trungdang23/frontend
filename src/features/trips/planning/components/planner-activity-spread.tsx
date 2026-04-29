@@ -288,7 +288,7 @@ function PlannerActivityTextField({
         <textarea
           aria-describedby={errorId}
           className={cn(
-            'mt-2 min-h-24 w-full resize-none rounded-[0.8rem] border border-dashed bg-white/60 px-4 py-3 font-marker text-[1.05rem] leading-tight text-[#3d332b] outline-none placeholder:text-[#71675c] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]',
+            'mt-2 min-h-[4.75rem] w-full resize-none rounded-[0.8rem] border border-dashed bg-white/60 px-4 py-3 font-marker text-[1.05rem] leading-tight text-[#3d332b] outline-none placeholder:text-[#71675c] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]',
             error ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
             disabled ? 'cursor-not-allowed opacity-65' : undefined,
           )}
@@ -697,7 +697,6 @@ function PlannerActivityDetailsPage({
 
 function PlannerActivitySupportPage({
   canGoToNextActivity,
-  canGoToPreviousActivity,
   canRemoveActivity,
   createError,
   createProgressMessage,
@@ -710,14 +709,12 @@ function PlannerActivitySupportPage({
   onCreate,
   onDraftChange,
   onGoToNextActivity,
-  onGoToPreviousActivity,
   onRemoveActivity,
   showAddActivityAction,
   submitActionLabel,
   submittingActionLabel,
 }: {
   canGoToNextActivity: boolean;
-  canGoToPreviousActivity: boolean;
   canRemoveActivity: boolean;
   createError: string | null;
   createProgressMessage: string | null;
@@ -730,7 +727,6 @@ function PlannerActivitySupportPage({
   onCreate: () => void;
   onDraftChange: PlannerActivityDraftChangeHandler;
   onGoToNextActivity: () => void;
-  onGoToPreviousActivity: () => void;
   onRemoveActivity: () => void;
   showAddActivityAction: boolean;
   submitActionLabel: string;
@@ -742,15 +738,26 @@ function PlannerActivitySupportPage({
 
   return (
     <div
-      className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-8 pt-5 sm:px-7 sm:pb-9 sm:pt-6 md:min-h-0 lg:px-8"
+      className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-5 pt-5 sm:px-7 sm:pb-6 sm:pt-6 md:min-h-0 lg:px-8"
       style={pageDotStyle}
     >
-      <div className="relative z-20 min-h-14">
+      <div className={cn('relative z-20 min-h-14', canGoToNextActivity ? 'pr-12 sm:pr-40' : undefined)}>
         <PlannerTapeTitle className="mt-1">{t('trips.planner.board.activitySpread.detailsTitle')}</PlannerTapeTitle>
+        {canGoToNextActivity ? (
+          <button
+            className="absolute right-0 top-0 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#6b4938] shadow-[0_5px_0_rgba(139,98,68,0.18)] transition hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
+            disabled={disabled}
+            onClick={onGoToNextActivity}
+            type="button"
+          >
+            <span className="hidden sm:inline">{t('trips.planner.board.activitySpread.nextActivityAction')}</span>
+            <ChevronRight className="h-4 w-4" strokeWidth={2.3} />
+          </button>
+        ) : null}
       </div>
 
-      <div className="relative z-10 mt-3 flex min-h-0 flex-1 flex-col">
-        <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
+      <div className="relative z-10 mt-2 flex min-h-0 flex-1 flex-col">
+        <div className="min-h-0 flex-1 space-y-2.5 overflow-hidden">
           <PlannerActivityTextField
             disabled={disabled}
             error={errors.imageUrl}
@@ -759,7 +766,7 @@ function PlannerActivitySupportPage({
             placeholder={t('trips.planner.board.activitySpread.placeholders.imageUrl')}
             value={draft.imageUrl}
           />
-          <div className="relative h-32 shrink-0 overflow-hidden rounded-[1.1rem] border border-dashed border-[#b9aea0] bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] sm:h-36 lg:h-40">
+          <div className="relative h-24 shrink-0 overflow-hidden rounded-[1.1rem] border border-dashed border-[#b9aea0] bg-white/45 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)] sm:h-28 lg:h-32">
             {shouldShowImage ? (
               <>
                 <img
@@ -782,7 +789,7 @@ function PlannerActivitySupportPage({
           />
         </div>
 
-        <div className="flex shrink-0 flex-col items-end gap-3 pt-4">
+        <div className="flex shrink-0 flex-col items-end gap-2.5 pt-3">
           {createProgressMessage ? (
             <p
               className="w-full rounded-[0.85rem] border border-[#6aa7c7]/30 bg-[#eff9ff] px-4 py-3 font-marker text-[1rem] leading-tight text-[#24546d]"
@@ -806,32 +813,6 @@ function PlannerActivitySupportPage({
             >
               {createSuccessMessage}
             </p>
-          ) : null}
-          {canGoToPreviousActivity || canGoToNextActivity ? (
-            <div className="flex w-full flex-wrap justify-end gap-2">
-              {canGoToPreviousActivity ? (
-                <button
-                  className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-4 font-marker text-[0.98rem] font-bold leading-none text-[#6b4938] shadow-[0_5px_0_rgba(139,98,68,0.18)] transition hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:text-[1.08rem]"
-                  disabled={disabled}
-                  onClick={onGoToPreviousActivity}
-                  type="button"
-                >
-                  <ChevronLeft className="h-4 w-4" strokeWidth={2.3} />
-                  {t('trips.planner.board.activitySpread.previousActivityAction')}
-                </button>
-              ) : null}
-              {canGoToNextActivity ? (
-                <button
-                  className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-4 font-marker text-[0.98rem] font-bold leading-none text-[#6b4938] shadow-[0_5px_0_rgba(139,98,68,0.18)] transition hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:text-[1.08rem]"
-                  disabled={disabled}
-                  onClick={onGoToNextActivity}
-                  type="button"
-                >
-                  {t('trips.planner.board.activitySpread.nextActivityAction')}
-                  <ChevronRight className="h-4 w-4" strokeWidth={2.3} />
-                </button>
-              ) : null}
-            </div>
           ) : null}
           {showAddActivityAction || canRemoveActivity ? (
             <div className="flex w-full flex-wrap justify-end gap-2">
@@ -929,7 +910,6 @@ export function PlannerActivitySpread({
     activityDrafts.length,
   );
   const canRemoveActiveActivity = activityDrafts.length > 1 && activeActivityIndex >= protectedDraftCount;
-  const canGoToPreviousActivity = activeActivityIndex > 0;
   const canGoToNextActivity = activeActivityIndex < activityDrafts.length - 1;
 
   useEffect(() => {
@@ -1178,16 +1158,6 @@ export function PlannerActivitySpread({
     });
   };
 
-  const goToPreviousExistingActivityDraft = () => {
-    if (isLocked || !canGoToPreviousActivity) {
-      return;
-    }
-
-    startPageTurn('previous', () => {
-      setActiveActivityIndex((currentIndex) => Math.max(0, currentIndex - 1));
-    });
-  };
-
   const goToPreviousActivityDraft = () => {
     if (activeActivityIndex === 0) {
       onBack();
@@ -1262,7 +1232,7 @@ export function PlannerActivitySpread({
             backLabel={
               activeActivityIndex === 0
                 ? (firstBackLabel ?? t('trips.planner.board.activitySpread.backToGeneralAction'))
-                : t('trips.planner.board.activitySpread.backToPreviousActivityAction')
+                : t('trips.planner.board.activitySpread.previousActivityAction')
             }
             disabled={isLocked}
             draft={activityDraft}
@@ -1274,7 +1244,6 @@ export function PlannerActivitySpread({
         <div className="md:h-full md:w-1/2">
           <PlannerActivitySupportPage
             canGoToNextActivity={canGoToNextActivity}
-            canGoToPreviousActivity={canGoToPreviousActivity}
             canRemoveActivity={canRemoveActiveActivity}
             createError={createError}
             createProgressMessage={createProgressMessage}
@@ -1287,7 +1256,6 @@ export function PlannerActivitySpread({
             onCreate={createActivities}
             onDraftChange={updateActivityDraft}
             onGoToNextActivity={goToNextActivityDraft}
-            onGoToPreviousActivity={goToPreviousExistingActivityDraft}
             onRemoveActivity={removeActivityDraft}
             showAddActivityAction={showAddActivityAction}
             submitActionLabel={submitActionLabel ?? t('trips.planner.board.activitySpread.createAction')}
