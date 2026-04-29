@@ -9,11 +9,12 @@ import {
   MapPinned,
   Pencil,
   Plane,
+  Plus,
   Trash2,
 } from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
-import { createTrip, deleteTrip } from '@/features/trips/api/trips-api';
+import { createTrip, deleteTrip, updateTrip } from '@/features/trips/api/trips-api';
 import {
   createPlanNode,
   deletePlanNode,
@@ -38,7 +39,7 @@ import type {
   PlanNodeUpdatePayload,
   TripPlannerResult,
 } from '@/features/trips/planning/types/plan-node';
-import type { TripBudgetMode, TripUpsertPayload, TripVisibility } from '@/features/trips/types/trip';
+import type { Trip, TripBudgetMode, TripUpsertPayload, TripVisibility } from '@/features/trips/types/trip';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -69,8 +70,14 @@ type PlannerTripDraftChangeHandler = <Field extends PlannerTripDraftField>(
 type PlannerCalendarView = 'day' | 'month' | 'year';
 type SavedPlannerActivityMode =
   | {
+      kind: 'add';
+    }
+  | {
       kind: 'edit';
       nodeId: string;
+    }
+  | {
+      kind: 'trip';
     }
   | {
       kind: 'list';
@@ -79,6 +86,7 @@ type SavedPlannerFeedback = {
   kind: 'error' | 'success';
   message: string;
 };
+type PlannerTranslate = (key: string, values?: Record<string, number | string>) => string;
 
 const createDefaultPlannerTripDraft = (): PlannerTripDraft => ({
   name: '',
@@ -92,6 +100,21 @@ const createDefaultPlannerTripDraft = (): PlannerTripDraft => ({
   manualBudgetCurrency: 'VND',
   visibility: 'private',
 });
+
+function buildPlannerTripDraftFromTrip(trip: Trip): PlannerTripDraft {
+  return {
+    name: trip.name,
+    destination: trip.destination ?? '',
+    summaryNotes: trip.summaryNotes ?? '',
+    coverImageUrl: trip.coverImageUrl ?? '',
+    startDate: trip.startDate,
+    endDate: trip.endDate,
+    budgetMode: trip.budgetMode,
+    manualBudgetAmount: trip.manualBudgetAmount === null ? '' : String(trip.manualBudgetAmount),
+    manualBudgetCurrency: trip.manualBudgetCurrency ?? 'VND',
+    visibility: trip.visibility,
+  };
+}
 
 function toNullableTrimmedValue(value: string) {
   const trimmedValue = value.trim();
@@ -114,6 +137,54 @@ function buildTripCreatePayload(draft: PlannerTripDraft): TripUpsertPayload {
     manualBudgetCurrency: isManualBudget ? draft.manualBudgetCurrency.trim().toUpperCase() : null,
     visibility: draft.visibility,
   };
+}
+
+function validatePlannerTripDraft(draft: PlannerTripDraft, t: PlannerTranslate) {
+  const nextErrors: PlannerTripDraftErrors = {};
+  const coverImageUrl = draft.coverImageUrl.trim();
+  const summaryNotes = draft.summaryNotes.trim();
+  const manualBudgetAmount = draft.manualBudgetAmount.trim();
+  const manualBudgetCurrency = draft.manualBudgetCurrency.trim();
+
+  if (!draft.name.trim()) {
+    nextErrors.name = t('trips.validation.nameRequired');
+  }
+
+  if (!draft.startDate) {
+    nextErrors.startDate = t('trips.validation.startDateRequired');
+  }
+
+  if (!draft.endDate) {
+    nextErrors.endDate = t('trips.validation.endDateRequired');
+  }
+
+  if (draft.startDate && draft.endDate && draft.endDate < draft.startDate) {
+    nextErrors.endDate = t('trips.validation.dateRangeInvalid');
+  }
+
+  if (summaryNotes.length > 2000) {
+    nextErrors.summaryNotes = t('trips.validation.summaryNotesLength');
+  }
+
+  if (coverImageUrl && !isValidHttpUrl(coverImageUrl)) {
+    nextErrors.coverImageUrl = t('trips.validation.coverImageUrlInvalid');
+  }
+
+  if (draft.budgetMode === 'manual') {
+    if (!manualBudgetAmount) {
+      nextErrors.manualBudgetAmount = t('trips.validation.manualBudgetAmountRequired');
+    } else if (Number(manualBudgetAmount) < 0) {
+      nextErrors.manualBudgetAmount = t('trips.validation.manualBudgetAmountPositive');
+    }
+
+    if (!manualBudgetCurrency) {
+      nextErrors.manualBudgetCurrency = t('trips.validation.manualBudgetCurrencyRequired');
+    } else if (manualBudgetCurrency.length !== 3) {
+      nextErrors.manualBudgetCurrency = t('trips.validation.manualBudgetCurrencyLength');
+    }
+  }
+
+  return nextErrors;
 }
 
 function buildActivityDateTime(date: string, time: string) {
@@ -869,11 +940,13 @@ function PlannerStepProgress({ currentStep }: { currentStep: number }) {
 }
 
 function PlannerCreateTripPage({
+  backLabel,
   draft,
   errors,
   onDraftChange,
   onBack,
 }: {
+  backLabel?: string;
   draft: PlannerTripDraft;
   errors: PlannerTripDraftErrors;
   onDraftChange: PlannerTripDraftChangeHandler;
@@ -895,7 +968,7 @@ function PlannerCreateTripPage({
         type="button"
       >
         <ChevronLeft className="h-4 w-4" strokeWidth={2.2} />
-        {t('trips.planner.board.returnToPreviousPageAction')}
+        {backLabel ?? t('trips.planner.board.returnToPreviousPageAction')}
       </button>
 
       <PlannerTapeTitle className="mt-3">{t('trips.planner.board.createSpread.stepTitle')}</PlannerTapeTitle>
@@ -1036,11 +1109,21 @@ function PlannerCoverPreview({ imageUrl }: { imageUrl: string }) {
 }
 
 function PlannerDestinationPage({
+  continueActionLabel,
+  continueDisabled = false,
+  feedbackError,
+  feedbackProgress,
+  feedbackSuccess,
   draft,
   errors,
   onDraftChange,
   onContinue,
 }: {
+  continueActionLabel?: string;
+  continueDisabled?: boolean;
+  feedbackError?: string | null;
+  feedbackProgress?: string | null;
+  feedbackSuccess?: string | null;
   draft: PlannerTripDraft;
   errors: PlannerTripDraftErrors;
   onDraftChange: PlannerTripDraftChangeHandler;
@@ -1121,12 +1204,37 @@ function PlannerDestinationPage({
           <PlannerCoverPreview imageUrl={draft.coverImageUrl} />
         </div>
 
+        {feedbackProgress ? (
+          <p
+            className="rounded-[0.85rem] border border-[#6aa7c7]/30 bg-[#eff9ff] px-4 py-3 font-marker text-[1rem] leading-tight text-[#24546d]"
+            role="status"
+          >
+            {feedbackProgress}
+          </p>
+        ) : null}
+        {feedbackError ? (
+          <p
+            className="rounded-[0.85rem] border border-[#d92d20]/25 bg-[#fff1f0] px-4 py-3 font-marker text-[1rem] leading-tight text-[#b42318]"
+            role="alert"
+          >
+            {feedbackError}
+          </p>
+        ) : null}
+        {feedbackSuccess ? (
+          <p
+            className="rounded-[0.85rem] border border-[#6f9e44]/35 bg-[#f1ffd8] px-4 py-3 font-marker text-[1rem] leading-tight text-[#31521c]"
+            role="status"
+          >
+            {feedbackSuccess}
+          </p>
+        ) : null}
         <button
-          className="mb-3 mt-1 self-end inline-flex shrink-0 items-center gap-2 rounded-[1.25rem] border-2 border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.75rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 sm:mb-4 sm:px-6 sm:text-[2.1rem]"
+          className="mb-3 mt-1 self-end inline-flex shrink-0 items-center gap-2 rounded-[1.25rem] border-2 border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.75rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:mb-4 sm:px-6 sm:text-[2.1rem]"
+          disabled={continueDisabled}
           onClick={onContinue}
           type="button"
         >
-          {t('trips.planner.board.createSpread.continueAction')}
+          {continueActionLabel ?? t('trips.planner.board.createSpread.continueAction')}
           <ArrowRight className="h-5 w-5" strokeWidth={2.5} />
         </button>
       </div>
@@ -1135,14 +1243,26 @@ function PlannerDestinationPage({
 }
 
 function PlannerCreateSpread({
+  backLabel,
+  continueActionLabel,
+  continueDisabled,
   draft,
   errors,
+  feedbackError,
+  feedbackProgress,
+  feedbackSuccess,
   onBack,
   onContinue,
   onDraftChange,
 }: {
+  backLabel?: string;
+  continueActionLabel?: string;
+  continueDisabled?: boolean;
   draft: PlannerTripDraft;
   errors: PlannerTripDraftErrors;
+  feedbackError?: string | null;
+  feedbackProgress?: string | null;
+  feedbackSuccess?: string | null;
   onBack: () => void;
   onContinue: () => void;
   onDraftChange: PlannerTripDraftChangeHandler;
@@ -1150,10 +1270,26 @@ function PlannerCreateSpread({
   return (
     <div className="flex h-full min-h-0 flex-col md:flex-row">
       <div className="md:h-full md:w-1/2">
-        <PlannerCreateTripPage draft={draft} errors={errors} onBack={onBack} onDraftChange={onDraftChange} />
+        <PlannerCreateTripPage
+          backLabel={backLabel}
+          draft={draft}
+          errors={errors}
+          onBack={onBack}
+          onDraftChange={onDraftChange}
+        />
       </div>
       <div className="md:h-full md:w-1/2">
-        <PlannerDestinationPage draft={draft} errors={errors} onContinue={onContinue} onDraftChange={onDraftChange} />
+        <PlannerDestinationPage
+          continueActionLabel={continueActionLabel}
+          continueDisabled={continueDisabled}
+          draft={draft}
+          errors={errors}
+          feedbackError={feedbackError}
+          feedbackProgress={feedbackProgress}
+          feedbackSuccess={feedbackSuccess}
+          onContinue={onContinue}
+          onDraftChange={onDraftChange}
+        />
       </div>
     </div>
   );
@@ -1166,6 +1302,11 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
   const [activityMutationError, setActivityMutationError] = useState<string | null>(null);
   const [activityMutationProgress, setActivityMutationProgress] = useState<string | null>(null);
   const [isSavingActivity, setIsSavingActivity] = useState(false);
+  const [savedTripDraft, setSavedTripDraft] = useState(createDefaultPlannerTripDraft);
+  const [savedTripDraftErrors, setSavedTripDraftErrors] = useState<PlannerTripDraftErrors>({});
+  const [tripMutationError, setTripMutationError] = useState<string | null>(null);
+  const [tripMutationProgress, setTripMutationProgress] = useState<string | null>(null);
+  const [isSavingTrip, setIsSavingTrip] = useState(false);
   const [savedPlannerFeedback, setSavedPlannerFeedback] = useState<SavedPlannerFeedback | null>(null);
   const [deletingNodeId, setDeletingNodeId] = useState<string | null>(null);
   const plannerQuery = useQuery({
@@ -1193,15 +1334,29 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
       draft: buildActivityDraftFromPlanNode(node),
       label: node.title || t('trips.planner.board.activitySpread.activityNumber', { index: index + 1 }),
     }));
-  const isActivityFormOpen = Boolean(trip) && Boolean(editedActivityNode);
+  const isActivityFormOpen = Boolean(trip) && (activityMode.kind === 'add' || Boolean(editedActivityNode));
+  const isSavedPlannerActionDisabled = isSavingActivity || isSavingTrip || Boolean(deletingNodeId);
 
   const clearActivityMutationState = () => {
     setActivityMutationError(null);
     setActivityMutationProgress(null);
   };
 
+  const clearTripMutationState = () => {
+    setTripMutationError(null);
+    setTripMutationProgress(null);
+  };
+
+  const openAddActivityForm = () => {
+    clearActivityMutationState();
+    clearTripMutationState();
+    setSavedPlannerFeedback(null);
+    setActivityMode({ kind: 'add' });
+  };
+
   const openEditActivityForm = (nodeId: string) => {
     clearActivityMutationState();
+    clearTripMutationState();
     setSavedPlannerFeedback(null);
     setActivityMode({ kind: 'edit', nodeId });
   };
@@ -1209,6 +1364,54 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
   const closeActivityForm = () => {
     clearActivityMutationState();
     setActivityMode({ kind: 'list' });
+  };
+
+  const openTripInfoForm = () => {
+    if (!trip) {
+      return;
+    }
+
+    clearActivityMutationState();
+    clearTripMutationState();
+    setSavedPlannerFeedback(null);
+    setSavedTripDraft(buildPlannerTripDraftFromTrip(trip));
+    setSavedTripDraftErrors({});
+    setActivityMode({ kind: 'trip' });
+  };
+
+  const closeTripInfoForm = () => {
+    clearTripMutationState();
+    setSavedTripDraftErrors({});
+    setActivityMode({ kind: 'list' });
+  };
+
+  const updateSavedTripDraft: PlannerTripDraftChangeHandler = (field, value) => {
+    if (isSavingTrip) {
+      return;
+    }
+
+    setSavedTripDraft((currentDraft) => ({
+      ...currentDraft,
+      [field]: value,
+    }));
+    clearTripMutationState();
+    setSavedTripDraftErrors((currentErrors) => {
+      const nextErrors = { ...currentErrors };
+
+      delete nextErrors[field];
+
+      if (field === 'startDate' || field === 'endDate') {
+        delete nextErrors.startDate;
+        delete nextErrors.endDate;
+      }
+
+      if (field === 'budgetMode' || field === 'manualBudgetAmount' || field === 'manualBudgetCurrency') {
+        delete nextErrors.manualBudgetAmount;
+        delete nextErrors.manualBudgetCurrency;
+      }
+
+      return nextErrors;
+    });
   };
 
   const getSavedActivityServerErrorMessage = (serverError: PlannerActivityServerError) => {
@@ -1268,6 +1471,67 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
 
   const invalidateSavedPlanner = async () => {
     await queryClient.invalidateQueries({ queryKey: plannerQueryKeys.detail(tripId) });
+  };
+
+  const createSavedActivities = async (activityDrafts: PlannerActivityDraft[]): Promise<PlannerActivityCreateResult> => {
+    if (!trip || isSavingActivity) {
+      return { ok: false };
+    }
+
+    setIsSavingActivity(true);
+    setActivityMutationError(null);
+    setSavedPlannerFeedback(null);
+
+    try {
+      const createdNodes: PlanNode[] = [];
+
+      for (const [activityIndex, activityDraft] of activityDrafts.entries()) {
+        setActivityMutationProgress(
+          t('trips.planner.board.savedSpread.feedback.createProgress', {
+            current: activityIndex + 1,
+            total: activityDrafts.length,
+          }),
+        );
+
+        try {
+          const createdNode = await createPlanNode(
+            buildActivityPlanNodePayload(trip.id, activityDraft, activityNodes.length + activityIndex),
+          );
+
+          createdNodes.push(createdNode);
+        } catch (error) {
+          const createFailure = buildSavedActivityFailure(
+            activityIndex,
+            error,
+            'trips.planner.board.savedSpread.feedback.activityCreateError',
+          );
+
+          if (!('activityError' in createFailure) || !createFailure.activityError) {
+            setActivityMutationError(t('trips.planner.board.savedSpread.feedback.createError'));
+          }
+
+          return createFailure;
+        }
+      }
+
+      queryClient.setQueryData<TripPlannerResult>(plannerQueryKeys.detail(trip.id), (currentPlanner) => ({
+        trip: currentPlanner?.trip ?? trip,
+        nodes: currentPlanner ? [...currentPlanner.nodes, ...createdNodes] : createdNodes,
+      }));
+      await invalidateSavedPlanner();
+      setSavedPlannerFeedback({
+        kind: 'success',
+        message: t('trips.planner.board.savedSpread.feedback.createSuccess', {
+          count: createdNodes.length,
+        }),
+      });
+      setActivityMode({ kind: 'list' });
+
+      return { ok: true };
+    } finally {
+      setIsSavingActivity(false);
+      setActivityMutationProgress(null);
+    }
   };
 
   const updateSavedActivity = async (activityDrafts: PlannerActivityDraft[]): Promise<PlannerActivityCreateResult> => {
@@ -1362,11 +1626,73 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
   };
 
   const saveActivityForm = (activityDrafts: PlannerActivityDraft[]) => {
+    if (activityMode.kind === 'add') {
+      return createSavedActivities(activityDrafts);
+    }
+
     return updateSavedActivity(activityDrafts);
   };
 
+  const saveSavedTripDetails = async () => {
+    if (!trip || isSavingTrip) {
+      return;
+    }
+
+    const nextErrors = validatePlannerTripDraft(savedTripDraft, t);
+    const firstOutsideActivity = activityNodes.find((node) => {
+      const activityDate = (node.startAt ?? node.endAt)?.slice(0, 10);
+
+      return (
+        activityDate &&
+        savedTripDraft.startDate &&
+        savedTripDraft.endDate &&
+        (activityDate < savedTripDraft.startDate || activityDate > savedTripDraft.endDate)
+      );
+    });
+
+    if (firstOutsideActivity) {
+      nextErrors.endDate = t('trips.planner.board.savedSpread.validation.tripDateActivitiesOutsideRange', {
+        title: firstOutsideActivity.title,
+      });
+    }
+
+    setSavedTripDraftErrors(nextErrors);
+
+    if (Object.keys(nextErrors).length > 0) {
+      return;
+    }
+
+    setIsSavingTrip(true);
+    setSavedPlannerFeedback(null);
+    setTripMutationError(null);
+    setTripMutationProgress(t('trips.planner.board.savedSpread.feedback.tripUpdateProgress'));
+
+    try {
+      const updatedTrip = await updateTrip(trip.id, buildTripCreatePayload(savedTripDraft));
+
+      queryClient.setQueryData<TripPlannerResult>(plannerQueryKeys.detail(updatedTrip.id), (currentPlanner) => ({
+        trip: updatedTrip,
+        nodes: currentPlanner?.nodes ?? plannerQuery.data?.nodes ?? [],
+      }));
+      await Promise.all([
+        invalidateSavedPlanner(),
+        queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
+      ]);
+      setSavedPlannerFeedback({
+        kind: 'success',
+        message: t('trips.planner.board.savedSpread.feedback.tripUpdateSuccess'),
+      });
+      setActivityMode({ kind: 'list' });
+    } catch {
+      setTripMutationError(t('trips.planner.board.savedSpread.feedback.tripUpdateError'));
+    } finally {
+      setIsSavingTrip(false);
+      setTripMutationProgress(null);
+    }
+  };
+
   const deleteSavedActivity = async (node: PlanNode) => {
-    if (deletingNodeId) {
+    if (isSavedPlannerActionDisabled) {
       return;
     }
 
@@ -1404,12 +1730,30 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
     }
   };
 
+  if (trip && activityMode.kind === 'trip') {
+    return (
+      <PlannerCreateSpread
+        backLabel={t('trips.planner.board.savedSpread.backToSavedPlannerAction')}
+        continueActionLabel={isSavingTrip ? t('trips.actions.saving') : t('trips.actions.save')}
+        continueDisabled={isSavingTrip}
+        draft={savedTripDraft}
+        errors={savedTripDraftErrors}
+        feedbackError={tripMutationError}
+        feedbackProgress={tripMutationProgress}
+        feedbackSuccess={null}
+        onBack={closeTripInfoForm}
+        onContinue={() => void saveSavedTripDetails()}
+        onDraftChange={updateSavedTripDraft}
+      />
+    );
+  }
+
   if (trip && isActivityFormOpen) {
     const initialDrafts = editedActivityNode ? [buildActivityDraftFromPlanNode(editedActivityNode)] : undefined;
 
     return (
       <PlannerActivitySpread
-        key={`edit-${editedActivityNode?.id}`}
+        key={activityMode.kind === 'add' ? `add-${trip.id}` : `edit-${editedActivityNode?.id}`}
         createError={activityMutationError}
         createProgressMessage={activityMutationProgress}
         createSuccessMessage={null}
@@ -1481,6 +1825,15 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
                     {trip.destination}
                   </p>
                 ) : null}
+                <button
+                  className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-4 py-2 font-marker text-[0.98rem] font-bold leading-none text-[#6b4938] shadow-[0_5px_0_rgba(139,98,68,0.18)] transition hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
+                  disabled={isSavedPlannerActionDisabled}
+                  onClick={openTripInfoForm}
+                  type="button"
+                >
+                  <Pencil className="h-4 w-4" strokeWidth={2.3} />
+                  {t('trips.planner.board.savedSpread.editTripAction')}
+                </button>
               </div>
 
               <div className="rounded-[0.95rem] border border-dashed border-[#b9aea0] bg-white/55 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
@@ -1508,6 +1861,18 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
         style={pageDotStyle}
       >
         <PlannerTapeTitle className="mt-1">{t('trips.planner.board.savedSpread.activitiesTitle')}</PlannerTapeTitle>
+
+        <div className="relative z-10 mt-4 flex justify-end">
+          <button
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-4 py-2 font-marker text-[1rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
+            disabled={!trip || isSavedPlannerActionDisabled}
+            onClick={openAddActivityForm}
+            type="button"
+          >
+            <Plus className="h-4 w-4" strokeWidth={2.5} />
+            {t('trips.planner.board.savedSpread.addActivityAction')}
+          </button>
+        </div>
 
         <div className="relative z-10 mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
           {savedPlannerFeedback ? (
@@ -1572,7 +1937,7 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button
                     className="inline-flex items-center gap-1.5 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-3 py-1.5 font-marker text-[0.92rem] font-bold leading-none text-[#6b4938] transition hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
-                    disabled={Boolean(deletingNodeId)}
+                    disabled={isSavedPlannerActionDisabled}
                     onClick={() => openEditActivityForm(node.id)}
                     type="button"
                   >
@@ -1581,7 +1946,7 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
                   </button>
                   <button
                     className="inline-flex items-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-3 py-1.5 font-marker text-[0.92rem] font-bold leading-none text-[#b42318] transition hover:-translate-y-0.5 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#d92d20]/20 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
-                    disabled={Boolean(deletingNodeId)}
+                    disabled={isSavedPlannerActionDisabled}
                     onClick={() => void deleteSavedActivity(node)}
                     type="button"
                   >
@@ -1643,53 +2008,7 @@ export function PlannerPage() {
     });
   };
 
-  const validateTripDraft = () => {
-    const nextErrors: PlannerTripDraftErrors = {};
-    const coverImageUrl = tripDraft.coverImageUrl.trim();
-    const summaryNotes = tripDraft.summaryNotes.trim();
-    const manualBudgetAmount = tripDraft.manualBudgetAmount.trim();
-    const manualBudgetCurrency = tripDraft.manualBudgetCurrency.trim();
-
-    if (!tripDraft.name.trim()) {
-      nextErrors.name = t('trips.validation.nameRequired');
-    }
-
-    if (!tripDraft.startDate) {
-      nextErrors.startDate = t('trips.validation.startDateRequired');
-    }
-
-    if (!tripDraft.endDate) {
-      nextErrors.endDate = t('trips.validation.endDateRequired');
-    }
-
-    if (tripDraft.startDate && tripDraft.endDate && tripDraft.endDate < tripDraft.startDate) {
-      nextErrors.endDate = t('trips.validation.dateRangeInvalid');
-    }
-
-    if (summaryNotes.length > 2000) {
-      nextErrors.summaryNotes = t('trips.validation.summaryNotesLength');
-    }
-
-    if (coverImageUrl && !isValidHttpUrl(coverImageUrl)) {
-      nextErrors.coverImageUrl = t('trips.validation.coverImageUrlInvalid');
-    }
-
-    if (tripDraft.budgetMode === 'manual') {
-      if (!manualBudgetAmount) {
-        nextErrors.manualBudgetAmount = t('trips.validation.manualBudgetAmountRequired');
-      } else if (Number(manualBudgetAmount) < 0) {
-        nextErrors.manualBudgetAmount = t('trips.validation.manualBudgetAmountPositive');
-      }
-
-      if (!manualBudgetCurrency) {
-        nextErrors.manualBudgetCurrency = t('trips.validation.manualBudgetCurrencyRequired');
-      } else if (manualBudgetCurrency.length !== 3) {
-        nextErrors.manualBudgetCurrency = t('trips.validation.manualBudgetCurrencyLength');
-      }
-    }
-
-    return nextErrors;
-  };
+  const validateTripDraft = () => validatePlannerTripDraft(tripDraft, t);
 
   const openNextPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);

@@ -398,6 +398,12 @@
     },
     "actions": {
       "openPlanner": "OPEN PLANNER",
+      "editPlanner": "EDIT",
+      "deletePlanner": "DELETE",
+      "deletingPlanner": "DELETING...",
+      "deletePlannerConfirm": "Delete the plan \"{{title}}\" from your account?",
+      "deletePlannerSuccess": "Deleted \"{{title}}\".",
+      "deletePlannerError": "Unable to delete \"{{title}}\" right now.",
       "viewMoreJournal": "VIEW MORE MEMORIES",
       "viewMorePlans": "VIEW MORE PLANS"
     }
@@ -658,6 +664,7 @@
           "stepTitle": "Saved Planner",
           "createNewAction": "Create a new trip",
           "addActivityAction": "Add activity",
+          "editTripAction": "Edit planner info",
           "editActivityAction": "Edit",
           "deleteActivityAction": "Delete",
           "backToSavedPlannerAction": "Back to planner",
@@ -670,19 +677,25 @@
           "activityCount": "{{count}} activities",
           "activitiesTitle": "Saved Activities",
           "emptyActivities": "This trip does not have any activities yet.",
+          "validation": {
+            "tripDateActivitiesOutsideRange": "The new date range would leave the saved activity \"{{title}}\" outside this trip."
+          },
           "feedback": {
             "createProgress": "Saving activity {{current}}/{{total}}...",
             "updateProgress": "Updating activity...",
             "deleteProgress": "Deleting activity...",
+            "tripUpdateProgress": "Saving planner info...",
             "createSuccess": "Added {{count}} activities.",
             "updateSuccess": "Activity updated.",
             "updateWithCreateSuccess": "Activity updated and {{count}} activities added.",
             "deleteSuccess": "Activity deleted.",
+            "tripUpdateSuccess": "Planner info updated.",
             "activityCreateError": "Activity {{index}} could not be saved: {{message}}",
             "activityUpdateError": "Activity could not be updated: {{message}}",
             "createError": "Unable to add the activity right now.",
             "updateError": "Unable to update the activity right now.",
-            "deleteError": "Unable to delete the activity right now."
+            "deleteError": "Unable to delete the activity right now.",
+            "tripUpdateError": "Unable to save planner info right now."
           }
         }
       },

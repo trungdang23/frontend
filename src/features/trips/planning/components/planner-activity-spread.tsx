@@ -737,41 +737,8 @@ function PlannerActivitySupportPage({
       className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-8 pt-5 sm:px-7 sm:pb-9 sm:pt-6 md:min-h-0 lg:px-8"
       style={pageDotStyle}
     >
-      <div
-        className={cn(
-          'relative z-20 min-h-14',
-          showAddActivityAction || canRemoveActivity ? 'pr-14 sm:pr-48' : undefined,
-        )}
-      >
+      <div className="relative z-20 min-h-14">
         <PlannerTapeTitle className="mt-1">{t('trips.planner.board.activitySpread.detailsTitle')}</PlannerTapeTitle>
-        {showAddActivityAction || canRemoveActivity ? (
-          <div className="absolute right-0 top-0 flex items-center gap-2">
-            {canRemoveActivity ? (
-              <button
-                aria-label={t('trips.planner.board.activitySpread.deleteDraftAction')}
-                className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#b42318] shadow-[0_6px_0_#f0b8b0,0_12px_20px_rgba(185,44,28,0.12)] transition duration-300 hover:-translate-y-0.5 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#d92d20]/20 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
-                disabled={disabled}
-                onClick={onRemoveActivity}
-                type="button"
-              >
-                <Trash2 className="h-4 w-4" strokeWidth={2.4} />
-                <span className="hidden sm:inline">{t('trips.planner.board.activitySpread.deleteDraftAction')}</span>
-              </button>
-            ) : null}
-            {showAddActivityAction ? (
-              <button
-                aria-label={t('trips.planner.board.activitySpread.addActivityAction')}
-                className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
-                disabled={disabled}
-                onClick={onAddActivity}
-                type="button"
-              >
-                <Plus className="h-4 w-4" strokeWidth={2.5} />
-                <span className="hidden sm:inline">{t('trips.planner.board.activitySpread.addActivityAction')}</span>
-              </button>
-            ) : null}
-          </div>
-        ) : null}
       </div>
 
       <div className="relative z-10 mt-3 flex min-h-0 flex-1 flex-col">
@@ -831,6 +798,32 @@ function PlannerActivitySupportPage({
             >
               {createSuccessMessage}
             </p>
+          ) : null}
+          {showAddActivityAction || canRemoveActivity ? (
+            <div className="flex w-full flex-wrap justify-end gap-2">
+              {canRemoveActivity ? (
+                <button
+                  className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-4 font-marker text-[0.98rem] font-bold leading-none text-[#b42318] shadow-[0_6px_0_#f0b8b0,0_12px_20px_rgba(185,44,28,0.12)] transition duration-300 hover:-translate-y-0.5 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#d92d20]/20 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:text-[1.08rem]"
+                  disabled={disabled}
+                  onClick={onRemoveActivity}
+                  type="button"
+                >
+                  <Trash2 className="h-4 w-4" strokeWidth={2.4} />
+                  {t('trips.planner.board.activitySpread.deleteDraftAction')}
+                </button>
+              ) : null}
+              {showAddActivityAction ? (
+                <button
+                  className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-4 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:text-[1.08rem]"
+                  disabled={disabled}
+                  onClick={onAddActivity}
+                  type="button"
+                >
+                  <Plus className="h-4 w-4" strokeWidth={2.5} />
+                  {t('trips.planner.board.activitySpread.addActivityAction')}
+                </button>
+              ) : null}
+            </div>
           ) : null}
           <button
             className="inline-flex shrink-0 items-center gap-2 rounded-[1.25rem] border-2 border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.75rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:px-6 sm:text-[2.1rem]"

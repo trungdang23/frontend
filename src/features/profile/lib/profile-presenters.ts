@@ -8,6 +8,7 @@ import {
 export type ProfileGridEntry = {
   actionHref?: string;
   actionLabel?: string;
+  id?: string;
   image: string;
   metadata: string;
   rotationClass: string;
@@ -62,6 +63,7 @@ export function buildProfileTripEntries(trips: Trip[], actionLabel?: string): Pr
   return trips.map((trip, index) => ({
     actionHref: `/app/planner?tripId=${encodeURIComponent(trip.id)}`,
     actionLabel,
+    id: trip.id,
     image: trip.coverImageUrl || resolveFallbackImage(index),
     metadata: `${formatProfileDate(trip.startDate)} • ${formatTripDuration(trip.startDate, trip.endDate)}`,
     rotationClass: resolveRotationClass(index),

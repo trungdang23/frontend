@@ -398,6 +398,12 @@
     },
     "actions": {
       "openPlanner": "MỞ PLANNER",
+      "editPlanner": "CHỈNH SỬA",
+      "deletePlanner": "XÓA",
+      "deletingPlanner": "ĐANG XÓA...",
+      "deletePlannerConfirm": "Xóa kế hoạch \"{{title}}\" khỏi tài khoản của bạn?",
+      "deletePlannerSuccess": "Đã xóa kế hoạch \"{{title}}\".",
+      "deletePlannerError": "Không thể xóa kế hoạch \"{{title}}\" lúc này.",
       "viewMoreJournal": "XEM THÊM KÝ ỨC",
       "viewMorePlans": "XEM THÊM KẾ HOẠCH"
     }
@@ -658,6 +664,7 @@
           "stepTitle": "Planner Đã Lưu",
           "createNewAction": "Tạo chuyến mới",
           "addActivityAction": "Thêm hoạt động",
+          "editTripAction": "Sửa thông tin planner",
           "editActivityAction": "Sửa",
           "deleteActivityAction": "Xóa",
           "backToSavedPlannerAction": "Quay lại planner",
@@ -670,19 +677,25 @@
           "activityCount": "{{count}} hoạt động",
           "activitiesTitle": "Hoạt Động Đã Lưu",
           "emptyActivities": "Chuyến đi này chưa có hoạt động nào.",
+          "validation": {
+            "tripDateActivitiesOutsideRange": "Khoảng ngày mới đang loại hoạt động đã lưu \"{{title}}\" khỏi chuyến đi."
+          },
           "feedback": {
             "createProgress": "Đang lưu hoạt động {{current}}/{{total}}...",
             "updateProgress": "Đang cập nhật hoạt động...",
             "deleteProgress": "Đang xóa hoạt động...",
+            "tripUpdateProgress": "Đang lưu thông tin planner...",
             "createSuccess": "Đã thêm {{count}} hoạt động.",
             "updateSuccess": "Đã cập nhật hoạt động.",
             "updateWithCreateSuccess": "Đã cập nhật hoạt động và thêm {{count}} hoạt động.",
             "deleteSuccess": "Đã xóa hoạt động.",
+            "tripUpdateSuccess": "Đã cập nhật thông tin planner.",
             "activityCreateError": "Hoạt động {{index}} chưa lưu được: {{message}}",
             "activityUpdateError": "Hoạt động chưa cập nhật được: {{message}}",
             "createError": "Không thể thêm hoạt động lúc này.",
             "updateError": "Không thể cập nhật hoạt động lúc này.",
-            "deleteError": "Không thể xóa hoạt động lúc này."
+            "deleteError": "Không thể xóa hoạt động lúc này.",
+            "tripUpdateError": "Không thể lưu thông tin planner lúc này."
           }
         }
       },

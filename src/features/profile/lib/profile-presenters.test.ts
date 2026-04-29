@@ -68,7 +68,7 @@ describe('profile presenters', () => {
           visibility: 'private',
         },
       ],
-      'MỞ PLANNER',
+      'CHỈNH SỬA',
     );
 
     expect(postEntries[0]).toMatchObject({
@@ -78,7 +78,8 @@ describe('profile presenters', () => {
     });
     expect(tripEntries[0]).toMatchObject({
       actionHref: '/app/planner?tripId=trip-1',
-      actionLabel: 'MỞ PLANNER',
+      actionLabel: 'CHỈNH SỬA',
+      id: 'trip-1',
       metadata: '22 Tháng 4, 2026 • 4 ngày',
       title: 'Đà Lạt',
     });

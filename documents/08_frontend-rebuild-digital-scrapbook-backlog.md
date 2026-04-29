@@ -271,6 +271,14 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] chặn thêm activity mới khi activity hiện tại còn thiếu thông tin bắt buộc
 - [x] cho phép xóa bản nháp activity được thêm thừa trong form activity
 
+### Follow-up planner/profile edit refinements
+
+- [x] đưa nút `Thêm hành động` và `Xóa hành động` trong form activity xuống khu action phía trên nút lưu/tạo
+- [x] thêm nút `Thêm hoạt động` bên ngoài danh sách hoạt động trong planner đã lưu
+- [x] cho phép sửa thông tin chung của planner/chuyến đi đã lưu
+- [x] đổi CTA kế hoạch ở profile thành `Chỉnh sửa` và thêm xóa cả planner/chuyến đi
+- [x] giữ danh sách kế hoạch trong profile scroll bên trong thẻ chứa, không làm body hoặc layout ngoài bị tràn
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

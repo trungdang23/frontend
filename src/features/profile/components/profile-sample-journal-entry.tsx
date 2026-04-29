@@ -1,10 +1,14 @@
 import { Link } from 'react-router-dom';
+import { Trash2 } from 'lucide-react';
 
 type ProfileSampleJournalEntryProps = {
   actionHref?: string;
   actionLabel?: string;
+  deleteActionLabel?: string;
   image: string;
+  isDeleting?: boolean;
   metadata: string;
+  onDelete?: () => void;
   rotationClass?: string;
   summary?: string;
   title: string;
@@ -13,8 +17,11 @@ type ProfileSampleJournalEntryProps = {
 export function ProfileSampleJournalEntry({
   actionHref,
   actionLabel,
+  deleteActionLabel,
   image,
+  isDeleting = false,
   metadata,
+  onDelete,
   rotationClass,
   summary,
   title,
@@ -28,13 +35,28 @@ export function ProfileSampleJournalEntry({
       <h3 className="mb-1 font-cursive text-[1.5rem] font-bold leading-none text-[#251b15]">{title}</h3>
       <p className="font-marker text-[0.98rem] leading-tight text-[#6b4938]">{metadata}</p>
       {summary ? <p className="mt-2 line-clamp-2 font-marker text-[0.95rem] leading-tight text-[#3d332b]">{summary}</p> : null}
-      {actionHref && actionLabel ? (
-        <Link
-          className="mt-4 inline-flex rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-4 py-2 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/30"
-          to={actionHref}
-        >
-          {actionLabel}
-        </Link>
+      {(actionHref && actionLabel) || onDelete ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {actionHref && actionLabel ? (
+            <Link
+              className="inline-flex rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-4 py-2 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/30"
+              to={actionHref}
+            >
+              {actionLabel}
+            </Link>
+          ) : null}
+          {onDelete && deleteActionLabel ? (
+            <button
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-4 py-2 font-marker text-[0.98rem] font-bold leading-none text-[#b42318] shadow-[0_5px_0_#f0b8b0] transition hover:-translate-y-0.5 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#d92d20]/20 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
+              disabled={isDeleting}
+              onClick={onDelete}
+              type="button"
+            >
+              <Trash2 className="h-4 w-4" strokeWidth={2.3} />
+              {deleteActionLabel}
+            </button>
+          ) : null}
+        </div>
       ) : null}
     </article>
   );
