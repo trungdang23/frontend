@@ -642,10 +642,23 @@
             "saved": "Đã lưu tọa độ sticker.",
             "saveError": "Không thể lưu tọa độ sticker lúc này.",
             "tripDraftInvalid": "Thông tin chung chưa hợp lệ. Hãy quay lại bước 1 để kiểm tra.",
+            "creatingTrip": "Đang tạo chuyến đi...",
+            "savingActivity": "Đang lưu hoạt động {{current}}/{{total}}...",
+            "openingPlanner": "Đang mở planner vừa tạo...",
             "createSuccess": "Đã tạo chuyến đi \"{{tripName}}\" và lưu {{count}} hoạt động.",
             "activityCreateError": "Hoạt động {{index}} chưa lưu được: {{message}}",
             "createError": "Không thể tạo chuyến đi và lưu hoạt động lúc này."
           }
+        },
+        "savedSpread": {
+          "stepTitle": "Planner Đã Lưu",
+          "createNewAction": "Tạo chuyến mới",
+          "loading": "Đang tải planner vừa tạo...",
+          "loadError": "Không tải được planner của chuyến đi này.",
+          "summaryTitle": "Tóm tắt chuyến đi",
+          "activityCount": "{{count}} hoạt động",
+          "activitiesTitle": "Hoạt Động Đã Lưu",
+          "emptyActivities": "Chuyến đi này chưa có hoạt động nào."
         }
       },
       "createRootTitle": "Thêm node gốc",

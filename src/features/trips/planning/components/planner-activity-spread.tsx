@@ -238,6 +238,7 @@ function PlannerActivityFieldError({ id, message }: { id?: string; message?: str
 }
 
 function PlannerActivityTextField({
+  disabled = false,
   error,
   inputMode,
   label,
@@ -248,6 +249,7 @@ function PlannerActivityTextField({
   transformValue,
   value,
 }: {
+  disabled?: boolean;
   error?: string;
   inputMode?: 'decimal' | 'numeric' | 'text';
   label: string;
@@ -271,7 +273,9 @@ function PlannerActivityTextField({
           className={cn(
             'mt-2 min-h-24 w-full resize-none rounded-[0.8rem] border border-dashed bg-white/60 px-4 py-3 font-marker text-[1.05rem] leading-tight text-[#3d332b] outline-none placeholder:text-[#71675c] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]',
             error ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+            disabled ? 'cursor-not-allowed opacity-65' : undefined,
           )}
+          disabled={disabled}
           onChange={(event) => onChange(event.target.value)}
           placeholder={placeholder}
           value={value}
@@ -282,7 +286,9 @@ function PlannerActivityTextField({
           className={cn(
             'mt-2 w-full rounded-[0.8rem] border border-dashed bg-white/60 px-4 py-3 font-marker text-[1.05rem] text-[#3d332b] outline-none placeholder:text-[#71675c] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]',
             error ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+            disabled ? 'cursor-not-allowed opacity-65' : undefined,
           )}
+          disabled={disabled}
           inputMode={inputMode}
           maxLength={maxLength}
           onChange={(event) => {
@@ -301,11 +307,13 @@ function PlannerActivityTextField({
 }
 
 function PlannerActivityDatePicker({
+  disabled = false,
   error,
   label,
   onChange,
   value,
 }: {
+  disabled?: boolean;
   error?: string;
   label: string;
   onChange: (value: string) => void;
@@ -317,9 +325,10 @@ function PlannerActivityDatePicker({
   const calendarDays = buildPlannerCalendarDays(visibleMonth);
   const weekdayLabels = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
   const errorId = error ? `${label.replace(/\W+/g, '-').toLowerCase()}-error` : undefined;
+  const isPickerOpen = isOpen && !disabled;
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!isPickerOpen) {
       return undefined;
     }
 
@@ -334,7 +343,7 @@ function PlannerActivityDatePicker({
     return () => {
       document.removeEventListener('pointerdown', closeOnOutsidePointer);
     };
-  }, [isOpen]);
+  }, [isPickerOpen]);
 
   return (
     <div className="relative" ref={pickerRef}>
@@ -343,11 +352,13 @@ function PlannerActivityDatePicker({
       </span>
       <button
         aria-describedby={errorId}
-        aria-expanded={isOpen}
+        aria-expanded={isPickerOpen}
         className={cn(
           'mt-2 flex min-h-12 w-full items-center rounded-[0.8rem] border border-dashed bg-white/60 px-4 py-3 text-left font-marker text-[1.05rem] text-[#3d332b] outline-none transition hover:bg-white/75 focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.2rem]',
           error ? 'border-[#d92d20]' : 'border-[#b9aea0] focus:border-[#7c6a58]',
+          disabled ? 'cursor-not-allowed opacity-65 hover:bg-white/60' : undefined,
         )}
+        disabled={disabled}
         onClick={() => {
           setVisibleMonth(getPlannerMonthKey(value));
           setIsOpen((current) => !current);
@@ -358,7 +369,7 @@ function PlannerActivityDatePicker({
         {formatPlannerDate(value) || <span className="text-[#71675c]">Chọn ngày</span>}
       </button>
 
-      {isOpen ? (
+      {isPickerOpen ? (
         <div className="absolute left-0 right-0 top-full z-[80] mt-3 rounded-[0.9rem] border border-[#b8a58e] bg-[#fffaf0] p-3 shadow-[0_18px_32px_rgba(59,44,32,0.22)]">
           <div className="flex items-center justify-between gap-3">
             <button
@@ -419,12 +430,14 @@ function PlannerActivityDatePicker({
 }
 
 function PlannerActivityTimePicker({
+  disabled = false,
   endTime,
   error,
   label,
   onChange,
   startTime,
 }: {
+  disabled?: boolean;
   endTime: string;
   error?: string;
   label: string;
@@ -445,6 +458,7 @@ function PlannerActivityTimePicker({
       >
         <PlannerActivityTimeSelect
           ariaLabel={t('trips.planner.board.activitySpread.fields.startTime')}
+          disabled={disabled}
           onChange={(value) => onChange('startTime', value)}
           placeholder={t('trips.planner.board.activitySpread.placeholders.startTime')}
           value={startTime}
@@ -452,6 +466,7 @@ function PlannerActivityTimePicker({
         <span className="font-marker text-[1.25rem] text-[#4f4138]">→</span>
         <PlannerActivityTimeSelect
           ariaLabel={t('trips.planner.board.activitySpread.fields.endTime')}
+          disabled={disabled}
           onChange={(value) => onChange('endTime', value)}
           placeholder={t('trips.planner.board.activitySpread.placeholders.endTime')}
           value={endTime}
@@ -464,11 +479,13 @@ function PlannerActivityTimePicker({
 
 function PlannerActivityTimeSelect({
   ariaLabel,
+  disabled = false,
   onChange,
   placeholder,
   value,
 }: {
   ariaLabel: string;
+  disabled?: boolean;
   onChange: (value: string) => void;
   placeholder: string;
   value: string;
@@ -476,9 +493,10 @@ function PlannerActivityTimeSelect({
   const pickerRef = useRef<HTMLDivElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const timeOptions = getTimeOptions();
+  const isPickerOpen = isOpen && !disabled;
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!isPickerOpen) {
       return undefined;
     }
 
@@ -493,14 +511,15 @@ function PlannerActivityTimeSelect({
     return () => {
       document.removeEventListener('pointerdown', closeOnOutsidePointer);
     };
-  }, [isOpen]);
+  }, [isPickerOpen]);
 
   return (
     <div className="relative" ref={pickerRef}>
       <button
-        aria-expanded={isOpen}
+        aria-expanded={isPickerOpen}
         aria-label={ariaLabel}
-        className="flex h-12 w-full items-center rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 pl-3 pr-2 text-left font-marker text-[1rem] text-[#3d332b] outline-none transition hover:bg-white/75 focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 sm:text-[1.06rem]"
+        className="flex h-12 w-full items-center rounded-[0.8rem] border border-dashed border-[#b9aea0] bg-white/60 pl-3 pr-2 text-left font-marker text-[1rem] text-[#3d332b] outline-none transition hover:bg-white/75 focus:border-[#7c6a58] focus:bg-white/80 focus:ring-2 focus:ring-[#b88a56]/20 disabled:cursor-not-allowed disabled:opacity-65 disabled:hover:bg-white/60 sm:text-[1.06rem]"
+        disabled={disabled}
         onClick={() => setIsOpen((current) => !current)}
         type="button"
       >
@@ -508,7 +527,7 @@ function PlannerActivityTimeSelect({
         <span className={cn('min-w-0 truncate', value ? undefined : 'text-[#71675c]')}>{value || placeholder}</span>
       </button>
 
-      {isOpen ? (
+      {isPickerOpen ? (
         <div className="absolute left-0 right-0 top-full z-[90] mt-2 max-h-44 overflow-y-auto rounded-[0.85rem] border border-[#b8a58e] bg-[#fffaf0] p-1.5 shadow-[0_16px_28px_rgba(59,44,32,0.2)]">
           <button
             className={cn(
@@ -555,6 +574,7 @@ function PlannerActivityTimeSelect({
 function PlannerActivityDetailsPage({
   activityNumber,
   backLabel,
+  disabled,
   draft,
   errors,
   onBack,
@@ -562,6 +582,7 @@ function PlannerActivityDetailsPage({
 }: {
   activityNumber: number;
   backLabel: string;
+  disabled: boolean;
   draft: PlannerActivityDraft;
   errors: PlannerActivityDraftErrors;
   onBack: () => void;
@@ -575,7 +596,8 @@ function PlannerActivityDetailsPage({
       style={pageDotStyle}
     >
       <button
-        className="relative z-40 inline-flex w-fit items-center gap-1.5 rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-4 py-2 font-hand text-[1.25rem] leading-none text-[#6b4938] shadow-[0_10px_18px_rgba(90,62,40,0.12)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:text-[1.45rem]"
+        className="relative z-40 inline-flex w-fit items-center gap-1.5 rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-4 py-2 font-hand text-[1.25rem] leading-none text-[#6b4938] shadow-[0_10px_18px_rgba(90,62,40,0.12)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:text-[1.45rem]"
+        disabled={disabled}
         onClick={onBack}
         type="button"
       >
@@ -593,6 +615,7 @@ function PlannerActivityDetailsPage({
       <div className="mt-5 grid gap-4 sm:mt-7 sm:grid-cols-2 sm:gap-5">
         <div className="sm:col-span-2">
           <PlannerActivityTextField
+            disabled={disabled}
             error={errors.title}
             label={t('trips.planner.board.activitySpread.fields.title')}
             onChange={(value) => onDraftChange('title', value)}
@@ -601,12 +624,14 @@ function PlannerActivityDetailsPage({
           />
         </div>
         <PlannerActivityDatePicker
+          disabled={disabled}
           error={errors.date}
           label={t('trips.planner.board.activitySpread.fields.date')}
           onChange={(value) => onDraftChange('date', value)}
           value={draft.date}
         />
         <PlannerActivityTimePicker
+          disabled={disabled}
           endTime={draft.endTime}
           error={errors.time ?? errors.startTime ?? errors.endTime}
           label={t('trips.planner.board.activitySpread.fields.time')}
@@ -614,6 +639,7 @@ function PlannerActivityDetailsPage({
           startTime={draft.startTime}
         />
         <PlannerActivityTextField
+          disabled={disabled}
           error={errors.location}
           label={t('trips.planner.board.activitySpread.fields.location')}
           onChange={(value) => onDraftChange('location', value)}
@@ -622,6 +648,7 @@ function PlannerActivityDetailsPage({
         />
         <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_7rem]">
           <PlannerActivityTextField
+            disabled={disabled}
             error={errors.costAmount}
             inputMode="decimal"
             label={t('trips.planner.board.activitySpread.fields.costAmount')}
@@ -631,6 +658,7 @@ function PlannerActivityDetailsPage({
             value={draft.costAmount}
           />
           <PlannerActivityTextField
+            disabled={disabled}
             error={errors.costCurrency}
             inputMode="text"
             label={t('trips.planner.board.activitySpread.fields.costCurrency')}
@@ -652,7 +680,9 @@ function PlannerActivityDetailsPage({
 
 function PlannerActivitySupportPage({
   createError,
+  createProgressMessage,
   createSuccessMessage,
+  disabled,
   draft,
   errors,
   isCreating,
@@ -661,7 +691,9 @@ function PlannerActivitySupportPage({
   onDraftChange,
 }: {
   createError: string | null;
+  createProgressMessage: string | null;
   createSuccessMessage: string | null;
+  disabled: boolean;
   draft: PlannerActivityDraft;
   errors: PlannerActivityDraftErrors;
   isCreating: boolean;
@@ -682,7 +714,8 @@ function PlannerActivitySupportPage({
         <PlannerTapeTitle className="mt-1">{t('trips.planner.board.activitySpread.detailsTitle')}</PlannerTapeTitle>
         <button
           aria-label={t('trips.planner.board.activitySpread.addActivityAction')}
-          className="absolute right-0 top-0 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 sm:h-11 sm:px-4 sm:text-[1.08rem]"
+          className="absolute right-0 top-0 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
+          disabled={disabled}
           onClick={onAddActivity}
           type="button"
         >
@@ -694,6 +727,7 @@ function PlannerActivitySupportPage({
       <div className="relative z-10 mt-3 flex min-h-0 flex-1 flex-col">
         <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
           <PlannerActivityTextField
+            disabled={disabled}
             error={errors.imageUrl}
             label={t('trips.planner.board.activitySpread.fields.imageUrl')}
             onChange={(value) => onDraftChange('imageUrl', value)}
@@ -713,6 +747,7 @@ function PlannerActivitySupportPage({
             ) : null}
           </div>
           <PlannerActivityTextField
+            disabled={disabled}
             error={errors.notes}
             label={t('trips.planner.board.activitySpread.fields.notes')}
             multiline
@@ -723,6 +758,14 @@ function PlannerActivitySupportPage({
         </div>
 
         <div className="flex shrink-0 flex-col items-end gap-3 pt-4">
+          {createProgressMessage ? (
+            <p
+              className="w-full rounded-[0.85rem] border border-[#6aa7c7]/30 bg-[#eff9ff] px-4 py-3 font-marker text-[1rem] leading-tight text-[#24546d]"
+              role="status"
+            >
+              {createProgressMessage}
+            </p>
+          ) : null}
           {createError ? (
             <p
               className="w-full rounded-[0.85rem] border border-[#d92d20]/25 bg-[#fff1f0] px-4 py-3 font-marker text-[1rem] leading-tight text-[#b42318]"
@@ -741,7 +784,7 @@ function PlannerActivitySupportPage({
           ) : null}
           <button
             className="inline-flex shrink-0 items-center gap-2 rounded-[1.25rem] border-2 border-[#3a5d25] bg-[#b9e177] px-5 py-2.5 font-cursive text-[1.75rem] font-bold leading-none text-[#172612] shadow-[0_7px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:px-6 sm:text-[2.1rem]"
-            disabled={isCreating || Boolean(createSuccessMessage)}
+            disabled={disabled}
             onClick={onCreate}
             type="button"
           >
@@ -758,6 +801,7 @@ function PlannerActivitySupportPage({
 
 export function PlannerActivitySpread({
   createError,
+  createProgressMessage,
   createSuccessMessage,
   isCreating,
   onBack,
@@ -765,6 +809,7 @@ export function PlannerActivitySpread({
   tripDateRange,
 }: {
   createError: string | null;
+  createProgressMessage: string | null;
   createSuccessMessage: string | null;
   isCreating: boolean;
   nodeId: string | null;
@@ -780,6 +825,7 @@ export function PlannerActivitySpread({
   const { t } = useI18n();
   const activityDraft = activityDrafts[activeActivityIndex] ?? createDefaultActivityDraft();
   const currentActivityErrors = activityDraftErrors[activeActivityIndex] ?? {};
+  const isLocked = isCreating || Boolean(createSuccessMessage);
 
   useEffect(() => {
     return () => {
@@ -803,6 +849,10 @@ export function PlannerActivitySpread({
   };
 
   const updateActivityDraft: PlannerActivityDraftChangeHandler = (field, value) => {
+    if (isLocked) {
+      return;
+    }
+
     setActivityDrafts((currentDrafts) =>
       currentDrafts.map((currentDraft, index) =>
         index === activeActivityIndex
@@ -935,6 +985,10 @@ export function PlannerActivitySpread({
   };
 
   const addActivityDraft = () => {
+    if (isLocked) {
+      return;
+    }
+
     startPageTurn('next', () => {
       setActivityDrafts((currentDrafts) => [...currentDrafts, createDefaultActivityDraft()]);
       setActiveActivityIndex(activityDrafts.length);
@@ -953,7 +1007,7 @@ export function PlannerActivitySpread({
   };
 
   const createActivities = async () => {
-    if (isCreating || createSuccessMessage) {
+    if (isLocked) {
       return;
     }
 
@@ -994,6 +1048,7 @@ export function PlannerActivitySpread({
                 ? t('trips.planner.board.activitySpread.backToGeneralAction')
                 : t('trips.planner.board.activitySpread.backToPreviousActivityAction')
             }
+            disabled={isLocked}
             draft={activityDraft}
             errors={currentActivityErrors}
             onBack={goToPreviousActivityDraft}
@@ -1003,7 +1058,9 @@ export function PlannerActivitySpread({
         <div className="md:h-full md:w-1/2">
           <PlannerActivitySupportPage
             createError={createError}
+            createProgressMessage={createProgressMessage}
             createSuccessMessage={createSuccessMessage}
+            disabled={isLocked}
             draft={activityDraft}
             errors={currentActivityErrors}
             isCreating={isCreating}

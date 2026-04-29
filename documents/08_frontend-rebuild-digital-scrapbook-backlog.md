@@ -238,6 +238,15 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] tạo activity tuần tự để không mất index activity lỗi trong quá trình lưu
 - [x] bổ sung test nhỏ cho mapping lỗi backend của activity
 
+### Follow-up created trip planner handoff
+
+- [x] sau khi tạo thành công, chuyển sang planner của chuyến đi vừa tạo
+- [x] load/refetch planner thật theo `tripId`
+- [x] seed cache planner bằng activity vừa tạo để UI hiện ngay trước khi refetch
+- [x] invalidate cache danh sách trip để profile/list nhìn thấy chuyến mới
+- [x] hiển thị tiến trình đang lưu từng activity trong lúc bấm `Tạo`
+- [x] khóa thao tác thêm/sửa activity trong lúc đang submit
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu

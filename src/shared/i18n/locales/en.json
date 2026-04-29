@@ -642,10 +642,23 @@
             "saved": "Sticker coordinates saved.",
             "saveError": "Unable to save sticker coordinates right now.",
             "tripDraftInvalid": "Trip basics are not valid yet. Return to step 1 and check the fields.",
+            "creatingTrip": "Creating the trip...",
+            "savingActivity": "Saving activity {{current}}/{{total}}...",
+            "openingPlanner": "Opening the new planner...",
             "createSuccess": "Created \"{{tripName}}\" and saved {{count}} activities.",
             "activityCreateError": "Activity {{index}} could not be saved: {{message}}",
             "createError": "Unable to create the trip and save the activities right now."
           }
+        },
+        "savedSpread": {
+          "stepTitle": "Saved Planner",
+          "createNewAction": "Create a new trip",
+          "loading": "Loading the new planner...",
+          "loadError": "Unable to load this trip planner.",
+          "summaryTitle": "Trip summary",
+          "activityCount": "{{count}} activities",
+          "activitiesTitle": "Saved Activities",
+          "emptyActivities": "This trip does not have any activities yet."
         }
       },
       "createRootTitle": "Add root node",

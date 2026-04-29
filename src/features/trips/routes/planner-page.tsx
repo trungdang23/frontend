@@ -1,10 +1,11 @@
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowRight, CalendarDays, ChevronLeft, Compass, MapPinned, Plane } from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { createTrip, deleteTrip } from '@/features/trips/api/trips-api';
-import { createPlanNode } from '@/features/trips/planning/api/planner-api';
+import { createPlanNode, getTripPlanner } from '@/features/trips/planning/api/planner-api';
 import {
   PlannerActivitySpread,
   type PlannerActivityCreateResult,
@@ -15,7 +16,8 @@ import {
   resolvePlannerActivityServerError,
   type PlannerActivityServerError,
 } from '@/features/trips/planning/lib/activity-server-errors';
-import type { PlanNodeMutationPayload } from '@/features/trips/planning/types/plan-node';
+import { plannerQueryKeys } from '@/features/trips/planning/lib/planner-query-keys';
+import type { PlanNode, PlanNodeMutationPayload } from '@/features/trips/planning/types/plan-node';
 import type { TripBudgetMode, TripUpsertPayload, TripVisibility } from '@/features/trips/types/trip';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -84,6 +86,49 @@ function buildTripCreatePayload(draft: PlannerTripDraft): TripUpsertPayload {
 
 function buildActivityDateTime(date: string, time: string) {
   return `${date}T${time || '00:00'}`;
+}
+
+function formatPlannerDateTime(value: string | null) {
+  if (!value) {
+    return '';
+  }
+
+  const [date, time = ''] = value.split('T');
+  const formattedDate = formatPlannerDate(date);
+  const formattedTime = time.slice(0, 5);
+
+  return formattedTime ? `${formattedDate} ${formattedTime}` : formattedDate;
+}
+
+function formatPlanNodeSchedule(node: PlanNode) {
+  if (!node.startAt && !node.endAt) {
+    return '';
+  }
+
+  if (!node.startAt) {
+    return formatPlannerDateTime(node.endAt);
+  }
+
+  if (!node.endAt) {
+    return formatPlannerDateTime(node.startAt);
+  }
+
+  const startDate = node.startAt.slice(0, 10);
+  const endDate = node.endAt.slice(0, 10);
+
+  if (startDate === endDate) {
+    return `${formatPlannerDate(startDate)} · ${node.startAt.slice(11, 16)} - ${node.endAt.slice(11, 16)}`;
+  }
+
+  return `${formatPlannerDateTime(node.startAt)} - ${formatPlannerDateTime(node.endAt)}`;
+}
+
+function formatPlanNodeCost(node: PlanNode) {
+  if (node.costAmount === null || node.costCurrency === null) {
+    return '';
+  }
+
+  return `${new Intl.NumberFormat('vi-VN').format(node.costAmount)} ${node.costCurrency}`;
 }
 
 function buildActivityPlanNodePayload(
@@ -1050,18 +1095,166 @@ function PlannerCreateSpread({
   );
 }
 
+function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => void; tripId: string }) {
+  const { t } = useI18n();
+  const plannerQuery = useQuery({
+    queryFn: ({ signal }) => getTripPlanner(tripId, { signal }),
+    queryKey: plannerQueryKeys.detail(tripId),
+  });
+  const trip = plannerQuery.data?.trip;
+  const activityNodes = (plannerQuery.data?.nodes ?? [])
+    .filter((node) => node.type === 'activity')
+    .sort((left, right) => {
+      const leftSchedule = left.startAt ?? '';
+      const rightSchedule = right.startAt ?? '';
+
+      if (leftSchedule !== rightSchedule) {
+        return leftSchedule.localeCompare(rightSchedule);
+      }
+
+      return left.sortOrder - right.sortOrder;
+    });
+
+  return (
+    <div className="flex h-full min-h-0 flex-col md:flex-row">
+      <div
+        className="relative flex h-full min-h-[33rem] flex-col overflow-hidden border-b border-gray-100 bg-[#fffdfa] px-5 py-5 sm:px-7 sm:py-6 md:w-1/2 md:border-b-0 md:border-r lg:px-8"
+        style={pageDotStyle}
+      >
+        <button
+          className="relative z-40 inline-flex w-fit items-center gap-1.5 rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-4 py-2 font-hand text-[1.25rem] leading-none text-[#6b4938] shadow-[0_10px_18px_rgba(90,62,40,0.12)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:text-[1.45rem]"
+          onClick={onCreateNew}
+          type="button"
+        >
+          <ChevronLeft className="h-4 w-4" strokeWidth={2.2} />
+          {t('trips.planner.board.savedSpread.createNewAction')}
+        </button>
+
+        <PlannerTapeTitle className="mt-4">{t('trips.planner.board.savedSpread.stepTitle')}</PlannerTapeTitle>
+
+        <div className="relative z-10 mt-7 flex min-h-0 flex-1 flex-col gap-4">
+          {plannerQuery.isLoading ? (
+            <p
+              className="rounded-[0.85rem] border border-[#6aa7c7]/30 bg-[#eff9ff] px-4 py-3 font-marker text-[1rem] leading-tight text-[#24546d]"
+              role="status"
+            >
+              {t('trips.planner.board.savedSpread.loading')}
+            </p>
+          ) : null}
+
+          {!plannerQuery.isLoading && plannerQuery.isError ? (
+            <p
+              className="rounded-[0.85rem] border border-[#d92d20]/25 bg-[#fff1f0] px-4 py-3 font-marker text-[1rem] leading-tight text-[#b42318]"
+              role="alert"
+            >
+              {t('trips.planner.board.savedSpread.loadError')}
+            </p>
+          ) : null}
+
+          {trip ? (
+            <>
+              <div>
+                <p className="font-cursive text-[1.65rem] font-bold leading-none text-[#201916] sm:text-[2rem]">
+                  {trip.name}
+                </p>
+                <p className="mt-3 font-marker text-[1.05rem] leading-tight text-[#6b4938] sm:text-[1.18rem]">
+                  {formatPlannerDate(trip.startDate)} - {formatPlannerDate(trip.endDate)}
+                </p>
+                {trip.destination ? (
+                  <p className="mt-2 font-marker text-[1.05rem] leading-tight text-[#3d332b] sm:text-[1.18rem]">
+                    {trip.destination}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="rounded-[0.95rem] border border-dashed border-[#b9aea0] bg-white/55 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
+                <p className="font-marker text-[1rem] font-bold text-[#6b4938]">
+                  {t('trips.planner.board.savedSpread.summaryTitle')}
+                </p>
+                <div className="mt-3 grid grid-cols-2 gap-3 font-marker text-[1rem] text-[#3d332b]">
+                  <span>{t('trips.planner.board.savedSpread.activityCount', { count: activityNodes.length })}</span>
+                  <span>{t(`trips.visibility.${trip.visibility}`)}</span>
+                </div>
+              </div>
+
+              {trip.summaryNotes ? (
+                <p className="min-h-0 overflow-y-auto rounded-[0.95rem] border border-[#e8dac7] bg-[#fff8ea] p-4 font-marker text-[1rem] leading-tight text-[#3d332b]">
+                  {trip.summaryNotes}
+                </p>
+              ) : null}
+            </>
+          ) : null}
+        </div>
+      </div>
+
+      <div
+        className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-8 pt-5 sm:px-7 sm:pb-9 sm:pt-6 md:w-1/2 lg:px-8"
+        style={pageDotStyle}
+      >
+        <PlannerTapeTitle className="mt-1">{t('trips.planner.board.savedSpread.activitiesTitle')}</PlannerTapeTitle>
+
+        <div className="relative z-10 mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
+          {trip && activityNodes.length === 0 ? (
+            <p className="rounded-[0.85rem] border border-[#e8dac7] bg-[#fff8ea] px-4 py-4 font-marker text-[1rem] leading-tight text-[#6b4938]">
+              {t('trips.planner.board.savedSpread.emptyActivities')}
+            </p>
+          ) : null}
+
+          {activityNodes.map((node, index) => {
+            const schedule = formatPlanNodeSchedule(node);
+            const cost = formatPlanNodeCost(node);
+
+            return (
+              <article
+                className="rounded-[0.95rem] border border-[#d8c5ab] bg-white/70 p-4 shadow-[0_8px_16px_rgba(90,62,40,0.08)]"
+                key={node.id}
+              >
+                <div className="flex items-start gap-3">
+                  <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#b9e177] font-marker text-[1rem] font-bold text-[#172612] shadow-[0_4px_0_#6f9e44]">
+                    {index + 1}
+                  </span>
+                  <div className="min-w-0">
+                    <h2 className="font-marker text-[1.1rem] font-bold leading-tight text-[#201916] sm:text-[1.2rem]">
+                      {node.title}
+                    </h2>
+                    {schedule ? (
+                      <p className="mt-1 font-marker text-[0.96rem] leading-tight text-[#6b4938]">{schedule}</p>
+                    ) : null}
+                  </div>
+                </div>
+                {node.notes ? (
+                  <p className="mt-3 font-marker text-[0.96rem] leading-tight text-[#3d332b]">{node.notes}</p>
+                ) : null}
+                {cost ? (
+                  <p className="mt-3 inline-flex rounded-full bg-[#f4cf8f]/55 px-3 py-1 font-marker text-[0.92rem] font-bold text-[#4d2d1b]">
+                    {cost}
+                  </p>
+                ) : null}
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function PlannerPage() {
   const { t } = useI18n();
+  const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const [tripDraft, setTripDraft] = useState(createDefaultPlannerTripDraft);
   const [tripDraftErrors, setTripDraftErrors] = useState<PlannerTripDraftErrors>({});
   const [isCreatingTripWithActivities, setIsCreatingTripWithActivities] = useState(false);
   const [createTripWithActivitiesError, setCreateTripWithActivitiesError] = useState<string | null>(null);
+  const [createTripWithActivitiesProgress, setCreateTripWithActivitiesProgress] = useState<string | null>(null);
   const [createTripWithActivitiesSuccess, setCreateTripWithActivitiesSuccess] = useState<string | null>(null);
   const plannerPage = searchParams.get('page');
+  const selectedTripId = searchParams.get('tripId');
   const isCreatingPlan = plannerPage === 'next';
   const isEditingActivities = plannerPage === 'activities';
-  const isPlannerFlowOpen = isCreatingPlan || isEditingActivities;
+  const isViewingSavedPlanner = Boolean(selectedTripId) && !isCreatingPlan && !isEditingActivities;
+  const isPlannerFlowOpen = isCreatingPlan || isEditingActivities || isViewingSavedPlanner;
   const activeNodeId = searchParams.get('nodeId');
 
   const updateTripDraft: PlannerTripDraftChangeHandler = (field, value) => {
@@ -1070,6 +1263,7 @@ export function PlannerPage() {
       [field]: value,
     }));
     setCreateTripWithActivitiesError(null);
+    setCreateTripWithActivitiesProgress(null);
     setCreateTripWithActivitiesSuccess(null);
     setTripDraftErrors((currentErrors) => {
       const nextErrors = { ...currentErrors };
@@ -1141,24 +1335,52 @@ export function PlannerPage() {
   const openNextPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set('page', 'next');
+    nextParams.delete('tripId');
     setSearchParams(nextParams, { replace: true });
     setCreateTripWithActivitiesError(null);
+    setCreateTripWithActivitiesProgress(null);
     setCreateTripWithActivitiesSuccess(null);
   };
 
   const returnToIntroPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.delete('page');
+    nextParams.delete('tripId');
     setSearchParams(nextParams, { replace: true });
     setCreateTripWithActivitiesError(null);
+    setCreateTripWithActivitiesProgress(null);
     setCreateTripWithActivitiesSuccess(null);
   };
 
   const openActivityPlannerPage = () => {
     const nextParams = new URLSearchParams(searchParams);
     nextParams.set('page', 'activities');
+    nextParams.delete('tripId');
     setSearchParams(nextParams, { replace: true });
     setCreateTripWithActivitiesError(null);
+    setCreateTripWithActivitiesProgress(null);
+  };
+
+  const openCreatedPlannerPage = (tripId: string) => {
+    setSearchParams(
+      {
+        tripId,
+      },
+      { replace: true },
+    );
+    setTripDraft(createDefaultPlannerTripDraft());
+    setTripDraftErrors({});
+    setCreateTripWithActivitiesError(null);
+    setCreateTripWithActivitiesProgress(null);
+  };
+
+  const openFreshPlannerDraft = () => {
+    setSearchParams({}, { replace: true });
+    setTripDraft(createDefaultPlannerTripDraft());
+    setTripDraftErrors({});
+    setCreateTripWithActivitiesError(null);
+    setCreateTripWithActivitiesProgress(null);
+    setCreateTripWithActivitiesSuccess(null);
   };
 
   const continueWithTripDraft = () => {
@@ -1249,14 +1471,25 @@ export function PlannerPage() {
 
     setIsCreatingTripWithActivities(true);
     setCreateTripWithActivitiesError(null);
+    setCreateTripWithActivitiesProgress(t('trips.planner.board.activitySpread.feedback.creatingTrip'));
     setCreateTripWithActivitiesSuccess(null);
 
     try {
       const trip = await createTrip(buildTripCreatePayload(tripDraft));
+      const createdNodes: PlanNode[] = [];
 
       for (const [index, activityDraft] of activityDrafts.entries()) {
+        setCreateTripWithActivitiesProgress(
+          t('trips.planner.board.activitySpread.feedback.savingActivity', {
+            current: index + 1,
+            total: activityDrafts.length,
+          }),
+        );
+
         try {
-          await createPlanNode(buildActivityPlanNodePayload(trip.id, activityDraft, index));
+          const createdNode = await createPlanNode(buildActivityPlanNodePayload(trip.id, activityDraft, index));
+
+          createdNodes.push(createdNode);
         } catch (error) {
           await rollbackCreatedTrip(trip.id);
 
@@ -1270,12 +1503,22 @@ export function PlannerPage() {
         }
       }
 
+      queryClient.setQueryData(plannerQueryKeys.detail(trip.id), {
+        nodes: createdNodes,
+        trip,
+      });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
+        queryClient.invalidateQueries({ queryKey: plannerQueryKeys.detail(trip.id) }),
+      ]);
+      setCreateTripWithActivitiesProgress(t('trips.planner.board.activitySpread.feedback.openingPlanner'));
       setCreateTripWithActivitiesSuccess(
         t('trips.planner.board.activitySpread.feedback.createSuccess', {
           count: activityDrafts.length,
           tripName: trip.name,
         }),
       );
+      openCreatedPlannerPage(trip.id);
 
       return { ok: true };
     } catch {
@@ -1284,6 +1527,7 @@ export function PlannerPage() {
       return { ok: false };
     } finally {
       setIsCreatingTripWithActivities(false);
+      setCreateTripWithActivitiesProgress(null);
     }
   };
 
@@ -1292,6 +1536,7 @@ export function PlannerPage() {
     nextParams.set('page', 'next');
     setSearchParams(nextParams, { replace: true });
     setCreateTripWithActivitiesError(null);
+    setCreateTripWithActivitiesProgress(null);
     setCreateTripWithActivitiesSuccess(null);
   };
 
@@ -1318,6 +1563,7 @@ export function PlannerPage() {
               {isEditingActivities ? (
                 <PlannerActivitySpread
                   createError={createTripWithActivitiesError}
+                  createProgressMessage={createTripWithActivitiesProgress}
                   createSuccessMessage={createTripWithActivitiesSuccess}
                   isCreating={isCreatingTripWithActivities}
                   nodeId={activeNodeId}
@@ -1336,6 +1582,8 @@ export function PlannerPage() {
                   onContinue={continueWithTripDraft}
                   onDraftChange={updateTripDraft}
                 />
+              ) : isViewingSavedPlanner && selectedTripId ? (
+                <PlannerSavedTripSpread onCreateNew={openFreshPlannerDraft} tripId={selectedTripId} />
               ) : (
                 <>
                   <PlannerLeftPage />
@@ -1348,6 +1596,7 @@ export function PlannerPage() {
               {isEditingActivities ? (
                 <PlannerActivitySpread
                   createError={createTripWithActivitiesError}
+                  createProgressMessage={createTripWithActivitiesProgress}
                   createSuccessMessage={createTripWithActivitiesSuccess}
                   isCreating={isCreatingTripWithActivities}
                   nodeId={activeNodeId}
@@ -1366,6 +1615,8 @@ export function PlannerPage() {
                   onContinue={continueWithTripDraft}
                   onDraftChange={updateTripDraft}
                 />
+              ) : isViewingSavedPlanner && selectedTripId ? (
+                <PlannerSavedTripSpread onCreateNew={openFreshPlannerDraft} tripId={selectedTripId} />
               ) : (
                 <div className="absolute inset-0 flex">
                   <div className="w-1/2">
