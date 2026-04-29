@@ -1,23 +1,44 @@
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowRight, CalendarDays, ChevronLeft, Compass, MapPinned, Plane } from 'lucide-react';
+import {
+  ArrowRight,
+  CalendarDays,
+  ChevronLeft,
+  Compass,
+  MapPinned,
+  Pencil,
+  Plane,
+  Plus,
+  Trash2,
+} from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { createTrip, deleteTrip } from '@/features/trips/api/trips-api';
-import { createPlanNode, getTripPlanner } from '@/features/trips/planning/api/planner-api';
+import {
+  createPlanNode,
+  deletePlanNode,
+  getTripPlanner,
+  updatePlanNode,
+} from '@/features/trips/planning/api/planner-api';
 import {
   PlannerActivitySpread,
   type PlannerActivityCreateResult,
   type PlannerActivityDraft,
   type PlannerActivityDraftErrors,
+  type PlannerActivityReservedTime,
 } from '@/features/trips/planning/components/planner-activity-spread';
 import {
   resolvePlannerActivityServerError,
   type PlannerActivityServerError,
 } from '@/features/trips/planning/lib/activity-server-errors';
 import { plannerQueryKeys } from '@/features/trips/planning/lib/planner-query-keys';
-import type { PlanNode, PlanNodeMutationPayload } from '@/features/trips/planning/types/plan-node';
+import type {
+  PlanNode,
+  PlanNodeMutationPayload,
+  PlanNodeUpdatePayload,
+  TripPlannerResult,
+} from '@/features/trips/planning/types/plan-node';
 import type { TripBudgetMode, TripUpsertPayload, TripVisibility } from '@/features/trips/types/trip';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -47,6 +68,21 @@ type PlannerTripDraftChangeHandler = <Field extends PlannerTripDraftField>(
   value: PlannerTripDraft[Field],
 ) => void;
 type PlannerCalendarView = 'day' | 'month' | 'year';
+type SavedPlannerActivityMode =
+  | {
+      kind: 'add';
+    }
+  | {
+      kind: 'edit';
+      nodeId: string;
+    }
+  | {
+      kind: 'list';
+    };
+type SavedPlannerFeedback = {
+  kind: 'error' | 'success';
+  message: string;
+};
 
 const createDefaultPlannerTripDraft = (): PlannerTripDraft => ({
   name: '',
@@ -150,6 +186,38 @@ function buildActivityPlanNodePayload(
     costCurrency: costAmount === null ? null : draft.costCurrency.trim().toUpperCase(),
     imageUrl: toNullableTrimmedValue(draft.imageUrl),
     sortOrder,
+  };
+}
+
+function buildActivityPlanNodeUpdatePayload(draft: PlannerActivityDraft): PlanNodeUpdatePayload {
+  const costAmount = draft.costAmount.trim() ? Number(draft.costAmount.trim()) : null;
+
+  return {
+    type: 'activity',
+    title: draft.title.trim(),
+    notes: toNullableTrimmedValue(draft.notes),
+    startAt: buildActivityDateTime(draft.date, draft.startTime),
+    endAt: draft.endTime ? buildActivityDateTime(draft.date, draft.endTime) : null,
+    costAmount,
+    costCurrency: costAmount === null ? null : draft.costCurrency.trim().toUpperCase(),
+    imageUrl: toNullableTrimmedValue(draft.imageUrl),
+  };
+}
+
+function buildActivityDraftFromPlanNode(node: PlanNode): PlannerActivityDraft {
+  const fallbackDate = node.endAt?.slice(0, 10) ?? '';
+  const startDate = node.startAt?.slice(0, 10) ?? fallbackDate;
+
+  return {
+    title: node.title,
+    date: startDate,
+    startTime: node.startAt?.slice(11, 16) ?? '',
+    endTime: node.endAt?.slice(11, 16) ?? '',
+    location: '',
+    costAmount: node.costAmount === null ? '' : String(node.costAmount),
+    costCurrency: node.costCurrency ?? 'VND',
+    notes: node.notes ?? '',
+    imageUrl: node.imageUrl ?? '',
   };
 }
 
@@ -1097,6 +1165,13 @@ function PlannerCreateSpread({
 
 function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => void; tripId: string }) {
   const { t } = useI18n();
+  const queryClient = useQueryClient();
+  const [activityMode, setActivityMode] = useState<SavedPlannerActivityMode>({ kind: 'list' });
+  const [activityMutationError, setActivityMutationError] = useState<string | null>(null);
+  const [activityMutationProgress, setActivityMutationProgress] = useState<string | null>(null);
+  const [isSavingActivity, setIsSavingActivity] = useState(false);
+  const [savedPlannerFeedback, setSavedPlannerFeedback] = useState<SavedPlannerFeedback | null>(null);
+  const [deletingNodeId, setDeletingNodeId] = useState<string | null>(null);
   const plannerQuery = useQuery({
     queryFn: ({ signal }) => getTripPlanner(tripId, { signal }),
     queryKey: plannerQueryKeys.detail(tripId),
@@ -1114,6 +1189,287 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
 
       return left.sortOrder - right.sortOrder;
     });
+  const editedActivityNode =
+    activityMode.kind === 'edit' ? activityNodes.find((node) => node.id === activityMode.nodeId) : null;
+  const reservedActivityTimes: PlannerActivityReservedTime[] = activityNodes
+    .filter((node) => activityMode.kind !== 'edit' || node.id !== activityMode.nodeId)
+    .map((node, index) => ({
+      draft: buildActivityDraftFromPlanNode(node),
+      label: node.title || t('trips.planner.board.activitySpread.activityNumber', { index: index + 1 }),
+    }));
+  const isActivityFormOpen = Boolean(trip) && (activityMode.kind === 'add' || Boolean(editedActivityNode));
+
+  const clearActivityMutationState = () => {
+    setActivityMutationError(null);
+    setActivityMutationProgress(null);
+  };
+
+  const openAddActivityForm = () => {
+    clearActivityMutationState();
+    setSavedPlannerFeedback(null);
+    setActivityMode({ kind: 'add' });
+  };
+
+  const openEditActivityForm = (nodeId: string) => {
+    clearActivityMutationState();
+    setSavedPlannerFeedback(null);
+    setActivityMode({ kind: 'edit', nodeId });
+  };
+
+  const closeActivityForm = () => {
+    clearActivityMutationState();
+    setActivityMode({ kind: 'list' });
+  };
+
+  const getSavedActivityServerErrorMessage = (serverError: PlannerActivityServerError) => {
+    if (serverError.kind === 'missingTime') {
+      return t('trips.planner.board.activitySpread.validation.serverTimeRequired');
+    }
+
+    if (serverError.kind === 'outsideTripRange') {
+      return t('trips.planner.board.activitySpread.validation.dateOutsideTripRange', {
+        endDate: formatPlannerDate(trip?.endDate ?? ''),
+        startDate: formatPlannerDate(trip?.startDate ?? ''),
+      });
+    }
+
+    if (serverError.kind === 'timeOverlap') {
+      return t('trips.planner.board.activitySpread.validation.timeOverlapServer');
+    }
+
+    return t('trips.planner.board.activitySpread.validation.timeRangeInvalid');
+  };
+
+  const buildSavedActivityFailure = (
+    activityIndex: number,
+    error: unknown,
+    feedbackKey:
+      | 'trips.planner.board.savedSpread.feedback.activityCreateError'
+      | 'trips.planner.board.savedSpread.feedback.activityUpdateError',
+  ): PlannerActivityCreateResult => {
+    const serverError = resolvePlannerActivityServerError(error);
+
+    if (!serverError) {
+      return {
+        ok: false,
+      };
+    }
+
+    const message = getSavedActivityServerErrorMessage(serverError);
+    const errors: PlannerActivityDraftErrors = {
+      [serverError.field]: message,
+    };
+
+    setActivityMutationError(
+      t(feedbackKey, {
+        index: activityIndex + 1,
+        message,
+      }),
+    );
+
+    return {
+      activityError: {
+        activityIndex,
+        errors,
+      },
+      ok: false,
+    };
+  };
+
+  const invalidateSavedPlanner = async () => {
+    await queryClient.invalidateQueries({ queryKey: plannerQueryKeys.detail(tripId) });
+  };
+
+  const createSavedActivities = async (activityDrafts: PlannerActivityDraft[]): Promise<PlannerActivityCreateResult> => {
+    if (!trip || isSavingActivity) {
+      return { ok: false };
+    }
+
+    setIsSavingActivity(true);
+    setActivityMutationError(null);
+    setSavedPlannerFeedback(null);
+
+    try {
+      const createdNodes: PlanNode[] = [];
+
+      for (const [index, activityDraft] of activityDrafts.entries()) {
+        setActivityMutationProgress(
+          t('trips.planner.board.savedSpread.feedback.createProgress', {
+            current: index + 1,
+            total: activityDrafts.length,
+          }),
+        );
+
+        try {
+          const createdNode = await createPlanNode(
+            buildActivityPlanNodePayload(trip.id, activityDraft, activityNodes.length + index),
+          );
+
+          createdNodes.push(createdNode);
+        } catch (error) {
+          const createFailure = buildSavedActivityFailure(
+            index,
+            error,
+            'trips.planner.board.savedSpread.feedback.activityCreateError',
+          );
+
+          if (!('activityError' in createFailure) || !createFailure.activityError) {
+            setActivityMutationError(t('trips.planner.board.savedSpread.feedback.createError'));
+          }
+
+          return createFailure;
+        }
+      }
+
+      queryClient.setQueryData<TripPlannerResult>(plannerQueryKeys.detail(trip.id), (currentPlanner) => ({
+        trip: currentPlanner?.trip ?? trip,
+        nodes: [...(currentPlanner?.nodes ?? []), ...createdNodes],
+      }));
+      await invalidateSavedPlanner();
+      setSavedPlannerFeedback({
+        kind: 'success',
+        message: t('trips.planner.board.savedSpread.feedback.createSuccess', {
+          count: createdNodes.length,
+        }),
+      });
+      setActivityMode({ kind: 'list' });
+
+      return { ok: true };
+    } catch {
+      setActivityMutationError(t('trips.planner.board.savedSpread.feedback.createError'));
+
+      return { ok: false };
+    } finally {
+      setIsSavingActivity(false);
+      setActivityMutationProgress(null);
+    }
+  };
+
+  const updateSavedActivity = async (activityDrafts: PlannerActivityDraft[]): Promise<PlannerActivityCreateResult> => {
+    if (!trip || !editedActivityNode || isSavingActivity) {
+      return { ok: false };
+    }
+
+    const [activityDraft] = activityDrafts;
+
+    if (!activityDraft) {
+      return { ok: false };
+    }
+
+    setIsSavingActivity(true);
+    setActivityMutationError(null);
+    setSavedPlannerFeedback(null);
+    setActivityMutationProgress(t('trips.planner.board.savedSpread.feedback.updateProgress'));
+
+    try {
+      const updatedNode = await updatePlanNode(editedActivityNode.id, buildActivityPlanNodeUpdatePayload(activityDraft));
+
+      queryClient.setQueryData<TripPlannerResult>(plannerQueryKeys.detail(trip.id), (currentPlanner) => ({
+        trip: currentPlanner?.trip ?? trip,
+        nodes: currentPlanner
+          ? currentPlanner.nodes.map((node) => (node.id === updatedNode.id ? updatedNode : node))
+          : [updatedNode],
+      }));
+      await invalidateSavedPlanner();
+      setSavedPlannerFeedback({
+        kind: 'success',
+        message: t('trips.planner.board.savedSpread.feedback.updateSuccess'),
+      });
+      setActivityMode({ kind: 'list' });
+
+      return { ok: true };
+    } catch (error) {
+      const updateFailure = buildSavedActivityFailure(
+        0,
+        error,
+        'trips.planner.board.savedSpread.feedback.activityUpdateError',
+      );
+
+      if (!('activityError' in updateFailure) || !updateFailure.activityError) {
+        setActivityMutationError(t('trips.planner.board.savedSpread.feedback.updateError'));
+      }
+
+      return updateFailure;
+    } finally {
+      setIsSavingActivity(false);
+      setActivityMutationProgress(null);
+    }
+  };
+
+  const saveActivityForm = (activityDrafts: PlannerActivityDraft[]) => {
+    if (activityMode.kind === 'edit') {
+      return updateSavedActivity(activityDrafts);
+    }
+
+    return createSavedActivities(activityDrafts);
+  };
+
+  const deleteSavedActivity = async (node: PlanNode) => {
+    if (deletingNodeId) {
+      return;
+    }
+
+    const shouldDelete = window.confirm(t('trips.planner.board.savedSpread.deleteConfirm'));
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    setDeletingNodeId(node.id);
+    setSavedPlannerFeedback(null);
+
+    try {
+      await deletePlanNode(node.id);
+      queryClient.setQueryData<TripPlannerResult>(plannerQueryKeys.detail(tripId), (currentPlanner) =>
+        currentPlanner
+          ? {
+              ...currentPlanner,
+              nodes: currentPlanner.nodes.filter((currentNode) => currentNode.id !== node.id),
+            }
+          : currentPlanner,
+      );
+      await invalidateSavedPlanner();
+      setSavedPlannerFeedback({
+        kind: 'success',
+        message: t('trips.planner.board.savedSpread.feedback.deleteSuccess'),
+      });
+    } catch {
+      setSavedPlannerFeedback({
+        kind: 'error',
+        message: t('trips.planner.board.savedSpread.feedback.deleteError'),
+      });
+    } finally {
+      setDeletingNodeId(null);
+    }
+  };
+
+  if (trip && isActivityFormOpen) {
+    const isEditingActivity = activityMode.kind === 'edit';
+    const initialDrafts = editedActivityNode ? [buildActivityDraftFromPlanNode(editedActivityNode)] : undefined;
+
+    return (
+      <PlannerActivitySpread
+        key={isEditingActivity ? `edit-${editedActivityNode?.id}` : 'add-saved-activity'}
+        createError={activityMutationError}
+        createProgressMessage={activityMutationProgress}
+        createSuccessMessage={null}
+        firstBackLabel={t('trips.planner.board.savedSpread.backToSavedPlannerAction')}
+        initialDrafts={initialDrafts}
+        isCreating={isSavingActivity}
+        nodeId={editedActivityNode?.id ?? null}
+        onBack={closeActivityForm}
+        onCreateActivities={saveActivityForm}
+        reservedActivityTimes={reservedActivityTimes}
+        showAddActivityAction={!isEditingActivity}
+        submitActionLabel={t('trips.planner.board.savedSpread.saveActivityAction')}
+        submittingActionLabel={t('trips.planner.board.savedSpread.savingActivityAction')}
+        tripDateRange={{
+          endDate: trip.endDate,
+          startDate: trip.startDate,
+        }}
+      />
+    );
+  }
 
   return (
     <div className="flex h-full min-h-0 flex-col md:flex-row">
@@ -1191,9 +1547,44 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
         className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-8 pt-5 sm:px-7 sm:pb-9 sm:pt-6 md:w-1/2 lg:px-8"
         style={pageDotStyle}
       >
-        <PlannerTapeTitle className="mt-1">{t('trips.planner.board.savedSpread.activitiesTitle')}</PlannerTapeTitle>
+        <div className="relative z-20 min-h-14 pr-14 sm:pr-40">
+          <PlannerTapeTitle className="mt-1">{t('trips.planner.board.savedSpread.activitiesTitle')}</PlannerTapeTitle>
+          <button
+            aria-label={t('trips.planner.board.savedSpread.addActivityAction')}
+            className="absolute right-0 top-0 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
+            disabled={!trip || Boolean(deletingNodeId)}
+            onClick={openAddActivityForm}
+            type="button"
+          >
+            <Plus className="h-4 w-4" strokeWidth={2.5} />
+            <span className="hidden sm:inline">{t('trips.planner.board.savedSpread.addActivityAction')}</span>
+          </button>
+        </div>
 
         <div className="relative z-10 mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
+          {savedPlannerFeedback ? (
+            <p
+              className={cn(
+                'rounded-[0.85rem] border px-4 py-3 font-marker text-[1rem] leading-tight',
+                savedPlannerFeedback.kind === 'success'
+                  ? 'border-[#6f9e44]/35 bg-[#f1ffd8] text-[#31521c]'
+                  : 'border-[#d92d20]/25 bg-[#fff1f0] text-[#b42318]',
+              )}
+              role={savedPlannerFeedback.kind === 'success' ? 'status' : 'alert'}
+            >
+              {savedPlannerFeedback.message}
+            </p>
+          ) : null}
+
+          {deletingNodeId ? (
+            <p
+              className="rounded-[0.85rem] border border-[#6aa7c7]/30 bg-[#eff9ff] px-4 py-3 font-marker text-[1rem] leading-tight text-[#24546d]"
+              role="status"
+            >
+              {t('trips.planner.board.savedSpread.feedback.deleteProgress')}
+            </p>
+          ) : null}
+
           {trip && activityNodes.length === 0 ? (
             <p className="rounded-[0.85rem] border border-[#e8dac7] bg-[#fff8ea] px-4 py-4 font-marker text-[1rem] leading-tight text-[#6b4938]">
               {t('trips.planner.board.savedSpread.emptyActivities')}
@@ -1230,6 +1621,26 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
                     {cost}
                   </p>
                 ) : null}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-3 py-1.5 font-marker text-[0.92rem] font-bold leading-none text-[#6b4938] transition hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
+                    disabled={Boolean(deletingNodeId)}
+                    onClick={() => openEditActivityForm(node.id)}
+                    type="button"
+                  >
+                    <Pencil className="h-3.5 w-3.5" strokeWidth={2.3} />
+                    {t('trips.planner.board.savedSpread.editActivityAction')}
+                  </button>
+                  <button
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-3 py-1.5 font-marker text-[0.92rem] font-bold leading-none text-[#b42318] transition hover:-translate-y-0.5 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#d92d20]/20 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
+                    disabled={Boolean(deletingNodeId)}
+                    onClick={() => void deleteSavedActivity(node)}
+                    type="button"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" strokeWidth={2.3} />
+                    {t('trips.planner.board.savedSpread.deleteActivityAction')}
+                  </button>
+                </div>
               </article>
             );
           })}

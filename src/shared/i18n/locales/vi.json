@@ -618,6 +618,7 @@
             "serverTimeRequired": "Backend yêu cầu hoạt động có đủ giờ bắt đầu và giờ kết thúc.",
             "timeRangeInvalid": "Giờ kết thúc phải sau giờ bắt đầu.",
             "timeOverlap": "Thời gian bị trùng với hành động {{index}}.",
+            "timeOverlapExisting": "Thời gian bị trùng với hoạt động đã lưu: {{title}}.",
             "timeOverlapServer": "Thời gian bị trùng với một hoạt động khác trong chuyến đi.",
             "costAmountInvalid": "Chi phí phải lớn hơn hoặc bằng 0.",
             "costCurrencyRequired": "Tiền tệ là bắt buộc khi nhập chi phí.",
@@ -653,12 +654,32 @@
         "savedSpread": {
           "stepTitle": "Planner Đã Lưu",
           "createNewAction": "Tạo chuyến mới",
+          "addActivityAction": "Thêm hoạt động",
+          "editActivityAction": "Sửa",
+          "deleteActivityAction": "Xóa",
+          "backToSavedPlannerAction": "Quay lại planner",
+          "saveActivityAction": "Lưu",
+          "savingActivityAction": "Đang lưu...",
+          "deleteConfirm": "Xóa hoạt động này khỏi chuyến đi?",
           "loading": "Đang tải planner vừa tạo...",
           "loadError": "Không tải được planner của chuyến đi này.",
           "summaryTitle": "Tóm tắt chuyến đi",
           "activityCount": "{{count}} hoạt động",
           "activitiesTitle": "Hoạt Động Đã Lưu",
-          "emptyActivities": "Chuyến đi này chưa có hoạt động nào."
+          "emptyActivities": "Chuyến đi này chưa có hoạt động nào.",
+          "feedback": {
+            "createProgress": "Đang lưu hoạt động {{current}}/{{total}}...",
+            "updateProgress": "Đang cập nhật hoạt động...",
+            "deleteProgress": "Đang xóa hoạt động...",
+            "createSuccess": "Đã thêm {{count}} hoạt động.",
+            "updateSuccess": "Đã cập nhật hoạt động.",
+            "deleteSuccess": "Đã xóa hoạt động.",
+            "activityCreateError": "Hoạt động {{index}} chưa lưu được: {{message}}",
+            "activityUpdateError": "Hoạt động chưa cập nhật được: {{message}}",
+            "createError": "Không thể thêm hoạt động lúc này.",
+            "updateError": "Không thể cập nhật hoạt động lúc này.",
+            "deleteError": "Không thể xóa hoạt động lúc này."
+          }
         }
       },
       "createRootTitle": "Thêm node gốc",

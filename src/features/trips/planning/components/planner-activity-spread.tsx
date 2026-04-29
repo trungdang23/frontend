@@ -39,6 +39,10 @@ type PlannerActivityTripDateRange = {
   endDate: string;
   startDate: string;
 };
+export type PlannerActivityReservedTime = {
+  draft: PlannerActivityDraft;
+  label: string;
+};
 type PlannerActivityDraftChangeHandler = <Field extends PlannerActivityDraftField>(
   field: Field,
   value: PlannerActivityDraft[Field],
@@ -689,6 +693,9 @@ function PlannerActivitySupportPage({
   onAddActivity,
   onCreate,
   onDraftChange,
+  showAddActivityAction,
+  submitActionLabel,
+  submittingActionLabel,
 }: {
   createError: string | null;
   createProgressMessage: string | null;
@@ -700,6 +707,9 @@ function PlannerActivitySupportPage({
   onAddActivity: () => void;
   onCreate: () => void;
   onDraftChange: PlannerActivityDraftChangeHandler;
+  showAddActivityAction: boolean;
+  submitActionLabel: string;
+  submittingActionLabel: string;
 }) {
   const { t } = useI18n();
   const imageUrl = draft.imageUrl.trim();
@@ -710,18 +720,20 @@ function PlannerActivitySupportPage({
       className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-8 pt-5 sm:px-7 sm:pb-9 sm:pt-6 md:min-h-0 lg:px-8"
       style={pageDotStyle}
     >
-      <div className="relative z-20 min-h-14 pr-14 sm:pr-36">
+      <div className={cn('relative z-20 min-h-14', showAddActivityAction ? 'pr-14 sm:pr-36' : undefined)}>
         <PlannerTapeTitle className="mt-1">{t('trips.planner.board.activitySpread.detailsTitle')}</PlannerTapeTitle>
-        <button
-          aria-label={t('trips.planner.board.activitySpread.addActivityAction')}
-          className="absolute right-0 top-0 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
-          disabled={disabled}
-          onClick={onAddActivity}
-          type="button"
-        >
-          <Plus className="h-4 w-4" strokeWidth={2.5} />
-          <span className="hidden sm:inline">{t('trips.planner.board.activitySpread.addActivityAction')}</span>
-        </button>
+        {showAddActivityAction ? (
+          <button
+            aria-label={t('trips.planner.board.activitySpread.addActivityAction')}
+            className="absolute right-0 top-0 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
+            disabled={disabled}
+            onClick={onAddActivity}
+            type="button"
+          >
+            <Plus className="h-4 w-4" strokeWidth={2.5} />
+            <span className="hidden sm:inline">{t('trips.planner.board.activitySpread.addActivityAction')}</span>
+          </button>
+        ) : null}
       </div>
 
       <div className="relative z-10 mt-3 flex min-h-0 flex-1 flex-col">
@@ -789,9 +801,7 @@ function PlannerActivitySupportPage({
             type="button"
           >
             <Check className="h-5 w-5" strokeWidth={2.5} />
-            {isCreating
-              ? t('trips.planner.board.activitySpread.creatingAction')
-              : t('trips.planner.board.activitySpread.createAction')}
+            {isCreating ? submittingActionLabel : submitActionLabel}
           </button>
         </div>
       </div>
@@ -803,21 +813,35 @@ export function PlannerActivitySpread({
   createError,
   createProgressMessage,
   createSuccessMessage,
+  firstBackLabel,
+  initialDrafts,
   isCreating,
   onBack,
   onCreateActivities,
+  reservedActivityTimes = [],
+  showAddActivityAction = true,
+  submitActionLabel,
+  submittingActionLabel,
   tripDateRange,
 }: {
   createError: string | null;
   createProgressMessage: string | null;
   createSuccessMessage: string | null;
+  firstBackLabel?: string;
+  initialDrafts?: PlannerActivityDraft[];
   isCreating: boolean;
   nodeId: string | null;
   onBack: () => void;
   onCreateActivities: (drafts: PlannerActivityDraft[]) => Promise<PlannerActivityCreateResult>;
+  reservedActivityTimes?: PlannerActivityReservedTime[];
+  showAddActivityAction?: boolean;
+  submitActionLabel?: string;
+  submittingActionLabel?: string;
   tripDateRange: PlannerActivityTripDateRange;
 }) {
-  const [activityDrafts, setActivityDrafts] = useState<PlannerActivityDraft[]>(() => [createDefaultActivityDraft()]);
+  const [activityDrafts, setActivityDrafts] = useState<PlannerActivityDraft[]>(() =>
+    initialDrafts?.length ? initialDrafts : [createDefaultActivityDraft()],
+  );
   const [activeActivityIndex, setActiveActivityIndex] = useState(0);
   const [activityDraftErrors, setActivityDraftErrors] = useState<Record<number, PlannerActivityDraftErrors>>({});
   const [pageTurnDirection, setPageTurnDirection] = useState<PlannerActivityPageTurnDirection | null>(null);
@@ -979,6 +1003,19 @@ export function PlannerActivitySpread({
           }),
         };
       });
+
+      reservedActivityTimes.forEach((reservedActivity) => {
+        if (!doPlannerActivityTimesOverlap(currentDraft, reservedActivity.draft)) {
+          return;
+        }
+
+        nextErrors[currentIndex] = {
+          ...(nextErrors[currentIndex] ?? {}),
+          time: t('trips.planner.board.activitySpread.validation.timeOverlapExisting', {
+            title: reservedActivity.label,
+          }),
+        };
+      });
     });
 
     return nextErrors;
@@ -1045,7 +1082,7 @@ export function PlannerActivitySpread({
             activityNumber={activeActivityIndex + 1}
             backLabel={
               activeActivityIndex === 0
-                ? t('trips.planner.board.activitySpread.backToGeneralAction')
+                ? (firstBackLabel ?? t('trips.planner.board.activitySpread.backToGeneralAction'))
                 : t('trips.planner.board.activitySpread.backToPreviousActivityAction')
             }
             disabled={isLocked}
@@ -1067,6 +1104,9 @@ export function PlannerActivitySpread({
             onAddActivity={addActivityDraft}
             onCreate={createActivities}
             onDraftChange={updateActivityDraft}
+            showAddActivityAction={showAddActivityAction}
+            submitActionLabel={submitActionLabel ?? t('trips.planner.board.activitySpread.createAction')}
+            submittingActionLabel={submittingActionLabel ?? t('trips.planner.board.activitySpread.creatingAction')}
           />
         </div>
       </div>

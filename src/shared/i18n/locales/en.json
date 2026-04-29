@@ -618,6 +618,7 @@
             "serverTimeRequired": "The backend requires both a start time and an end time for this activity.",
             "timeRangeInvalid": "End time must be after start time.",
             "timeOverlap": "This time overlaps activity {{index}}.",
+            "timeOverlapExisting": "This time overlaps a saved activity: {{title}}.",
             "timeOverlapServer": "This time overlaps another activity in the trip.",
             "costAmountInvalid": "Cost must be greater than or equal to 0.",
             "costCurrencyRequired": "Currency is required when a cost is entered.",
@@ -653,12 +654,32 @@
         "savedSpread": {
           "stepTitle": "Saved Planner",
           "createNewAction": "Create a new trip",
+          "addActivityAction": "Add activity",
+          "editActivityAction": "Edit",
+          "deleteActivityAction": "Delete",
+          "backToSavedPlannerAction": "Back to planner",
+          "saveActivityAction": "Save",
+          "savingActivityAction": "Saving...",
+          "deleteConfirm": "Delete this activity from the trip?",
           "loading": "Loading the new planner...",
           "loadError": "Unable to load this trip planner.",
           "summaryTitle": "Trip summary",
           "activityCount": "{{count}} activities",
           "activitiesTitle": "Saved Activities",
-          "emptyActivities": "This trip does not have any activities yet."
+          "emptyActivities": "This trip does not have any activities yet.",
+          "feedback": {
+            "createProgress": "Saving activity {{current}}/{{total}}...",
+            "updateProgress": "Updating activity...",
+            "deleteProgress": "Deleting activity...",
+            "createSuccess": "Added {{count}} activities.",
+            "updateSuccess": "Activity updated.",
+            "deleteSuccess": "Activity deleted.",
+            "activityCreateError": "Activity {{index}} could not be saved: {{message}}",
+            "activityUpdateError": "Activity could not be updated: {{message}}",
+            "createError": "Unable to add the activity right now.",
+            "updateError": "Unable to update the activity right now.",
+            "deleteError": "Unable to delete the activity right now."
+          }
         }
       },
       "createRootTitle": "Add root node",

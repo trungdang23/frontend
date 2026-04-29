@@ -247,6 +247,15 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] hiển thị tiến trình đang lưu từng activity trong lúc bấm `Tạo`
 - [x] khóa thao tác thêm/sửa activity trong lúc đang submit
 
+### Follow-up saved planner activity management
+
+- [x] thêm activity mới trực tiếp trong planner đã lưu theo `tripId`
+- [x] sửa activity đã lưu bằng form nhập activity hiện có
+- [x] xóa activity đã lưu và cập nhật cache planner
+- [x] giữ ràng buộc ngày/giờ khi thêm hoặc sửa activity đã lưu
+- [x] map lỗi backend khi thêm/sửa activity đã lưu về đúng form
+- [x] refetch/invalidate planner sau mỗi thao tác thành công
+
 ## FR-A - Documentation reset và route map
 
 ### Mục tiêu
