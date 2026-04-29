@@ -9,7 +9,6 @@ import {
   MapPinned,
   Pencil,
   Plane,
-  Plus,
   Trash2,
 } from 'lucide-react';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
@@ -69,9 +68,6 @@ type PlannerTripDraftChangeHandler = <Field extends PlannerTripDraftField>(
 ) => void;
 type PlannerCalendarView = 'day' | 'month' | 'year';
 type SavedPlannerActivityMode =
-  | {
-      kind: 'add';
-    }
   | {
       kind: 'edit';
       nodeId: string;
@@ -1170,7 +1166,6 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
   const [activityMutationError, setActivityMutationError] = useState<string | null>(null);
   const [activityMutationProgress, setActivityMutationProgress] = useState<string | null>(null);
   const [isSavingActivity, setIsSavingActivity] = useState(false);
-  const [isManagingActivities, setIsManagingActivities] = useState(false);
   const [savedPlannerFeedback, setSavedPlannerFeedback] = useState<SavedPlannerFeedback | null>(null);
   const [deletingNodeId, setDeletingNodeId] = useState<string | null>(null);
   const plannerQuery = useQuery({
@@ -1198,44 +1193,17 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
       draft: buildActivityDraftFromPlanNode(node),
       label: node.title || t('trips.planner.board.activitySpread.activityNumber', { index: index + 1 }),
     }));
-  const isActivityFormOpen = Boolean(trip) && (activityMode.kind === 'add' || Boolean(editedActivityNode));
+  const isActivityFormOpen = Boolean(trip) && Boolean(editedActivityNode);
 
   const clearActivityMutationState = () => {
     setActivityMutationError(null);
     setActivityMutationProgress(null);
   };
 
-  const openAddActivityForm = () => {
-    if (!isManagingActivities) {
-      return;
-    }
-
-    clearActivityMutationState();
-    setSavedPlannerFeedback(null);
-    setActivityMode({ kind: 'add' });
-  };
-
   const openEditActivityForm = (nodeId: string) => {
-    if (!isManagingActivities) {
-      return;
-    }
-
     clearActivityMutationState();
     setSavedPlannerFeedback(null);
     setActivityMode({ kind: 'edit', nodeId });
-  };
-
-  const openManageActivities = () => {
-    clearActivityMutationState();
-    setSavedPlannerFeedback(null);
-    setIsManagingActivities(true);
-  };
-
-  const closeManageActivities = () => {
-    clearActivityMutationState();
-    setSavedPlannerFeedback(null);
-    setActivityMode({ kind: 'list' });
-    setIsManagingActivities(false);
   };
 
   const closeActivityForm = () => {
@@ -1302,35 +1270,45 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
     await queryClient.invalidateQueries({ queryKey: plannerQueryKeys.detail(tripId) });
   };
 
-  const createSavedActivities = async (activityDrafts: PlannerActivityDraft[]): Promise<PlannerActivityCreateResult> => {
-    if (!trip || isSavingActivity) {
+  const updateSavedActivity = async (activityDrafts: PlannerActivityDraft[]): Promise<PlannerActivityCreateResult> => {
+    if (!trip || !editedActivityNode || isSavingActivity) {
+      return { ok: false };
+    }
+
+    const [activityDraft, ...newActivityDrafts] = activityDrafts;
+
+    if (!activityDraft) {
       return { ok: false };
     }
 
     setIsSavingActivity(true);
     setActivityMutationError(null);
     setSavedPlannerFeedback(null);
+    setActivityMutationProgress(t('trips.planner.board.savedSpread.feedback.updateProgress'));
 
     try {
+      const updatedNode = await updatePlanNode(editedActivityNode.id, buildActivityPlanNodeUpdatePayload(activityDraft));
       const createdNodes: PlanNode[] = [];
 
-      for (const [index, activityDraft] of activityDrafts.entries()) {
+      for (const [newActivityIndex, newActivityDraft] of newActivityDrafts.entries()) {
+        const activityIndex = newActivityIndex + 1;
+
         setActivityMutationProgress(
           t('trips.planner.board.savedSpread.feedback.createProgress', {
-            current: index + 1,
-            total: activityDrafts.length,
+            current: newActivityIndex + 1,
+            total: newActivityDrafts.length,
           }),
         );
 
         try {
           const createdNode = await createPlanNode(
-            buildActivityPlanNodePayload(trip.id, activityDraft, activityNodes.length + index),
+            buildActivityPlanNodePayload(trip.id, newActivityDraft, activityNodes.length + newActivityIndex),
           );
 
           createdNodes.push(createdNode);
         } catch (error) {
           const createFailure = buildSavedActivityFailure(
-            index,
+            activityIndex,
             error,
             'trips.planner.board.savedSpread.feedback.activityCreateError',
           );
@@ -1345,57 +1323,22 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
 
       queryClient.setQueryData<TripPlannerResult>(plannerQueryKeys.detail(trip.id), (currentPlanner) => ({
         trip: currentPlanner?.trip ?? trip,
-        nodes: [...(currentPlanner?.nodes ?? []), ...createdNodes],
-      }));
-      await invalidateSavedPlanner();
-      setSavedPlannerFeedback({
-        kind: 'success',
-        message: t('trips.planner.board.savedSpread.feedback.createSuccess', {
-          count: createdNodes.length,
-        }),
-      });
-      setActivityMode({ kind: 'list' });
-
-      return { ok: true };
-    } catch {
-      setActivityMutationError(t('trips.planner.board.savedSpread.feedback.createError'));
-
-      return { ok: false };
-    } finally {
-      setIsSavingActivity(false);
-      setActivityMutationProgress(null);
-    }
-  };
-
-  const updateSavedActivity = async (activityDrafts: PlannerActivityDraft[]): Promise<PlannerActivityCreateResult> => {
-    if (!trip || !editedActivityNode || isSavingActivity) {
-      return { ok: false };
-    }
-
-    const [activityDraft] = activityDrafts;
-
-    if (!activityDraft) {
-      return { ok: false };
-    }
-
-    setIsSavingActivity(true);
-    setActivityMutationError(null);
-    setSavedPlannerFeedback(null);
-    setActivityMutationProgress(t('trips.planner.board.savedSpread.feedback.updateProgress'));
-
-    try {
-      const updatedNode = await updatePlanNode(editedActivityNode.id, buildActivityPlanNodeUpdatePayload(activityDraft));
-
-      queryClient.setQueryData<TripPlannerResult>(plannerQueryKeys.detail(trip.id), (currentPlanner) => ({
-        trip: currentPlanner?.trip ?? trip,
         nodes: currentPlanner
-          ? currentPlanner.nodes.map((node) => (node.id === updatedNode.id ? updatedNode : node))
-          : [updatedNode],
+          ? [
+              ...currentPlanner.nodes.map((node) => (node.id === updatedNode.id ? updatedNode : node)),
+              ...createdNodes,
+            ]
+          : [updatedNode, ...createdNodes],
       }));
       await invalidateSavedPlanner();
       setSavedPlannerFeedback({
         kind: 'success',
-        message: t('trips.planner.board.savedSpread.feedback.updateSuccess'),
+        message:
+          createdNodes.length > 0
+            ? t('trips.planner.board.savedSpread.feedback.updateWithCreateSuccess', {
+                count: createdNodes.length,
+              })
+            : t('trips.planner.board.savedSpread.feedback.updateSuccess'),
       });
       setActivityMode({ kind: 'list' });
 
@@ -1419,15 +1362,11 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
   };
 
   const saveActivityForm = (activityDrafts: PlannerActivityDraft[]) => {
-    if (activityMode.kind === 'edit') {
-      return updateSavedActivity(activityDrafts);
-    }
-
-    return createSavedActivities(activityDrafts);
+    return updateSavedActivity(activityDrafts);
   };
 
   const deleteSavedActivity = async (node: PlanNode) => {
-    if (!isManagingActivities || deletingNodeId) {
+    if (deletingNodeId) {
       return;
     }
 
@@ -1466,23 +1405,22 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
   };
 
   if (trip && isActivityFormOpen) {
-    const isEditingActivity = activityMode.kind === 'edit';
     const initialDrafts = editedActivityNode ? [buildActivityDraftFromPlanNode(editedActivityNode)] : undefined;
 
     return (
       <PlannerActivitySpread
-        key={isEditingActivity ? `edit-${editedActivityNode?.id}` : 'add-saved-activity'}
+        key={`edit-${editedActivityNode?.id}`}
         createError={activityMutationError}
         createProgressMessage={activityMutationProgress}
         createSuccessMessage={null}
-        firstBackLabel={t('trips.planner.board.savedSpread.backToEditPlannerAction')}
+        firstBackLabel={t('trips.planner.board.savedSpread.backToSavedPlannerAction')}
         initialDrafts={initialDrafts}
         isCreating={isSavingActivity}
         nodeId={editedActivityNode?.id ?? null}
         onBack={closeActivityForm}
         onCreateActivities={saveActivityForm}
         reservedActivityTimes={reservedActivityTimes}
-        showAddActivityAction={false}
+        showAddActivityAction
         submitActionLabel={t('trips.planner.board.savedSpread.saveActivityAction')}
         submittingActionLabel={t('trips.planner.board.savedSpread.savingActivityAction')}
         tripDateRange={{
@@ -1569,43 +1507,7 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
         className="relative flex h-full min-h-[33rem] flex-col overflow-hidden bg-[#fffdfa] px-5 pb-8 pt-5 sm:px-7 sm:pb-9 sm:pt-6 md:w-1/2 lg:px-8"
         style={pageDotStyle}
       >
-        <div className="relative z-20 min-h-14 pr-14 sm:pr-48">
-          <PlannerTapeTitle className="mt-1">{t('trips.planner.board.savedSpread.activitiesTitle')}</PlannerTapeTitle>
-          {isManagingActivities ? (
-            <div className="absolute right-0 top-0 flex items-center gap-2">
-              <button
-                aria-label={t('trips.planner.board.savedSpread.addActivityAction')}
-                className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#3a5d25]/45 bg-[#b9e177] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_12px_20px_rgba(55,83,34,0.14)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#c6ec88] focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/35 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
-                disabled={!trip || Boolean(deletingNodeId)}
-                onClick={openAddActivityForm}
-                type="button"
-              >
-                <Plus className="h-4 w-4" strokeWidth={2.5} />
-                <span className="hidden sm:inline">{t('trips.planner.board.savedSpread.addActivityAction')}</span>
-              </button>
-              <button
-                aria-label={t('trips.planner.board.savedSpread.doneEditingAction')}
-                className="inline-flex h-10 items-center rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#6b4938] shadow-[0_6px_0_#d7b17a,0_12px_20px_rgba(90,62,40,0.12)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
-                disabled={Boolean(deletingNodeId)}
-                onClick={closeManageActivities}
-                type="button"
-              >
-                {t('trips.planner.board.savedSpread.doneEditingAction')}
-              </button>
-            </div>
-          ) : (
-            <button
-              aria-label={t('trips.planner.board.savedSpread.editPlanAction')}
-              className="absolute right-0 top-0 inline-flex h-10 items-center gap-1.5 rounded-full border border-[#8b6244]/35 bg-[#fff1d9] px-3 font-marker text-[0.98rem] font-bold leading-none text-[#6b4938] shadow-[0_6px_0_#d7b17a,0_12px_20px_rgba(90,62,40,0.12)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65 sm:h-11 sm:px-4 sm:text-[1.08rem]"
-              disabled={!trip}
-              onClick={openManageActivities}
-              type="button"
-            >
-              <Pencil className="h-4 w-4" strokeWidth={2.4} />
-              <span className="hidden sm:inline">{t('trips.planner.board.savedSpread.editPlanAction')}</span>
-            </button>
-          )}
-        </div>
+        <PlannerTapeTitle className="mt-1">{t('trips.planner.board.savedSpread.activitiesTitle')}</PlannerTapeTitle>
 
         <div className="relative z-10 mt-5 min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
           {savedPlannerFeedback ? (
@@ -1667,28 +1569,26 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
                     {cost}
                   </p>
                 ) : null}
-                {isManagingActivities ? (
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <button
-                      className="inline-flex items-center gap-1.5 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-3 py-1.5 font-marker text-[0.92rem] font-bold leading-none text-[#6b4938] transition hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
-                      disabled={Boolean(deletingNodeId)}
-                      onClick={() => openEditActivityForm(node.id)}
-                      type="button"
-                    >
-                      <Pencil className="h-3.5 w-3.5" strokeWidth={2.3} />
-                      {t('trips.planner.board.savedSpread.editActivityAction')}
-                    </button>
-                    <button
-                      className="inline-flex items-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-3 py-1.5 font-marker text-[0.92rem] font-bold leading-none text-[#b42318] transition hover:-translate-y-0.5 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#d92d20]/20 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
-                      disabled={Boolean(deletingNodeId)}
-                      onClick={() => void deleteSavedActivity(node)}
-                      type="button"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" strokeWidth={2.3} />
-                      {t('trips.planner.board.savedSpread.deleteActivityAction')}
-                    </button>
-                  </div>
-                ) : null}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <button
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-3 py-1.5 font-marker text-[0.92rem] font-bold leading-none text-[#6b4938] transition hover:-translate-y-0.5 hover:bg-[#fff8ea] focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
+                    disabled={Boolean(deletingNodeId)}
+                    onClick={() => openEditActivityForm(node.id)}
+                    type="button"
+                  >
+                    <Pencil className="h-3.5 w-3.5" strokeWidth={2.3} />
+                    {t('trips.planner.board.savedSpread.editActivityAction')}
+                  </button>
+                  <button
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-3 py-1.5 font-marker text-[0.92rem] font-bold leading-none text-[#b42318] transition hover:-translate-y-0.5 hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#d92d20]/20 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
+                    disabled={Boolean(deletingNodeId)}
+                    onClick={() => void deleteSavedActivity(node)}
+                    type="button"
+                  >
+                    <Trash2 className="h-3.5 w-3.5" strokeWidth={2.3} />
+                    {t('trips.planner.board.savedSpread.deleteActivityAction')}
+                  </button>
+                </div>
               </article>
             );
           })}

@@ -256,12 +256,12 @@ Giai đoạn rebuild này chưa xử lý:
 - [x] map lỗi backend khi thêm/sửa activity đã lưu về đúng form
 - [x] refetch/invalidate planner sau mỗi thao tác thành công
 
-### Follow-up saved planner edit mode separation
+### Follow-up saved planner direct item actions
 
-- [x] màn planner đã lưu mặc định chỉ là chế độ xem, không hiện nút thêm activity
-- [x] thêm nút chỉnh sửa kế hoạch để vào chế độ quản lý activity
-- [x] chỉ hiện nút thêm/sửa/xóa activity trong chế độ chỉnh sửa kế hoạch
-- [x] sau khi thêm/sửa/xóa activity vẫn quay về chế độ chỉnh sửa để tiếp tục quản lý
+- [x] màn planner đã lưu không hiện nút thêm activity tổng hay nút xong
+- [x] mỗi activity trong danh sách luôn hiện nút sửa và xóa
+- [x] form sửa một activity cụ thể có nút thêm activity để bổ sung hoạt động mới
+- [x] khi lưu form sửa, cập nhật activity đang sửa và tạo thêm các activity mới nếu có
 
 ## FR-A - Documentation reset và route map
 
