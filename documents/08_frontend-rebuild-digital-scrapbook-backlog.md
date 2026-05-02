@@ -1058,6 +1058,20 @@ Làm các nút mạng xã hội ở footer nổi bật hơn khi hover, sáng mà
 
 Làm planner thành khu rõ ràng, data-first, không cố giả scrapbook editor.
 
+### FR-C0 - Non-visual trip route compatibility aliases
+
+### Mục tiêu
+
+Thêm nền route theo route map mới mà không thay đổi UI hiện tại, navigation hiện tại, hoặc flow planner hiện tại.
+
+### Scope của lượt triển khai này
+
+- [x] thêm alias protected cho `/app/trips/:tripId` và `/app/trips/:tripId/planner`
+- [x] thêm alias protected cho `/app/trips/:tripId/journal`
+- [x] redirect alias về route hiện tại tương ứng để giữ nguyên flow đang dùng
+- [x] giữ nguyên toàn bộ link hiện tại như `/app/planner?tripId=...`, `/app/planner`, `/app/journal`
+- [x] bổ sung test nhỏ cho redirect path builder để khóa behavior không đổi UI
+
 ### Scope của lượt triển khai này
 
 - [x] đưa `planner` về đúng body notebook tham chiếu từ `demo.txt`
