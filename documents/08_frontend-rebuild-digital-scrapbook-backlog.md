@@ -67,19 +67,19 @@ Giai đoạn rebuild này chưa xử lý:
 
 ## Screen inventory mục tiêu
 
-| Surface | Route mục tiêu | Layout type | Trạng thái mong muốn |
-| --- | --- | --- | --- |
-| Trang chủ | `/` | fixed-layout | editorial landing, branded scrapbook feel |
-| Cộng đồng | `/community` | fixed-layout | feed/list/detail, không freeform |
-| Auth | `/auth/login`, `/auth/register` | fixed-layout | brand-aligned forms |
-| Dashboard | `/app` | fixed-layout | overview ngắn gọn |
-| Trips | `/app/trips` | fixed-layout | list + quick actions |
-| Trip create/edit | `/app/trips/new`, `/app/trips/:tripId/edit` | fixed-layout | structured form |
-| Planner | `/app/trips/:tripId/planner` | fixed-layout/structured | data-first workspace |
-| Journal editor | `/app/trips/:tripId/journal` | freeform scrapbook | drag/drop, rotate, layer |
-| Journal public view | `/trips/:tripId/journal` | scrapbook read-only | share/publish surface |
-| Profile | `/app/profile` | fixed-layout | user/account summary |
-| Compatibility | `/app/trips/:tripId` | redirect | về `planner` trong giai đoạn đầu |
+| Surface             | Route mục tiêu                              | Layout type             | Trạng thái mong muốn                      |
+| ------------------- | ------------------------------------------- | ----------------------- | ----------------------------------------- |
+| Trang chủ           | `/`                                         | fixed-layout            | editorial landing, branded scrapbook feel |
+| Cộng đồng           | `/community`                                | fixed-layout            | feed/list/detail, không freeform          |
+| Auth                | `/auth/login`, `/auth/register`             | fixed-layout            | brand-aligned forms                       |
+| Dashboard           | `/app`                                      | fixed-layout            | overview ngắn gọn                         |
+| Trips               | `/app/trips`                                | fixed-layout            | list + quick actions                      |
+| Trip create/edit    | `/app/trips/new`, `/app/trips/:tripId/edit` | fixed-layout            | structured form                           |
+| Planner             | `/app/trips/:tripId/planner`                | fixed-layout/structured | data-first workspace                      |
+| Journal editor      | `/app/trips/:tripId/journal`                | freeform scrapbook      | drag/drop, rotate, layer                  |
+| Journal public view | `/trips/:tripId/journal`                    | scrapbook read-only     | share/publish surface                     |
+| Profile             | `/app/profile`                              | fixed-layout            | user/account summary                      |
+| Compatibility       | `/app/trips/:tripId`                        | redirect                | về `planner` trong giai đoạn đầu          |
 
 ## Deliverables bắt buộc trước khi code lớn
 
@@ -379,25 +379,27 @@ Làm phần hero board của route `planner` khớp hơn với planner page đã
 
 Siết lại cụm heading và flow dẫn mắt ở planner board để title rõ hơn và các card thể hiện một nhịp itinerary liên tục.
 
-### FR-B4 - Planner activity sticker canvas
+### FR-B4 - Planner activity structured fields, sticker canvas superseded
 
 ### Mục tiêu
 
-Thêm trang kế tiếp sau bước `Thông Tin Chung` trong planner để người dùng nhập hoạt động bằng các field cố định, đồng thời chọn sticker và kéo thả sticker tự do trong khung nhập hoạt động.
+Thêm trang kế tiếp sau bước `Thông Tin Chung` trong planner để người dùng nhập hoạt động bằng các field cố định.
+
+Re-baseline: activity creation hiện tại không cần sticker, palette sticker, hoặc canvas kéo thả. Sticker/freeform interaction thuộc phạm vi `journal`, không thuộc flow tạo hoạt động của planner.
 
 ### Scope của lượt triển khai này
 
 - [x] thêm bước `Hoạt Động` sau `createSpread`
-- [x] dựng palette sticker không cần dependency drag-drop mới
-- [x] dùng Pointer Events, `setPointerCapture`, `getBoundingClientRect`, và tọa độ chuẩn hóa để kéo thả sticker trong khung responsive
-- [x] thêm client API cho `PlanNodeSticker` để load/save tọa độ theo `nodeId`
+- [x] dùng form field cố định cho activity payload
+- [x] bỏ palette sticker và canvas sticker khỏi flow nhập hoạt động
+- [x] giữ sticker/freeform interaction ngoài planner activity creation
 - [x] giữ màn hình hoạt động hoạt động được ở chế độ local draft khi route chưa có `nodeId`
 
 ### Deferred
 
 - nối hoàn chỉnh bước `Thông Tin Chung` với tạo `Trip` thật
 - autosave/debounce theo session editor
-- resize/rotate sticker bằng handle riêng
+- nếu cần giữ API sticker hiện có, chỉ xem là legacy/experimental support; không coi là yêu cầu của activity creation hiện tại
 
 ### Scope của lượt triển khai này
 
