@@ -1,5 +1,5 @@
 export type TripBudgetMode = "auto" | "manual";
-export type TripVisibility = "private" | "public";
+export type TripVisibility = "private" | "unlisted" | "public";
 
 export type Trip = {
   id: string;
@@ -55,3 +55,5 @@ export type TripUpsertPayload = {
   manualBudgetCurrency: string | null;
   visibility: TripVisibility;
 };
+
+export type TripUpdatePayload = Partial<TripUpsertPayload>;

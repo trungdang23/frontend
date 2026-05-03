@@ -77,7 +77,7 @@ Giai đoạn rebuild này chưa xử lý:
 | Trip create/edit    | `/app/trips/new`, `/app/trips/:tripId/edit` | fixed-layout            | structured form                           |
 | Planner             | `/app/trips/:tripId/planner`                | fixed-layout/structured | data-first workspace                      |
 | Journal editor      | `/app/trips/:tripId/journal`                | freeform scrapbook      | drag/drop, rotate, layer                  |
-| Journal public view | `/trips/:tripId/journal`                    | scrapbook read-only     | share/publish surface                     |
+| Journal public view | `/public/trips/:tripId/journal`            | scrapbook read-only     | share/publish surface                     |
 | Profile             | `/app/profile`                              | fixed-layout            | user/account summary                      |
 | Compatibility       | `/app/trips/:tripId`                        | redirect                | về `planner` trong giai đoạn đầu          |
 
@@ -661,7 +661,7 @@ Nối profile/trip list với journal scene thật để người dùng không b
 - kéo thả trực tiếp trên canvas
 - upload asset thật
 - autosave/debounce
-- public journal route
+- [x] public journal route qua `/public/trips/:tripId/journal`
 
 ## FR-J3 - Saved journal profile management
 
@@ -682,6 +682,29 @@ Nối profile/trip list với journal scene thật để người dùng không b
 - preview thumbnail render từ canvas thật
 - phân trang journal trong profile
 - public/published journal list riêng
+
+## FR-J4 - Profile share controls and public read-only pages
+
+### Mục tiêu
+
+Cho người dùng chia sẻ kế hoạch cá nhân hoặc nhật ký đã lưu từ page cá nhân mà không trộn hành động publish với editor. Scope này dùng `Trip.visibility` làm source of truth cho share mode: `private`, `unlisted`, và `public`.
+
+### Scope của lượt triển khai này
+
+- [x] thêm nút chia sẻ trên card kế hoạch và card nhật ký đã lưu trong profile
+- [x] thêm modal chia sẻ với preview, chế độ riêng tư/có liên kết/công khai, link xem public và thao tác copy
+- [x] cập nhật `Trip.visibility` frontend type sang `private | unlisted | public`
+- [x] khi đổi share mode, gọi `PATCH /trips/:tripId` với field `visibility`
+- [x] thêm route read-only `/public/trips/:tripId` cho kế hoạch
+- [x] thêm route read-only `/public/trips/:tripId/journal` cho nhật ký, reuse `JournalSceneRenderer`
+- [x] invalidate profile trip/journal caches sau khi đổi share mode
+
+### Ngoài phạm vi
+
+- share token/signed URL riêng
+- tùy chọn ẩn hiện từng phần ngân sách/ghi chú
+- public journal discovery list
+- social publish thành post cộng đồng
 - [x] giữ nguyên bố cục nội dung và hiệu ứng lật trang
 - [x] xác nhận quyển sổ fit gọn hơn trong body
 

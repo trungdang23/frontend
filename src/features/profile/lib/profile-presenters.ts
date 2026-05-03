@@ -1,6 +1,6 @@
 import type { CommunityPost } from '@/features/community/types/post';
 import type { TripJournalResult } from '@/features/journal/types/journal';
-import type { Trip } from '@/features/trips/types/trip';
+import type { Trip, TripVisibility } from '@/features/trips/types/trip';
 import {
   profileEntryRotationClasses,
   profileFallbackGalleryImages,
@@ -13,11 +13,14 @@ export type ProfileGridEntry = {
   image: string;
   secondaryActionHref?: string;
   secondaryActionLabel?: string;
+  shareBadgeLabel?: string;
   metadata: string;
   rotationClass: string;
   summary?: string;
   title: string;
 };
+
+export type ProfileShareBadgeLabels = Partial<Record<TripVisibility, string>>;
 
 function resolveFallbackImage(index: number) {
   return profileFallbackGalleryImages[index % profileFallbackGalleryImages.length];
@@ -65,6 +68,7 @@ export function buildProfilePostEntries(
 export function buildProfileJournalEntries(
   journals: TripJournalResult[],
   actionLabel?: string,
+  shareBadgeLabels: ProfileShareBadgeLabels = {},
 ): ProfileGridEntry[] {
   return journals.map(({ journal, trip }, index) => ({
     actionHref: `/app/journal?tripId=${encodeURIComponent(trip.id)}`,
@@ -76,6 +80,7 @@ export function buildProfileJournalEntries(
       resolveFallbackImage(index),
     metadata: `${formatProfileDate(journal.updatedAt)} • ${journal.objects.length} mảnh`,
     rotationClass: resolveRotationClass(index),
+    shareBadgeLabel: resolveShareBadgeLabel(trip.visibility, shareBadgeLabels),
     summary: trip.destination || trip.summaryNotes || undefined,
     title: trip.name,
   }));
@@ -85,6 +90,7 @@ export function buildProfileTripEntries(
   trips: Trip[],
   actionLabel?: string,
   secondaryActionLabel?: string,
+  shareBadgeLabels: ProfileShareBadgeLabels = {},
 ): ProfileGridEntry[] {
   return trips.map((trip, index) => ({
     actionHref: `/app/planner?tripId=${encodeURIComponent(trip.id)}`,
@@ -95,9 +101,17 @@ export function buildProfileTripEntries(
     rotationClass: resolveRotationClass(index),
     secondaryActionHref: `/app/journal?tripId=${encodeURIComponent(trip.id)}`,
     secondaryActionLabel,
+    shareBadgeLabel: resolveShareBadgeLabel(trip.visibility, shareBadgeLabels),
     summary: trip.destination || trip.summaryNotes || undefined,
     title: trip.name,
   }));
+}
+
+function resolveShareBadgeLabel(
+  visibility: TripVisibility,
+  shareBadgeLabels: ProfileShareBadgeLabels,
+) {
+  return visibility === 'private' ? undefined : shareBadgeLabels[visibility];
 }
 
 function resolveJournalCoverImage(objects: TripJournalResult['journal']['objects']) {

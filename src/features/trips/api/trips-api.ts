@@ -5,6 +5,7 @@ import {
   TripListMeta,
   TripListQuery,
   TripListResult,
+  TripUpdatePayload,
   TripUpsertPayload,
 } from '@/features/trips/types/trip';
 
@@ -52,8 +53,8 @@ export async function createTrip(payload: TripUpsertPayload) {
   });
 }
 
-export async function updateTrip(tripId: string, payload: TripUpsertPayload) {
-  return request<Trip, TripUpsertPayload>(`/trips/${tripId}`, {
+export async function updateTrip(tripId: string, payload: TripUpdatePayload) {
+  return request<Trip, TripUpdatePayload>(`/trips/${tripId}`, {
     method: 'PATCH',
     auth: true,
     body: payload,

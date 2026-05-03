@@ -18,6 +18,15 @@ export async function getTripJournal(
   });
 }
 
+export async function getPublicTripJournal(
+  tripId: string,
+  options: RequestOptions = {},
+) {
+  return request<TripJournalResult>(`/public/trips/${tripId}/journal`, {
+    signal: options.signal,
+  });
+}
+
 export async function listMyJournals(options: RequestOptions = {}) {
   return request<TripJournalResult[]>('/journals/mine', {
     auth: true,

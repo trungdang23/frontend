@@ -401,6 +401,7 @@
       "editPlanner": "EDIT",
       "openJournal": "JOURNAL",
       "updateJournal": "UPDATE",
+      "share": "SHARE",
       "deleteJournal": "DELETE",
       "deletingJournal": "DELETING...",
       "deleteJournalConfirm": "Delete journal \"{{title}}\" from your account?",
@@ -413,6 +414,42 @@
       "deletePlannerError": "Unable to delete \"{{title}}\" right now.",
       "viewMoreJournal": "VIEW MORE MEMORIES",
       "viewMorePlans": "VIEW MORE PLANS"
+    },
+    "share": {
+      "eyebrow": "Share",
+      "titlePlanner": "Share plan",
+      "titleJournal": "Share journal",
+      "description": "Choose how other people can view a read-only version of this item.",
+      "modeLabel": "Sharing mode",
+      "linkLabel": "Share link",
+      "copy": "COPY",
+      "copied": "COPIED",
+      "openPublic": "OPEN PAGE",
+      "privateNotice": "This item is private, so no public link is available yet.",
+      "save": "SAVE MODE",
+      "saving": "SAVING...",
+      "cancel": "CANCEL",
+      "close": "Close sharing",
+      "saveSuccess": "Set \"{{title}}\" to {{mode}}.",
+      "saveError": "Unable to update sharing for \"{{title}}\" right now.",
+      "badges": {
+        "unlisted": "Link-only",
+        "public": "Public"
+      },
+      "modes": {
+        "private": {
+          "title": "Private",
+          "description": "Only you can view it inside your personal workspace."
+        },
+        "unlisted": {
+          "title": "Link-only",
+          "description": "Anyone with the link can view it, but it will not appear in public lists."
+        },
+        "public": {
+          "title": "Public",
+          "description": "Anyone can view it and the trip can appear in public discovery."
+        }
+      }
     }
   },
   "journalPage": {
@@ -458,6 +495,26 @@
       "saveSuccess": "Journal saved.",
       "saveError": "Unable to save journal.",
       "objectCount": "{{count}} pieces"
+    },
+    "publicPage": {
+      "eyebrow": "Shared journal",
+      "description": "A read-only scrapbook page from Journey.",
+      "loadingTitle": "Opening journal",
+      "loadingDescription": "Journey is loading the shared journal page.",
+      "loadErrorTitle": "We couldn't load this shared journal",
+      "loadErrorDescription": "Please try again in a few minutes or check the link.",
+      "notFoundTitle": "This journal could not be found",
+      "notFoundDescription": "The link may no longer be valid or the trip may have been deleted.",
+      "privateTitle": "This journal is currently private",
+      "privateDescription": "The owner has not opened this link for viewing yet.",
+      "readOnlyNotice": "The public journal is read-only. Editing stays inside the owner's protected workspace.",
+      "emptyTitle": "This page has no memories yet",
+      "emptyDescription": "The owner has shared this route but has not added journal pieces yet.",
+      "actions": {
+        "backHome": "Back to home",
+        "login": "Log in",
+        "openPlanner": "View plan"
+      }
     },
     "cards": {
       "notesTitle": "Travel notes",
@@ -565,6 +622,7 @@
     },
     "visibility": {
       "private": "Private",
+      "unlisted": "Link-only",
       "public": "Public"
     },
     "budget": {
@@ -823,6 +881,8 @@
     },
     "publicPage": {
       "eyebrow": "Public trip",
+      "loadingTitle": "Opening trip",
+      "loadingDescription": "Journey is loading the shared plan.",
       "loadErrorTitle": "We couldn't load this public trip",
       "loadErrorDescription": "Please try again in a few minutes or reload this route to continue.",
       "notFoundTitle": "This public trip could not be found",

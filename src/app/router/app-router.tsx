@@ -17,7 +17,9 @@ import { RegisterPage } from '@/features/auth/routes/register-page';
 import { CommunityFeedPage } from '@/features/community/routes/community-feed-page';
 import { HomePage } from '@/features/home/routes/home-page';
 import { JournalPage } from '@/features/journal/routes/journal-page';
+import { PublicJournalPage } from '@/features/journal/routes/public-journal-page';
 import { ProfilePage } from '@/features/profile/routes/profile-page';
+import { PublicTripPage } from '@/features/trips/public/routes/public-trip-page';
 import { PlannerPage } from '@/features/trips/routes/planner-page';
 
 function PlannerTripRouteRedirect() {
@@ -50,6 +52,8 @@ export function AppRouter() {
       <Routes>
         <Route element={<HomePage />} path="/" />
         <Route element={<CommunityFeedPage />} path="/community" />
+        <Route element={<PublicTripPage />} path="/public/trips/:tripId" />
+        <Route element={<PublicJournalPage />} path="/public/trips/:tripId/journal" />
         <Route
           element={(
             <GuestRoute>

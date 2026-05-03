@@ -9,15 +9,21 @@ import {
 import { journalQueryKeys } from '@/features/journal/lib/journal-query-keys';
 import { ProfileSampleCard } from '@/features/profile/components/profile-sample-card';
 import { ProfileSampleJournalEntry } from '@/features/profile/components/profile-sample-journal-entry';
+import {
+  ProfileShareModal,
+  type ProfileShareTarget,
+} from '@/features/profile/components/profile-share-modal';
 import { profilePlaceholderPhotoUrl } from '@/features/profile/content/profile-sample-content';
 import {
   buildProfileJournalEntries,
   buildProfileTripEntries,
   formatProfileDate,
+  type ProfileGridEntry,
 } from '@/features/profile/lib/profile-presenters';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
-import { deleteTrip, listTrips } from '@/features/trips/api/trips-api';
+import { deleteTrip, listTrips, updateTrip } from '@/features/trips/api/trips-api';
+import type { Trip, TripVisibility } from '@/features/trips/types/trip';
 import { useAuth } from '@/features/auth/session/use-auth';
 import { useI18n } from '@/shared/i18n/use-i18n';
 import { cn } from '@/shared/lib/cn';
@@ -50,7 +56,9 @@ export function ProfilePage() {
   const [visibleCount, setVisibleCount] = useState(2);
   const [deletingJournalTripId, setDeletingJournalTripId] = useState<string | null>(null);
   const [deletingTripId, setDeletingTripId] = useState<string | null>(null);
+  const [isSavingShare, setIsSavingShare] = useState(false);
   const [profileFeedback, setProfileFeedback] = useState<ProfileFeedback | null>(null);
+  const [shareTarget, setShareTarget] = useState<ProfileShareTarget | null>(null);
   const journalsQuery = useQuery({
     queryFn: ({ signal }) => listMyJournals({ signal }),
     queryKey: journalQueryKeys.mine(),
@@ -59,15 +67,21 @@ export function ProfilePage() {
     queryFn: ({ signal }) => listTrips(PROFILE_TRIP_QUERY, { signal }),
     queryKey: ['trips', 'list', 'profile', PROFILE_TRIP_QUERY],
   });
+  const shareBadgeLabels = {
+    public: t('profile.share.badges.public'),
+    unlisted: t('profile.share.badges.unlisted'),
+  };
 
   const journalEntries = buildProfileJournalEntries(
     journalsQuery.data || [],
     t('profile.actions.updateJournal'),
+    shareBadgeLabels,
   );
   const tripEntries = buildProfileTripEntries(
     tripsQuery.data?.data || [],
     t('profile.actions.editPlanner'),
     t('profile.actions.openJournal'),
+    shareBadgeLabels,
   );
   const activeEntries = activeTab === 'journal' ? journalEntries : tripEntries;
   const activeQuery = activeTab === 'journal' ? journalsQuery : tripsQuery;
@@ -108,6 +122,94 @@ export function ProfilePage() {
     } finally {
       setDeletingTripId(null);
     }
+  };
+
+  const openShareTarget = (entry: ProfileGridEntry) => {
+    const trip = findTripForEntry(entry);
+
+    if (!trip) {
+      return;
+    }
+
+    setProfileFeedback(null);
+    setShareTarget({
+      image: entry.image,
+      kind: activeTab === 'journal' ? 'journal' : 'planner',
+      metadata: entry.metadata,
+      publicPath:
+        activeTab === 'journal'
+          ? `/public/trips/${encodeURIComponent(trip.id)}/journal`
+          : `/public/trips/${encodeURIComponent(trip.id)}`,
+      title: entry.title,
+      trip,
+    });
+  };
+
+  const saveShareVisibility = async (visibility: TripVisibility) => {
+    if (!shareTarget || isSavingShare) {
+      return;
+    }
+
+    setIsSavingShare(true);
+    setProfileFeedback(null);
+
+    try {
+      const updatedTrip = await updateTrip(shareTarget.trip.id, {
+        visibility,
+      });
+
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
+        queryClient.invalidateQueries({ queryKey: ['public', 'trips'] }),
+        queryClient.invalidateQueries({ queryKey: journalQueryKeys.mine() }),
+        queryClient.invalidateQueries({
+          queryKey: journalQueryKeys.detail(shareTarget.trip.id),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: journalQueryKeys.publicDetail(shareTarget.trip.id),
+        }),
+      ]);
+
+      setShareTarget((currentTarget) =>
+        currentTarget && currentTarget.trip.id === updatedTrip.id
+          ? {
+              ...currentTarget,
+              trip: updatedTrip,
+            }
+          : currentTarget,
+      );
+      setProfileFeedback({
+        kind: 'success',
+        message: t('profile.share.saveSuccess', {
+          mode: t(`profile.share.modes.${updatedTrip.visibility}.title`),
+          title: updatedTrip.name,
+        }),
+      });
+    } catch {
+      setProfileFeedback({
+        kind: 'error',
+        message: t('profile.share.saveError', {
+          title: shareTarget.trip.name,
+        }),
+      });
+    } finally {
+      setIsSavingShare(false);
+    }
+  };
+
+  const findTripForEntry = (entry: ProfileGridEntry): Trip | null => {
+    if (!entry.id) {
+      return null;
+    }
+
+    if (activeTab === 'journal') {
+      return (
+        journalsQuery.data?.find(({ trip }) => trip.id === entry.id)?.trip ??
+        null
+      );
+    }
+
+    return tripsQuery.data?.data.find((trip) => trip.id === entry.id) ?? null;
   };
 
   const deleteProfileJournal = async (entryId: string | undefined, entryTitle: string) => {
@@ -271,6 +373,9 @@ export function ProfilePage() {
                       rotationClass={entry.rotationClass}
                       secondaryActionHref={entry.secondaryActionHref}
                       secondaryActionLabel={entry.secondaryActionLabel}
+                      shareActionLabel={t('profile.actions.share')}
+                      shareBadgeLabel={entry.shareBadgeLabel}
+                      onShare={() => openShareTarget(entry)}
                       summary={entry.summary}
                       title={entry.title}
                     />
@@ -294,6 +399,15 @@ export function ProfilePage() {
           </div>
         </section>
       </div>
+      {shareTarget ? (
+        <ProfileShareModal
+          isSaving={isSavingShare}
+          key={`${shareTarget.kind}-${shareTarget.trip.id}-${shareTarget.trip.visibility}`}
+          onClose={() => setShareTarget(null)}
+          onSaveVisibility={saveShareVisibility}
+          target={shareTarget}
+        />
+      ) : null}
     </PublicPageShell>
   );
 }

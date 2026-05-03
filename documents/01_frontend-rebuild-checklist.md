@@ -19,7 +19,7 @@
 - [x] route `/community` đã có feed public đầu tiên
 - [x] auth routes đã có shared chrome và session flow
 - [x] planner route hiện tại đã dùng `PlanNode` API client qua compatibility route `/app/planner?tripId=...`
-- [x] profile route đã bind `journals/mine` và `trips`
+- [x] profile route đã bind `journals/mine` và `trips`, có share modal cho kế hoạch/nhật ký
 - [~] journal route đã có API client, trip picker, renderer, và editor tối giản; drag/drop/autosave chưa có
 - [x] shared API client vẫn còn
 - [x] auth session modules vẫn còn
@@ -27,7 +27,7 @@
 - [x] `planner-api.ts` cho `PlanNode` đã tồn tại dưới `features/trips/planning/api`
 - [x] i18n baseline vẫn còn
 - [x] test baseline vẫn còn
-- [~] runtime router/shell/UI primitives đã có cho các surface chính, nhưng route canonical planner/journal và journal engine vẫn chưa cutover hoàn chỉnh
+- [~] runtime router/shell/UI primitives đã có cho các surface chính và route public read-only cho plan/journal, nhưng route canonical planner/journal và journal engine vẫn chưa cutover hoàn chỉnh
 
 ## Bộ docs active cần giữ
 

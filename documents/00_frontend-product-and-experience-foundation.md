@@ -81,7 +81,7 @@
 | --- | --- | --- | --- |
 | Public | `/` | fixed-layout | landing theo brand scrapbook nhưng cấu trúc ổn định |
 | Public | `/community` | fixed-layout | feed/list/detail dùng card/editorial layout |
-| Public | `/trips/:tripId/journal` | scrapbook read-only | xem nhật ký đã publish |
+| Public | `/public/trips/:tripId/journal` | scrapbook read-only | xem nhật ký đã publish |
 | Auth | `/auth/login`, `/auth/register` | fixed-layout | giàu brand nhưng không freeform |
 | Protected | `/app` | fixed-layout | dashboard hoặc overview |
 | Protected | `/app/trips` | fixed-layout | danh sách chuyến đi |

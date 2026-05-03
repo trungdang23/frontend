@@ -401,6 +401,7 @@
       "editPlanner": "CHỈNH SỬA",
       "openJournal": "NHẬT KÝ",
       "updateJournal": "CẬP NHẬT",
+      "share": "CHIA SẺ",
       "deleteJournal": "XÓA",
       "deletingJournal": "ĐANG XÓA...",
       "deleteJournalConfirm": "Xóa nhật ký \"{{title}}\" khỏi tài khoản của bạn?",
@@ -413,6 +414,42 @@
       "deletePlannerError": "Không thể xóa kế hoạch \"{{title}}\" lúc này.",
       "viewMoreJournal": "XEM THÊM KÝ ỨC",
       "viewMorePlans": "XEM THÊM KẾ HOẠCH"
+    },
+    "share": {
+      "eyebrow": "Chia sẻ",
+      "titlePlanner": "Chia sẻ kế hoạch",
+      "titleJournal": "Chia sẻ nhật ký",
+      "description": "Chọn cách người khác có thể xem bản read-only của nội dung này.",
+      "modeLabel": "Chế độ chia sẻ",
+      "linkLabel": "Liên kết chia sẻ",
+      "copy": "SAO CHÉP",
+      "copied": "ĐÃ SAO CHÉP",
+      "openPublic": "XEM TRANG",
+      "privateNotice": "Nội dung đang ở chế độ riêng tư nên chưa có link công khai.",
+      "save": "LƯU CHẾ ĐỘ",
+      "saving": "ĐANG LƯU...",
+      "cancel": "HỦY",
+      "close": "Đóng chia sẻ",
+      "saveSuccess": "Đã đặt \"{{title}}\" sang chế độ {{mode}}.",
+      "saveError": "Không thể cập nhật chia sẻ cho \"{{title}}\" lúc này.",
+      "badges": {
+        "unlisted": "Có liên kết",
+        "public": "Công khai"
+      },
+      "modes": {
+        "private": {
+          "title": "Riêng tư",
+          "description": "Chỉ bạn xem được trong workspace cá nhân."
+        },
+        "unlisted": {
+          "title": "Có liên kết",
+          "description": "Ai có link đều xem được, nhưng không hiện ở danh sách public."
+        },
+        "public": {
+          "title": "Công khai",
+          "description": "Ai cũng xem được và chuyến đi có thể xuất hiện ở khu public."
+        }
+      }
     }
   },
   "journalPage": {
@@ -458,6 +495,26 @@
       "saveSuccess": "Đã lưu nhật ký.",
       "saveError": "Chưa lưu được nhật ký.",
       "objectCount": "{{count}} mảnh"
+    },
+    "publicPage": {
+      "eyebrow": "Nhật ký được chia sẻ",
+      "description": "Một trang scrapbook read-only từ Journey.",
+      "loadingTitle": "Đang mở nhật ký",
+      "loadingDescription": "Journey đang tải trang nhật ký được chia sẻ.",
+      "loadErrorTitle": "Chưa tải được nhật ký được chia sẻ",
+      "loadErrorDescription": "Hãy thử lại sau ít phút hoặc kiểm tra lại link.",
+      "notFoundTitle": "Không tìm thấy nhật ký này",
+      "notFoundDescription": "Link có thể không còn hợp lệ hoặc chuyến đi đã bị xoá.",
+      "privateTitle": "Nhật ký này đang ở chế độ riêng tư",
+      "privateDescription": "Chủ sở hữu chưa mở quyền xem cho link này.",
+      "readOnlyNotice": "Trang nhật ký public đang là read-only. Chỉnh sửa vẫn nằm trong workspace riêng của chủ chuyến đi.",
+      "emptyTitle": "Trang này chưa có ký ức",
+      "emptyDescription": "Chủ chuyến đi đã chia sẻ route này nhưng chưa thêm mảnh nhật ký nào.",
+      "actions": {
+        "backHome": "Quay lại trang chủ",
+        "login": "Đăng nhập",
+        "openPlanner": "Xem kế hoạch"
+      }
     },
     "cards": {
       "notesTitle": "Ghi chú hành trình",
@@ -565,6 +622,7 @@
     },
     "visibility": {
       "private": "Riêng tư",
+      "unlisted": "Có liên kết",
       "public": "Công khai"
     },
     "budget": {
@@ -823,6 +881,8 @@
     },
     "publicPage": {
       "eyebrow": "Chuyến đi công khai",
+      "loadingTitle": "Đang mở chuyến đi",
+      "loadingDescription": "Journey đang tải kế hoạch được chia sẻ.",
       "loadErrorTitle": "Chưa tải được chuyến đi công khai này",
       "loadErrorDescription": "Hãy thử lại sau ít phút hoặc tải lại route này để tiếp tục xem.",
       "notFoundTitle": "Không tìm thấy chuyến đi công khai này",

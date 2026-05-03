@@ -66,11 +66,15 @@ describe('profile presenters', () => {
           timezone: null,
           updatedAt: '2026-04-22T10:30:00.000Z',
           userId: 'user-1',
-          visibility: 'private',
+          visibility: 'unlisted',
         },
       ],
       'CHỈNH SỬA',
       'NHẬT KÝ',
+      {
+        public: 'Công khai',
+        unlisted: 'Có liên kết',
+      },
     );
 
     expect(postEntries[0]).toMatchObject({
@@ -85,6 +89,7 @@ describe('profile presenters', () => {
       metadata: '22 Tháng 4, 2026 • 4 ngày',
       secondaryActionHref: '/app/journal?tripId=trip-1',
       secondaryActionLabel: 'NHẬT KÝ',
+      shareBadgeLabel: 'Có liên kết',
       title: 'Đà Lạt',
     });
 
@@ -108,7 +113,7 @@ describe('profile presenters', () => {
             timezone: null,
             updatedAt: '2026-04-22T10:30:00.000Z',
             userId: 'user-1',
-            visibility: 'private',
+            visibility: 'public',
           },
           journal: {
             createdAt: '2026-04-22T10:30:00.000Z',
@@ -143,6 +148,10 @@ describe('profile presenters', () => {
         },
       ],
       'CẬP NHẬT',
+      {
+        public: 'Công khai',
+        unlisted: 'Có liên kết',
+      },
     );
 
     expect(journalEntries[0]).toMatchObject({
@@ -150,6 +159,7 @@ describe('profile presenters', () => {
       actionLabel: 'CẬP NHẬT',
       image: 'https://example.com/journal.jpg',
       metadata: '26 Tháng 4, 2026 • 1 mảnh',
+      shareBadgeLabel: 'Công khai',
       title: 'Đà Lạt',
     });
   });

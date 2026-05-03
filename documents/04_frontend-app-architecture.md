@@ -11,9 +11,9 @@
 
 - `src/main.tsx` đã bootstrap app thật với `AppProviders + router`.
 - `app/providers`, `shared/api`, `auth/session`, `trips` API, `community` API, và i18n baseline vẫn còn.
-- Route `/`, `/community`, `/auth/login`, `/auth/register`, `/app/planner`, `/app/journal`, và `/app/profile` đã có screen thật; journal hiện là read-only scene renderer phase đầu.
+- Route `/`, `/community`, `/auth/login`, `/auth/register`, `/app/planner`, `/app/journal`, `/app/profile`, `/public/trips/:tripId`, và `/public/trips/:tripId/journal` đã có screen thật; journal hiện là read-only scene renderer phase đầu.
 - Route target `/app/trips/:tripId`, `/app/trips/:tripId/planner`, và `/app/trips/:tripId/journal` hiện là compatibility aliases redirect về `/app/planner?tripId=...` hoặc `/app/journal?tripId=...`.
-- Journal feature hiện có API client, query key, type model, owner journal listing for profile, trip picker, scene renderer, và editor controls tối giản trên route journal. Editor shell tách riêng, object transforms, asset upload, autosave, và public journal surface vẫn deferred.
+- Journal feature hiện có API client, query key, type model, owner journal listing for profile, trip picker, scene renderer, public read-only journal route, và editor controls tối giản trên route journal. Editor shell tách riêng, object transforms, asset upload, và autosave vẫn deferred.
 
 ## Kiến trúc mục tiêu
 
@@ -197,7 +197,7 @@ Compatibility:
 
 - `JournalSceneRenderer` phải là module dùng lại được ở:
   - editor page
-  - public journal page
+  - public journal page đã có route `/public/trips/:tripId/journal`; còn thiếu discovery/publish workflow riêng
   - preview card/thumbnails
 - `JournalEditorShell` mới là thứ mang toolbar, inspector, save status.
 
