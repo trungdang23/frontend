@@ -1,5 +1,5 @@
 import type { CommunityPost } from '@/features/community/types/post';
-import type { TripJournalResult } from '@/features/journal/types/journal';
+import type { JournalVisibility, TripJournalResult } from '@/features/journal/types/journal';
 import type { Trip, TripVisibility } from '@/features/trips/types/trip';
 import {
   profileEntryRotationClasses,
@@ -21,6 +21,7 @@ export type ProfileGridEntry = {
 };
 
 export type ProfileShareBadgeLabels = Partial<Record<TripVisibility, string>>;
+export type ProfileJournalShareBadgeLabels = Partial<Record<JournalVisibility, string>>;
 
 function resolveFallbackImage(index: number) {
   return profileFallbackGalleryImages[index % profileFallbackGalleryImages.length];
@@ -68,7 +69,7 @@ export function buildProfilePostEntries(
 export function buildProfileJournalEntries(
   journals: TripJournalResult[],
   actionLabel?: string,
-  shareBadgeLabels: ProfileShareBadgeLabels = {},
+  shareBadgeLabels: ProfileJournalShareBadgeLabels = {},
 ): ProfileGridEntry[] {
   return journals.map(({ journal, trip }, index) => ({
     actionHref: `/app/journal?tripId=${encodeURIComponent(trip.id)}`,
@@ -80,7 +81,7 @@ export function buildProfileJournalEntries(
       resolveFallbackImage(index),
     metadata: `${formatProfileDate(journal.updatedAt)} • ${journal.objects.length} mảnh`,
     rotationClass: resolveRotationClass(index),
-    shareBadgeLabel: resolveShareBadgeLabel(trip.visibility, shareBadgeLabels),
+    shareBadgeLabel: resolveShareBadgeLabel(journal.visibility, shareBadgeLabels),
     summary: trip.destination || trip.summaryNotes || undefined,
     title: trip.name,
   }));
@@ -108,8 +109,8 @@ export function buildProfileTripEntries(
 }
 
 function resolveShareBadgeLabel(
-  visibility: TripVisibility,
-  shareBadgeLabels: ProfileShareBadgeLabels,
+  visibility: TripVisibility | JournalVisibility,
+  shareBadgeLabels: Partial<Record<TripVisibility | JournalVisibility, string>>,
 ) {
   return visibility === 'private' ? undefined : shareBadgeLabels[visibility];
 }

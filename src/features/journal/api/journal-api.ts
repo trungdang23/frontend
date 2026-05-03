@@ -2,6 +2,7 @@ import { request } from '@/shared/api/http-client';
 import type {
   SaveTripJournalPayload,
   TripJournalResult,
+  UpdateTripJournalPayload,
 } from '@/features/journal/types/journal';
 
 type RequestOptions = {
@@ -34,6 +35,12 @@ export async function listMyJournals(options: RequestOptions = {}) {
   });
 }
 
+export async function listPublicJournals(options: RequestOptions = {}) {
+  return request<TripJournalResult[]>('/public/journals', {
+    signal: options.signal,
+  });
+}
+
 export async function saveTripJournal(
   tripId: string,
   payload: SaveTripJournalPayload,
@@ -42,6 +49,20 @@ export async function saveTripJournal(
     `/trips/${tripId}/journal`,
     {
       method: 'PUT',
+      auth: true,
+      body: payload,
+    },
+  );
+}
+
+export async function updateTripJournalVisibility(
+  tripId: string,
+  payload: UpdateTripJournalPayload,
+) {
+  return request<TripJournalResult, UpdateTripJournalPayload>(
+    `/trips/${tripId}/journal`,
+    {
+      method: 'PATCH',
       auth: true,
       body: payload,
     },

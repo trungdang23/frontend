@@ -65,9 +65,6 @@ export function PublicJournalPage() {
             <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-[#5f5146]">
               {journalQuery.data.trip.destination || t('journalPage.publicPage.description')}
             </p>
-            <p className="mx-auto mt-4 max-w-2xl rounded-[0.65rem] border border-dashed border-[#d8c5ab] bg-[#fff8ea]/70 px-4 py-3 text-sm leading-6 text-[#6b4938]">
-              {t('journalPage.publicPage.readOnlyNotice')}
-            </p>
           </header>
 
           <JournalSceneRenderer
@@ -78,13 +75,15 @@ export function PublicJournalPage() {
           />
 
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link
-              className="inline-flex items-center gap-1.5 rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-4 py-2 font-marker font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5"
-              to={`/public/trips/${encodeURIComponent(journalQuery.data.trip.id)}`}
-            >
-              <BookOpenText className="h-4 w-4" strokeWidth={2.3} />
-              {t('journalPage.publicPage.actions.openPlanner')}
-            </Link>
+            {journalQuery.data.trip.visibility !== 'private' ? (
+              <Link
+                className="inline-flex items-center gap-1.5 rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-4 py-2 font-marker font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5"
+                to={`/public/trips/${encodeURIComponent(journalQuery.data.trip.id)}`}
+              >
+                <BookOpenText className="h-4 w-4" strokeWidth={2.3} />
+                {t('journalPage.publicPage.actions.openPlanner')}
+              </Link>
+            ) : null}
             <Link
               className="inline-flex items-center gap-1.5 rounded-full border border-[#7b4d22]/25 bg-[#ffe4a8] px-4 py-2 font-marker font-bold leading-none text-[#6b3b18] shadow-[0_5px_0_#d7a957] transition hover:-translate-y-0.5"
               to="/auth/login"

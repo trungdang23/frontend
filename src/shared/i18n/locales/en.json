@@ -289,6 +289,11 @@
     "description": "Community now reads real public posts so the product has a layer of published stories beyond read-only public trips.",
     "summary": "{{count}} public stories are live right now.",
     "cardEyebrow": "Community story",
+    "sources": {
+      "post": "Post",
+      "planner": "Plan",
+      "journal": "Journal"
+    },
     "authorFallback": "Storyteller",
     "detailEyebrow": "Community post",
     "contentEyebrow": "Story",
@@ -507,7 +512,6 @@
       "notFoundDescription": "The link may no longer be valid or the trip may have been deleted.",
       "privateTitle": "This journal is currently private",
       "privateDescription": "The owner has not opened this link for viewing yet.",
-      "readOnlyNotice": "The public journal is read-only. Editing stays inside the owner's protected workspace.",
       "emptyTitle": "This page has no memories yet",
       "emptyDescription": "The owner has shared this route but has not added journal pieces yet.",
       "actions": {
@@ -889,20 +893,31 @@
       "notFoundDescription": "The link may no longer be valid or the trip may have been deleted.",
       "privateTitle": "This trip is currently private",
       "privateDescription": "The owner has not opened this route for public viewing yet. Log in if you think you should have access.",
-      "readOnlyNotice": "The public planner is read-only. Editing stays inside the owner's protected workspace.",
       "plannerEyebrow": "Public planner",
       "plannerTitle": "The shared planner tree",
       "plannerDescription": "You can view the full planner tree as sections, days, locations, activities, and notes without logging in.",
       "plannerLoadError": "We couldn't load the public planner for this trip.",
       "plannerEmptyTitle": "There are no public planner nodes yet",
       "plannerEmptyDescription": "The owner has opened the public route but has not added planner nodes to share yet.",
+      "copyError": "We could not create a copy of this plan right now. Please try again shortly.",
       "nodeDepth": "Layer {{depth}}",
+      "budget": {
+        "eyebrow": "Public budget",
+        "title": "Budget notes",
+        "tripBudgetLabel": "Trip budget",
+        "plannedLabel": "Planner costs",
+        "notSet": "No total budget set",
+        "noPlannedCosts": "No planner costs yet"
+      },
       "metrics": {
         "plannerDensity": "Planner density"
       },
       "actions": {
         "backHome": "Back to home",
         "login": "Log in",
+        "loginToCopy": "Log in to create a plan",
+        "copyToAccount": "Create a plan from this",
+        "copyingToAccount": "Creating plan...",
         "startPlanning": "Create your trip"
       }
     },

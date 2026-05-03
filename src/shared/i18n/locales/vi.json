@@ -289,6 +289,11 @@
     "description": "Community giờ lấy dữ liệu thật từ các bài viết công khai để mở một lớp cảm hứng khác ngoài public trip read-only.",
     "summary": "Hiện có {{count}} câu chuyện công khai đang mở.",
     "cardEyebrow": "Câu chuyện cộng đồng",
+    "sources": {
+      "post": "Bài viết",
+      "planner": "Kế hoạch",
+      "journal": "Nhật ký"
+    },
     "authorFallback": "Người kể chuyện",
     "detailEyebrow": "Bài viết cộng đồng",
     "contentEyebrow": "Nội dung",
@@ -507,7 +512,6 @@
       "notFoundDescription": "Link có thể không còn hợp lệ hoặc chuyến đi đã bị xoá.",
       "privateTitle": "Nhật ký này đang ở chế độ riêng tư",
       "privateDescription": "Chủ sở hữu chưa mở quyền xem cho link này.",
-      "readOnlyNotice": "Trang nhật ký public đang là read-only. Chỉnh sửa vẫn nằm trong workspace riêng của chủ chuyến đi.",
       "emptyTitle": "Trang này chưa có ký ức",
       "emptyDescription": "Chủ chuyến đi đã chia sẻ route này nhưng chưa thêm mảnh nhật ký nào.",
       "actions": {
@@ -889,20 +893,31 @@
       "notFoundDescription": "Link có thể không còn hợp lệ hoặc chuyến đi đã bị xoá.",
       "privateTitle": "Chuyến đi này đang ở chế độ riêng tư",
       "privateDescription": "Chủ sở hữu chưa mở quyền xem công khai cho route này. Hãy đăng nhập nếu bạn nghĩ mình cần quyền truy cập.",
-      "readOnlyNotice": "Planner ở route công khai đang là read-only. Mọi thao tác chỉnh sửa vẫn nằm trong workspace riêng của chủ chuyến đi.",
       "plannerEyebrow": "Planner public",
       "plannerTitle": "Planner tree đang được chia sẻ",
       "plannerDescription": "Bạn có thể xem toàn bộ planner tree theo cấu trúc section, day, location, activity và note mà không cần đăng nhập.",
       "plannerLoadError": "Không tải được planner công khai của chuyến đi này.",
       "plannerEmptyTitle": "Planner công khai chưa có node nào",
       "plannerEmptyDescription": "Chủ chuyến đi đã mở public route nhưng vẫn chưa thêm planner node nào để chia sẻ.",
+      "copyError": "Chưa tạo được bản sao kế hoạch lúc này. Hãy thử lại sau ít phút.",
       "nodeDepth": "Tầng {{depth}}",
+      "budget": {
+        "eyebrow": "Ngân sách công khai",
+        "title": "Ghi chú ngân sách",
+        "tripBudgetLabel": "Ngân sách chuyến đi",
+        "plannedLabel": "Chi phí trong planner",
+        "notSet": "Chưa đặt ngân sách tổng",
+        "noPlannedCosts": "Chưa có chi phí trong planner"
+      },
       "metrics": {
         "plannerDensity": "Mật độ planner"
       },
       "actions": {
         "backHome": "Quay lại trang chủ",
         "login": "Đăng nhập",
+        "loginToCopy": "Đăng nhập để tạo kế hoạch",
+        "copyToAccount": "Tạo kế hoạch từ mẫu này",
+        "copyingToAccount": "Đang tạo kế hoạch...",
         "startPlanning": "Tạo chuyến đi của bạn"
       }
     },

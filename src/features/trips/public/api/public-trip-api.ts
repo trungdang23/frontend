@@ -49,3 +49,10 @@ export async function getPublicTripPlanner(
     signal: options.signal,
   });
 }
+
+export async function copyPublicTripPlanner(tripId: string) {
+  return request<TripPlannerResult>(`/public/trips/${tripId}/copy`, {
+    auth: true,
+    method: 'POST',
+  });
+}

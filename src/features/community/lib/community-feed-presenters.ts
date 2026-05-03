@@ -1,17 +1,24 @@
 import type { CommunityPost } from '@/features/community/types/post';
+import type { TripJournalResult } from '@/features/journal/types/journal';
+import type { Trip } from '@/features/trips/types/trip';
 
 export type CommunityRegion = 'All' | 'North' | 'Central' | 'South';
+export type CommunityFeedCardSource = 'journal' | 'planner' | 'post';
 
 export type CommunityFeedCard = {
+  authorName: string | null;
   avatarUrl: string;
   coverImageUrl: string | null;
   decorativeCommentCount: number;
   decorativeLikeCount: number;
   displayTitle: string;
   excerpt: string;
-  post: CommunityPost;
+  href: string | null;
+  id: string;
   region: Exclude<CommunityRegion, 'All'>;
   rotate: number;
+  sortAt: string;
+  source: CommunityFeedCardSource;
   tapeClassName: string;
 };
 
@@ -80,7 +87,7 @@ function hashString(value: string) {
   return hash;
 }
 
-function normalizeText(post: CommunityPost) {
+function normalizePostText(post: CommunityPost) {
   return [
     post.title,
     post.content,
@@ -92,15 +99,20 @@ function normalizeText(post: CommunityPost) {
 }
 
 export function deriveCommunityRegion(post: CommunityPost): Exclude<CommunityRegion, 'All'> {
-  const normalized = normalizeText(post);
+  return deriveCommunityRegionFromText(normalizePostText(post), post.id);
+}
 
+function deriveCommunityRegionFromText(
+  normalized: string,
+  seed: string,
+): Exclude<CommunityRegion, 'All'> {
   for (const [region, keywords] of Object.entries(REGION_KEYWORDS) as Array<[Exclude<CommunityRegion, 'All'>, string[]]>) {
     if (keywords.some((keyword) => normalized.includes(keyword))) {
       return region;
     }
   }
 
-  const fallbackIndex = hashString(post.id) % 3;
+  const fallbackIndex = hashString(seed) % 3;
 
   if (fallbackIndex === 0) {
     return 'North';
@@ -139,16 +151,139 @@ export function decorateCommunityPosts(posts: CommunityPost[]): CommunityFeedCar
     const displayName = post.author.displayName || post.userId || post.id;
 
     return {
+      authorName: post.author.displayName,
       avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`,
       coverImageUrl: post.coverImageUrl || post.trip?.coverImageUrl || null,
       decorativeCommentCount: (hash % 18) + 6,
       decorativeLikeCount: (hash % 260) + 48,
       displayTitle: getCommunityCardTitle(post),
       excerpt: createExcerpt(post.content),
-      post,
+      href: post.trip ? `/public/trips/${encodeURIComponent(post.trip.id)}` : null,
+      id: `post-${post.id}`,
       region: deriveCommunityRegion(post),
       rotate: ROTATIONS[hash % ROTATIONS.length],
+      sortAt: post.createdAt,
+      source: 'post',
       tapeClassName: TAPE_CLASSES[hash % TAPE_CLASSES.length],
     };
   });
+}
+
+export function decoratePublicTrips(trips: Trip[]): CommunityFeedCard[] {
+  return trips.map((trip) =>
+    createTripFeedCard({
+      coverImageUrl: trip.coverImageUrl,
+      displayTitle: trip.name,
+      excerpt: trip.summaryNotes || trip.destination || formatTripDates(trip),
+      href: `/public/trips/${encodeURIComponent(trip.id)}`,
+      id: `planner-${trip.id}`,
+      seed: trip.id,
+      source: 'planner',
+      sortAt: trip.updatedAt,
+      trip,
+    }),
+  );
+}
+
+export function decoratePublicJournals(
+  results: TripJournalResult[],
+): CommunityFeedCard[] {
+  return results.map(({ journal, trip }) => {
+    const journalText = getJournalText(journal.objects);
+
+    return createTripFeedCard({
+      coverImageUrl: resolveJournalCoverImage(journal.objects) || trip.coverImageUrl,
+      displayTitle: trip.name,
+      excerpt:
+        journalText ||
+        trip.destination ||
+        `${journal.objects.length} mảnh nhật ký`,
+      href: `/public/trips/${encodeURIComponent(trip.id)}/journal`,
+      id: `journal-${journal.id ?? trip.id}`,
+      seed: journal.id ?? trip.id,
+      source: 'journal',
+      sortAt: journal.updatedAt,
+      trip,
+      extraSearchText: journalText,
+    });
+  });
+}
+
+export function mergeCommunityFeedCards(
+  cards: CommunityFeedCard[],
+): CommunityFeedCard[] {
+  return [...cards].sort(
+    (left, right) =>
+      right.sortAt.localeCompare(left.sortAt) || left.id.localeCompare(right.id),
+  );
+}
+
+function createTripFeedCard({
+  coverImageUrl,
+  displayTitle,
+  excerpt,
+  extraSearchText = '',
+  href,
+  id,
+  seed,
+  sortAt,
+  source,
+  trip,
+}: {
+  coverImageUrl: string | null;
+  displayTitle: string;
+  excerpt: string;
+  extraSearchText?: string;
+  href: string;
+  id: string;
+  seed: string;
+  sortAt: string;
+  source: Exclude<CommunityFeedCardSource, 'post'>;
+  trip: Trip;
+}): CommunityFeedCard {
+  const hash = hashString(seed);
+  const normalized = [
+    trip.name,
+    trip.destination,
+    trip.summaryNotes,
+    extraSearchText,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLocaleLowerCase('vi-VN');
+
+  return {
+    authorName: null,
+    avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(trip.userId || trip.id)}`,
+    coverImageUrl,
+    decorativeCommentCount: (hash % 18) + 6,
+    decorativeLikeCount: (hash % 260) + 48,
+    displayTitle,
+    excerpt: createExcerpt(excerpt),
+    href,
+    id,
+    region: deriveCommunityRegionFromText(normalized, seed),
+    rotate: ROTATIONS[hash % ROTATIONS.length],
+    sortAt,
+    source,
+    tapeClassName: TAPE_CLASSES[hash % TAPE_CLASSES.length],
+  };
+}
+
+function getJournalText(objects: TripJournalResult['journal']['objects']) {
+  return objects
+    .map((object) => object.props.text)
+    .filter((value): value is string => typeof value === 'string' && value.trim().length > 0)
+    .join(' ');
+}
+
+function resolveJournalCoverImage(objects: TripJournalResult['journal']['objects']) {
+  const photo = objects.find((object) => object.type === 'photo');
+  const imageUrl = photo?.props.imageUrl;
+
+  return typeof imageUrl === 'string' && imageUrl.trim() ? imageUrl.trim() : null;
+}
+
+function formatTripDates(trip: Trip) {
+  return `${trip.startDate} - ${trip.endDate}`;
 }

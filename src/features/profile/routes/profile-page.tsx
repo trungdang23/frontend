@@ -5,12 +5,15 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   deleteTripJournal,
   listMyJournals,
+  updateTripJournalVisibility,
 } from '@/features/journal/api/journal-api';
+import type { JournalVisibility } from '@/features/journal/types/journal';
 import { journalQueryKeys } from '@/features/journal/lib/journal-query-keys';
 import { ProfileSampleCard } from '@/features/profile/components/profile-sample-card';
 import { ProfileSampleJournalEntry } from '@/features/profile/components/profile-sample-journal-entry';
 import {
   ProfileShareModal,
+  type ProfileShareVisibility,
   type ProfileShareTarget,
 } from '@/features/profile/components/profile-share-modal';
 import { profilePlaceholderPhotoUrl } from '@/features/profile/content/profile-sample-content';
@@ -126,6 +129,10 @@ export function ProfilePage() {
 
   const openShareTarget = (entry: ProfileGridEntry) => {
     const trip = findTripForEntry(entry);
+    const journalResult =
+      activeTab === 'journal'
+        ? journalsQuery.data?.find(({ trip: journalTrip }) => journalTrip.id === entry.id) ?? null
+        : null;
 
     if (!trip) {
       return;
@@ -142,10 +149,14 @@ export function ProfilePage() {
           : `/public/trips/${encodeURIComponent(trip.id)}`,
       title: entry.title,
       trip,
+      visibility:
+        activeTab === 'journal'
+          ? journalResult?.journal.visibility ?? 'private'
+          : trip.visibility,
     });
   };
 
-  const saveShareVisibility = async (visibility: TripVisibility) => {
+  const saveShareVisibility = async (visibility: ProfileShareVisibility) => {
     if (!shareTarget || isSavingShare) {
       return;
     }
@@ -154,14 +165,28 @@ export function ProfilePage() {
     setProfileFeedback(null);
 
     try {
-      const updatedTrip = await updateTrip(shareTarget.trip.id, {
-        visibility,
-      });
+      let updatedTrip: Trip;
+      let savedVisibility: ProfileShareVisibility;
+
+      if (shareTarget.kind === 'journal') {
+        const updatedJournal = await updateTripJournalVisibility(shareTarget.trip.id, {
+          visibility: visibility as JournalVisibility,
+        });
+
+        updatedTrip = updatedJournal.trip;
+        savedVisibility = updatedJournal.journal.visibility;
+      } else {
+        updatedTrip = await updateTrip(shareTarget.trip.id, {
+          visibility: visibility as TripVisibility,
+        });
+        savedVisibility = updatedTrip.visibility;
+      }
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ['trips', 'list'] }),
         queryClient.invalidateQueries({ queryKey: ['public', 'trips'] }),
         queryClient.invalidateQueries({ queryKey: journalQueryKeys.mine() }),
+        queryClient.invalidateQueries({ queryKey: journalQueryKeys.publicList() }),
         queryClient.invalidateQueries({
           queryKey: journalQueryKeys.detail(shareTarget.trip.id),
         }),
@@ -175,13 +200,14 @@ export function ProfilePage() {
           ? {
               ...currentTarget,
               trip: updatedTrip,
+              visibility: savedVisibility,
             }
           : currentTarget,
       );
       setProfileFeedback({
         kind: 'success',
         message: t('profile.share.saveSuccess', {
-          mode: t(`profile.share.modes.${updatedTrip.visibility}.title`),
+          mode: t(`profile.share.modes.${savedVisibility}.title`),
           title: updatedTrip.name,
         }),
       });
@@ -402,7 +428,7 @@ export function ProfilePage() {
       {shareTarget ? (
         <ProfileShareModal
           isSaving={isSavingShare}
-          key={`${shareTarget.kind}-${shareTarget.trip.id}-${shareTarget.trip.visibility}`}
+          key={`${shareTarget.kind}-${shareTarget.trip.id}-${shareTarget.visibility}`}
           onClose={() => setShareTarget(null)}
           onSaveVisibility={saveShareVisibility}
           target={shareTarget}

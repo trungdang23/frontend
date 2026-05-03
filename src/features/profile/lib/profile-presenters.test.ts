@@ -144,6 +144,7 @@ describe('profile presenters', () => {
             sceneVersion: 1,
             tripId: 'trip-1',
             updatedAt: '2026-04-26T10:30:00.000Z',
+            visibility: 'public',
           },
         },
       ],

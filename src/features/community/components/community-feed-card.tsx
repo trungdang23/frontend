@@ -3,6 +3,7 @@ import {
   Heart,
   MessageCircle,
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import type { CommunityFeedCard } from '@/features/community/lib/community-feed-presenters';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -13,17 +14,15 @@ type CommunityFeedCardProps = {
 
 export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
   const { t } = useI18n();
-  const authorName = card.post.author.displayName || t('community.authorFallback');
+  const authorName = card.authorName || t('community.authorFallback');
+  const className =
+    'group relative flex flex-col items-center bg-white p-3 pb-8 text-left shadow-[4px_4px_15px_rgba(0,0,0,0.15)] transition-transform duration-300 [transform:rotate(var(--card-rotate))] hover:z-10 hover:[transform:rotate(0deg)_scale(1.02)]';
+  const style = {
+    ['--card-rotate' as string]: `${card.rotate}deg`,
+  } as CSSProperties;
 
-  return (
-    <article
-      className="group relative flex flex-col items-center bg-white p-3 pb-8 shadow-[4px_4px_15px_rgba(0,0,0,0.15)] transition-transform duration-300 [transform:rotate(var(--card-rotate))] hover:z-10 hover:[transform:rotate(0deg)_scale(1.02)]"
-      style={
-        {
-          ['--card-rotate' as string]: `${card.rotate}deg`,
-        } as CSSProperties
-      }
-    >
+  const content = (
+    <>
       <div
         className={cn(
           'absolute -top-3 left-1/2 z-20 h-6 w-16 -translate-x-1/2 rotate-1 shadow-sm',
@@ -48,6 +47,9 @@ export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
       </div>
 
       <div className="w-full px-2 text-left">
+        <p className="mb-2 inline-flex rounded-full bg-[#fff1d9] px-2.5 py-1 font-marker text-[0.78rem] font-bold uppercase leading-none tracking-normal text-[#6b4938]">
+          {t(`community.sources.${card.source}`)}
+        </p>
         <h2 className="line-clamp-1 font-hand text-[1.9rem] leading-[0.95] text-slate-900">
           {card.displayTitle}
         </h2>
@@ -81,6 +83,20 @@ export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
           </div>
         </div>
       </div>
+    </>
+  );
+
+  if (card.href) {
+    return (
+      <Link className={className} style={style} to={card.href}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <article className={className} style={style}>
+      {content}
     </article>
   );
 }

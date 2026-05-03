@@ -8,6 +8,7 @@ import {
   X,
 } from 'lucide-react';
 import type { Trip, TripVisibility } from '@/features/trips/types/trip';
+import type { JournalVisibility } from '@/features/journal/types/journal';
 import { useI18n } from '@/shared/i18n/use-i18n';
 import { cn } from '@/shared/lib/cn';
 import {
@@ -15,6 +16,7 @@ import {
 } from 'react';
 
 export type ProfileShareTargetKind = 'journal' | 'planner';
+export type ProfileShareVisibility = TripVisibility | JournalVisibility;
 
 export type ProfileShareTarget = {
   kind: ProfileShareTargetKind;
@@ -23,18 +25,19 @@ export type ProfileShareTarget = {
   metadata: string;
   publicPath: string;
   title: string;
+  visibility: ProfileShareVisibility;
 };
 
 type ProfileShareModalProps = {
   isSaving: boolean;
   onClose: () => void;
-  onSaveVisibility: (visibility: TripVisibility) => Promise<void>;
+  onSaveVisibility: (visibility: ProfileShareVisibility) => Promise<void>;
   target: ProfileShareTarget;
 };
 
 const SHARE_MODES: Array<{
   icon: typeof Lock;
-  value: TripVisibility;
+  value: ProfileShareVisibility;
 }> = [
   {
     icon: Lock,
@@ -57,8 +60,8 @@ export function ProfileShareModal({
   target,
 }: ProfileShareModalProps) {
   const { t } = useI18n();
-  const [selectedVisibility, setSelectedVisibility] = useState<TripVisibility>(
-    target.trip.visibility,
+  const [selectedVisibility, setSelectedVisibility] = useState<ProfileShareVisibility>(
+    target.visibility,
   );
   const [didCopy, setDidCopy] = useState(false);
   const shareUrl = buildShareUrl(target.publicPath);

@@ -1,14 +1,21 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   CalendarDays,
+  Copy,
   Home,
   LogIn,
   MapPin,
 } from 'lucide-react';
-import { Link, useParams } from 'react-router-dom';
-import { getPublicTripPlanner } from '@/features/trips/public/api/public-trip-api';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import {
+  copyPublicTripPlanner,
+  getPublicTripPlanner,
+} from '@/features/trips/public/api/public-trip-api';
 import { publicTripQueryKeys } from '@/features/trips/public/lib/public-trip-query-keys';
 import type { PlanNode } from '@/features/trips/planning/types/plan-node';
+import { plannerQueryKeys } from '@/features/trips/planning/lib/planner-query-keys';
+import type { Trip } from '@/features/trips/types/trip';
+import { useAuth } from '@/features/auth/session/use-auth';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { ApiError } from '@/shared/api/api-error';
@@ -19,11 +26,23 @@ const fallbackCoverImage = '/images/defaults/planner-hoian.svg';
 
 export function PublicTripPage() {
   const { tripId = '' } = useParams<{ tripId: string }>();
+  const auth = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const { t } = useI18n();
   const plannerQuery = useQuery({
     enabled: Boolean(tripId),
     queryFn: ({ signal }) => getPublicTripPlanner(tripId, { signal }),
     queryKey: publicTripQueryKeys.planner(tripId),
+  });
+  const copyMutation = useMutation({
+    mutationFn: () => copyPublicTripPlanner(tripId),
+    onSuccess: (result) => {
+      queryClient.setQueryData(plannerQueryKeys.detail(result.trip.id), result);
+      void queryClient.invalidateQueries({ queryKey: ['trips', 'list'] });
+      navigate(`/app/planner?tripId=${encodeURIComponent(result.trip.id)}`);
+    },
   });
   const errorStatus =
     plannerQuery.error instanceof ApiError ? plannerQuery.error.status : null;
@@ -84,9 +103,35 @@ export function PublicTripPage() {
                   {plannerQuery.data.trip.summaryNotes}
                 </p>
               ) : null}
-              <p className="mt-5 rounded-[0.65rem] border border-dashed border-[#d8c5ab] bg-[#fff8ea]/70 px-4 py-3 text-sm leading-6 text-[#6b4938]">
-                {t('trips.publicPage.readOnlyNotice')}
-              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                {auth.status === 'authenticated' ? (
+                  <button
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-4 py-2 font-marker font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/30 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
+                    disabled={copyMutation.isPending}
+                    onClick={() => copyMutation.mutate()}
+                    type="button"
+                  >
+                    <Copy className="h-4 w-4" strokeWidth={2.3} />
+                    {copyMutation.isPending
+                      ? t('trips.publicPage.actions.copyingToAccount')
+                      : t('trips.publicPage.actions.copyToAccount')}
+                  </button>
+                ) : (
+                  <Link
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[#7b4d22]/25 bg-[#ffe4a8] px-4 py-2 font-marker font-bold leading-none text-[#6b3b18] shadow-[0_5px_0_#d7a957] transition hover:-translate-y-0.5"
+                    state={{ from: location }}
+                    to="/auth/login"
+                  >
+                    <LogIn className="h-4 w-4" strokeWidth={2.3} />
+                    {t('trips.publicPage.actions.loginToCopy')}
+                  </Link>
+                )}
+              </div>
+              {copyMutation.isError ? (
+                <p className="mt-3 max-w-2xl rounded-[0.65rem] border border-[#d92d20]/25 bg-[#fff1f0] px-4 py-3 text-sm leading-6 text-[#b42318]">
+                  {t('trips.publicPage.copyError')}
+                </p>
+              ) : null}
             </div>
             <img
               alt={plannerQuery.data.trip.name}
@@ -94,6 +139,11 @@ export function PublicTripPage() {
               src={plannerQuery.data.trip.coverImageUrl || fallbackCoverImage}
             />
           </header>
+
+          <PublicTripBudgetSection
+            nodes={plannerQuery.data.nodes}
+            trip={plannerQuery.data.trip}
+          />
 
           <section className="border-t border-[#eadbc5] p-5 sm:p-8">
             <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -120,6 +170,77 @@ export function PublicTripPage() {
         </article>
       ) : null}
     </PublicPageShell>
+  );
+}
+
+function PublicTripBudgetSection({
+  nodes,
+  trip,
+}: {
+  nodes: PlanNode[];
+  trip: Trip;
+}) {
+  const { t } = useI18n();
+  const tripBudget = formatTripBudget(trip);
+  const costedNodes = nodes.filter(
+    (node) => node.costAmount !== null && node.costCurrency,
+  );
+  const plannedTotals = summarizeNodeCosts(costedNodes);
+
+  return (
+    <section className="border-t border-[#eadbc5] p-5 sm:p-8">
+      <div className="mb-5">
+        <p className="section-label">{t('trips.publicPage.budget.eyebrow')}</p>
+        <h2 className="font-cursive text-[2.2rem] font-bold leading-none text-[#251b15]">
+          {t('trips.publicPage.budget.title')}
+        </h2>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-[0.65rem] border border-[#eadbc5] bg-[#fff8ea]/65 p-4">
+          <p className="font-marker text-[0.88rem] font-bold uppercase leading-none tracking-normal text-[#8b6244]">
+            {t('trips.publicPage.budget.tripBudgetLabel')}
+          </p>
+          <p className="mt-2 font-cursive text-[1.55rem] font-bold leading-none text-[#251b15]">
+            {tripBudget || t('trips.publicPage.budget.notSet')}
+          </p>
+        </div>
+
+        <div className="rounded-[0.65rem] border border-[#eadbc5] bg-[#f7fbec] p-4">
+          <p className="font-marker text-[0.88rem] font-bold uppercase leading-none tracking-normal text-[#5d7d32]">
+            {t('trips.publicPage.budget.plannedLabel')}
+          </p>
+          <p className="mt-2 font-cursive text-[1.55rem] font-bold leading-none text-[#251b15]">
+            {plannedTotals.length > 0
+              ? plannedTotals.map((total) => formatMoney(total.amount, total.currency)).join(' / ')
+              : t('trips.publicPage.budget.noPlannedCosts')}
+          </p>
+        </div>
+      </div>
+
+      {costedNodes.length > 0 ? (
+        <ul className="mt-5 grid gap-3 md:grid-cols-2">
+          {costedNodes.map((node) => (
+            <li
+              className="rounded-[0.55rem] border border-[#eadbc5] bg-white/80 p-4"
+              key={node.id}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <p className="font-marker text-[1rem] font-bold leading-tight text-[#251b15]">
+                  {node.title}
+                </p>
+                <p className="shrink-0 font-marker text-[0.95rem] leading-tight text-[#6b4938]">
+                  {formatMoney(node.costAmount ?? 0, node.costCurrency ?? trip.budgetCurrency)}
+                </p>
+              </div>
+              {node.notes ? (
+                <p className="mt-2 text-sm leading-6 text-[#5f5146]">{node.notes}</p>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </section>
   );
 }
 
@@ -265,10 +386,48 @@ function formatNodeMeta(node: PlanNode) {
   const schedule = node.startAt ? formatNodeDateTime(node.startAt) : null;
   const cost =
     node.costAmount !== null && node.costCurrency
-      ? `${node.costAmount.toLocaleString('vi-VN')} ${node.costCurrency}`
+      ? formatMoney(node.costAmount, node.costCurrency)
       : null;
 
   return [schedule, cost].filter(Boolean).join(' • ');
+}
+
+function formatTripBudget(trip: Trip) {
+  if (trip.budgetMode === 'manual' && trip.manualBudgetAmount !== null && trip.manualBudgetCurrency) {
+    return formatMoney(trip.manualBudgetAmount, trip.manualBudgetCurrency);
+  }
+
+  if (trip.budgetAmount > 0 && trip.budgetCurrency) {
+    return formatMoney(trip.budgetAmount, trip.budgetCurrency);
+  }
+
+  return null;
+}
+
+function summarizeNodeCosts(nodes: PlanNode[]) {
+  const totalsByCurrency = new Map<string, number>();
+
+  for (const node of nodes) {
+    if (node.costAmount === null || !node.costCurrency) {
+      continue;
+    }
+
+    totalsByCurrency.set(
+      node.costCurrency,
+      (totalsByCurrency.get(node.costCurrency) ?? 0) + node.costAmount,
+    );
+  }
+
+  return Array.from(totalsByCurrency.entries())
+    .map(([currency, amount]) => ({
+      amount,
+      currency,
+    }))
+    .sort((left, right) => left.currency.localeCompare(right.currency));
+}
+
+function formatMoney(amount: number, currency: string) {
+  return `${amount.toLocaleString('vi-VN')} ${currency}`;
 }
 
 function formatNodeDateTime(value: string) {

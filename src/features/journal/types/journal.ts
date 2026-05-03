@@ -1,6 +1,7 @@
 import type { Trip } from '@/features/trips/types/trip';
 
 export type JournalObjectType = 'photo' | 'sticker' | 'note' | 'tape';
+export type JournalVisibility = 'private' | 'unlisted' | 'public';
 
 export type JournalPage = {
   width: number;
@@ -29,6 +30,7 @@ export type TripJournal = {
   sceneVersion: number;
   page: JournalPage;
   objects: JournalSceneObject[];
+  visibility: JournalVisibility;
   createdAt: string;
   updatedAt: string;
 };
@@ -42,4 +44,8 @@ export type SaveTripJournalPayload = {
   sceneVersion: number;
   page: JournalPage;
   objects: JournalSceneObject[];
+};
+
+export type UpdateTripJournalPayload = {
+  visibility: JournalVisibility;
 };

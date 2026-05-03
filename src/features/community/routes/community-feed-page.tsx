@@ -6,17 +6,30 @@ import { CommunityFeedCard } from '@/features/community/components/community-fee
 import { CommunityRegionFilter } from '@/features/community/components/community-region-filter';
 import {
   decorateCommunityPosts,
+  decoratePublicJournals,
+  decoratePublicTrips,
+  mergeCommunityFeedCards,
 } from '@/features/community/lib/community-feed-presenters';
 import type { CommunityRegion } from '@/features/community/lib/community-feed-presenters';
 import { communityQueryKeys } from '@/features/community/lib/community-query-keys';
+import { listPublicJournals } from '@/features/journal/api/journal-api';
+import { journalQueryKeys } from '@/features/journal/lib/journal-query-keys';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
+import { listPublicTrips } from '@/features/trips/public/api/public-trip-api';
+import { publicTripQueryKeys } from '@/features/trips/public/lib/public-trip-query-keys';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
 const COMMUNITY_FEED_QUERY = {
   page: 0,
   size: 24,
   sort: 'createdAt,desc' as const,
+};
+
+const PUBLIC_TRIP_QUERY = {
+  page: 0,
+  size: 24,
+  sort: 'startDate,desc' as const,
 };
 
 const REGION_FILTERS = [
@@ -67,19 +80,37 @@ export function CommunityFeedPage() {
     queryFn: ({ signal }) => listPosts(COMMUNITY_FEED_QUERY, { signal }),
     queryKey: communityQueryKeys.listQuery(COMMUNITY_FEED_QUERY),
   });
+  const publicTripsQuery = useQuery({
+    queryFn: ({ signal }) => listPublicTrips(PUBLIC_TRIP_QUERY, { signal }),
+    queryKey: publicTripQueryKeys.listQuery(PUBLIC_TRIP_QUERY),
+  });
+  const publicJournalsQuery = useQuery({
+    queryFn: ({ signal }) => listPublicJournals({ signal }),
+    queryKey: journalQueryKeys.publicList(),
+  });
 
-  const decoratedPosts = useMemo(
-    () => decorateCommunityPosts(postsQuery.data?.data || []),
-    [postsQuery.data?.data],
+  const feedCards = useMemo(
+    () =>
+      mergeCommunityFeedCards([
+        ...decorateCommunityPosts(postsQuery.data?.data || []),
+        ...decoratePublicTrips(publicTripsQuery.data?.data || []),
+        ...decoratePublicJournals(publicJournalsQuery.data || []),
+      ]),
+    [postsQuery.data?.data, publicJournalsQuery.data, publicTripsQuery.data?.data],
   );
+  const isFeedLoading =
+    feedCards.length === 0 &&
+    (postsQuery.isLoading || publicTripsQuery.isLoading || publicJournalsQuery.isLoading);
+  const isFeedError =
+    postsQuery.isError && publicTripsQuery.isError && publicJournalsQuery.isError;
 
-  const filteredPosts = useMemo(() => {
+  const filteredCards = useMemo(() => {
     if (activeRegion === 'All') {
-      return decoratedPosts;
+      return feedCards;
     }
 
-    return decoratedPosts.filter((post) => post.region === activeRegion);
-  }, [activeRegion, decoratedPosts]);
+    return feedCards.filter((card) => card.region === activeRegion);
+  }, [activeRegion, feedCards]);
 
   return (
     <PublicPageShell
@@ -131,11 +162,11 @@ export function CommunityFeedPage() {
           </svg>
         </div>
 
-        {postsQuery.isLoading ? (
+        {isFeedLoading ? (
           <CommunityFeedSkeleton />
         ) : null}
 
-        {!postsQuery.isLoading && postsQuery.isError ? (
+        {!isFeedLoading && isFeedError ? (
           <div className="mx-auto max-w-2xl rounded-[2rem] border border-[rgba(122,75,57,0.16)] bg-[rgba(255,250,242,0.94)] px-6 py-8 text-center shadow-[0_22px_48px_rgba(96,72,50,0.12)]">
             <h2 className="font-title text-[1.9rem] text-[#1a1a1a]">
               {t('community.loadErrorTitle')}
@@ -146,25 +177,25 @@ export function CommunityFeedPage() {
           </div>
         ) : null}
 
-        {!postsQuery.isLoading && !postsQuery.isError && filteredPosts.length === 0 ? (
+        {!isFeedLoading && !isFeedError && filteredCards.length === 0 ? (
           <div className="mx-auto max-w-2xl rounded-[2rem] border border-[rgba(122,75,57,0.16)] bg-[rgba(255,250,242,0.94)] px-6 py-8 text-center shadow-[0_22px_48px_rgba(96,72,50,0.12)]">
             <h2 className="font-title text-[1.9rem] text-[#1a1a1a]">
-              {decoratedPosts.length === 0
+              {feedCards.length === 0
                 ? t('community.emptyTitle')
                 : t('community.filteredEmptyTitle')}
             </h2>
             <p className="mt-3 text-sm leading-7 text-[var(--color-ink-soft)]">
-              {decoratedPosts.length === 0
+              {feedCards.length === 0
                 ? t('community.emptyDescription')
                 : t('community.filteredEmptyDescription')}
             </p>
           </div>
         ) : null}
 
-        {!postsQuery.isLoading && !postsQuery.isError && filteredPosts.length > 0 ? (
+        {!isFeedLoading && !isFeedError && filteredCards.length > 0 ? (
           <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-4">
-            {filteredPosts.map((post) => (
-              <CommunityFeedCard card={post} key={post.post.id} />
+            {filteredCards.map((card) => (
+              <CommunityFeedCard card={card} key={card.id} />
             ))}
           </div>
         ) : null}

@@ -1261,6 +1261,23 @@ Kết nối editor với backend theo một contract bền vững.
 - published journal render đúng scene đã lưu
 - không cần đổi cả database platform để chạy feature này
 
+## Follow-up share independence and community discovery
+
+### Mục tiêu
+
+Tách chia sẻ `planner` và `journal` ở UI/contract, đồng thời để tab cộng đồng discovery cả kế hoạch public lẫn nhật ký public.
+
+### Việc cần làm
+
+- [x] modal chia sẻ ở profile nhận visibility riêng theo loại nội dung
+- [x] lưu chia sẻ kế hoạch qua `PATCH /trips/:tripId`
+- [x] lưu chia sẻ nhật ký qua `PATCH /trips/:tripId/journal`
+- [x] community feed gộp public posts, public trips, và public journals
+- [x] public journal chỉ hiện link mở kế hoạch khi planner cũng đang share được
+- [x] public planner hiển thị ghi chú và ngân sách rõ hơn
+- [x] public planner có CTA tạo bản sao kế hoạch vào tài khoản đang đăng nhập
+- [ ] smoke test thủ công flow share journal-only sau deploy
+
 ## FR-G - Verification, cleanup, deploy smoke refresh
 
 ### Mục tiêu
