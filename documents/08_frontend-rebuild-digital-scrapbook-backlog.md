@@ -1278,6 +1278,18 @@ Tách chia sẻ `planner` và `journal` ở UI/contract, đồng thời để ta
 - [x] public planner có CTA tạo bản sao kế hoạch vào tài khoản đang đăng nhập
 - [ ] smoke test thủ công flow share journal-only sau deploy
 
+## Follow-up authenticated shell logout
+
+### Mục tiêu
+
+Đưa hành động đăng xuất vào chrome chung để người dùng thoát tài khoản từ planner, journal, profile, community hoặc trang public mà không phải tìm trong một page riêng.
+
+### Việc cần làm
+
+- [x] hiển thị nút `Đăng xuất` trong shared header khi session đang authenticated
+- [x] gọi `auth.logout()` và đưa người dùng về trang đăng nhập sau khi logout
+- [ ] smoke test thủ công trên desktop/mobile sau deploy
+
 ## FR-G - Verification, cleanup, deploy smoke refresh
 
 ### Mục tiêu
