@@ -640,6 +640,28 @@ Thu nhỏ thêm phần bìa và wrapper của quyển sổ planner để desktop
 - asset upload
 - autosave/debounce và manual save
 - public read-only journal route
+
+## FR-J2 - Journal trip handoff and minimal creator
+
+### Mục tiêu
+
+Nối profile/trip list với journal scene thật để người dùng không bị rơi vào `/app/journal` trống, đồng thời cho tạo vài object cơ bản và lưu scene bằng contract phase đầu.
+
+### Scope của lượt triển khai này
+
+- [x] thêm CTA mở nhật ký trên card kế hoạch trong profile
+- [x] khi `/app/journal` thiếu `tripId`, hiển thị danh sách chuyến đi để chọn
+- [x] thêm thao tác tạo note, ảnh bằng URL, sticker và tape ở journal route
+- [x] lưu scene bằng `PUT /trips/:tripId/journal`
+- [x] giữ drag/drop, resize, rotate tự do ngoài scope
+
+### Deferred
+
+- inspector chọn object đầy đủ
+- kéo thả trực tiếp trên canvas
+- upload asset thật
+- autosave/debounce
+- public journal route
 - [x] giữ nguyên bố cục nội dung và hiệu ứng lật trang
 - [x] xác nhận quyển sổ fit gọn hơn trong body
 

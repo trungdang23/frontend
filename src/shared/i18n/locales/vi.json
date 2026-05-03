@@ -399,6 +399,7 @@
     "actions": {
       "openPlanner": "MỞ PLANNER",
       "editPlanner": "CHỈNH SỬA",
+      "openJournal": "NHẬT KÝ",
       "deletePlanner": "XÓA",
       "deletingPlanner": "ĐANG XÓA...",
       "deletePlannerConfirm": "Xóa kế hoạch \"{{title}}\" khỏi tài khoản của bạn?",
@@ -414,6 +415,15 @@
     "description": "Những mảnh ký ức của chuyến đi nằm trên một trang giấy riêng, giữ đúng nhịp scrapbook của Journey.",
     "missingTripTitle": "Chưa chọn chuyến đi",
     "missingTripDescription": "Mở nhật ký từ một chuyến đi đã lưu để xem trang scrapbook của chuyến đó.",
+    "pickerTitle": "Chọn chuyến đi",
+    "pickerDescription": "Mỗi chuyến đi có một trang nhật ký riêng để lưu ký ức sau khi kế hoạch đã được tạo.",
+    "pickerLoadingTitle": "Đang tải chuyến đi",
+    "pickerLoadingDescription": "Journey đang mở danh sách kế hoạch của bạn.",
+    "pickerErrorTitle": "Chưa tải được chuyến đi",
+    "pickerErrorDescription": "Hãy thử lại sau ít phút hoặc quay về trang cá nhân.",
+    "pickerEmptyTitle": "Chưa có chuyến đi",
+    "pickerEmptyDescription": "Tạo một kế hoạch đầu tiên rồi quay lại để mở trang nhật ký của chuyến đó.",
+    "pickerCreateTrip": "Tạo chuyến đi",
     "loadingTitle": "Đang mở nhật ký",
     "loadingDescription": "Journey đang tải scene mới nhất của chuyến đi này.",
     "errorTitle": "Chưa tải được nhật ký",
@@ -426,6 +436,22 @@
     "meta": {
       "trip": "Chuyến đi",
       "updatedAt": "Cập nhật"
+    },
+    "editor": {
+      "noteLabel": "Note",
+      "imageLabel": "Ảnh",
+      "stickerLabel": "Sticker",
+      "defaultNote": "Một ký ức mới",
+      "defaultSticker": "Journey",
+      "addNote": "Thêm note",
+      "addPhoto": "Thêm ảnh",
+      "addSticker": "Thêm sticker",
+      "addTape": "Thêm tape",
+      "save": "Lưu nhật ký",
+      "saving": "Đang lưu...",
+      "saveSuccess": "Đã lưu nhật ký.",
+      "saveError": "Chưa lưu được nhật ký.",
+      "objectCount": "{{count}} mảnh"
     },
     "cards": {
       "notesTitle": "Ghi chú hành trình",

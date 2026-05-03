@@ -399,6 +399,7 @@
     "actions": {
       "openPlanner": "OPEN PLANNER",
       "editPlanner": "EDIT",
+      "openJournal": "JOURNAL",
       "deletePlanner": "DELETE",
       "deletingPlanner": "DELETING...",
       "deletePlannerConfirm": "Delete the plan \"{{title}}\" from your account?",
@@ -414,6 +415,15 @@
     "description": "Trip memories sit on their own scrapbook page, keeping Journey's journal rhythm intact.",
     "missingTripTitle": "No trip selected",
     "missingTripDescription": "Open the journal from a saved trip to view its scrapbook page.",
+    "pickerTitle": "Choose a trip",
+    "pickerDescription": "Each saved trip has its own journal page for memories after the plan exists.",
+    "pickerLoadingTitle": "Loading trips",
+    "pickerLoadingDescription": "Journey is opening your saved plans.",
+    "pickerErrorTitle": "Unable to load trips",
+    "pickerErrorDescription": "Try again shortly or return to your profile.",
+    "pickerEmptyTitle": "No trips yet",
+    "pickerEmptyDescription": "Create your first plan, then return here to open its journal page.",
+    "pickerCreateTrip": "Create trip",
     "loadingTitle": "Opening journal",
     "loadingDescription": "Journey is loading the latest scene for this trip.",
     "errorTitle": "Unable to load journal",
@@ -426,6 +436,22 @@
     "meta": {
       "trip": "Trip",
       "updatedAt": "Updated"
+    },
+    "editor": {
+      "noteLabel": "Note",
+      "imageLabel": "Photo",
+      "stickerLabel": "Sticker",
+      "defaultNote": "A new memory",
+      "defaultSticker": "Journey",
+      "addNote": "Add note",
+      "addPhoto": "Add photo",
+      "addSticker": "Add sticker",
+      "addTape": "Add tape",
+      "save": "Save journal",
+      "saving": "Saving...",
+      "saveSuccess": "Journal saved.",
+      "saveError": "Unable to save journal.",
+      "objectCount": "{{count}} pieces"
     },
     "cards": {
       "notesTitle": "Travel notes",

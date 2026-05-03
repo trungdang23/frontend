@@ -69,6 +69,7 @@ describe('profile presenters', () => {
         },
       ],
       'CHỈNH SỬA',
+      'NHẬT KÝ',
     );
 
     expect(postEntries[0]).toMatchObject({
@@ -81,6 +82,8 @@ describe('profile presenters', () => {
       actionLabel: 'CHỈNH SỬA',
       id: 'trip-1',
       metadata: '22 Tháng 4, 2026 • 4 ngày',
+      secondaryActionHref: '/app/journal?tripId=trip-1',
+      secondaryActionLabel: 'NHẬT KÝ',
       title: 'Đà Lạt',
     });
   });

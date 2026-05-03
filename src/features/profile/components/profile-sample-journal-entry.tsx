@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Trash2 } from 'lucide-react';
+import { BookOpenText, Trash2 } from 'lucide-react';
 
 type ProfileSampleJournalEntryProps = {
   actionHref?: string;
@@ -10,6 +10,8 @@ type ProfileSampleJournalEntryProps = {
   metadata: string;
   onDelete?: () => void;
   rotationClass?: string;
+  secondaryActionHref?: string;
+  secondaryActionLabel?: string;
   summary?: string;
   title: string;
 };
@@ -23,6 +25,8 @@ export function ProfileSampleJournalEntry({
   metadata,
   onDelete,
   rotationClass,
+  secondaryActionHref,
+  secondaryActionLabel,
   summary,
   title,
 }: ProfileSampleJournalEntryProps) {
@@ -35,7 +39,7 @@ export function ProfileSampleJournalEntry({
       <h3 className="mb-1 font-cursive text-[1.5rem] font-bold leading-none text-[#251b15]">{title}</h3>
       <p className="font-marker text-[0.98rem] leading-tight text-[#6b4938]">{metadata}</p>
       {summary ? <p className="mt-2 line-clamp-2 font-marker text-[0.95rem] leading-tight text-[#3d332b]">{summary}</p> : null}
-      {(actionHref && actionLabel) || onDelete ? (
+      {(actionHref && actionLabel) || (secondaryActionHref && secondaryActionLabel) || onDelete ? (
         <div className="mt-4 flex flex-wrap gap-2">
           {actionHref && actionLabel ? (
             <Link
@@ -43,6 +47,15 @@ export function ProfileSampleJournalEntry({
               to={actionHref}
             >
               {actionLabel}
+            </Link>
+          ) : null}
+          {secondaryActionHref && secondaryActionLabel ? (
+            <Link
+              className="inline-flex items-center gap-1.5 rounded-full border border-[#7b4d22]/25 bg-[#ffe4a8] px-4 py-2 font-marker text-[0.98rem] font-bold leading-none text-[#6b3b18] shadow-[0_5px_0_#d7a957] transition hover:-translate-y-0.5 hover:bg-[#ffedc5] focus:outline-none focus:ring-2 focus:ring-[#d7a957]/25"
+              to={secondaryActionHref}
+            >
+              <BookOpenText className="h-4 w-4" strokeWidth={2.3} />
+              {secondaryActionLabel}
             </Link>
           ) : null}
           {onDelete && deleteActionLabel ? (

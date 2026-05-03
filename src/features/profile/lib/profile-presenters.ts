@@ -10,6 +10,8 @@ export type ProfileGridEntry = {
   actionLabel?: string;
   id?: string;
   image: string;
+  secondaryActionHref?: string;
+  secondaryActionLabel?: string;
   metadata: string;
   rotationClass: string;
   summary?: string;
@@ -59,7 +61,11 @@ export function buildProfilePostEntries(
   }));
 }
 
-export function buildProfileTripEntries(trips: Trip[], actionLabel?: string): ProfileGridEntry[] {
+export function buildProfileTripEntries(
+  trips: Trip[],
+  actionLabel?: string,
+  secondaryActionLabel?: string,
+): ProfileGridEntry[] {
   return trips.map((trip, index) => ({
     actionHref: `/app/planner?tripId=${encodeURIComponent(trip.id)}`,
     actionLabel,
@@ -67,6 +73,8 @@ export function buildProfileTripEntries(trips: Trip[], actionLabel?: string): Pr
     image: trip.coverImageUrl || resolveFallbackImage(index),
     metadata: `${formatProfileDate(trip.startDate)} • ${formatTripDuration(trip.startDate, trip.endDate)}`,
     rotationClass: resolveRotationClass(index),
+    secondaryActionHref: `/app/journal?tripId=${encodeURIComponent(trip.id)}`,
+    secondaryActionLabel,
     summary: trip.destination || trip.summaryNotes || undefined,
     title: trip.name,
   }));

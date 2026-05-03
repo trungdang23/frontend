@@ -20,7 +20,7 @@
 - [x] auth routes đã có shared chrome và session flow
 - [x] planner route hiện tại đã dùng `PlanNode` API client qua compatibility route `/app/planner?tripId=...`
 - [x] profile route đã bind `posts/mine` và `trips`
-- [~] journal route đã có read-only renderer và API client, nhưng editor interactions/autosave chưa có
+- [~] journal route đã có API client, trip picker, renderer, và editor tối giản; drag/drop/autosave chưa có
 - [x] shared API client vẫn còn
 - [x] auth session modules vẫn còn
 - [x] `trips` và `community` API modules vẫn còn
@@ -72,7 +72,7 @@ Status: `In progress`
 - [ ] dựng design token system mới
 - [~] dựng fixed-layout public/auth/protected surfaces
 - [x] dựng journal scene renderer
-- [ ] dựng journal editor interactions
+- [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape; drag/drop/inspector còn deferred
 - [~] chốt journal API contract với backend phase đầu `GET/PUT /trips/:tripId/journal`; page-level contract còn deferred
 - [ ] chốt asset flow
 - [ ] cập nhật deploy smoke checklist theo route mới

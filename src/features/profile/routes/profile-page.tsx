@@ -65,7 +65,11 @@ export function ProfilePage() {
     postsQuery.data?.data || [],
     t('profile.meta.posted'),
   );
-  const tripEntries = buildProfileTripEntries(tripsQuery.data?.data || [], t('profile.actions.editPlanner'));
+  const tripEntries = buildProfileTripEntries(
+    tripsQuery.data?.data || [],
+    t('profile.actions.editPlanner'),
+    t('profile.actions.openJournal'),
+  );
   const activeEntries = activeTab === 'journal' ? postEntries : tripEntries;
   const activeQuery = activeTab === 'journal' ? postsQuery : tripsQuery;
   const visibleEntries = activeEntries.slice(0, visibleCount);
@@ -224,6 +228,8 @@ export function ProfilePage() {
                           : undefined
                       }
                       rotationClass={entry.rotationClass}
+                      secondaryActionHref={entry.secondaryActionHref}
+                      secondaryActionLabel={entry.secondaryActionLabel}
                       summary={entry.summary}
                       title={entry.title}
                     />
