@@ -11,7 +11,9 @@
 
 - `src/main.tsx` đã bootstrap app thật với `AppProviders + router`.
 - `app/providers`, `shared/api`, `auth/session`, `trips` API, `community` API, và i18n baseline vẫn còn.
-- Route `/` đã có homepage scrapbook baseline, nhưng router và screen tree còn lại vẫn cần được scaffold tiếp theo direction mới.
+- Route `/`, `/community`, `/auth/login`, `/auth/register`, `/app/planner`, `/app/journal`, và `/app/profile` đã có screen thật hoặc placeholder route rõ ràng.
+- Route target `/app/trips/:tripId`, `/app/trips/:tripId/planner`, và `/app/trips/:tripId/journal` hiện là compatibility aliases redirect về `/app/planner?tripId=...` hoặc `/app/journal?tripId=...`.
+- Journal feature hiện chưa có scene renderer/editor hoặc API persistence riêng.
 
 ## Kiến trúc mục tiêu
 
@@ -27,7 +29,6 @@ frontend/
       auth/
       home/
       community/
-      planner/
       journal/
         api/
         routes/
@@ -42,6 +43,11 @@ frontend/
         lib/
         types/
       trips/
+        planning/
+          api/
+          components/
+          lib/
+          types/
       profile/
       shell/
     shared/
@@ -183,7 +189,9 @@ frontend/
 
 Compatibility:
 
-- `/app/trips/:tripId` redirect sang `/app/trips/:tripId/planner`
+- `/app/trips/:tripId` là compatibility alias về planner.
+- Trong source hiện tại, `/app/trips/:tripId/planner` redirect về `/app/planner?tripId=...` và `/app/trips/:tripId/journal` redirect về `/app/journal?tripId=...`.
+- Khi cutover sang canonical route, cần cập nhật router, shared navigation/profile links, tests, deploy smoke checklist, và docs trong cùng slice.
 
 ## Reuse chiến lược giữa viewer và editor
 

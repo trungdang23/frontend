@@ -13,13 +13,15 @@ Các API modules còn giữ trong repo:
 - `src/features/auth/api/auth-api.ts`
 - `src/features/trips/api/trips-api.ts`
 - `src/features/trips/api/trip-planning-api.ts`
+- `src/features/trips/planning/api/planner-api.ts`
 - `src/features/community/api/posts-api.ts`
 
 Nhận xét quan trọng:
 
-- Runtime UI hiện mới wiring thật cho homepage `/`; các module còn lại sẽ được nối tiếp khi từng surface được scaffold hoàn chỉnh.
-- `trip-planning-api.ts` vẫn còn mang nặng semantics `itinerary + budget` cũ.
-- Nếu backend planner `PlanNode` tiếp tục là hướng chính cho planning workspace, frontend nên tách `planner-api.ts` riêng thay vì mở rộng tiếp file bridge cũ.
+- Runtime UI hiện đã wiring thật cho homepage, community, auth, planner compatibility flow, profile, và journal placeholder.
+- `trip-planning-api.ts` vẫn là bridge cũ cho semantics `itinerary + budget`; không nên mở rộng file này cho journal editor.
+- Planner `PlanNode` client đã được tách tại `src/features/trips/planning/api/planner-api.ts`.
+- Route canonical mục tiêu là `/app/trips/:tripId/planner`, nhưng source hiện vẫn dùng compatibility route `/app/planner?tripId=...` và alias redirect để giữ flow ổn định trong giai đoạn chuyển tiếp.
 
 ## Backend base hiện tại
 
@@ -84,18 +86,22 @@ Nhận xét quan trọng:
 
 - `GET /posts`
 - `GET /posts/:postId`
+- `GET /posts/mine`
 - `POST /posts`
 
 ## Hướng contract mới cần bổ sung cho sản phẩm mới
 
 ### Structured planner
 
-Nếu backend đã có `PlanNode` contract ổn định, frontend nên tách riêng nhóm endpoint planner:
+Backend đã có `PlanNode` contract ổn định và frontend hiện đã có client riêng cho nhóm endpoint planner:
 
 - `GET /trips/:tripId/planner`
 - `POST /nodes`
 - `PATCH /nodes/:nodeId`
 - `DELETE /nodes/:nodeId`
+- legacy/experimental sticker endpoints hiện vẫn có client:
+  - `GET /nodes/:nodeId/stickers`
+  - `PUT /nodes/:nodeId/stickers`
 
 Planner là workspace dữ liệu có cấu trúc, không phải scrapbook scene.
 
@@ -228,8 +234,9 @@ Nhưng cách này sẽ khó mở rộng revision/page-level publish về sau.
 ## Khuyến nghị file/module ở frontend
 
 - Không tiếp tục bơm editor logic vào `trip-planning-api.ts`.
-- Tách thành:
-  - `features/planner/api/planner-api.ts`
+- Giữ planner client hiện tại tại:
+  - `features/trips/planning/api/planner-api.ts`
+- Khi mở journal, tách thành:
   - `features/journal/api/journal-api.ts`
   - `features/journal/api/journal-assets-api.ts`
 

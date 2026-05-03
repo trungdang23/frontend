@@ -13,12 +13,14 @@
 - shared API client còn sống
 - auth/session modules còn sống
 - `trips`, `community`, i18n baseline còn sống
-- runtime UI đã có homepage baseline ở `/`, nhưng các surface còn lại vẫn đang trong rebuild
+- runtime UI đã có homepage, community, auth, planner compatibility flow, profile, và journal placeholder route
+- planner hiện dùng `PlanNode` API client riêng qua compatibility route `/app/planner?tripId=...`
+- journal scene renderer/editor vẫn chưa có
 
 ### Từ backend
 
 - backend đang đi theo `NestJS + Prisma + PostgreSQL`
-- auth, trips, posts, itinerary/budget bridge đã có nền
+- auth, trips, planner `PlanNode`, budget summary, public trips/planner, posts, và itinerary compatibility bridge đã có nền
 - journal API riêng chưa có trong repo hiện tại
 
 ### Từ product direction
@@ -106,8 +108,8 @@ Hướng xử lý:
 
 - contract backend cuối cùng cho journal pages
 - asset upload/storage provider
-- decision về planner API chính thức nếu bỏ bridge itinerary cũ
-- deploy smoke checklist sau khi route mới được scaffold lại
+- quyết định cutover từ compatibility route `/app/planner?tripId=...` sang canonical `/app/trips/:tripId/planner`
+- deploy smoke checklist sau khi canonical planner/journal routes hoặc journal renderer lên đầy đủ
 
 ## Điều cần giữ kỷ luật
 

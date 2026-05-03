@@ -48,6 +48,7 @@
 - Dữ liệu load/save đúng contract planner hoặc bridge đang được phê duyệt
 - Budget/planning information đọc rõ
 - Route planner tách biệt với route journal
+- Nếu còn dùng compatibility route, docs và tests phải ghi rõ target canonical route và route đang chạy thật
 
 ## Một mốc rebuild được xem là xong khi
 

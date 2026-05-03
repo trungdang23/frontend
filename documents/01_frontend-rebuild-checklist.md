@@ -16,12 +16,18 @@
 - [x] `frontend/` còn toolchain `React + Vite + TypeScript`
 - [x] `src/main.tsx` đã bootstrap lại bằng `AppProviders + router`
 - [x] route `/` đã có homepage scrapbook baseline thật
+- [x] route `/community` đã có feed public đầu tiên
+- [x] auth routes đã có shared chrome và session flow
+- [x] planner route hiện tại đã dùng `PlanNode` API client qua compatibility route `/app/planner?tripId=...`
+- [x] profile route đã bind `posts/mine` và `trips`
+- [~] journal route hiện mới là placeholder/preview, chưa có scene renderer/editor
 - [x] shared API client vẫn còn
 - [x] auth session modules vẫn còn
 - [x] `trips` và `community` API modules vẫn còn
+- [x] `planner-api.ts` cho `PlanNode` đã tồn tại dưới `features/trips/planning/api`
 - [x] i18n baseline vẫn còn
 - [x] test baseline vẫn còn
-- [~] runtime router/shell/UI primitives mới chỉ được scaffold cho homepage và foundation chung
+- [~] runtime router/shell/UI primitives đã có cho các surface chính, nhưng route canonical planner/journal và journal engine vẫn chưa cutover hoàn chỉnh
 
 ## Bộ docs active cần giữ
 
@@ -62,9 +68,9 @@ Status: `In progress`
 - [x] chốt ranh giới `fixed-layout vs freeform`
 - [x] chốt route map mức nền cho `planner` và `journal`
 - [x] dựng homepage scrapbook baseline ở `/`
-- [ ] dựng lại router và app shell
+- [~] dựng lại router và app shell
 - [ ] dựng design token system mới
-- [ ] dựng fixed-layout public/auth/protected surfaces
+- [~] dựng fixed-layout public/auth/protected surfaces
 - [ ] dựng journal scene renderer
 - [ ] dựng journal editor interactions
 - [ ] chốt journal API contract với backend
@@ -76,7 +82,7 @@ Status: `In progress`
 - [ ] không mở rộng thêm UI cũ chỉ vì tiện
 - [ ] không dùng editor engine cho các page fixed-layout
 - [ ] không lưu journal object theo pixel viewport hiện tại
-- [ ] không mở rộng tiếp `trip-planning-api.ts` cho journal editor
+- [x] không mở rộng tiếp `trip-planning-api.ts` cho journal editor; planner `PlanNode` client đã được tách riêng
 - [ ] không đổi storage platform chỉ vì scene data nhìn giống document
 
 ## Definition of done cho đợt sync doc này
@@ -85,4 +91,4 @@ Status: `In progress`
 - [x] docs không còn claim sai trạng thái source
 - [x] foundation đã ghi rõ quyết định storage
 - [x] backlog đã có slice cụ thể cho journal renderer/editor
-- [~] deploy runbook đã được refresh cho homepage hiện tại và sẽ cập nhật tiếp khi các route mới lên đầy đủ
+- [~] deploy runbook đã được refresh cho staged deploy và cần cập nhật tiếp khi canonical planner/journal routes hoặc journal renderer lên đầy đủ

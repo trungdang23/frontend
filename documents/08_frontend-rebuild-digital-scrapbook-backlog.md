@@ -839,15 +839,15 @@ Biến route `/` từ placeholder thành homepage thật đầu tiên để ch�
 - [x] đưa copy của homepage vào i18n thay vì hardcode rời rạc
 - [x] giữ các surface khác ở mức preview ngay trên homepage để không lấn scope
 - [x] nối route thật cho `community`
-- [ ] nối route thật cho `planner`, `journal`, `profile`
+- [x] nối route thật/compatibility flow cho `planner`, `journal`, `profile`
 - [ ] thay ảnh demo bằng asset/content product thật
 
 ### Deferred rõ ràng sau homepage
 
 - auth shell và auth screens theo visual mới
-- planner route thật
+- cutover planner sang canonical route `/app/trips/:tripId/planner`
 - journal route thật với renderer/editor riêng
-- profile route thật
+- profile production polish sau khi canonical planner/journal route chốt
 
 ### FR-B1A - Homepage notebook alignment theo mẫu chốt ngày 2026-04-22
 
@@ -1184,7 +1184,7 @@ Làm giai đoạn rebuild này đủ sạch để bước vào implementation th
 
 - [ ] cập nhật smoke test plan theo route mới
 - [x] đổi deploy workflow sang staged `dist` swap để tránh cửa sổ runtime đọc bundle lỗi khi build trực tiếp trên máy đích
-- [ ] cập nhật deploy smoke checklist cho homepage baseline hiện tại rồi cho post-cutover
+- [ ] cập nhật deploy smoke checklist cho compatibility routes hiện tại rồi cho canonical planner/journal cutover
 - [ ] gỡ các tham chiếu cũ còn sót tới route/workspace model cũ
 - [ ] rà README và docs active list một lần cuối
 

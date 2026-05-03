@@ -10,8 +10,8 @@
 
 - Frontend đang ở giai đoạn rebuild hiện tại, nên runtime production đang có homepage baseline ở `/` và sẽ mở dần các route khác theo từng slice.
 - Vì vậy checklist smoke cần tách rõ:
-  - smoke tối thiểu cho homepage baseline hiện tại
-  - smoke đầy đủ cho giai đoạn sau khi các route `planner/journal/community/auth` quay lại
+  - smoke tối thiểu cho homepage baseline và compatibility routes hiện tại
+  - smoke đầy đủ cho compatibility routes hiện tại và cho giai đoạn sau canonical planner/journal cutover
 
 ## Checklist hardening verify sau deploy
 
@@ -185,7 +185,7 @@ Scope: frontend/main @ <commit>
 Local verify: pass
 Public smoke: landing pass, homepage baseline pass
 Warnings / advisory: public domain health có warning Cloudflare nhưng local runtime vẫn healthy
-Deferred / next action: verify planner/journal routes sau khi UI mới được scaffold lại
+Deferred / next action: verify canonical planner/journal routes sau route cutover hoặc journal renderer rollout
 ```
 
 ## Kiểm tra sau reboot

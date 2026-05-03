@@ -13,8 +13,8 @@
 
 ## Workflow Rules
 
-- Keep `deploy-frontend.yml` manual by default unless the task explicitly changes release strategy.
-- Preserve the current deploy transport: `Cloudflare Tunnel` plus `cloudflared access ssh` to the stable hostname in `SSH_HOST`.
+- Keep `deploy-frontend.yml` aligned with the current release strategy: automatic deploy on `push` to `main` with `workflow_dispatch` retained for manual redeploys.
+- Preserve the current deploy transport: a Linux/X64 self-hosted runner on the deploy machine. Do not reintroduce `cloudflared access ssh` as a deploy transport unless the task explicitly calls for rollback or comparison.
 - Keep frontend deploy aligned with backend style: source checkout on target machine, env rendered on GitHub Actions, build on target machine, and process restart via repo scripts.
 - Never hardcode real secret values, private keys, host keys, or environment-specific deploy values in workflow files.
 - When changing deploy behavior, update the frontend README and the nearest runbooks in `documents/`.
