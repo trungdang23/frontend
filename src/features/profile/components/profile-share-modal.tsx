@@ -2,7 +2,6 @@ import {
   Check,
   Copy,
   ExternalLink,
-  Link2,
   Lock,
   Megaphone,
   X,
@@ -42,10 +41,6 @@ const SHARE_MODES: Array<{
   {
     icon: Lock,
     value: 'private',
-  },
-  {
-    icon: Link2,
-    value: 'unlisted',
   },
   {
     icon: Megaphone,
@@ -133,7 +128,7 @@ export function ProfileShareModal({
           <p className="mb-2 font-marker text-[1rem] font-bold leading-tight text-[#3d332b]">
             {t('profile.share.modeLabel')}
           </p>
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             {SHARE_MODES.map((mode) => {
               const Icon = mode.icon;
               const isSelected = selectedVisibility === mode.value;

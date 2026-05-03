@@ -438,17 +438,12 @@
       "saveSuccess": "Đã đặt \"{{title}}\" sang chế độ {{mode}}.",
       "saveError": "Không thể cập nhật chia sẻ cho \"{{title}}\" lúc này.",
       "badges": {
-        "unlisted": "Có liên kết",
         "public": "Công khai"
       },
       "modes": {
         "private": {
           "title": "Riêng tư",
           "description": "Chỉ bạn xem được trong workspace cá nhân."
-        },
-        "unlisted": {
-          "title": "Có liên kết",
-          "description": "Ai có link đều xem được, nhưng không hiện ở danh sách public."
         },
         "public": {
           "title": "Công khai",
@@ -626,7 +621,6 @@
     },
     "visibility": {
       "private": "Riêng tư",
-      "unlisted": "Có liên kết",
       "public": "Công khai"
     },
     "budget": {

@@ -8,7 +8,7 @@ Frontend package cho sản phẩm `journey`.
 - Runtime UI không còn chỉ là placeholder. Route `/` đã được dựng thành homepage scrapbook đầu tiên để chốt visual direction cho lần rebuild này.
 - Route `/community`, auth, planner, journal read-only renderer, và profile đã có route thật trong app router.
 - Planner hiện đang chạy bằng compatibility route `/app/planner?tripId=...` và dùng `PlanNode` API client riêng; route target `/app/trips/:tripId/planner` đang redirect về flow này để tránh gãy link trong giai đoạn chuyển tiếp.
-- Profile đã bind dữ liệu thật từ `journals/mine` và `trips`; journal hiện có API client, trip picker, renderer và editor tối giản để thêm note/ảnh/sticker/tape rồi lưu qua `PUT /trips/:tripId/journal`. Profile cũng có share modal cho kế hoạch và nhật ký với `private | unlisted | public` riêng từng loại; route read-only `/public/trips/:tripId` có CTA copy kế hoạch vào tài khoản, còn `/public/trips/:tripId/journal` đọc theo journal visibility riêng. Community feed đang gộp public posts, public trips, và public journals. Drag/drop/autosave vẫn chưa dựng.
+- Profile đã bind dữ liệu thật từ `journals/mine` và `trips`; journal hiện có API client, trip picker, renderer và editor tối giản để thêm note/ảnh/sticker/tape rồi lưu qua `PUT /trips/:tripId/journal`. Profile cũng có share modal cho kế hoạch và nhật ký với `private | public` riêng từng loại; route read-only `/public/trips/:tripId` có CTA copy kế hoạch vào tài khoản, còn `/public/trips/:tripId/journal` đọc theo journal visibility riêng. Community feed đang gộp public posts, public trips, và public journals. Drag/drop/autosave vẫn chưa dựng.
 - Những phần nền vẫn còn giá trị và đang được giữ:
   - shared API client + API error handling
   - auth session modules

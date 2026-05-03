@@ -72,7 +72,6 @@ export function ProfilePage() {
   });
   const shareBadgeLabels = {
     public: t('profile.share.badges.public'),
-    unlisted: t('profile.share.badges.unlisted'),
   };
 
   const journalEntries = buildProfileJournalEntries(

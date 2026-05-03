@@ -687,13 +687,13 @@ Nối profile/trip list với journal scene thật để người dùng không b
 
 ### Mục tiêu
 
-Cho người dùng chia sẻ kế hoạch cá nhân hoặc nhật ký đã lưu từ page cá nhân mà không trộn hành động publish với editor. Scope này dùng `Trip.visibility` làm source of truth cho share mode: `private`, `unlisted`, và `public`.
+Cho người dùng chia sẻ kế hoạch cá nhân hoặc nhật ký đã lưu từ page cá nhân mà không trộn hành động publish với editor. Scope này dùng `Trip.visibility` làm source of truth cho share mode: `private` và `public`.
 
 ### Scope của lượt triển khai này
 
 - [x] thêm nút chia sẻ trên card kế hoạch và card nhật ký đã lưu trong profile
-- [x] thêm modal chia sẻ với preview, chế độ riêng tư/có liên kết/công khai, link xem public và thao tác copy
-- [x] cập nhật `Trip.visibility` frontend type sang `private | unlisted | public`
+- [x] thêm modal chia sẻ với preview, chế độ riêng tư/công khai, link xem public và thao tác copy
+- [x] cập nhật `Trip.visibility` frontend type sang `private | public`
 - [x] khi đổi share mode, gọi `PATCH /trips/:tripId` với field `visibility`
 - [x] thêm route read-only `/public/trips/:tripId` cho kế hoạch
 - [x] thêm route read-only `/public/trips/:tripId/journal` cho nhật ký, reuse `JournalSceneRenderer`
@@ -1277,6 +1277,20 @@ Tách chia sẻ `planner` và `journal` ở UI/contract, đồng thời để ta
 - [x] public planner hiển thị ghi chú và ngân sách rõ hơn
 - [x] public planner có CTA tạo bản sao kế hoạch vào tài khoản đang đăng nhập
 - [ ] smoke test thủ công flow share journal-only sau deploy
+
+## Follow-up two-mode sharing and responsive public pages
+
+### Mục tiêu
+
+Thu gọn chế độ chia sẻ về đúng hai lựa chọn `private` và `public`, đồng thời đảm bảo các page public read-only có behavior responsive/scroll phù hợp trong shared shell.
+
+### Scope
+
+- [x] bỏ `unlisted` khỏi frontend type cho trip và journal
+- [x] rút modal chia sẻ và form tạo trip về hai chế độ riêng tư/công khai
+- [x] cập nhật copy, badge, và label i18n cho share mode hai trạng thái
+- [x] cho auth và public trip/journal page dùng scroll responsive trong shared shell
+- [x] cập nhật test presenter liên quan đến share badge
 
 ## Follow-up authenticated shell logout
 

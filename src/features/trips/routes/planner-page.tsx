@@ -1195,7 +1195,7 @@ function PlannerDestinationPage({
             {t('trips.planner.board.createSpread.visibilityLabel')}
           </p>
           <div className="mt-2 grid grid-cols-2 gap-2 rounded-[0.85rem] border border-[#b9aea0] bg-white/45 p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.72)]">
-            {(['private', 'unlisted', 'public'] as const).map((visibility) => (
+            {(['private', 'public'] as const).map((visibility) => (
               <button
                 aria-pressed={draft.visibility === visibility}
                 className={cn(

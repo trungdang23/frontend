@@ -1,7 +1,7 @@
 import type { Trip } from '@/features/trips/types/trip';
 
 export type JournalObjectType = 'photo' | 'sticker' | 'note' | 'tape';
-export type JournalVisibility = 'private' | 'unlisted' | 'public';
+export type JournalVisibility = 'private' | 'public';
 
 export type JournalPage = {
   width: number;

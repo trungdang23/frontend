@@ -28,6 +28,7 @@ export function PublicJournalPage() {
     <PublicPageShell
       mainClassName={publicPageMainLayouts.community}
       mainId="public-journal-content"
+      scrollable
     >
       {journalQuery.isLoading ? (
         <PublicJournalState
@@ -75,7 +76,7 @@ export function PublicJournalPage() {
           />
 
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            {journalQuery.data.trip.visibility !== 'private' ? (
+            {journalQuery.data.trip.visibility === 'public' ? (
               <Link
                 className="inline-flex items-center gap-1.5 rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-4 py-2 font-marker font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5"
                 to={`/public/trips/${encodeURIComponent(journalQuery.data.trip.id)}`}

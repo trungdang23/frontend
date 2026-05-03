@@ -1,5 +1,5 @@
 export type TripBudgetMode = "auto" | "manual";
-export type TripVisibility = "private" | "unlisted" | "public";
+export type TripVisibility = "private" | "public";
 
 export type Trip = {
   id: string;

@@ -12,8 +12,9 @@ export function AuthBookScene({ children }: PropsWithChildren) {
     <PublicPageShell
       mainClassName={publicPageMainLayouts.auth}
       mainId="auth-content"
+      scrollable
     >
-      <section className="relative h-full overflow-hidden px-4 py-2 sm:px-6 sm:py-3 lg:px-8">
+      <section className="relative min-h-full overflow-hidden px-4 py-2 sm:px-6 sm:py-3 lg:px-8">
         <div className="auth-grain" />
 
         <div className="pointer-events-none absolute inset-0">
@@ -53,7 +54,7 @@ export function AuthBookScene({ children }: PropsWithChildren) {
           />
         </div>
 
-        <div className="relative mx-auto flex h-full min-h-0 max-w-[68rem] items-center justify-center">
+        <div className="relative mx-auto flex min-h-full max-w-[68rem] items-center justify-center">
           {children}
         </div>
       </section>

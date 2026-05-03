@@ -51,6 +51,7 @@ export function PublicTripPage() {
     <PublicPageShell
       mainClassName={publicPageMainLayouts.community}
       mainId="public-trip-content"
+      scrollable
     >
       {plannerQuery.isLoading ? (
         <PublicTripState

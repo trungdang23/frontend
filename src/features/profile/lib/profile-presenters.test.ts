@@ -66,14 +66,13 @@ describe('profile presenters', () => {
           timezone: null,
           updatedAt: '2026-04-22T10:30:00.000Z',
           userId: 'user-1',
-          visibility: 'unlisted',
+          visibility: 'public',
         },
       ],
       'CHỈNH SỬA',
       'NHẬT KÝ',
       {
         public: 'Công khai',
-        unlisted: 'Có liên kết',
       },
     );
 
@@ -89,7 +88,7 @@ describe('profile presenters', () => {
       metadata: '22 Tháng 4, 2026 • 4 ngày',
       secondaryActionHref: '/app/journal?tripId=trip-1',
       secondaryActionLabel: 'NHẬT KÝ',
-      shareBadgeLabel: 'Có liên kết',
+      shareBadgeLabel: 'Công khai',
       title: 'Đà Lạt',
     });
 
@@ -151,7 +150,6 @@ describe('profile presenters', () => {
       'CẬP NHẬT',
       {
         public: 'Công khai',
-        unlisted: 'Có liên kết',
       },
     );
 

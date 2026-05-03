@@ -438,17 +438,12 @@
       "saveSuccess": "Set \"{{title}}\" to {{mode}}.",
       "saveError": "Unable to update sharing for \"{{title}}\" right now.",
       "badges": {
-        "unlisted": "Link-only",
         "public": "Public"
       },
       "modes": {
         "private": {
           "title": "Private",
           "description": "Only you can view it inside your personal workspace."
-        },
-        "unlisted": {
-          "title": "Link-only",
-          "description": "Anyone with the link can view it, but it will not appear in public lists."
         },
         "public": {
           "title": "Public",
@@ -626,7 +621,6 @@
     },
     "visibility": {
       "private": "Private",
-      "unlisted": "Link-only",
       "public": "Public"
     },
     "budget": {
