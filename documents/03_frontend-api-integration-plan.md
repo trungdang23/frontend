@@ -18,7 +18,7 @@ Các API modules còn giữ trong repo:
 
 Nhận xét quan trọng:
 
-- Runtime UI hiện đã wiring thật cho homepage, community, auth, planner compatibility flow, profile, và journal placeholder.
+- Runtime UI hiện đã wiring thật cho homepage, community, auth, planner compatibility flow, profile, và journal read-only renderer.
 - `trip-planning-api.ts` vẫn là bridge cũ cho semantics `itinerary + budget`; không nên mở rộng file này cho journal editor.
 - Planner `PlanNode` client đã được tách tại `src/features/trips/planning/api/planner-api.ts`.
 - Route canonical mục tiêu là `/app/trips/:tripId/planner`, nhưng source hiện vẫn dùng compatibility route `/app/planner?tripId=...` và alias redirect để giữ flow ổn định trong giai đoạn chuyển tiếp.
@@ -109,7 +109,7 @@ Planner là workspace dữ liệu có cấu trúc, không phải scrapbook scene
 
 Journal cần một contract riêng, không nên nhét vào planner hoặc post payload.
 
-Nhóm endpoint đề xuất:
+Nhóm endpoint dài hạn đề xuất:
 
 - `GET /trips/:tripId/journal`
 - `GET /trips/:tripId/journal/pages/:pageId`
@@ -119,7 +119,7 @@ Nhóm endpoint đề xuất:
 - `POST /trips/:tripId/journal/pages/:pageId/publish`
 - `POST /trips/:tripId/journal/assets`
 
-Nếu phase đầu muốn đơn giản hơn, có thể bắt đầu bằng:
+Phase đầu hiện đã bắt đầu bằng:
 
 - `GET /trips/:tripId/journal`
 - `PUT /trips/:tripId/journal`
@@ -153,8 +153,10 @@ Nhưng cách này sẽ khó mở rộng revision/page-level publish về sau.
       "rotation": -6,
       "zIndex": 3,
       "locked": false,
-      "assetId": "asset_01",
-      "frameStyle": "polaroid"
+      "props": {
+        "assetId": "asset_01",
+        "frameStyle": "polaroid"
+      }
     },
     {
       "id": "obj_sticker_01",
@@ -166,7 +168,9 @@ Nhưng cách này sẽ khó mở rộng revision/page-level publish về sau.
       "rotation": 12,
       "zIndex": 8,
       "locked": false,
-      "stickerKey": "flower-orange"
+      "props": {
+        "stickerKey": "flower-orange"
+      }
     }
   ],
   "updatedAt": "2026-04-22T12:00:00.000Z"
@@ -191,7 +195,9 @@ Nhưng cách này sẽ khó mở rộng revision/page-level publish về sau.
   - `height`
   - `rotation`
   - `zIndex`
-- Payload riêng theo loại object mới là phần linh hoạt.
+  - `locked`
+  - `props`
+- Payload riêng theo loại object nằm trong `props` để base contract không phình theo từng loại object.
 
 ### 3. Asset metadata tách khỏi layout
 
@@ -226,8 +232,8 @@ Nhưng cách này sẽ khó mở rộng revision/page-level publish về sau.
 | `['auth', 'me']` | stale `5m` | auth boot |
 | `['trips', 'list']` | stale `30s` | list page |
 | `['trips', 'detail', tripId]` | stale `30s` | structured trip info |
-| `['planner', tripId]` | stale `0s` hoặc very low | owner workspace structured |
-| `['journal', tripId]` | stale `0s` khi edit | editor cần dữ liệu mới nhất |
+| `['trips', 'planner', tripId]` | stale `0s` hoặc very low | owner workspace structured |
+| `['trips', 'journal', tripId]` | stale `0s` khi edit | editor cần dữ liệu mới nhất |
 | `['journal-page', pageId]` | stale `0s` khi edit | có save/load vòng kín |
 | `['posts', 'list']` | stale `30s` | community feed |
 
@@ -238,7 +244,9 @@ Nhưng cách này sẽ khó mở rộng revision/page-level publish về sau.
   - `features/trips/planning/api/planner-api.ts`
 - Khi mở journal, tách thành:
   - `features/journal/api/journal-api.ts`
-  - `features/journal/api/journal-assets-api.ts`
+  - `features/journal/lib/journal-query-keys.ts`
+  - `features/journal/types/journal.ts`
+  - `features/journal/api/journal-assets-api.ts` khi asset upload thật bắt đầu
 
 ## Khuyến nghị storage từ góc nhìn API
 

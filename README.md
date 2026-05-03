@@ -6,9 +6,9 @@ Frontend package cho sản phẩm `journey`.
 
 - `frontend/` đang dùng `React + Vite + TypeScript`.
 - Runtime UI không còn chỉ là placeholder. Route `/` đã được dựng thành homepage scrapbook đầu tiên để chốt visual direction cho lần rebuild này.
-- Route `/community`, auth, planner, journal placeholder, và profile đã có route thật trong app router.
+- Route `/community`, auth, planner, journal read-only renderer, và profile đã có route thật trong app router.
 - Planner hiện đang chạy bằng compatibility route `/app/planner?tripId=...` và dùng `PlanNode` API client riêng; route target `/app/trips/:tripId/planner` đang redirect về flow này để tránh gãy link trong giai đoạn chuyển tiếp.
-- Profile đã bind dữ liệu thật từ `posts/mine` và `trips`; journal vẫn chưa có scene renderer/editor hoặc persistence contract riêng.
+- Profile đã bind dữ liệu thật từ `posts/mine` và `trips`; journal hiện có API client + read-only renderer đọc `GET /trips/:tripId/journal`, còn editor kéo thả/autosave vẫn chưa dựng.
 - Những phần nền vẫn còn giá trị và đang được giữ:
   - shared API client + API error handling
   - auth session modules
@@ -27,7 +27,7 @@ Frontend package cho sản phẩm `journey`.
   - `/app/trips/:tripId/journal`
 - Route cũ `/app/trips/:tripId` nên được giữ như compatibility redirect về `planner`.
 - Trong source hiện tại, các route target này vẫn là alias/redirect về `/app/planner?tripId=...` và `/app/journal?tripId=...`; cutover sang canonical path là việc riêng cần chốt trước khi đổi navigation chính.
-- Hướng lưu trữ được khuyến nghị hiện tại là `PostgreSQL + JSONB` cho scene journal, chưa nên đổi hẳn sang `MongoDB`.
+- Hướng lưu trữ hiện tại là `PostgreSQL + JSONB` cho scene journal phase đầu, chưa nên đổi hẳn sang `MongoDB`.
 
 ## Docs nên đọc theo thứ tự
 

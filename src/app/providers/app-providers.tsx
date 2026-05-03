@@ -27,6 +27,9 @@ export function AppProviders({ children }: PropsWithChildren) {
       client.setQueryDefaults(['trips', 'planner'], {
         staleTime: 0,
       });
+      client.setQueryDefaults(['trips', 'journal'], {
+        staleTime: 0,
+      });
       client.setQueryDefaults(['community', 'posts', 'list'], {
         staleTime: 30_000,
       });

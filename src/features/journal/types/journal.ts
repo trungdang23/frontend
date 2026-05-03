@@ -1,0 +1,45 @@
+import type { Trip } from '@/features/trips/types/trip';
+
+export type JournalObjectType = 'photo' | 'sticker' | 'note' | 'tape';
+
+export type JournalPage = {
+  width: number;
+  height: number;
+  background: {
+    style: string;
+  };
+};
+
+export type JournalSceneObject = {
+  id: string;
+  type: JournalObjectType;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
+  zIndex: number;
+  locked: boolean;
+  props: Record<string, unknown>;
+};
+
+export type TripJournal = {
+  id: string | null;
+  tripId: string;
+  sceneVersion: number;
+  page: JournalPage;
+  objects: JournalSceneObject[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type TripJournalResult = {
+  trip: Trip;
+  journal: TripJournal;
+};
+
+export type SaveTripJournalPayload = {
+  sceneVersion: number;
+  page: JournalPage;
+  objects: JournalSceneObject[];
+};

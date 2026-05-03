@@ -618,6 +618,28 @@ Thu nhỏ thêm phần bìa và wrapper của quyển sổ planner để desktop
 
 - [x] giảm phần chìa xuống của các lớp bìa phía dưới
 - [x] giảm nhẹ padding dọc của notebook wrapper
+
+## FR-J1 - Journal read-only renderer and persistence client
+
+### Mục tiêu
+
+Đưa route journal từ placeholder sang surface đọc scene thật đầu tiên, dùng contract `GET/PUT /trips/:tripId/journal` mới của backend nhưng chưa dựng editor kéo thả đầy đủ.
+
+### Scope của lượt triển khai này
+
+- [x] thêm `features/journal/api/journal-api.ts`
+- [x] thêm type/query key riêng cho journal scene
+- [x] load journal theo `tripId` từ query string compatibility route `/app/journal?tripId=...`
+- [x] dựng read-only renderer dùng canonical page space `width/height`
+- [x] render trạng thái empty/loading/error rõ ràng
+- [x] giữ editor controls và autosave ngoài scope phase này
+
+### Deferred
+
+- selection, drag/drop, resize, rotate
+- asset upload
+- autosave/debounce và manual save
+- public read-only journal route
 - [x] giữ nguyên bố cục nội dung và hiệu ứng lật trang
 - [x] xác nhận quyển sổ fit gọn hơn trong body
 

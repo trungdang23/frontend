@@ -410,8 +410,23 @@
   },
   "journalPage": {
     "eyebrow": "Journal",
-    "title": "The journal workspace now has its own route.",
-    "description": "This page now exists as a real destination so the journal note no longer falls back to the homepage. The full editor will come next, but navigation and layout scope are now separated properly.",
+    "title": "Trip journal",
+    "description": "Trip memories sit on their own scrapbook page, keeping Journey's journal rhythm intact.",
+    "missingTripTitle": "No trip selected",
+    "missingTripDescription": "Open the journal from a saved trip to view its scrapbook page.",
+    "loadingTitle": "Opening journal",
+    "loadingDescription": "Journey is loading the latest scene for this trip.",
+    "errorTitle": "Unable to load journal",
+    "errorDescription": "The trip may have been deleted, or this session no longer has access.",
+    "emptyTitle": "No memories yet",
+    "emptyDescription": "This page is waiting for its first photos, notes, and traces.",
+    "actions": {
+      "backToProfile": "Back to profile"
+    },
+    "meta": {
+      "trip": "Trip",
+      "updatedAt": "Updated"
+    },
     "cards": {
       "notesTitle": "Travel notes",
       "notesDescription": "Handwritten notes, short captions, and memory snippets will live here.",

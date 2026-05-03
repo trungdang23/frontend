@@ -11,9 +11,9 @@
 
 - `src/main.tsx` đã bootstrap app thật với `AppProviders + router`.
 - `app/providers`, `shared/api`, `auth/session`, `trips` API, `community` API, và i18n baseline vẫn còn.
-- Route `/`, `/community`, `/auth/login`, `/auth/register`, `/app/planner`, `/app/journal`, và `/app/profile` đã có screen thật hoặc placeholder route rõ ràng.
+- Route `/`, `/community`, `/auth/login`, `/auth/register`, `/app/planner`, `/app/journal`, và `/app/profile` đã có screen thật; journal hiện là read-only scene renderer phase đầu.
 - Route target `/app/trips/:tripId`, `/app/trips/:tripId/planner`, và `/app/trips/:tripId/journal` hiện là compatibility aliases redirect về `/app/planner?tripId=...` hoặc `/app/journal?tripId=...`.
-- Journal feature hiện chưa có scene renderer/editor hoặc API persistence riêng.
+- Journal feature hiện có API client, query key, type model, và read-only scene renderer. Editor shell, object transforms, asset upload, autosave, và public journal surface vẫn deferred.
 
 ## Kiến trúc mục tiêu
 

@@ -20,7 +20,7 @@
 - [x] auth routes đã có shared chrome và session flow
 - [x] planner route hiện tại đã dùng `PlanNode` API client qua compatibility route `/app/planner?tripId=...`
 - [x] profile route đã bind `posts/mine` và `trips`
-- [~] journal route hiện mới là placeholder/preview, chưa có scene renderer/editor
+- [~] journal route đã có read-only renderer và API client, nhưng editor interactions/autosave chưa có
 - [x] shared API client vẫn còn
 - [x] auth session modules vẫn còn
 - [x] `trips` và `community` API modules vẫn còn
@@ -71,9 +71,9 @@ Status: `In progress`
 - [~] dựng lại router và app shell
 - [ ] dựng design token system mới
 - [~] dựng fixed-layout public/auth/protected surfaces
-- [ ] dựng journal scene renderer
+- [x] dựng journal scene renderer
 - [ ] dựng journal editor interactions
-- [ ] chốt journal API contract với backend
+- [~] chốt journal API contract với backend phase đầu `GET/PUT /trips/:tripId/journal`; page-level contract còn deferred
 - [ ] chốt asset flow
 - [ ] cập nhật deploy smoke checklist theo route mới
 
@@ -81,7 +81,7 @@ Status: `In progress`
 
 - [ ] không mở rộng thêm UI cũ chỉ vì tiện
 - [ ] không dùng editor engine cho các page fixed-layout
-- [ ] không lưu journal object theo pixel viewport hiện tại
+- [x] không lưu journal object theo pixel viewport hiện tại
 - [x] không mở rộng tiếp `trip-planning-api.ts` cho journal editor; planner `PlanNode` client đã được tách riêng
 - [ ] không đổi storage platform chỉ vì scene data nhìn giống document
 

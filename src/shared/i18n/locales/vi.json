@@ -410,8 +410,23 @@
   },
   "journalPage": {
     "eyebrow": "Nhật ký",
-    "title": "Workspace tạo nhật ký đang được tách riêng khỏi trang chủ.",
-    "description": "Trang này đã có route thật để không còn quay về homepage khi bấm vào. Editor hoàn chỉnh sẽ được dựng tiếp trong bước sau, nhưng phần điều hướng và phạm vi layout giờ đã tách riêng.",
+    "title": "Nhật ký chuyến đi",
+    "description": "Những mảnh ký ức của chuyến đi nằm trên một trang giấy riêng, giữ đúng nhịp scrapbook của Journey.",
+    "missingTripTitle": "Chưa chọn chuyến đi",
+    "missingTripDescription": "Mở nhật ký từ một chuyến đi đã lưu để xem trang scrapbook của chuyến đó.",
+    "loadingTitle": "Đang mở nhật ký",
+    "loadingDescription": "Journey đang tải scene mới nhất của chuyến đi này.",
+    "errorTitle": "Chưa tải được nhật ký",
+    "errorDescription": "Chuyến đi có thể đã bị xoá hoặc phiên đăng nhập không còn quyền truy cập.",
+    "emptyTitle": "Chưa có ký ức",
+    "emptyDescription": "Trang này đang chờ những mảnh ảnh, note và dấu vết đầu tiên.",
+    "actions": {
+      "backToProfile": "Về trang cá nhân"
+    },
+    "meta": {
+      "trip": "Chuyến đi",
+      "updatedAt": "Cập nhật"
+    },
     "cards": {
       "notesTitle": "Ghi chú hành trình",
       "notesDescription": "Khu viết tay, caption ngắn và các mẩu note sẽ nằm ở đây.",
