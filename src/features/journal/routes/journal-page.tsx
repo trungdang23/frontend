@@ -75,6 +75,9 @@ export function JournalPage() {
         journalQueryKeys.detail(tripId),
         result,
       );
+      void queryClient.invalidateQueries({
+        queryKey: journalQueryKeys.mine(),
+      });
     },
   });
 

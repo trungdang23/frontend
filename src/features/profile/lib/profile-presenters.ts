@@ -1,4 +1,5 @@
 import type { CommunityPost } from '@/features/community/types/post';
+import type { TripJournalResult } from '@/features/journal/types/journal';
 import type { Trip } from '@/features/trips/types/trip';
 import {
   profileEntryRotationClasses,
@@ -61,6 +62,25 @@ export function buildProfilePostEntries(
   }));
 }
 
+export function buildProfileJournalEntries(
+  journals: TripJournalResult[],
+  actionLabel?: string,
+): ProfileGridEntry[] {
+  return journals.map(({ journal, trip }, index) => ({
+    actionHref: `/app/journal?tripId=${encodeURIComponent(trip.id)}`,
+    actionLabel,
+    id: trip.id,
+    image:
+      resolveJournalCoverImage(journal.objects) ||
+      trip.coverImageUrl ||
+      resolveFallbackImage(index),
+    metadata: `${formatProfileDate(journal.updatedAt)} • ${journal.objects.length} mảnh`,
+    rotationClass: resolveRotationClass(index),
+    summary: trip.destination || trip.summaryNotes || undefined,
+    title: trip.name,
+  }));
+}
+
 export function buildProfileTripEntries(
   trips: Trip[],
   actionLabel?: string,
@@ -78,4 +98,11 @@ export function buildProfileTripEntries(
     summary: trip.destination || trip.summaryNotes || undefined,
     title: trip.name,
   }));
+}
+
+function resolveJournalCoverImage(objects: TripJournalResult['journal']['objects']) {
+  const photo = objects.find((object) => object.type === 'photo');
+  const imageUrl = photo?.props.imageUrl;
+
+  return typeof imageUrl === 'string' && imageUrl.trim() ? imageUrl.trim() : null;
 }

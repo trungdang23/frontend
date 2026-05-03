@@ -2,12 +2,16 @@ import {
   useState,
 } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { listMyPosts } from '@/features/community/api/posts-api';
+import {
+  deleteTripJournal,
+  listMyJournals,
+} from '@/features/journal/api/journal-api';
+import { journalQueryKeys } from '@/features/journal/lib/journal-query-keys';
 import { ProfileSampleCard } from '@/features/profile/components/profile-sample-card';
 import { ProfileSampleJournalEntry } from '@/features/profile/components/profile-sample-journal-entry';
 import { profilePlaceholderPhotoUrl } from '@/features/profile/content/profile-sample-content';
 import {
-  buildProfilePostEntries,
+  buildProfileJournalEntries,
   buildProfileTripEntries,
   formatProfileDate,
 } from '@/features/profile/lib/profile-presenters';
@@ -17,12 +21,6 @@ import { deleteTrip, listTrips } from '@/features/trips/api/trips-api';
 import { useAuth } from '@/features/auth/session/use-auth';
 import { useI18n } from '@/shared/i18n/use-i18n';
 import { cn } from '@/shared/lib/cn';
-
-const PROFILE_POST_QUERY = {
-  page: 0,
-  size: 100,
-  sort: 'createdAt,desc' as const,
-};
 
 const PROFILE_TRIP_QUERY = {
   page: 0,
@@ -50,28 +48,29 @@ export function ProfilePage() {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<ProfileTab>('journal');
   const [visibleCount, setVisibleCount] = useState(2);
+  const [deletingJournalTripId, setDeletingJournalTripId] = useState<string | null>(null);
   const [deletingTripId, setDeletingTripId] = useState<string | null>(null);
   const [profileFeedback, setProfileFeedback] = useState<ProfileFeedback | null>(null);
-  const postsQuery = useQuery({
-    queryFn: ({ signal }) => listMyPosts(PROFILE_POST_QUERY, { signal }),
-    queryKey: ['community', 'posts', 'mine', PROFILE_POST_QUERY],
+  const journalsQuery = useQuery({
+    queryFn: ({ signal }) => listMyJournals({ signal }),
+    queryKey: journalQueryKeys.mine(),
   });
   const tripsQuery = useQuery({
     queryFn: ({ signal }) => listTrips(PROFILE_TRIP_QUERY, { signal }),
     queryKey: ['trips', 'list', 'profile', PROFILE_TRIP_QUERY],
   });
 
-  const postEntries = buildProfilePostEntries(
-    postsQuery.data?.data || [],
-    t('profile.meta.posted'),
+  const journalEntries = buildProfileJournalEntries(
+    journalsQuery.data || [],
+    t('profile.actions.updateJournal'),
   );
   const tripEntries = buildProfileTripEntries(
     tripsQuery.data?.data || [],
     t('profile.actions.editPlanner'),
     t('profile.actions.openJournal'),
   );
-  const activeEntries = activeTab === 'journal' ? postEntries : tripEntries;
-  const activeQuery = activeTab === 'journal' ? postsQuery : tripsQuery;
+  const activeEntries = activeTab === 'journal' ? journalEntries : tripEntries;
+  const activeQuery = activeTab === 'journal' ? journalsQuery : tripsQuery;
   const visibleEntries = activeEntries.slice(0, visibleCount);
   const publicTripCount = (tripsQuery.data?.data || []).filter(
     (trip) => trip.visibility === 'public',
@@ -111,6 +110,38 @@ export function ProfilePage() {
     }
   };
 
+  const deleteProfileJournal = async (entryId: string | undefined, entryTitle: string) => {
+    if (!entryId || deletingJournalTripId) {
+      return;
+    }
+
+    const shouldDelete = window.confirm(t('profile.actions.deleteJournalConfirm', { title: entryTitle }));
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    setDeletingJournalTripId(entryId);
+    setProfileFeedback(null);
+
+    try {
+      await deleteTripJournal(entryId);
+      await queryClient.invalidateQueries({ queryKey: journalQueryKeys.mine() });
+      await queryClient.invalidateQueries({ queryKey: journalQueryKeys.detail(entryId) });
+      setProfileFeedback({
+        kind: 'success',
+        message: t('profile.actions.deleteJournalSuccess', { title: entryTitle }),
+      });
+    } catch {
+      setProfileFeedback({
+        kind: 'error',
+        message: t('profile.actions.deleteJournalError', { title: entryTitle }),
+      });
+    } finally {
+      setDeletingJournalTripId(null);
+    }
+  };
+
   return (
     <PublicPageShell
       mainClassName={publicPageMainLayouts.profile}
@@ -124,8 +155,8 @@ export function ProfilePage() {
             name={auth.user?.displayName || t('common.userFallback')}
             stats={[
               {
-                labelLines: [t('profile.stats.postsLine1'), t('profile.stats.postsLine2')],
-                value: String(postsQuery.data?.meta.totalElements || 0),
+                labelLines: [t('profile.stats.journalsLine1'), t('profile.stats.journalsLine2')],
+                value: String(journalsQuery.data?.length || 0),
               },
               {
                 labelLines: [t('profile.stats.plansLine1'), t('profile.stats.plansLine2')],
@@ -174,7 +205,7 @@ export function ProfilePage() {
             </button>
           </div>
 
-          {activeTab === 'plans' && profileFeedback ? (
+          {profileFeedback ? (
             <p
               className={cn(
                 'mb-4 shrink-0 rounded-[0.85rem] border px-4 py-3 font-marker text-[1rem] leading-tight',
@@ -201,7 +232,7 @@ export function ProfilePage() {
               {!activeQuery.isLoading && !activeQuery.isError && visibleEntries.length === 0 ? (
                 <ProfileStateCard
                   message={activeTab === 'journal'
-                    ? t('profile.states.postsEmpty')
+                    ? t('profile.states.journalsEmpty')
                     : t('profile.states.plansEmpty')}
                 />
               ) : null}
@@ -212,18 +243,28 @@ export function ProfilePage() {
                       actionHref={entry.actionHref}
                       actionLabel={entry.actionLabel}
                       deleteActionLabel={
-                        activeTab === 'plans'
+                        activeTab === 'journal'
+                          ? deletingJournalTripId === entry.id
+                            ? t('profile.actions.deletingJournal')
+                            : t('profile.actions.deleteJournal')
+                          : activeTab === 'plans'
                           ? deletingTripId === entry.id
                             ? t('profile.actions.deletingPlanner')
                             : t('profile.actions.deletePlanner')
                           : undefined
                       }
                       image={entry.image}
-                      isDeleting={Boolean(deletingTripId)}
+                      isDeleting={
+                        activeTab === 'journal'
+                          ? Boolean(deletingJournalTripId)
+                          : Boolean(deletingTripId)
+                      }
                       key={`${activeTab}-${entry.id ?? entry.title}-${entry.metadata}`}
                       metadata={entry.metadata}
                       onDelete={
-                        activeTab === 'plans'
+                        activeTab === 'journal'
+                          ? () => void deleteProfileJournal(entry.id, entry.title)
+                          : activeTab === 'plans'
                           ? () => void deleteProfileTrip(entry.id, entry.title)
                           : undefined
                       }

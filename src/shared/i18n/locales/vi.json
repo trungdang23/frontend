@@ -377,12 +377,12 @@
     "memberSince": "Tham gia Journey từ {{date}}",
     "memberSinceFallback": "chưa rõ",
     "tabs": {
-      "journal": "Nhật ký của tôi",
+      "journal": "Nhật ký đã lưu",
       "plans": "Kế hoạch đã lưu"
     },
     "stats": {
-      "postsLine1": "Bài",
-      "postsLine2": "viết",
+      "journalsLine1": "Nhật",
+      "journalsLine2": "ký",
       "plansLine1": "Kế",
       "plansLine2": "hoạch",
       "publicLine1": "Công",
@@ -393,13 +393,19 @@
     },
     "states": {
       "loading": "Đang tải dữ liệu cá nhân...",
-      "postsEmpty": "Bạn chưa đăng bài viết nào.",
+      "journalsEmpty": "Bạn chưa lưu nhật ký nào.",
       "plansEmpty": "Bạn chưa tạo kế hoạch nào."
     },
     "actions": {
       "openPlanner": "MỞ PLANNER",
       "editPlanner": "CHỈNH SỬA",
       "openJournal": "NHẬT KÝ",
+      "updateJournal": "CẬP NHẬT",
+      "deleteJournal": "XÓA",
+      "deletingJournal": "ĐANG XÓA...",
+      "deleteJournalConfirm": "Xóa nhật ký \"{{title}}\" khỏi tài khoản của bạn?",
+      "deleteJournalSuccess": "Đã xóa nhật ký \"{{title}}\".",
+      "deleteJournalError": "Không thể xóa nhật ký \"{{title}}\" lúc này.",
       "deletePlanner": "XÓA",
       "deletingPlanner": "ĐANG XÓA...",
       "deletePlannerConfirm": "Xóa kế hoạch \"{{title}}\" khỏi tài khoản của bạn?",

@@ -19,7 +19,7 @@
 - [x] route `/community` đã có feed public đầu tiên
 - [x] auth routes đã có shared chrome và session flow
 - [x] planner route hiện tại đã dùng `PlanNode` API client qua compatibility route `/app/planner?tripId=...`
-- [x] profile route đã bind `posts/mine` và `trips`
+- [x] profile route đã bind `journals/mine` và `trips`
 - [~] journal route đã có API client, trip picker, renderer, và editor tối giản; drag/drop/autosave chưa có
 - [x] shared API client vẫn còn
 - [x] auth session modules vẫn còn

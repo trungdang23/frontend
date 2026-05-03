@@ -4,6 +4,7 @@ import {
   it,
 } from 'vitest';
 import {
+  buildProfileJournalEntries,
   buildProfilePostEntries,
   buildProfileTripEntries,
   formatProfileDate,
@@ -20,7 +21,7 @@ describe('profile presenters', () => {
     expect(formatTripDuration('2026-04-22', '2026-04-28')).toBe('1 tuần');
   });
 
-  it('builds scrapbook entries for posts and trips', () => {
+  it('builds scrapbook entries for posts, journals and trips', () => {
     const postEntries = buildProfilePostEntries(
       [
         {
@@ -84,6 +85,71 @@ describe('profile presenters', () => {
       metadata: '22 Tháng 4, 2026 • 4 ngày',
       secondaryActionHref: '/app/journal?tripId=trip-1',
       secondaryActionLabel: 'NHẬT KÝ',
+      title: 'Đà Lạt',
+    });
+
+    const journalEntries = buildProfileJournalEntries(
+      [
+        {
+          trip: {
+            budgetAmount: 0,
+            budgetCurrency: 'VND',
+            budgetMode: 'auto',
+            coverImageUrl: null,
+            createdAt: '2026-04-22T10:30:00.000Z',
+            destination: 'Đà Lạt',
+            endDate: '2026-04-25',
+            id: 'trip-1',
+            manualBudgetAmount: null,
+            manualBudgetCurrency: null,
+            name: 'Đà Lạt',
+            startDate: '2026-04-22',
+            summaryNotes: null,
+            timezone: null,
+            updatedAt: '2026-04-22T10:30:00.000Z',
+            userId: 'user-1',
+            visibility: 'private',
+          },
+          journal: {
+            createdAt: '2026-04-22T10:30:00.000Z',
+            id: 'journal-1',
+            objects: [
+              {
+                height: 300,
+                id: 'photo-1',
+                locked: false,
+                props: {
+                  imageUrl: 'https://example.com/journal.jpg',
+                },
+                rotation: 0,
+                type: 'photo',
+                width: 300,
+                x: 0,
+                y: 0,
+                zIndex: 1,
+              },
+            ],
+            page: {
+              background: {
+                style: 'paper-cream',
+              },
+              height: 1600,
+              width: 1200,
+            },
+            sceneVersion: 1,
+            tripId: 'trip-1',
+            updatedAt: '2026-04-26T10:30:00.000Z',
+          },
+        },
+      ],
+      'CẬP NHẬT',
+    );
+
+    expect(journalEntries[0]).toMatchObject({
+      actionHref: '/app/journal?tripId=trip-1',
+      actionLabel: 'CẬP NHẬT',
+      image: 'https://example.com/journal.jpg',
+      metadata: '26 Tháng 4, 2026 • 1 mảnh',
       title: 'Đà Lạt',
     });
   });

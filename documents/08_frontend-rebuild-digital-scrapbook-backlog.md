@@ -662,6 +662,26 @@ Nối profile/trip list với journal scene thật để người dùng không b
 - upload asset thật
 - autosave/debounce
 - public journal route
+
+## FR-J3 - Saved journal profile management
+
+### Mục tiêu
+
+Đưa tab nhật ký trong trang cá nhân về đúng dữ liệu journal scene đã lưu thay vì bài viết cộng đồng, đồng thời cho cập nhật/xóa journal đã lưu.
+
+### Scope của lượt triển khai này
+
+- [x] dùng `GET /journals/mine` cho tab nhật ký trong profile
+- [x] hiển thị journal đã lưu sau khi save scene
+- [x] thêm CTA cập nhật journal về `/app/journal?tripId=...`
+- [x] thêm xóa journal bằng `DELETE /trips/:tripId/journal`
+- [x] invalidate cache journal sau khi lưu hoặc xóa
+
+### Deferred
+
+- preview thumbnail render từ canvas thật
+- phân trang journal trong profile
+- public/published journal list riêng
 - [x] giữ nguyên bố cục nội dung và hiệu ứng lật trang
 - [x] xác nhận quyển sổ fit gọn hơn trong body
 

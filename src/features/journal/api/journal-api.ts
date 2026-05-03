@@ -18,6 +18,13 @@ export async function getTripJournal(
   });
 }
 
+export async function listMyJournals(options: RequestOptions = {}) {
+  return request<TripJournalResult[]>('/journals/mine', {
+    auth: true,
+    signal: options.signal,
+  });
+}
+
 export async function saveTripJournal(
   tripId: string,
   payload: SaveTripJournalPayload,
@@ -30,4 +37,11 @@ export async function saveTripJournal(
       body: payload,
     },
   );
+}
+
+export async function deleteTripJournal(tripId: string) {
+  return request<void>(`/trips/${tripId}/journal`, {
+    method: 'DELETE',
+    auth: true,
+  });
 }

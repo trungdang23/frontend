@@ -377,12 +377,12 @@
     "memberSince": "On Journey since {{date}}",
     "memberSinceFallback": "unknown",
     "tabs": {
-      "journal": "My journal",
+      "journal": "Saved journals",
       "plans": "Saved plans"
     },
     "stats": {
-      "postsLine1": "Posts",
-      "postsLine2": "shared",
+      "journalsLine1": "Journals",
+      "journalsLine2": "saved",
       "plansLine1": "Plans",
       "plansLine2": "saved",
       "publicLine1": "Public",
@@ -393,13 +393,19 @@
     },
     "states": {
       "loading": "Loading your personal data...",
-      "postsEmpty": "You have not published any posts yet.",
+      "journalsEmpty": "You have not saved any journals yet.",
       "plansEmpty": "You have not created any plans yet."
     },
     "actions": {
       "openPlanner": "OPEN PLANNER",
       "editPlanner": "EDIT",
       "openJournal": "JOURNAL",
+      "updateJournal": "UPDATE",
+      "deleteJournal": "DELETE",
+      "deletingJournal": "DELETING...",
+      "deleteJournalConfirm": "Delete journal \"{{title}}\" from your account?",
+      "deleteJournalSuccess": "Deleted journal \"{{title}}\".",
+      "deleteJournalError": "Unable to delete journal \"{{title}}\" right now.",
       "deletePlanner": "DELETE",
       "deletingPlanner": "DELETING...",
       "deletePlannerConfirm": "Delete the plan \"{{title}}\" from your account?",
