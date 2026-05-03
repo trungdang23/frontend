@@ -3,7 +3,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowLeft,
@@ -27,15 +27,7 @@ import type {
 } from '@/features/journal/types/journal';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
-import { listTrips } from '@/features/trips/api/trips-api';
-import type { Trip } from '@/features/trips/types/trip';
 import { useI18n } from '@/shared/i18n/use-i18n';
-
-const JOURNAL_TRIP_PICKER_QUERY = {
-  page: 0,
-  size: 100,
-  sort: 'startDate,desc' as const,
-};
 
 export function JournalPage() {
   const { t } = useI18n();
@@ -50,11 +42,6 @@ export function JournalPage() {
     queryKey: journalQueryKeys.detail(tripId),
     queryFn: ({ signal }) => getTripJournal(tripId, { signal }),
     enabled: Boolean(tripId),
-  });
-  const tripsQuery = useQuery({
-    queryKey: ['trips', 'list', 'journal-picker', JOURNAL_TRIP_PICKER_QUERY],
-    queryFn: ({ signal }) => listTrips(JOURNAL_TRIP_PICKER_QUERY, { signal }),
-    enabled: !tripId,
   });
   const activeJournal = draftJournal ?? journalQuery.data?.journal ?? null;
   const saveJournalMutation = useMutation({
@@ -86,6 +73,10 @@ export function JournalPage() {
       setDraftJournal(journalQuery.data.journal);
     }
   }, [journalQuery.data?.journal, tripId]);
+
+  if (!tripId) {
+    return <Navigate replace to="/app/profile" />;
+  }
 
   return (
     <PublicPageShell
@@ -145,20 +136,12 @@ export function JournalPage() {
       return journalQuery.data.trip.name;
     }
 
-    if (!tripId) {
-      return t('journalPage.pickerTitle');
-    }
-
     return t('journalPage.title');
   }
 
   function resolveJournalDescription() {
     if (journalQuery.data) {
       return formatTripSummary(journalQuery.data.trip.destination, journalQuery.data.trip.startDate, journalQuery.data.trip.endDate);
-    }
-
-    if (!tripId) {
-      return t('journalPage.pickerDescription');
     }
 
     if (journalQuery.isError) {
@@ -169,23 +152,6 @@ export function JournalPage() {
   }
 
   function renderJournalSurface() {
-    if (!tripId) {
-      return (
-        <JournalTripPicker
-          errorDescription={t('journalPage.pickerErrorDescription')}
-          errorTitle={t('journalPage.pickerErrorTitle')}
-          emptyDescription={t('journalPage.pickerEmptyDescription')}
-          emptyTitle={t('journalPage.pickerEmptyTitle')}
-          createTripLabel={t('journalPage.pickerCreateTrip')}
-          loadingDescription={t('journalPage.pickerLoadingDescription')}
-          loadingTitle={t('journalPage.pickerLoadingTitle')}
-          trips={tripsQuery.data?.data ?? []}
-          isError={tripsQuery.isError}
-          isLoading={tripsQuery.isLoading}
-        />
-      );
-    }
-
     if (journalQuery.isLoading) {
       return (
         <StatusPanel
@@ -395,86 +361,6 @@ export function JournalPage() {
       },
     };
   }
-}
-
-function JournalTripPicker({
-  createTripLabel,
-  emptyDescription,
-  emptyTitle,
-  errorDescription,
-  errorTitle,
-  isError,
-  isLoading,
-  loadingDescription,
-  loadingTitle,
-  trips,
-}: {
-  createTripLabel: string;
-  emptyDescription: string;
-  emptyTitle: string;
-  errorDescription: string;
-  errorTitle: string;
-  isError: boolean;
-  isLoading: boolean;
-  loadingDescription: string;
-  loadingTitle: string;
-  trips: Trip[];
-}) {
-  if (isLoading) {
-    return (
-      <StatusPanel
-        icon={<RefreshCw aria-hidden="true" className="h-8 w-8 animate-spin" />}
-        title={loadingTitle}
-        description={loadingDescription}
-      />
-    );
-  }
-
-  if (isError) {
-    return (
-      <StatusPanel
-        icon={<BookOpenText aria-hidden="true" className="h-8 w-8" />}
-        title={errorTitle}
-        description={errorDescription}
-      />
-    );
-  }
-
-  if (trips.length === 0) {
-    return (
-      <StatusPanel
-        icon={<BookOpenText aria-hidden="true" className="h-8 w-8" />}
-        title={emptyTitle}
-        description={emptyDescription}
-      >
-        <Link
-          className="mt-5 inline-flex rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-5 py-2.5 font-marker text-[1.05rem] font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5"
-          to="/app/planner"
-        >
-          {createTripLabel}
-        </Link>
-      </StatusPanel>
-    );
-  }
-
-  return (
-    <div className="grid gap-3">
-      {trips.map((trip) => (
-        <Link
-          className="group grid gap-2 rounded-[1.1rem] border border-[#d7b88f]/45 bg-white/65 p-4 shadow-[0_14px_24px_rgba(96,72,50,0.1)] transition hover:-translate-y-0.5 hover:bg-white"
-          key={trip.id}
-          to={`/app/journal?tripId=${encodeURIComponent(trip.id)}`}
-        >
-          <span className="font-display text-[1.45rem] leading-tight text-[#2c1f18]">
-            {trip.name}
-          </span>
-          <span className="font-marker text-[1rem] leading-tight text-[#6b4938]">
-            {formatTripSummary(trip.destination, trip.startDate, trip.endDate)}
-          </span>
-        </Link>
-      ))}
-    </div>
-  );
 }
 
 function StatusPanel({

@@ -650,7 +650,7 @@ Nối profile/trip list với journal scene thật để người dùng không b
 ### Scope của lượt triển khai này
 
 - [x] thêm CTA mở nhật ký trên card kế hoạch trong profile
-- [x] khi `/app/journal` thiếu `tripId`, hiển thị danh sách chuyến đi để chọn
+- [x] khi `/app/journal` thiếu `tripId`, không để người dùng rơi vào journal trống
 - [x] thêm thao tác tạo note, ảnh bằng URL, sticker và tape ở journal route
 - [x] lưu scene bằng `PUT /trips/:tripId/journal`
 - [x] giữ drag/drop, resize, rotate tự do ngoài scope
@@ -1291,6 +1291,20 @@ Thu gọn chế độ chia sẻ về đúng hai lựa chọn `private` và `publ
 - [x] cập nhật copy, badge, và label i18n cho share mode hai trạng thái
 - [x] cho auth và public trip/journal page dùng scroll responsive trong shared shell
 - [x] cập nhật test presenter liên quan đến share badge
+
+## Follow-up planner direct entry and profile-owned journal access
+
+### Mục tiêu
+
+Giảm các điểm vào bị lặp: planner mở thẳng quyển sổ lập kế hoạch, còn journal/chỉnh sửa đi qua tab Cá nhân thay vì có thêm màn chọn chuyến đi riêng.
+
+### Scope
+
+- [x] bỏ màn bìa/CTA trung gian khi vào `/app/planner`
+- [x] mở trực tiếp spread nhập thông tin kế hoạch mới khi planner không có `tripId`
+- [x] bỏ note điều hướng `Tạo Nhật Ký` khỏi chrome chung
+- [x] khi `/app/journal` thiếu `tripId`, redirect về `/app/profile` thay vì render picker chọn chuyến đi
+- [x] bỏ copy picker journal không còn dùng
 
 ## Follow-up authenticated shell logout
 

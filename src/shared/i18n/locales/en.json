@@ -137,7 +137,6 @@
       "home": "Home",
       "community": "Community",
       "planner": "Planner",
-      "journal": "Journal",
       "profile": "Profile"
     },
     "hero": {
@@ -458,15 +457,6 @@
     "description": "Trip memories sit on their own scrapbook page, keeping Journey's journal rhythm intact.",
     "missingTripTitle": "No trip selected",
     "missingTripDescription": "Open the journal from a saved trip to view its scrapbook page.",
-    "pickerTitle": "Choose a trip",
-    "pickerDescription": "Each saved trip has its own journal page for memories after the plan exists.",
-    "pickerLoadingTitle": "Loading trips",
-    "pickerLoadingDescription": "Journey is opening your saved plans.",
-    "pickerErrorTitle": "Unable to load trips",
-    "pickerErrorDescription": "Try again shortly or return to your profile.",
-    "pickerEmptyTitle": "No trips yet",
-    "pickerEmptyDescription": "Create your first plan, then return here to open its journal page.",
-    "pickerCreateTrip": "Create trip",
     "loadingTitle": "Opening journal",
     "loadingDescription": "Journey is loading the latest scene for this trip.",
     "errorTitle": "Unable to load journal",

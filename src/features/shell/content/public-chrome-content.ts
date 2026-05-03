@@ -55,14 +55,6 @@ export const homeNavItems: HomeNavItem[] = [
     yOffset: 6,
   },
   {
-    href: '/app/journal',
-    labelKey: 'home.navigation.journal',
-    rotate: 5,
-    shape: 'straight',
-    tone: 'leaf',
-    yOffset: -2,
-  },
-  {
     href: '/app/profile',
     labelKey: 'home.navigation.profile',
     rotate: -3,

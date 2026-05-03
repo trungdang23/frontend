@@ -137,7 +137,6 @@
       "home": "Trang Chủ",
       "community": "Cộng Đồng",
       "planner": "Lập Kế Hoạch",
-      "journal": "Tạo Nhật Ký",
       "profile": "Cá Nhân"
     },
     "hero": {
@@ -458,15 +457,6 @@
     "description": "Những mảnh ký ức của chuyến đi nằm trên một trang giấy riêng, giữ đúng nhịp scrapbook của Journey.",
     "missingTripTitle": "Chưa chọn chuyến đi",
     "missingTripDescription": "Mở nhật ký từ một chuyến đi đã lưu để xem trang scrapbook của chuyến đó.",
-    "pickerTitle": "Chọn chuyến đi",
-    "pickerDescription": "Mỗi chuyến đi có một trang nhật ký riêng để lưu ký ức sau khi kế hoạch đã được tạo.",
-    "pickerLoadingTitle": "Đang tải chuyến đi",
-    "pickerLoadingDescription": "Journey đang mở danh sách kế hoạch của bạn.",
-    "pickerErrorTitle": "Chưa tải được chuyến đi",
-    "pickerErrorDescription": "Hãy thử lại sau ít phút hoặc quay về trang cá nhân.",
-    "pickerEmptyTitle": "Chưa có chuyến đi",
-    "pickerEmptyDescription": "Tạo một kế hoạch đầu tiên rồi quay lại để mở trang nhật ký của chuyến đó.",
-    "pickerCreateTrip": "Tạo chuyến đi",
     "loadingTitle": "Đang mở nhật ký",
     "loadingDescription": "Journey đang tải scene mới nhất của chuyến đi này.",
     "errorTitle": "Chưa tải được nhật ký",
