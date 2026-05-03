@@ -12,6 +12,7 @@ import {
 import { AuthBookScene } from '@/features/auth/components/auth-book-scene';
 import { AuthField } from '@/features/auth/components/auth-field';
 import { localizeAuthError } from '@/features/auth/lib/localize-auth-error';
+import { validateRegisterForm } from '@/features/auth/lib/register-validation';
 import { readPostAuthPathFromState } from '@/features/auth/lib/resolve-post-auth-path';
 import { useAuth } from '@/features/auth/session/use-auth';
 import { ApiError } from '@/shared/api/api-error';
@@ -40,6 +41,20 @@ export function RegisterPage() {
       return;
     }
 
+    const validationError = validateRegisterForm(
+      {
+        displayName,
+        email,
+        password,
+      },
+      t,
+    );
+
+    if (validationError) {
+      setSubmitError(validationError);
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitError(null);
 
@@ -65,6 +80,7 @@ export function RegisterPage() {
     <AuthBookScene>
       <form
         className="auth-notebook relative w-full max-w-[62rem] overflow-hidden"
+        noValidate
         onSubmit={handleSubmit}
       >
         <div className="pointer-events-none absolute left-1/2 top-3 bottom-3 hidden w-8 -translate-x-1/2 bg-[radial-gradient(circle_at_center,rgba(73,49,31,0.5),rgba(73,49,31,0.14)_45%,transparent_72%)] blur-md lg:block" />
@@ -109,10 +125,8 @@ export function RegisterPage() {
                 autoComplete="new-password"
                 id="register-password"
                 label={t('common.labels.password')}
-                minLength={8}
                 name="password"
                 onChange={(event) => setPassword(event.target.value)}
-                pattern="(?=.*[A-Za-z])(?=.*\\d).{8,}"
                 required
                 type="password"
                 value={password}

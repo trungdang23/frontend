@@ -1290,6 +1290,18 @@ Tách chia sẻ `planner` và `journal` ở UI/contract, đồng thời để ta
 - [x] gọi `auth.logout()` và đưa người dùng về trang đăng nhập sau khi logout
 - [ ] smoke test thủ công trên desktop/mobile sau deploy
 
+## Follow-up register validation copy
+
+### Mục tiêu
+
+Giữ lỗi đăng ký bằng copy sản phẩm tiếng Việt, tránh để trình duyệt hiện thông báo native như password không khớp format.
+
+### Việc cần làm
+
+- [x] chuyển rule mật khẩu khỏi native `pattern` sang validate trong React
+- [x] dùng message i18n hiện có cho email, tên hiển thị và mật khẩu
+- [ ] smoke test thủ công form đăng ký sau deploy
+
 ## FR-G - Verification, cleanup, deploy smoke refresh
 
 ### Mục tiêu
