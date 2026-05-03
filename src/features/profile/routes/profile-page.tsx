@@ -2,6 +2,8 @@ import {
   useState,
 } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { LogOut } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import {
   deleteTripJournal,
   listMyJournals,
@@ -53,12 +55,14 @@ function ProfileStateCard({ message }: { message: string }) {
 
 export function ProfilePage() {
   const auth = useAuth();
+  const navigate = useNavigate();
   const { t } = useI18n();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<ProfileTab>('journal');
   const [visibleCount, setVisibleCount] = useState(2);
   const [deletingJournalTripId, setDeletingJournalTripId] = useState<string | null>(null);
   const [deletingTripId, setDeletingTripId] = useState<string | null>(null);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isSavingShare, setIsSavingShare] = useState(false);
   const [profileFeedback, setProfileFeedback] = useState<ProfileFeedback | null>(null);
   const [shareTarget, setShareTarget] = useState<ProfileShareTarget | null>(null);
@@ -123,6 +127,21 @@ export function ProfilePage() {
       });
     } finally {
       setDeletingTripId(null);
+    }
+  };
+
+  const logoutFromProfile = async () => {
+    if (isLoggingOut) {
+      return;
+    }
+
+    setIsLoggingOut(true);
+
+    try {
+      await auth.logout();
+      navigate('/auth/login', { replace: true });
+    } finally {
+      setIsLoggingOut(false);
     }
   };
 
@@ -299,36 +318,48 @@ export function ProfilePage() {
         </aside>
 
         <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-          <div className="mb-4 flex shrink-0 flex-wrap gap-3 border-b border-dashed border-[#d8c5ab] pb-3">
+          <div className="mb-4 flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-dashed border-[#d8c5ab] pb-3">
+            <div className="flex flex-wrap gap-3">
+              <button
+                className={cn(
+                  'rounded-full border px-4 py-2 font-marker text-[1rem] font-bold leading-none transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                  activeTab === 'journal'
+                    ? 'border-[#8b6244]/35 bg-[#fff1d9] text-[#6b4938] shadow-[0_5px_0_#d7b17a]'
+                    : 'border-[#d8c5ab] bg-white/55 text-[#7b6b5c]',
+                )}
+                onClick={() => {
+                  setActiveTab('journal');
+                  setVisibleCount(2);
+                }}
+                type="button"
+              >
+                {t('profile.tabs.journal')}
+              </button>
+              <button
+                className={cn(
+                  'rounded-full border px-4 py-2 font-marker text-[1rem] font-bold leading-none transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                  activeTab === 'plans'
+                    ? 'border-[#3a5d25]/40 bg-[#b9e177] text-[#172612] shadow-[0_5px_0_#6f9e44]'
+                    : 'border-[#d8c5ab] bg-white/55 text-[#7b6b5c]',
+                )}
+                onClick={() => {
+                  setActiveTab('plans');
+                  setVisibleCount(2);
+                }}
+                type="button"
+              >
+                {t('profile.tabs.plans')}
+              </button>
+            </div>
+
             <button
-              className={cn(
-                'rounded-full border px-4 py-2 font-marker text-[1rem] font-bold leading-none transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
-                activeTab === 'journal'
-                  ? 'border-[#8b6244]/35 bg-[#fff1d9] text-[#6b4938] shadow-[0_5px_0_#d7b17a]'
-                  : 'border-[#d8c5ab] bg-white/55 text-[#7b6b5c]',
-              )}
-              onClick={() => {
-                setActiveTab('journal');
-                setVisibleCount(2);
-              }}
+              className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full border border-[#7b4d22]/25 bg-[#ffe4a8] px-4 py-2 font-marker text-[1rem] font-bold leading-none text-[#6b3b18] shadow-[0_5px_0_#d7a957] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#d7a957]/30 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-65"
+              disabled={isLoggingOut}
+              onClick={() => void logoutFromProfile()}
               type="button"
             >
-              {t('profile.tabs.journal')}
-            </button>
-            <button
-              className={cn(
-                'rounded-full border px-4 py-2 font-marker text-[1rem] font-bold leading-none transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
-                activeTab === 'plans'
-                  ? 'border-[#3a5d25]/40 bg-[#b9e177] text-[#172612] shadow-[0_5px_0_#6f9e44]'
-                  : 'border-[#d8c5ab] bg-white/55 text-[#7b6b5c]',
-              )}
-              onClick={() => {
-                setActiveTab('plans');
-                setVisibleCount(2);
-              }}
-              type="button"
-            >
-              {t('profile.tabs.plans')}
+              <LogOut className="h-4 w-4" strokeWidth={2.3} />
+              {t('common.actions.logout')}
             </button>
           </div>
 

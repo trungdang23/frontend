@@ -34,50 +34,39 @@ const twelveClockVerticalBias = [0, -5.5, -7, 0, 7, 5.5, 0, 5.5, 7, 0, -7, -5.5]
 
 export function PolaroidCluster() {
   return (
-    <>
-      <div className="absolute inset-0 hidden lg:block">
-        {polaroidMoments.map((moment, index) => {
-          const angle = (index / polaroidMoments.length) * Math.PI * 2 - Math.PI / 2;
-          const verticalBias = polaroidMoments.length === 12
-            ? twelveClockVerticalBias[index] || 0
-            : 0;
-          const x = 39 + 51 * Math.cos(angle);
-          const y = 50 + 44 * Math.sin(angle) + verticalBias;
+    <div className="home-polaroid-ring">
+      {polaroidMoments.map((moment, index) => {
+        const angle = (index / polaroidMoments.length) * Math.PI * 2 - Math.PI / 2;
+        const verticalBias = polaroidMoments.length === 12
+          ? twelveClockVerticalBias[index] || 0
+          : 0;
+        const desktopX = 39 + 51 * Math.cos(angle);
+        const desktopY = 50 + 44 * Math.sin(angle) + verticalBias;
+        const portraitX = 50 + 38 * Math.cos(angle);
+        const portraitY = 50 + 34 * Math.sin(angle) + verticalBias * 0.42;
+        const landscapeX = 45 + 46 * Math.cos(angle);
+        const landscapeY = 50 + 38 * Math.sin(angle) + verticalBias * 0.5;
 
-          return (
-            <div
-              className="absolute w-28 xl:w-[9.6rem]"
-              key={moment.id}
-              style={{
-                left: `${x}%`,
-                top: `${y}%`,
-                transform: 'translate(-50%, -50%)',
-              }}
-            >
-              <PolaroidCard hoverClassName={polaroidHoverClasses[index % polaroidHoverClasses.length]} moment={moment} />
-            </div>
-          );
-        })}
-      </div>
-
-      <div className="mt-5 grid w-full max-w-xl grid-cols-2 gap-3 sm:gap-4 lg:hidden">
-        {polaroidMoments.map((moment, index) => (
+        return (
           <div
+            className="home-polaroid-ring-item"
             key={moment.id}
             style={
               {
-                transform:
-                  index % 2 === 0
-                    ? 'translateY(0.45rem)'
-                    : 'translateY(-0.25rem)',
+                ['--polaroid-x' as string]: `${desktopX}%`,
+                ['--polaroid-y' as string]: `${desktopY}%`,
+                ['--polaroid-portrait-x' as string]: `${portraitX}%`,
+                ['--polaroid-portrait-y' as string]: `${portraitY}%`,
+                ['--polaroid-landscape-x' as string]: `${landscapeX}%`,
+                ['--polaroid-landscape-y' as string]: `${landscapeY}%`,
               } as CSSProperties
             }
           >
             <PolaroidCard hoverClassName={polaroidHoverClasses[index % polaroidHoverClasses.length]} moment={moment} />
           </div>
-        ))}
-      </div>
-    </>
+        );
+      })}
+    </div>
   );
 }
 
@@ -121,7 +110,7 @@ function PolaroidCard({
         </p>
 
         {moment.noteKey ? (
-          <div className="pointer-events-none absolute -right-12 top-0 w-24 opacity-80">
+          <div className="home-polaroid-note pointer-events-none absolute -right-12 top-0 w-24 opacity-80">
             <svg className="h-8 w-8 rotate-[-30deg]" viewBox="0 0 100 100">
               <path
                 className="text-slate-500"

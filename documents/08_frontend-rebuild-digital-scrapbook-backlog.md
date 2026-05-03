@@ -1093,6 +1093,20 @@ Làm vòng polaroid tròn hơn sau khi tăng lên 12 thẻ, tránh cảm giác b
 - [x] đẩy các card 4 giờ, 5 giờ, 7 giờ, 8 giờ xuống gần 6 giờ hơn
 - [x] giữ nguyên cơ chế phân bố theo thứ tự dữ liệu hiện tại của vòng 12 card
 
+### FR-B1P - Homepage orientation responsive refinement
+
+### Mục tiêu
+
+Làm trang chủ co giãn tốt hơn trên màn hình nhỏ theo tỷ lệ màn hình: landscape vẫn giữ cảm giác hero/map một màn bằng cách thu nhỏ vòng polaroid và tiêu đề, còn portrait chuyển thành 1 cột 2 hàng với hero ở trên và bản đồ/hotspot ở dưới.
+
+### Scope của lượt triển khai này
+
+- [x] thêm layout responsive theo `orientation` cho homepage main
+- [x] trên màn hình nhỏ landscape, thu nhỏ card ảnh và tiêu đề để không tràn chiều cao
+- [x] trên portrait, chia thành 2 hàng: vòng ảnh bao quanh tiêu đề ở trên, bản đồ Việt Nam và hotspot ở dưới
+- [x] cho phép scroll dọc khi portrait cần xem tiếp bản đồ/hotspot nhưng vẫn ẩn thanh scroll
+- [x] giữ bản đồ và hotspot không tràn ngang viewport mobile
+
 ### FR-B1K - Navigation hover cleanup and extra footer reduction
 
 ### Mục tiêu
@@ -1317,6 +1331,18 @@ Giảm các điểm vào bị lặp: planner mở thẳng quyển sổ lập k�
 - [x] hiển thị nút `Đăng xuất` trong shared header khi session đang authenticated
 - [x] gọi `auth.logout()` và đưa người dùng về trang đăng nhập sau khi logout
 - [ ] smoke test thủ công trên desktop/mobile sau deploy
+
+## Follow-up profile-only logout relocation
+
+### Mục tiêu
+
+Dời hành động `Đăng xuất` khỏi chrome dùng chung và chỉ đặt trong page `Cá Nhân` để navigation/public shell không bị thêm action tài khoản ngoài ngữ cảnh.
+
+### Việc cần làm
+
+- [x] bỏ nút `Đăng xuất` khỏi shared header
+- [x] bỏ nút `Đăng xuất` khỏi private shell dùng chung nếu còn được tái sử dụng
+- [x] thêm nút `Đăng xuất` trong `/app/profile` và điều hướng về đăng nhập sau khi logout
 
 ## Follow-up register validation copy
 

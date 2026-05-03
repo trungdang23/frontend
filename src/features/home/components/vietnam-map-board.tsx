@@ -11,12 +11,20 @@ const pinToneClasses: Record<AccentTone, string> = {
   sun: 'text-blue-400',
 };
 
+const hotspotLabelPositionClasses: Record<string, string> = {
+  hanoi: 'right-full mr-2 origin-right',
+  hue: 'right-full mr-2 origin-right',
+  'nha-trang': 'right-full mr-2 origin-right',
+  'sai-gon': 'right-full mr-2 origin-right',
+  sapa: 'left-full ml-2 origin-left',
+};
+
 export function VietnamMapBoard() {
   const { t } = useI18n();
 
   return (
     <section
-      className="relative mx-auto w-full max-w-[480px] aspect-[1/1.4] overflow-visible p-4"
+      className="home-map-board relative mx-auto w-full max-w-[480px] aspect-[1/1.4] overflow-visible p-4"
       id="map-board"
     >
       <div className="absolute inset-0 translate-x-1 translate-y-1 rounded-sm border border-[#d4b483] bg-[#f4e4bc] shadow-inner rotate-1" />
@@ -54,7 +62,12 @@ export function VietnamMapBoard() {
             <div className={cn('relative', pinToneClasses[stop.tone])}>
               <MapPin className="h-6 w-6 fill-current drop-shadow-sm" />
 
-              <div className="paper-shadow absolute left-full top-0 ml-2 w-[180px] origin-left rounded-lg border border-slate-100/60 bg-white p-3 scale-[0.88] transition-transform group-hover:scale-100">
+              <div
+                className={cn(
+                  'home-map-hotspot-label paper-shadow absolute top-0 w-[180px] rounded-lg border border-slate-100/60 bg-white p-3 scale-[0.88] transition-transform group-hover:scale-100',
+                  hotspotLabelPositionClasses[stop.id],
+                )}
+              >
                 <h3 className="font-hand text-base font-bold leading-none text-slate-800">
                   {t(stop.titleKey)}
                 </h3>

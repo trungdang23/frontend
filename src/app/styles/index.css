@@ -145,6 +145,372 @@
     box-shadow: 0 0 0 0.32rem rgba(215, 99, 85, 0.16);
   }
 
+  .home-main {
+    display: grid;
+    width: 100%;
+    max-width: none;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    justify-items: center;
+    gap: 0.75rem;
+    padding: 0.2rem clamp(0.75rem, 4vw, 1.25rem) 1.1rem;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+  }
+
+  .home-hero-stage {
+    position: relative;
+    display: flex;
+    width: min(100%, 40rem);
+    height: clamp(21rem, 52vh, 31rem);
+    align-items: center;
+    justify-content: center;
+  }
+
+  .home-hero-title {
+    pointer-events: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 40;
+    width: max-content;
+    max-width: none;
+    text-align: center;
+    transform: translate(-50%, -50%);
+  }
+
+  .home-hero-heading {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.18rem;
+    color: #1a1a1a;
+    font-family: var(--font-title);
+    font-size: clamp(2.05rem, 8.8vw, 3.35rem);
+    line-height: 0.82;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .home-hero-sparkle {
+    position: absolute;
+    left: -10%;
+    top: -1.5rem;
+    opacity: 0.9;
+  }
+
+  .home-hero-sparkle-badge {
+    display: flex;
+    width: 2.45rem;
+    height: 2.45rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: #facc15;
+    color: #1a1a1a;
+    font-size: 1.25rem;
+    box-shadow: 0 8px 14px rgba(92, 66, 38, 0.16);
+    transform: rotate(12deg);
+  }
+
+  .home-hero-map-pin {
+    position: absolute;
+    right: -7%;
+    top: 80%;
+    font-size: 2rem;
+    opacity: 0.8;
+  }
+
+  .home-polaroid-ring {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+  }
+
+  .home-polaroid-ring-item {
+    position: absolute;
+    left: var(--polaroid-portrait-x);
+    top: var(--polaroid-portrait-y);
+    width: clamp(3.65rem, 18vw, 5.6rem);
+    transform: translate(-50%, -50%);
+  }
+
+  .home-polaroid-ring .polaroid-card {
+    padding: 0.35rem 0.35rem 1.35rem;
+  }
+
+  .home-polaroid-ring .polaroid-card p {
+    margin-top: 0.28rem;
+    font-size: clamp(0.72rem, 3.4vw, 0.95rem);
+    line-height: 0.95;
+  }
+
+  .home-polaroid-note {
+    display: none;
+  }
+
+  .home-map-panel {
+    position: relative;
+    width: 100%;
+    max-width: min(21rem, calc(100vw - 1.25rem));
+    justify-self: center;
+    padding-bottom: 4rem;
+  }
+
+  .home-map-panel .home-map-board {
+    padding: 0.85rem;
+  }
+
+  .home-map-board .home-map-hotspot-label {
+    width: clamp(6.4rem, 34vw, 10.5rem);
+    padding: 0.55rem;
+  }
+
+  .home-map-board .home-map-hotspot-label h3 {
+    font-size: clamp(0.92rem, 3.8vw, 1.1rem);
+  }
+
+  .home-map-board .home-map-hotspot-label p {
+    margin-top: 0.32rem;
+    font-size: clamp(0.56rem, 2.5vw, 0.68rem);
+  }
+
+  @media (orientation: landscape) and (max-width: 1023px) {
+    .home-main {
+      grid-template-columns: minmax(0, 1fr) clamp(8rem, 34vh, 12rem);
+      grid-template-rows: minmax(0, 1fr);
+      align-content: center;
+      align-items: center;
+      justify-items: stretch;
+      gap: clamp(0.2rem, 1vw, 0.65rem);
+      padding: 0.1rem clamp(0.5rem, 2vw, 1rem) 0.2rem;
+      overflow-x: visible !important;
+      overflow-y: hidden !important;
+    }
+
+    .home-hero-stage {
+      width: 100%;
+      height: calc(100% - 0.25rem);
+      min-height: 12rem;
+      max-height: 20rem;
+    }
+
+    .home-hero-title {
+      left: 45%;
+    }
+
+    .home-hero-heading {
+      gap: 0.05rem;
+      font-size: clamp(1.45rem, 8.7vh, 2.45rem);
+    }
+
+    .home-hero-sparkle {
+      left: -7%;
+      top: -0.95rem;
+    }
+
+    .home-hero-sparkle-badge {
+      width: 1.9rem;
+      height: 1.9rem;
+      font-size: 1rem;
+    }
+
+    .home-hero-map-pin {
+      right: -5%;
+      font-size: 1.55rem;
+    }
+
+    .home-polaroid-ring-item {
+      left: var(--polaroid-landscape-x);
+      top: var(--polaroid-landscape-y);
+      width: clamp(3.35rem, 14vh, 5.25rem);
+    }
+
+    .home-polaroid-ring .polaroid-card {
+      padding: 0.28rem 0.28rem 1rem;
+    }
+
+    .home-polaroid-ring .polaroid-card p {
+      margin-top: 0.2rem;
+      font-size: clamp(0.58rem, 2.2vh, 0.74rem);
+    }
+
+    .home-map-panel {
+      max-width: clamp(8rem, 34vh, 12rem);
+      justify-self: end;
+      padding-bottom: 0;
+    }
+
+    .home-map-panel .home-map-board {
+      padding: 0.45rem;
+    }
+
+    .home-map-board .home-map-hotspot-label {
+      width: clamp(5.8rem, 22vw, 8.6rem);
+      padding: 0.42rem;
+    }
+
+    .home-map-board .home-map-hotspot-label h3 {
+      font-size: clamp(0.72rem, 2.7vh, 0.92rem);
+    }
+
+    .home-map-board .home-map-hotspot-label p {
+      font-size: clamp(0.48rem, 1.9vh, 0.58rem);
+    }
+  }
+
+  @media (orientation: landscape) and (max-height: 430px) {
+    .home-hero-stage {
+      min-height: 10.5rem;
+      max-height: 15rem;
+    }
+
+    .home-polaroid-ring .polaroid-card {
+      padding-bottom: 0.8rem;
+    }
+
+    .home-map-board .home-map-hotspot-label p {
+      display: none;
+    }
+  }
+
+  @media (min-width: 640px) and (orientation: portrait) {
+    .home-hero-stage {
+      height: clamp(24rem, 50vh, 31rem);
+    }
+
+    .home-hero-heading {
+      font-size: clamp(3rem, 7.4vw, 3.85rem);
+    }
+
+    .home-hero-sparkle {
+      left: -14%;
+      top: -2.2rem;
+    }
+
+    .home-hero-sparkle-badge {
+      width: 3rem;
+      height: 3rem;
+      font-size: 1.45rem;
+    }
+
+    .home-hero-map-pin {
+      right: -10%;
+      font-size: 2.45rem;
+    }
+  }
+
+  @media (max-width: 380px) and (orientation: portrait) {
+    .home-main {
+      padding-inline: 0.65rem;
+    }
+
+    .home-hero-stage {
+      height: 20.5rem;
+    }
+
+    .home-hero-heading {
+      font-size: clamp(1.85rem, 9.4vw, 2.3rem);
+    }
+
+    .home-polaroid-ring-item {
+      width: clamp(3.2rem, 17vw, 4.2rem);
+    }
+  }
+
+  @media (min-width: 1024px) and (orientation: landscape) {
+    .home-main {
+      grid-template-columns: minmax(0, 52rem) minmax(12rem, 20rem);
+      grid-template-rows: minmax(0, 1fr);
+      align-content: center;
+      align-items: center;
+      justify-content: center;
+      justify-items: stretch;
+      gap: clamp(0.75rem, 1.6vw, 1.25rem);
+      padding: 0.25rem clamp(1rem, 2.4vw, 2rem) 0.35rem;
+      overflow-x: visible !important;
+      overflow-y: hidden !important;
+    }
+
+    .home-hero-stage {
+      width: min(52rem, 100%);
+      height: clamp(25rem, 57vh, 31rem);
+      justify-self: center;
+      transform: translateX(-3rem);
+    }
+
+    .home-hero-title {
+      left: 39%;
+    }
+
+    .home-hero-heading {
+      gap: 0.25rem;
+      font-size: clamp(3.65rem, 4vw, 4rem);
+    }
+
+    .home-hero-sparkle {
+      left: -15%;
+      top: -2.5rem;
+    }
+
+    .home-hero-sparkle-badge {
+      width: 3rem;
+      height: 3rem;
+      font-size: 1.5rem;
+    }
+
+    .home-hero-map-pin {
+      right: -10%;
+      font-size: 2.5rem;
+    }
+
+    .home-polaroid-ring-item {
+      left: var(--polaroid-x);
+      top: var(--polaroid-y);
+      width: 7rem;
+    }
+
+    .home-polaroid-ring .polaroid-card {
+      padding: 0.5rem 0.5rem 2rem;
+    }
+
+    .home-polaroid-ring .polaroid-card p {
+      margin-top: 0.5rem;
+      font-size: 1.05rem;
+      line-height: 1.05;
+    }
+
+    .home-polaroid-note {
+      display: block;
+    }
+
+    .home-map-panel {
+      max-width: 20rem;
+      justify-self: end;
+      padding-top: 0.5rem;
+      padding-bottom: 0;
+    }
+
+    .home-map-panel .home-map-board {
+      padding: 1rem;
+    }
+
+    .home-map-board .home-map-hotspot-label {
+      width: 11.25rem;
+      padding: 0.75rem;
+    }
+  }
+
+  @media (min-width: 1280px) and (orientation: landscape) {
+    .home-polaroid-ring-item {
+      width: 9.6rem;
+    }
+
+    .home-polaroid-ring .polaroid-card p {
+      font-size: 1.125rem;
+    }
+  }
+
   .nav-note-shell {
     position: relative;
     display: inline-flex;

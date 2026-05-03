@@ -84,16 +84,6 @@ export function PrivatePageShell({
               </Link>
             ))}
           </div>
-
-          <button
-            className="auth-stamp-button auth-stamp-button--small self-end sm:self-auto"
-            onClick={() => {
-              void auth.logout();
-            }}
-            type="button"
-          >
-            {t('common.actions.logout')}
-          </button>
         </div>
 
         <section className="paper-panel overflow-hidden p-5 sm:p-8 lg:p-10">
@@ -150,4 +140,3 @@ export function PrivatePageShell({
     </main>
   );
 }
-
