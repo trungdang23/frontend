@@ -811,6 +811,18 @@ Khi người dùng bấm `Tạo chuyến đi` ở planner, chuyển sang một s
 - [x] giữ desktop tiếp tục fit theo chiều cao body khả dụng
 - [x] xác nhận lớp bìa/paper phía sau phủ tới nửa trang dưới
 
+### FR-B5O - Planner mobile date row and calendar placement
+
+### Mục tiêu
+
+Làm hai ô chọn ngày bắt đầu/kết thúc nằm cùng một hàng trên mobile và để popup lịch mở xuống dưới input thay vì tràn lên trên rồi bị che.
+
+### Scope của lượt triển khai này
+
+- [x] đặt ngày bắt đầu và ngày kết thúc cùng một hàng trên mobile
+- [x] giảm ràng buộc min-width của date input để fit trong hai cột nhỏ
+- [x] đổi popup lịch sang neo dưới input để không bị cắt ở mép trên
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu

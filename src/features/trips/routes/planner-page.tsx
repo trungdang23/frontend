@@ -425,12 +425,14 @@ function PlannerFieldError({ id, message }: { id?: string; message?: string }) {
 }
 
 function PlannerDateInput({
+  calendarAlign = 'center',
   error,
   iconSide,
   label,
   onChange,
   value,
 }: {
+  calendarAlign?: 'center' | 'end' | 'start';
   error?: string;
   iconSide: 'left' | 'right';
   label: string;
@@ -528,8 +530,8 @@ function PlannerDateInput({
         : formatPlannerMonthTitle(visibleMonth);
 
   return (
-    <div className="group relative block flex-1 min-w-[10.75rem]" ref={datePickerRef}>
-      <span className="absolute -top-2 left-5 right-5 z-10 flex h-5 items-start justify-between">
+    <div className="group relative block min-w-0 flex-1 sm:min-w-[10.75rem]" ref={datePickerRef}>
+      <span className="absolute -top-2 left-3 right-3 z-10 flex h-5 items-start justify-between sm:left-5 sm:right-5">
         {Array.from({ length: 9 }).map((_, index) => (
           <span
             className="h-5 w-2 rounded-full border border-[#8a8075] bg-[#6f6b65] shadow-[0_2px_0_rgba(255,255,255,0.55)]"
@@ -542,7 +544,7 @@ function PlannerDateInput({
         aria-expanded={isPickerOpen}
         aria-label={label}
         className={cn(
-          'relative flex min-h-[5.45rem] w-full cursor-pointer items-center rounded-[0.75rem] border bg-[#fffdf6] px-4 py-3 text-left shadow-[0_6px_0_#b9b2a5,0_12px_18px_rgba(59,44,32,0.14)] transition duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+          'relative flex min-h-[5.45rem] w-full cursor-pointer items-center rounded-[0.75rem] border bg-[#fffdf6] px-3 py-3 text-left shadow-[0_6px_0_#b9b2a5,0_12px_18px_rgba(59,44,32,0.14)] transition duration-300 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:px-4',
           error ? 'border-[#d92d20]' : 'border-[#8d8073] hover:border-[#6d5b4a]',
         )}
         onClick={openPicker}
@@ -551,16 +553,23 @@ function PlannerDateInput({
         {iconSide === 'left' ? (
           <CalendarDays className="mr-3 h-5 w-5 shrink-0 text-[#6d5b4a]" strokeWidth={1.7} />
         ) : null}
-        <span className="w-full min-w-0 border-b border-dashed border-[#9c9286] pb-1 text-center font-marker text-[1.05rem] text-[#3d332b] sm:text-[1.2rem]">
+        <span className="w-full min-w-0 border-b border-dashed border-[#9c9286] pb-1 text-center font-marker text-[0.95rem] leading-tight text-[#3d332b] sm:text-[1.2rem]">
           {displayValue || <span className="text-[#6f685f]">{label}</span>}
         </span>
         {iconSide === 'right' ? (
-          <CalendarDays className="ml-3 h-5 w-5 shrink-0 text-[#6d5b4a]" strokeWidth={1.7} />
+          <CalendarDays className="ml-2 h-4 w-4 shrink-0 text-[#6d5b4a] sm:ml-3 sm:h-5 sm:w-5" strokeWidth={1.7} />
         ) : null}
       </button>
 
       {isPickerOpen ? (
-        <div className="absolute bottom-full left-1/2 z-[100] mb-4 w-[18rem] max-w-[calc(100vw-2rem)] -translate-x-1/2 rounded-[0.9rem] border border-[#b8a58e] bg-[#fffaf0] p-3 shadow-[0_18px_32px_rgba(59,44,32,0.22)]">
+        <div
+          className={cn(
+            'absolute top-full z-[100] mt-4 w-[18rem] max-w-[calc(100vw-2rem)] rounded-[0.9rem] border border-[#b8a58e] bg-[#fffaf0] p-3 shadow-[0_18px_32px_rgba(59,44,32,0.22)] sm:left-1/2 sm:right-auto sm:-translate-x-1/2',
+            calendarAlign === 'start' && 'left-0',
+            calendarAlign === 'end' && 'right-0',
+            calendarAlign === 'center' && 'left-1/2 -translate-x-1/2',
+          )}
+        >
           <div className="flex items-center justify-between gap-3">
             <button
               aria-label="Lùi lịch"
@@ -783,8 +792,9 @@ function PlannerCreateTripPage({
           <p className="font-cursive text-[1.75rem] font-bold leading-none text-[#201916] sm:text-[2.1rem]">
             {t('trips.planner.board.createSpread.dateLabel')}
           </p>
-          <div className="mt-5 flex flex-col items-stretch gap-4 sm:flex-row sm:items-start sm:gap-5">
+          <div className="mt-5 grid grid-cols-2 items-start gap-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-5">
             <PlannerDateInput
+              calendarAlign="start"
               error={errors.startDate}
               iconSide="right"
               label={t('trips.planner.board.createSpread.startDatePlaceholder')}
@@ -793,6 +803,7 @@ function PlannerCreateTripPage({
             />
             <span className="hidden pt-8 font-marker text-[1.8rem] text-[#302720] sm:block">→</span>
             <PlannerDateInput
+              calendarAlign="end"
               error={errors.endDate}
               iconSide="right"
               label={t('trips.planner.board.createSpread.endDatePlaceholder')}
