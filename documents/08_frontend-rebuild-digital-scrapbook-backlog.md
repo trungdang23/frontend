@@ -823,6 +823,18 @@ Làm hai ô chọn ngày bắt đầu/kết thúc nằm cùng một hàng trên 
 - [x] giảm ràng buộc min-width của date input để fit trong hai cột nhỏ
 - [x] đổi popup lịch sang neo dưới input để không bị cắt ở mép trên
 
+### FR-B5P - Planner mobile QA sweep
+
+### Mục tiêu
+
+Rà lại toàn bộ `/app/planner` trên các viewport mobile phổ biến sau các chỉnh sửa responsive gần đây, ưu tiên lỗi tràn ngang, nội dung bị che, và controls khó thao tác.
+
+### Scope của lượt triển khai này
+
+- [x] kiểm viewport 360, 390, và 430 cho planner create flow
+- [x] sửa các lỗi layout còn lại ở header/notebook/date/budget/footer trong planner
+- [x] chạy lại lint/build sau khi sửa
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu

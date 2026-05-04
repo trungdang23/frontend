@@ -425,14 +425,12 @@ function PlannerFieldError({ id, message }: { id?: string; message?: string }) {
 }
 
 function PlannerDateInput({
-  calendarAlign = 'center',
   error,
   iconSide,
   label,
   onChange,
   value,
 }: {
-  calendarAlign?: 'center' | 'end' | 'start';
   error?: string;
   iconSide: 'left' | 'right';
   label: string;
@@ -563,17 +561,12 @@ function PlannerDateInput({
 
       {isPickerOpen ? (
         <div
-          className={cn(
-            'absolute top-full z-[100] mt-4 w-[18rem] max-w-[calc(100vw-2rem)] rounded-[0.9rem] border border-[#b8a58e] bg-[#fffaf0] p-3 shadow-[0_18px_32px_rgba(59,44,32,0.22)] sm:left-1/2 sm:right-auto sm:-translate-x-1/2',
-            calendarAlign === 'start' && 'left-0',
-            calendarAlign === 'end' && 'right-0',
-            calendarAlign === 'center' && 'left-1/2 -translate-x-1/2',
-          )}
+          className="fixed bottom-[6.5rem] left-4 right-4 z-[100] max-h-[calc(100dvh-12rem)] overflow-y-auto rounded-[0.9rem] border border-[#b8a58e] bg-[#fffaf0] p-2 shadow-[0_18px_32px_rgba(59,44,32,0.22)] sm:absolute sm:bottom-auto sm:left-1/2 sm:right-auto sm:top-full sm:mt-4 sm:w-[18rem] sm:max-w-[calc(100vw-2rem)] sm:-translate-x-1/2 sm:overflow-visible sm:p-3"
         >
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-2 sm:gap-3">
             <button
               aria-label="Lùi lịch"
-              className="grid h-8 w-8 place-items-center rounded-full border border-[#b8a58e] bg-white/70 font-marker text-[1.2rem] text-[#3d332b] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25"
+              className="grid h-7 w-7 place-items-center rounded-full border border-[#b8a58e] bg-white/70 font-marker text-[1.1rem] text-[#3d332b] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:h-8 sm:w-8 sm:text-[1.2rem]"
               onClick={moveCalendarBackward}
               type="button"
             >
@@ -581,7 +574,7 @@ function PlannerDateInput({
             </button>
             <button
               className={cn(
-                'min-w-0 rounded-full px-3 py-1.5 font-marker text-[1.05rem] font-bold text-[#3d332b] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                'min-w-0 rounded-full px-3 py-1 font-marker text-[0.98rem] font-bold text-[#3d332b] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:py-1.5 sm:text-[1.05rem]',
                 calendarView === 'year' ? 'cursor-default' : 'hover:bg-white/75',
               )}
               disabled={calendarView === 'year'}
@@ -592,7 +585,7 @@ function PlannerDateInput({
             </button>
             <button
               aria-label="Tiến lịch"
-              className="grid h-8 w-8 place-items-center rounded-full border border-[#b8a58e] bg-white/70 font-marker text-[1.2rem] text-[#3d332b] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25"
+              className="grid h-7 w-7 place-items-center rounded-full border border-[#b8a58e] bg-white/70 font-marker text-[1.1rem] text-[#3d332b] transition hover:bg-white focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:h-8 sm:w-8 sm:text-[1.2rem]"
               onClick={moveCalendarForward}
               type="button"
             >
@@ -602,19 +595,19 @@ function PlannerDateInput({
 
           {calendarView === 'day' ? (
             <>
-              <div className="mt-3 grid grid-cols-7 gap-1 text-center font-marker text-[0.82rem] font-bold text-[#75685b]">
+              <div className="mt-2 grid grid-cols-7 gap-0.5 text-center font-marker text-[0.78rem] font-bold text-[#75685b] sm:mt-3 sm:gap-1 sm:text-[0.82rem]">
                 {weekdayLabels.map((weekday) => (
                   <span key={weekday}>{weekday}</span>
                 ))}
               </div>
-              <div className="mt-1 grid grid-cols-7 gap-1">
+              <div className="mt-1 grid grid-cols-7 gap-0.5 sm:gap-1">
                 {calendarDays.map((calendarDay) => {
                   const isSelectedDate = calendarDay.date === value;
 
                   return (
                     <button
                       className={cn(
-                        'grid h-8 place-items-center rounded-[0.45rem] font-marker text-[0.95rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                        'grid h-7 place-items-center rounded-[0.4rem] font-marker text-[0.88rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:h-8 sm:rounded-[0.45rem] sm:text-[0.95rem]',
                         calendarDay.isCurrentMonth ? 'text-[#342820]' : 'text-[#b7a99a]',
                         isSelectedDate
                           ? 'bg-[#b9e177] font-bold text-[#172612] shadow-[0_4px_0_#6f9e44]'
@@ -636,7 +629,7 @@ function PlannerDateInput({
           ) : null}
 
           {calendarView === 'month' ? (
-            <div className="mt-3 grid grid-cols-3 gap-2">
+            <div className="mt-2 grid grid-cols-3 gap-1.5 sm:mt-3 sm:gap-2">
               {monthLabels.map((monthLabel, index) => {
                 const monthNumber = index + 1;
                 const isSelectedMonth = monthNumber === visibleMonthNumber;
@@ -644,7 +637,7 @@ function PlannerDateInput({
                 return (
                   <button
                     className={cn(
-                      'rounded-[0.6rem] px-2 py-2.5 font-marker text-[1rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                      'rounded-[0.6rem] px-2 py-2 font-marker text-[0.92rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:py-2.5 sm:text-[1rem]',
                       isSelectedMonth
                         ? 'bg-[#b9e177] font-bold text-[#172612] shadow-[0_4px_0_#6f9e44]'
                         : 'bg-white/50 text-[#3d332b] hover:bg-white/80',
@@ -664,14 +657,14 @@ function PlannerDateInput({
           ) : null}
 
           {calendarView === 'year' ? (
-            <div className="mt-3 grid grid-cols-3 gap-2">
+            <div className="mt-2 grid grid-cols-3 gap-1.5 sm:mt-3 sm:gap-2">
               {yearRange.map((year) => {
                 const isSelectedYear = year === visibleYear;
 
                 return (
                   <button
                     className={cn(
-                      'rounded-[0.6rem] px-2 py-2.5 font-marker text-[1rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25',
+                      'rounded-[0.6rem] px-2 py-2 font-marker text-[0.92rem] transition focus:outline-none focus:ring-2 focus:ring-[#8b6244]/25 sm:py-2.5 sm:text-[1rem]',
                       isSelectedYear
                         ? 'bg-[#b9e177] font-bold text-[#172612] shadow-[0_4px_0_#6f9e44]'
                         : 'bg-white/50 text-[#3d332b] hover:bg-white/80',
@@ -794,7 +787,6 @@ function PlannerCreateTripPage({
           </p>
           <div className="mt-5 grid grid-cols-2 items-start gap-3 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:gap-5">
             <PlannerDateInput
-              calendarAlign="start"
               error={errors.startDate}
               iconSide="right"
               label={t('trips.planner.board.createSpread.startDatePlaceholder')}
@@ -803,7 +795,6 @@ function PlannerCreateTripPage({
             />
             <span className="hidden pt-8 font-marker text-[1.8rem] text-[#302720] sm:block">→</span>
             <PlannerDateInput
-              calendarAlign="end"
               error={errors.endDate}
               iconSide="right"
               label={t('trips.planner.board.createSpread.endDatePlaceholder')}
