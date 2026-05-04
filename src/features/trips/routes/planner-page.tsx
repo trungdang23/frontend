@@ -1953,7 +1953,7 @@ export function PlannerPage() {
       mainId="planner-content"
       scrollable
     >
-      <div className="flex h-full min-h-0 w-full items-stretch justify-center">
+      <div className="flex min-h-full w-full items-start justify-center md:h-full md:min-h-0 md:items-stretch">
         <div className="relative w-full px-2 py-3 sm:px-2.5 sm:py-3 md:flex md:h-full md:min-h-0 md:items-center md:px-3 md:py-4 lg:px-3.5 lg:py-5">
           <div className="pointer-events-none absolute inset-x-0 top-3 bottom-3 z-0 md:top-4 md:bottom-4 lg:top-5 lg:bottom-5">
             <div className="absolute -left-1.5 -right-1.5 top-0 bottom-0 rounded-[1rem] bg-[linear-gradient(180deg,#d1ab7b_0%,#b68558_100%)] shadow-[0_16px_30px_rgba(76,51,33,0.16)] sm:-left-2 sm:-right-2 md:-left-2.5 md:-right-2.5" />

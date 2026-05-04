@@ -799,6 +799,18 @@ Khi người dùng bấm `Tạo chuyến đi` ở planner, chuyển sang một s
 - [x] sửa nút `Quay lại trang trước` để toàn bộ vùng nút click được khi sang trang kế tiếp
 - [x] giữ responsive mobile bằng cách xếp hai trang theo chiều dọc
 
+### FR-B5N - Planner mobile notebook depth continuity
+
+### Mục tiêu
+
+Đảm bảo lớp bìa và các lớp giấy phía sau planner notebook trên mobile kéo dài theo toàn bộ chiều cao hai nửa trang, không chỉ dừng ở nửa trên/viewport đầu.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ ràng buộc `h-full` mobile làm wrapper notebook chỉ cao bằng viewport
+- [x] giữ desktop tiếp tục fit theo chiều cao body khả dụng
+- [x] xác nhận lớp bìa/paper phía sau phủ tới nửa trang dưới
+
 ### FR-B5D - Planner spread height recovery
 
 ### Mục tiêu
