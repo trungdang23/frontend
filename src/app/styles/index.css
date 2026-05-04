@@ -812,9 +812,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.7rem;
-    height: 3.05rem;
-    padding: 0.4rem;
+    width: 2.35rem;
+    height: 2.65rem;
+    padding: 0.32rem;
     color: var(--stamp-ink, #5b3418);
     background:
       radial-gradient(circle at top left, rgba(255, 255, 255, 0.46), transparent 38%),
@@ -898,8 +898,8 @@
   }
 
   .footer-social-stamp svg {
-    width: 1.15rem;
-    height: 1.15rem;
+    width: 1rem;
+    height: 1rem;
     filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.24));
     transition:
       transform 220ms ease,

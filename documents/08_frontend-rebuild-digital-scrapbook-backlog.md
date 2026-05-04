@@ -1155,6 +1155,18 @@ Làm các nút mạng xã hội ở footer nổi bật hơn khi hover, sáng mà
 - [x] đổi visual stamp sang viền tem răng cưa và inner border rõ hơn
 - [x] tăng hover lift, scale, glow và độ sáng nền cho từng social stamp
 
+### FR-B1O - Mobile shared chrome balance refinement
+
+### Mục tiêu
+
+Cân lại shared header/footer trên mobile để navigation dãn đều theo đúng số note, đồng thời gom logo và các social stamp của footer trên một hàng gọn hơn.
+
+### Scope của lượt triển khai này
+
+- [x] header mobile dùng số cột khớp với số navigation item thật
+- [x] footer mobile đặt logo và social stamps trên cùng một hàng
+- [x] giữ footer link navigation tách hàng dưới để không làm hàng logo/social bị quá tải
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

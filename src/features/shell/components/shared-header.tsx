@@ -39,7 +39,12 @@ export function SharedHeader() {
         aria-label={t('home.navigation.ariaLabel')}
         className="pointer-events-auto w-full pb-2"
       >
-        <ul className="grid w-full grid-cols-5 items-start gap-1 sm:gap-1.5 md:flex md:justify-center md:gap-4">
+        <ul
+          className="grid w-full items-start gap-1 sm:gap-1.5 md:flex md:justify-center md:gap-4"
+          style={{
+            gridTemplateColumns: `repeat(${homeNavItems.length}, minmax(0, 1fr))`,
+          }}
+        >
           {homeNavItems.map((item, index) => {
             const isProtectedPlanner = item.href === '/app/planner';
             const isProtectedWorkspace = item.href.startsWith('/app/');

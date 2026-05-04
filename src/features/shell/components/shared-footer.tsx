@@ -90,53 +90,55 @@ export function SharedFooter() {
         </svg>
       </div>
 
-      <div className="relative z-20 flex w-full flex-col items-center justify-between gap-2 px-4 sm:px-6 md:flex-row md:gap-3 md:px-10 xl:px-14">
-        <div className="group relative inline-block cursor-default px-5 py-1 transition-transform duration-300 hover:scale-105 md:px-6">
-          <div className="pointer-events-none absolute inset-0 z-0">
-            <svg className="h-full w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 220 90">
-              <path
-                d="M120,15 C80,12 25,18 25,45 C25,72 75,82 120,82 C165,82 205,72 205,45 C205,18 160,12 105,15"
-                fill="none"
-                opacity="0.9"
-                stroke="#0f172a"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="3"
-              />
-            </svg>
+      <div className="relative z-20 flex w-full flex-col items-center justify-between gap-1.5 px-3 sm:gap-2 sm:px-6 md:flex-row md:gap-3 md:px-10 xl:px-14">
+        <div className="flex w-full min-w-0 items-center justify-center gap-1.5 sm:gap-2.5 md:w-auto md:justify-start md:gap-3">
+          <div className="group relative inline-block shrink-0 cursor-default px-3 py-0.5 transition-transform duration-300 hover:scale-105 sm:px-5 sm:py-1 md:px-6">
+            <div className="pointer-events-none absolute inset-0 z-0">
+              <svg className="h-full w-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 220 90">
+                <path
+                  d="M120,15 C80,12 25,18 25,45 C25,72 75,82 120,82 C165,82 205,72 205,45 C205,18 160,12 105,15"
+                  fill="none"
+                  opacity="0.9"
+                  stroke="#0f172a"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="3"
+                />
+              </svg>
+            </div>
+            <span className="relative z-10 select-none pb-0.5 font-cursive text-[1.55rem] tracking-normal text-slate-900 sm:text-[2.4rem] md:text-[2.8rem]">
+              Journey
+            </span>
           </div>
-          <span className="relative z-10 select-none pb-0.5 font-cursive text-[1.8rem] tracking-normal text-slate-900 sm:text-[2.8rem]">
-            Journey
-          </span>
-        </div>
 
-        <div className="flex gap-2 sm:gap-2.5 md:gap-3">
-          {socialStamps.map((social) => {
-            const Icon = stampIconMap[social.id];
+          <div className="flex shrink-0 gap-1.5 sm:gap-2.5 md:gap-3">
+            {socialStamps.map((social) => {
+              const Icon = stampIconMap[social.id];
 
-            return (
-              <div className="relative" key={social.id}>
-                <div
-                  aria-label={t(social.labelKey)}
-                  className={cn('footer-social-stamp cursor-pointer')}
-                  role="img"
-                  style={
-                    {
-                      ['--stamp-rotate' as string]: `${social.rotate}deg`,
-                      ...stampToneStyles[social.tone],
-                    } as CSSProperties
-                  }
-                >
-                  <Icon aria-hidden="true" />
+              return (
+                <div className="relative" key={social.id}>
+                  <div
+                    aria-label={t(social.labelKey)}
+                    className={cn('footer-social-stamp cursor-pointer')}
+                    role="img"
+                    style={
+                      {
+                        ['--stamp-rotate' as string]: `${social.rotate}deg`,
+                        ...stampToneStyles[social.tone],
+                      } as CSSProperties
+                    }
+                  >
+                    <Icon aria-hidden="true" />
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
 
         <nav
           aria-label={t('home.footer.navigationLabel')}
-          className="flex flex-wrap justify-center gap-x-8 gap-y-0.5 font-cursive text-[1.15rem] text-slate-900 sm:text-[1.4rem] md:justify-end md:gap-x-10 md:text-[1.6rem]"
+          className="flex flex-wrap justify-center gap-x-6 gap-y-0.5 font-cursive text-[1.15rem] text-slate-900 sm:gap-x-8 sm:text-[1.4rem] md:justify-end md:gap-x-10 md:text-[1.6rem]"
         >
           {footerLinks.map((link) => (
             <a
