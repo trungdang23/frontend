@@ -8,10 +8,11 @@
 
 ## Ghi chú trạng thái hiện tại
 
-- Frontend đang ở giai đoạn rebuild hiện tại, nên runtime production đang có homepage baseline ở `/` và sẽ mở dần các route khác theo từng slice.
+- Frontend đang ở giai đoạn rebuild hiện tại, nhưng runtime production đã có homepage, community, auth, planner compatibility flow, profile, journal editor tối giản, và public read-only plan/journal routes.
 - Vì vậy checklist smoke cần tách rõ:
-  - smoke tối thiểu cho homepage baseline và compatibility routes hiện tại
-  - smoke đầy đủ cho compatibility routes hiện tại và cho giai đoạn sau canonical planner/journal cutover
+  - smoke tối thiểu cho public runtime và asset pipeline
+  - smoke đầy đủ cho compatibility routes hiện tại
+  - smoke sau này cho canonical planner/journal cutover
 
 ## Checklist hardening verify sau deploy
 
@@ -119,8 +120,8 @@ Frontend có các script:
    - `https://buicojourney.com`
    - `https://www.buicojourney.com`
 6. Test theo đúng giai đoạn hiện tại của app:
-   - nếu đang ở giai đoạn rebuild hiện tại: verify homepage baseline/runtime health
-   - nếu route mới đã lên lại: verify thêm auth/community/planner/journal theo checklist bên dưới
+   - verify public runtime, asset pipeline, auth/community, planner compatibility route, profile, và journal compatibility route
+   - sau canonical planner/journal cutover, verify thêm route target theo checklist riêng bên dưới
 
 ## Post-deploy checklist tối thiểu
 
@@ -132,28 +133,35 @@ Sau mỗi deploy production, ưu tiên verify nhanh theo đúng thứ tự này:
    - expected: script pass và app còn bind ở `127.0.0.1:3000`
 2. Public landing tại `/`
    - expected: load được app, không `5xx`, không trắng trang
-
-### Nếu app vẫn đang ở giai đoạn rebuild hiện tại
-
 3. Verify homepage scrapbook baseline hiện đúng
    - expected: route `/` render đúng homepage notebook/scrapbook, không trắng trang và không vỡ layout chính
 4. Verify asset runtime cơ bản
-   - expected: `index.html`, JS bundle, CSS bundle load được
-
-### Nếu app đã quay lại route mới
-
-3. Đăng nhập từ `/auth/login`
-   - expected: vào được app shell và session boot ổn
-4. Mở `/community`
+   - expected: `index.html`, JS bundle, CSS bundle, và `/images/defaults/favicon.png` load được
+5. Mở `/community`
    - expected: feed load được hoặc hiện empty state hợp lệ, không crash route
-5. Mở `/app/trips`
-   - expected: trip list load được
-6. Mở `/app/trips/:tripId/planner`
-   - expected: planner workspace load được
-7. Mở `/app/trips/:tripId/journal` hoặc public `/trips/:tripId/journal`
-   - expected: journal viewer/editor render được scene đúng
-8. Đăng xuất
-   - expected: quay lại flow public/auth với notice hợp lệ
+6. Đăng nhập từ `/auth/login`
+   - expected: vào được app shell và session boot ổn
+7. Mở `/app/planner`
+   - expected: planner tạo mới mở trực tiếp spread nhập thông tin, cụm progress bên dưới chỉ có bước `1` và `2`
+8. Mở `/app/planner?tripId=<owned-trip-id>`
+   - expected: planner đã lưu load được thông tin chung và danh sách activity
+9. Mở `/app/profile`
+   - expected: tab kế hoạch/nhật ký load được dữ liệu hoặc empty state hợp lệ
+10. Mở `/app/journal?tripId=<owned-trip-id>`
+    - expected: journal editor render được scene, thêm object và lưu qua `PUT /trips/:tripId/journal`
+11. Mở public route `/public/trips/:tripId` và `/public/trips/:tripId/journal`
+    - expected: read-only plan/journal load được khi trip đang public, hoặc hiện trạng thái lỗi hợp lệ khi không public
+12. Đăng xuất từ `/app/profile`
+    - expected: quay lại flow public/auth với notice hợp lệ
+
+### Sau canonical planner/journal cutover
+
+- Mở `/app/trips/:tripId/planner`
+  - expected: planner workspace load trực tiếp, không còn phụ thuộc compatibility query string
+- Mở `/app/trips/:tripId/journal`
+  - expected: journal viewer/editor load trực tiếp theo route param
+- Mở `/app/trips/:tripId`
+  - expected: redirect về planner đúng route canonical
 
 Nếu đang verify phase budget hardening, bổ sung thêm một trip có planner cost để rà lại budget summary owner flow.
 

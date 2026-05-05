@@ -1,8 +1,4 @@
-import {
-  type ReactNode,
-  useEffect,
-  useState,
-} from 'react';
+import { type ReactNode, useEffect, useState } from 'react';
 import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -37,7 +33,10 @@ export function JournalPage() {
   const [draftJournal, setDraftJournal] = useState<TripJournal | null>(null);
   const [noteText, setNoteText] = useState(t('journalPage.editor.defaultNote'));
   const [imageUrl, setImageUrl] = useState('');
-  const [stickerLabel, setStickerLabel] = useState(t('journalPage.editor.defaultSticker'));
+  const [stickerLabel, setStickerLabel] = useState(
+    t('journalPage.editor.defaultSticker'),
+  );
+  const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
   const journalQuery = useQuery({
     queryKey: journalQueryKeys.detail(tripId),
     queryFn: ({ signal }) => getTripJournal(tripId, { signal }),
@@ -73,6 +72,16 @@ export function JournalPage() {
       setDraftJournal(journalQuery.data.journal);
     }
   }, [journalQuery.data?.journal, tripId]);
+
+  useEffect(() => {
+    if (
+      activeJournal &&
+      selectedObjectId &&
+      !activeJournal.objects.some((object) => object.id === selectedObjectId)
+    ) {
+      setSelectedObjectId(null);
+    }
+  }, [activeJournal, selectedObjectId]);
 
   if (!tripId) {
     return <Navigate replace to="/app/profile" />;
@@ -116,7 +125,9 @@ export function JournalPage() {
                 <dt className="font-semibold text-[#4f382c]">
                   {t('journalPage.meta.updatedAt')}
                 </dt>
-                <dd>{formatDisplayDate(journalQuery.data.journal.updatedAt)}</dd>
+                <dd>
+                  {formatDisplayDate(journalQuery.data.journal.updatedAt)}
+                </dd>
               </div>
             </dl>
           ) : null}
@@ -124,9 +135,7 @@ export function JournalPage() {
           {activeJournal ? renderEditorPanel(activeJournal) : null}
         </section>
 
-        <section className="min-h-[26rem]">
-          {renderJournalSurface()}
-        </section>
+        <section className="min-h-[26rem]">{renderJournalSurface()}</section>
       </div>
     </PublicPageShell>
   );
@@ -141,7 +150,11 @@ export function JournalPage() {
 
   function resolveJournalDescription() {
     if (journalQuery.data) {
-      return formatTripSummary(journalQuery.data.trip.destination, journalQuery.data.trip.startDate, journalQuery.data.trip.endDate);
+      return formatTripSummary(
+        journalQuery.data.trip.destination,
+        journalQuery.data.trip.startDate,
+        journalQuery.data.trip.endDate,
+      );
     }
 
     if (journalQuery.isError) {
@@ -155,7 +168,9 @@ export function JournalPage() {
     if (journalQuery.isLoading) {
       return (
         <StatusPanel
-          icon={<RefreshCw aria-hidden="true" className="h-8 w-8 animate-spin" />}
+          icon={
+            <RefreshCw aria-hidden="true" className="h-8 w-8 animate-spin" />
+          }
           title={t('journalPage.loadingTitle')}
           description={t('journalPage.loadingDescription')}
         />
@@ -174,9 +189,14 @@ export function JournalPage() {
 
     return (
       <JournalSceneRenderer
+        editable
         emptyDescription={t('journalPage.emptyDescription')}
         emptyTitle={t('journalPage.emptyTitle')}
+        interactiveObjectLabel={t('journalPage.editor.objectControlLabel')}
         journal={activeJournal}
+        onObjectMove={moveJournalObject}
+        onObjectSelect={setSelectedObjectId}
+        selectedObjectId={selectedObjectId}
       />
     );
   }
@@ -278,12 +298,18 @@ export function JournalPage() {
         </div>
 
         {saveJournalMutation.isSuccess ? (
-          <p className="mt-3 font-marker text-[1rem] leading-tight text-[#31521c]" role="status">
+          <p
+            className="mt-3 font-marker text-[1rem] leading-tight text-[#31521c]"
+            role="status"
+          >
             {t('journalPage.editor.saveSuccess')}
           </p>
         ) : null}
         {saveJournalMutation.isError ? (
-          <p className="mt-3 font-marker text-[1rem] leading-tight text-[#b42318]" role="alert">
+          <p
+            className="mt-3 font-marker text-[1rem] leading-tight text-[#b42318]"
+            role="alert"
+          >
             {t('journalPage.editor.saveError')}
           </p>
         ) : null}
@@ -293,11 +319,14 @@ export function JournalPage() {
 
   function addJournalObject(type: JournalObjectType, journal: TripJournal) {
     saveJournalMutation.reset();
+    const nextObject = createJournalObject(type, journal);
+
     setDraftJournal({
       ...journal,
-      objects: [...journal.objects, createJournalObject(type, journal)],
+      objects: [...journal.objects, nextObject],
       updatedAt: new Date().toISOString(),
     });
+    setSelectedObjectId(nextObject.id);
 
     if (type === 'note') {
       setNoteText('');
@@ -306,6 +335,47 @@ export function JournalPage() {
     if (type === 'photo') {
       setImageUrl('');
     }
+  }
+
+  function moveJournalObject(
+    objectId: string,
+    position: { x: number; y: number },
+  ) {
+    saveJournalMutation.reset();
+    setDraftJournal((currentJournal) => {
+      const journal = currentJournal ?? journalQuery.data?.journal;
+
+      if (!journal) {
+        return currentJournal;
+      }
+
+      let didMove = false;
+      const objects = journal.objects.map((object) => {
+        if (object.id !== objectId) {
+          return object;
+        }
+
+        if (object.x === position.x && object.y === position.y) {
+          return object;
+        }
+
+        didMove = true;
+
+        return {
+          ...object,
+          x: position.x,
+          y: position.y,
+        };
+      });
+
+      return didMove
+        ? {
+            ...journal,
+            objects,
+            updatedAt: new Date().toISOString(),
+          }
+        : journal;
+    });
   }
 
   function createJournalObject(

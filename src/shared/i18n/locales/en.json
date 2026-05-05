@@ -484,6 +484,7 @@
       "saving": "Saving...",
       "saveSuccess": "Journal saved.",
       "saveError": "Unable to save journal.",
+      "objectControlLabel": "Select and move journal piece",
       "objectCount": "{{count}} pieces"
     },
     "publicPage": {

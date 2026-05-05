@@ -75,7 +75,7 @@ Status: `In progress`
 - [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape; drag/drop/inspector còn deferred
 - [~] chốt journal API contract với backend phase đầu `GET/PUT /trips/:tripId/journal`; page-level contract còn deferred
 - [ ] chốt asset flow
-- [ ] cập nhật deploy smoke checklist theo route mới
+- [x] cập nhật deploy smoke checklist theo route mới
 
 ## Điểm cần giữ kỷ luật trong giai đoạn này
 

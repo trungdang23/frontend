@@ -1,4 +1,10 @@
-import type { CSSProperties } from 'react';
+import {
+  type CSSProperties,
+  type KeyboardEvent,
+  type PointerEvent,
+  useRef,
+  useState,
+} from 'react';
 import { ImageOff } from 'lucide-react';
 import type {
   JournalSceneObject,
@@ -9,16 +15,30 @@ import { cn } from '@/shared/lib/cn';
 type JournalSceneRendererProps = {
   journal: TripJournal;
   className?: string;
+  editable?: boolean;
   emptyDescription: string;
   emptyTitle: string;
+  interactiveObjectLabel?: string;
+  onObjectMove?: (objectId: string, position: { x: number; y: number }) => void;
+  onObjectSelect?: (objectId: string | null) => void;
+  selectedObjectId?: string | null;
 };
 
 export function JournalSceneRenderer({
+  editable = false,
   emptyDescription,
   emptyTitle,
+  interactiveObjectLabel,
   journal,
   className,
+  onObjectMove,
+  onObjectSelect,
+  selectedObjectId,
 }: JournalSceneRendererProps) {
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const [dragState, setDragState] = useState<JournalObjectDragState | null>(
+    null,
+  );
   const orderedObjects = [...journal.objects].sort((left, right) => {
     if (left.zIndex !== right.zIndex) {
       return left.zIndex - right.zIndex;
@@ -27,6 +47,7 @@ export function JournalSceneRenderer({
     return left.id.localeCompare(right.id);
   });
   const aspectRatio = `${journal.page.width} / ${journal.page.height}`;
+  const canEdit = editable && Boolean(onObjectMove);
 
   return (
     <div
@@ -39,42 +60,202 @@ export function JournalSceneRenderer({
       }}
     >
       <div className="absolute inset-0 overflow-hidden rounded-[1.5rem] bg-[linear-gradient(135deg,rgba(255,255,255,0.46),transparent_32%),radial-gradient(circle_at_18%_16%,rgba(194,137,83,0.12),transparent_18%),linear-gradient(180deg,#fffaf0_0%,#f7e8cb_100%)]">
-        <div className="absolute inset-0 opacity-[0.16] [background-image:radial-gradient(#8d7258_0.8px,transparent_0.8px)] [background-size:22px_22px]" />
+        <div
+          className="absolute inset-0 overflow-hidden rounded-[1.5rem]"
+          onPointerCancel={finishObjectDrag}
+          onPointerDown={handleScenePointerDown}
+          onPointerMove={handleScenePointerMove}
+          onPointerUp={finishObjectDrag}
+          ref={sceneRef}
+        >
+          <div className="absolute inset-0 opacity-[0.16] [background-image:radial-gradient(#8d7258_0.8px,transparent_0.8px)] [background-size:22px_22px]" />
 
-        {orderedObjects.length === 0 ? (
-          <div className="absolute left-[12%] top-[18%] w-[76%] rotate-[-3deg] rounded-[0.8rem] border border-[#d8b982]/70 bg-[#fff4c7] px-6 py-7 text-center shadow-[0_14px_26px_rgba(92,68,43,0.16)]">
-            <p className="font-hand text-[2.1rem] leading-none text-[#7a4b39]">
-              {emptyTitle}
-            </p>
-            <p className="mt-3 text-sm leading-6 text-[#6f5c48]">
-              {emptyDescription}
-            </p>
-          </div>
-        ) : null}
+          {orderedObjects.length === 0 ? (
+            <div className="absolute left-[12%] top-[18%] w-[76%] rotate-[-3deg] rounded-[0.8rem] border border-[#d8b982]/70 bg-[#fff4c7] px-6 py-7 text-center shadow-[0_14px_26px_rgba(92,68,43,0.16)]">
+              <p className="font-hand text-[2.1rem] leading-none text-[#7a4b39]">
+                {emptyTitle}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-[#6f5c48]">
+                {emptyDescription}
+              </p>
+            </div>
+          ) : null}
 
-        {orderedObjects.map((object) => (
-          <JournalSceneObjectView
-            key={object.id}
-            object={object}
-            pageHeight={journal.page.height}
-            pageWidth={journal.page.width}
-          />
-        ))}
+          {orderedObjects.map((object) => (
+            <JournalSceneObjectView
+              isDragging={dragState?.objectId === object.id}
+              isEditable={canEdit}
+              isSelected={selectedObjectId === object.id}
+              key={object.id}
+              object={object}
+              onKeyMove={moveObjectFromKeyboard}
+              onPointerDown={startObjectDrag}
+              onSelect={selectObject}
+              pageHeight={journal.page.height}
+              pageWidth={journal.page.width}
+              selectedLabel={interactiveObjectLabel}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
+
+  function handleScenePointerDown() {
+    if (!canEdit) {
+      return;
+    }
+
+    onObjectSelect?.(null);
+  }
+
+  function startObjectDrag(
+    event: PointerEvent<HTMLDivElement>,
+    object: JournalSceneObject,
+  ) {
+    if (!canEdit || object.locked) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    onObjectSelect?.(object.id);
+
+    const pointerPosition = getPagePointFromPointerEvent(
+      event,
+      sceneRef.current,
+      journal.page.width,
+      journal.page.height,
+    );
+
+    if (!pointerPosition) {
+      return;
+    }
+
+    sceneRef.current?.setPointerCapture(event.pointerId);
+    setDragState({
+      height: object.height,
+      objectId: object.id,
+      offsetX: pointerPosition.x - object.x,
+      offsetY: pointerPosition.y - object.y,
+      width: object.width,
+    });
+  }
+
+  function handleScenePointerMove(event: PointerEvent<HTMLDivElement>) {
+    if (!dragState || !canEdit || !onObjectMove) {
+      return;
+    }
+
+    const pointerPosition = getPagePointFromPointerEvent(
+      event,
+      sceneRef.current,
+      journal.page.width,
+      journal.page.height,
+    );
+
+    if (!pointerPosition) {
+      return;
+    }
+
+    event.preventDefault();
+    onObjectMove(dragState.objectId, {
+      x: Math.round(
+        clamp(
+          pointerPosition.x - dragState.offsetX,
+          0,
+          journal.page.width - dragState.width,
+        ),
+      ),
+      y: Math.round(
+        clamp(
+          pointerPosition.y - dragState.offsetY,
+          0,
+          journal.page.height - dragState.height,
+        ),
+      ),
+    });
+  }
+
+  function finishObjectDrag(event: PointerEvent<HTMLDivElement>) {
+    if (!dragState) {
+      return;
+    }
+
+    if (sceneRef.current?.hasPointerCapture(event.pointerId)) {
+      sceneRef.current.releasePointerCapture(event.pointerId);
+    }
+
+    setDragState(null);
+  }
+
+  function selectObject(objectId: string) {
+    if (!canEdit) {
+      return;
+    }
+
+    onObjectSelect?.(objectId);
+  }
+
+  function moveObjectFromKeyboard(
+    event: KeyboardEvent<HTMLDivElement>,
+    object: JournalSceneObject,
+  ) {
+    if (!canEdit || object.locked || !onObjectMove) {
+      return;
+    }
+
+    const step = event.shiftKey ? 24 : 8;
+    const movement = resolveKeyboardMovement(event.key, step);
+
+    if (!movement) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    onObjectSelect?.(object.id);
+    onObjectMove(object.id, {
+      x: Math.round(
+        clamp(object.x + movement.x, 0, journal.page.width - object.width),
+      ),
+      y: Math.round(
+        clamp(object.y + movement.y, 0, journal.page.height - object.height),
+      ),
+    });
+  }
 }
 
 type JournalSceneObjectViewProps = {
+  isDragging: boolean;
+  isEditable: boolean;
+  isSelected: boolean;
   object: JournalSceneObject;
+  onKeyMove: (
+    event: KeyboardEvent<HTMLDivElement>,
+    object: JournalSceneObject,
+  ) => void;
+  onPointerDown: (
+    event: PointerEvent<HTMLDivElement>,
+    object: JournalSceneObject,
+  ) => void;
+  onSelect: (objectId: string) => void;
   pageWidth: number;
   pageHeight: number;
+  selectedLabel?: string;
 };
 
 function JournalSceneObjectView({
+  isDragging,
+  isEditable,
+  isSelected,
   object,
+  onKeyMove,
+  onPointerDown,
+  onSelect,
   pageHeight,
   pageWidth,
+  selectedLabel,
 }: JournalSceneObjectViewProps) {
   const style: CSSProperties = {
     left: `${(object.x / pageWidth) * 100}%`,
@@ -86,7 +267,35 @@ function JournalSceneObjectView({
   };
 
   return (
-    <div className="absolute origin-center" style={style}>
+    <div
+      aria-label={
+        isEditable && !object.locked ? (selectedLabel ?? object.id) : undefined
+      }
+      aria-pressed={isEditable && !object.locked ? isSelected : undefined}
+      className={cn(
+        'absolute origin-center',
+        isEditable && !object.locked
+          ? 'touch-none cursor-grab select-none rounded-[0.9rem] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#4d8f72]/45'
+          : undefined,
+        isSelected
+          ? 'ring-4 ring-[#4d8f72] ring-offset-2 ring-offset-[#fff8ea]'
+          : undefined,
+        isDragging ? 'cursor-grabbing' : undefined,
+      )}
+      onClick={(event) => {
+        if (!isEditable || object.locked) {
+          return;
+        }
+
+        event.stopPropagation();
+        onSelect(object.id);
+      }}
+      onKeyDown={(event) => onKeyMove(event, object)}
+      onPointerDown={(event) => onPointerDown(event, object)}
+      role={isEditable && !object.locked ? 'button' : undefined}
+      style={style}
+      tabIndex={isEditable && !object.locked ? 0 : undefined}
+    >
       {renderJournalObject(object)}
     </div>
   );
@@ -107,7 +316,8 @@ function renderJournalObject(object: JournalSceneObject) {
 }
 
 function PhotoObject({ object }: { object: JournalSceneObject }) {
-  const imageUrl = getUrlProp(object.props, 'imageUrl') ?? getUrlProp(object.props, 'src');
+  const imageUrl =
+    getUrlProp(object.props, 'imageUrl') ?? getUrlProp(object.props, 'src');
   const alt = getStringProp(object.props, 'alt') ?? '';
 
   return (
@@ -116,6 +326,7 @@ function PhotoObject({ object }: { object: JournalSceneObject }) {
         <img
           alt={alt}
           className="h-full w-full rounded-[0.28rem] object-cover"
+          draggable={false}
           src={imageUrl}
         />
       ) : (
@@ -203,4 +414,53 @@ function getColorProp(props: Record<string, unknown>, key: string) {
   }
 
   return /^#[0-9a-fA-F]{3,8}$/.test(value) ? value : null;
+}
+
+type JournalObjectDragState = {
+  height: number;
+  objectId: string;
+  offsetX: number;
+  offsetY: number;
+  width: number;
+};
+
+function getPagePointFromPointerEvent(
+  event: PointerEvent,
+  sceneElement: HTMLDivElement | null,
+  pageWidth: number,
+  pageHeight: number,
+) {
+  if (!sceneElement) {
+    return null;
+  }
+
+  const rect = sceneElement.getBoundingClientRect();
+
+  if (rect.width <= 0 || rect.height <= 0) {
+    return null;
+  }
+
+  return {
+    x: ((event.clientX - rect.left) / rect.width) * pageWidth,
+    y: ((event.clientY - rect.top) / rect.height) * pageHeight,
+  };
+}
+
+function resolveKeyboardMovement(key: string, step: number) {
+  switch (key) {
+    case 'ArrowDown':
+      return { x: 0, y: step };
+    case 'ArrowLeft':
+      return { x: -step, y: 0 };
+    case 'ArrowRight':
+      return { x: step, y: 0 };
+    case 'ArrowUp':
+      return { x: 0, y: -step };
+    default:
+      return null;
+  }
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), Math.max(min, max));
 }

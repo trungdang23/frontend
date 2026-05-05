@@ -77,7 +77,7 @@ Giai đoạn rebuild này chưa xử lý:
 | Trip create/edit    | `/app/trips/new`, `/app/trips/:tripId/edit` | fixed-layout            | structured form                           |
 | Planner             | `/app/trips/:tripId/planner`                | fixed-layout/structured | data-first workspace                      |
 | Journal editor      | `/app/trips/:tripId/journal`                | freeform scrapbook      | drag/drop, rotate, layer                  |
-| Journal public view | `/public/trips/:tripId/journal`            | scrapbook read-only     | share/publish surface                     |
+| Journal public view | `/public/trips/:tripId/journal`             | scrapbook read-only     | share/publish surface                     |
 | Profile             | `/app/profile`                              | fixed-layout            | user/account summary                      |
 | Compatibility       | `/app/trips/:tripId`                        | redirect                | về `planner` trong giai đoạn đầu          |
 
@@ -683,6 +683,26 @@ Nối profile/trip list với journal scene thật để người dùng không b
 - preview thumbnail render từ canvas thật
 - phân trang journal trong profile
 - public/published journal list riêng
+
+## FR-J5 - Journal object selection and drag baseline
+
+### Mục tiêu
+
+Bắt đầu biến journal editor từ creator tĩnh thành editor trực tiếp trên scene, nhưng vẫn giữ renderer public ở chế độ read-only.
+
+### Scope của lượt triển khai này
+
+- [x] cho owner journal route chọn object trên scene
+- [x] kéo object chưa khóa trong giới hạn page space canonical
+- [x] hỗ trợ nudge bằng phím mũi tên cho object đang focus
+- [x] giữ public journal renderer không nhận interaction editor
+
+### Deferred
+
+- resize/rotate handles
+- layer reorder inspector
+- autosave/debounce
+- asset upload thật
 
 ## FR-J4 - Profile share controls and public read-only pages
 
@@ -1423,9 +1443,9 @@ Làm giai đoạn rebuild này đủ sạch để bước vào implementation th
 
 ### Việc cần làm
 
-- [ ] cập nhật smoke test plan theo route mới
+- [x] cập nhật smoke test plan theo route mới
 - [x] đổi deploy workflow sang staged `dist` swap để tránh cửa sổ runtime đọc bundle lỗi khi build trực tiếp trên máy đích
-- [ ] cập nhật deploy smoke checklist cho compatibility routes hiện tại rồi cho canonical planner/journal cutover
+- [x] cập nhật deploy smoke checklist cho compatibility routes hiện tại rồi cho canonical planner/journal cutover
 - [ ] gỡ các tham chiếu cũ còn sót tới route/workspace model cũ
 - [ ] rà README và docs active list một lần cuối
 
