@@ -1405,6 +1405,16 @@ Giữ lỗi đăng ký bằng copy sản phẩm tiếng Việt, tránh để tr�
 - [x] dùng message i18n hiện có cho email, tên hiển thị và mật khẩu
 - [ ] smoke test thủ công form đăng ký sau deploy
 
+## Follow-up site favicon wiring
+
+### Mục tiêu
+
+Dùng favicon Journey đã có trong `public` cho metadata trình duyệt của toàn bộ app.
+
+### Việc cần làm
+
+- [x] khai báo favicon từ asset public trong `index.html`
+
 ## FR-G - Verification, cleanup, deploy smoke refresh
 
 ### Mục tiêu
