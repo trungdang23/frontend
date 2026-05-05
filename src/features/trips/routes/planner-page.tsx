@@ -694,8 +694,6 @@ function PlannerStepProgress({ currentStep }: { currentStep: number }) {
   const stepClassNames = [
     'bg-[#a7d76f] ring-[#70a849]',
     'bg-[#99cde8] ring-[#6aa7c7]',
-    'bg-[#f2cc6f] ring-[#c79a37]',
-    'bg-[#f2a088] ring-[#c56d54]',
   ];
 
   return (

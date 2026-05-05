@@ -200,6 +200,7 @@ Giai đoạn rebuild này chưa xử lý:
 ### Follow-up activity step refinement
 
 - [x] hiển thị số bước bên dưới ở bước 2 và làm nổi bật số 2
+- [x] chỉ hiển thị hai số bước trong cụm progress của flow tạo kế hoạch
 - [x] bỏ note "Thông tin cố định..." khỏi trang trái bước hoạt động
 - [x] đổi ngày hoạt động sang calendar picker thay vì nhập text
 - [x] đổi giờ hoạt động sang picker chọn giờ bắt đầu/kết thúc
