@@ -7,8 +7,8 @@ import {
   useParams,
 } from 'react-router-dom';
 import {
-  buildJournalCompatibilityPath,
-  buildPlannerCompatibilityPath,
+  buildJournalTripPath,
+  buildPlannerTripPath,
 } from '@/app/router/trip-route-redirects';
 import { GuestRoute } from '@/features/auth/routes/guest-route';
 import { LoginPage } from '@/features/auth/routes/login-page';
@@ -29,19 +29,35 @@ function PlannerTripRouteRedirect() {
   return (
     <Navigate
       replace
-      to={tripId ? buildPlannerCompatibilityPath(tripId, location.search) : '/app/planner'}
+      to={tripId ? buildPlannerTripPath(tripId, location.search) : '/app/planner'}
     />
   );
 }
 
-function JournalTripRouteRedirect() {
+function PlannerCompatibilityRoute() {
   const location = useLocation();
-  const { tripId } = useParams<{ tripId: string }>();
+  const searchParams = new URLSearchParams(location.search);
+  const tripId = searchParams.get('tripId')?.trim();
+
+  return tripId ? (
+    <Navigate
+      replace
+      to={buildPlannerTripPath(tripId, location.search)}
+    />
+  ) : (
+    <PlannerPage />
+  );
+}
+
+function JournalCompatibilityRoute() {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const tripId = searchParams.get('tripId')?.trim();
 
   return (
     <Navigate
       replace
-      to={tripId ? buildJournalCompatibilityPath(tripId, location.search) : '/app/journal'}
+      to={tripId ? buildJournalTripPath(tripId, location.search) : '/app/profile'}
     />
   );
 }
@@ -89,7 +105,7 @@ export function AppRouter() {
         <Route
           element={(
             <ProtectedRoute>
-              <PlannerTripRouteRedirect />
+              <PlannerPage />
             </ProtectedRoute>
           )}
           path="/app/trips/:tripId/planner"
@@ -97,7 +113,7 @@ export function AppRouter() {
         <Route
           element={(
             <ProtectedRoute>
-              <JournalTripRouteRedirect />
+              <JournalPage />
             </ProtectedRoute>
           )}
           path="/app/trips/:tripId/journal"
@@ -105,7 +121,7 @@ export function AppRouter() {
         <Route
           element={(
             <ProtectedRoute>
-              <PlannerPage />
+              <PlannerCompatibilityRoute />
             </ProtectedRoute>
           )}
           path="/app/planner"
@@ -113,7 +129,7 @@ export function AppRouter() {
         <Route
           element={(
             <ProtectedRoute>
-              <JournalPage />
+              <JournalCompatibilityRoute />
             </ProtectedRoute>
           )}
           path="/app/journal"

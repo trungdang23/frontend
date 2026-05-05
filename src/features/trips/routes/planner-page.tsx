@@ -1,5 +1,5 @@
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   ArrowRight,
@@ -37,6 +37,7 @@ import type {
   TripPlannerResult,
 } from '@/features/trips/planning/types/plan-node';
 import type { Trip, TripBudgetMode, TripUpsertPayload, TripVisibility } from '@/features/trips/types/trip';
+import { buildPlannerTripPath } from '@/app/router/trip-route-redirects';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
 
@@ -1715,6 +1716,8 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
 
 export function PlannerPage() {
   const { t } = useI18n();
+  const navigate = useNavigate();
+  const { tripId: routeTripId } = useParams<{ tripId: string }>();
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const [tripDraft, setTripDraft] = useState(createDefaultPlannerTripDraft);
@@ -1724,8 +1727,8 @@ export function PlannerPage() {
   const [createTripWithActivitiesProgress, setCreateTripWithActivitiesProgress] = useState<string | null>(null);
   const [createTripWithActivitiesSuccess, setCreateTripWithActivitiesSuccess] = useState<string | null>(null);
   const plannerPage = searchParams.get('page');
-  const selectedTripId = searchParams.get('tripId');
-  const isEditingActivities = plannerPage === 'activities';
+  const selectedTripId = routeTripId?.trim() || searchParams.get('tripId');
+  const isEditingActivities = !selectedTripId && plannerPage === 'activities';
   const isViewingSavedPlanner = Boolean(selectedTripId) && !isEditingActivities;
   const activeNodeId = searchParams.get('nodeId');
 
@@ -1768,12 +1771,7 @@ export function PlannerPage() {
   };
 
   const openCreatedPlannerPage = (tripId: string) => {
-    setSearchParams(
-      {
-        tripId,
-      },
-      { replace: true },
-    );
+    navigate(buildPlannerTripPath(tripId), { replace: true });
     setTripDraft(createDefaultPlannerTripDraft());
     setTripDraftErrors({});
     setCreateTripWithActivitiesError(null);
@@ -1781,7 +1779,7 @@ export function PlannerPage() {
   };
 
   const openFreshPlannerDraft = () => {
-    setSearchParams({}, { replace: true });
+    navigate('/app/planner', { replace: true });
     setTripDraft(createDefaultPlannerTripDraft());
     setTripDraftErrors({});
     setCreateTripWithActivitiesError(null);

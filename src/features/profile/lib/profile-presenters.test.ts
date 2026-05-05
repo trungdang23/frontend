@@ -82,11 +82,11 @@ describe('profile presenters', () => {
       title: 'Nhật ký Hội An',
     });
     expect(tripEntries[0]).toMatchObject({
-      actionHref: '/app/planner?tripId=trip-1',
+      actionHref: '/app/trips/trip-1/planner',
       actionLabel: 'CHỈNH SỬA',
       id: 'trip-1',
       metadata: '22 Tháng 4, 2026 • 4 ngày',
-      secondaryActionHref: '/app/journal?tripId=trip-1',
+      secondaryActionHref: '/app/trips/trip-1/journal',
       secondaryActionLabel: 'NHẬT KÝ',
       shareBadgeLabel: 'Công khai',
       title: 'Đà Lạt',
@@ -154,7 +154,7 @@ describe('profile presenters', () => {
     );
 
     expect(journalEntries[0]).toMatchObject({
-      actionHref: '/app/journal?tripId=trip-1',
+      actionHref: '/app/trips/trip-1/journal',
       actionLabel: 'CẬP NHẬT',
       image: 'https://example.com/journal.jpg',
       metadata: '26 Tháng 4, 2026 • 1 mảnh',

@@ -484,8 +484,29 @@
       "saving": "Đang lưu...",
       "saveSuccess": "Đã lưu nhật ký.",
       "saveError": "Chưa lưu được nhật ký.",
+      "savedState": "Đã lưu",
+      "unsavedChanges": "Có thay đổi chưa lưu",
+      "selectionTitle": "Mảnh đang chọn",
+      "noSelection": "Chọn một mảnh trên trang để đổi lớp, xoay hoặc xoá.",
+      "objectPosition": "x {{x}} · y {{y}}",
+      "sendBackward": "Đưa mảnh xuống dưới",
+      "sendBackwardShort": "Xuống",
+      "bringForward": "Đưa mảnh lên trên",
+      "bringForwardShort": "Lên",
+      "rotateLeft": "Xoay trái",
+      "rotateLeftShort": "Trái",
+      "rotateRight": "Xoay phải",
+      "rotateRightShort": "Phải",
+      "deleteObject": "Xoá mảnh",
+      "deleteObjectShort": "Xoá",
       "objectControlLabel": "Chọn và di chuyển mảnh nhật ký",
-      "objectCount": "{{count}} mảnh"
+      "objectCount": "{{count}} mảnh",
+      "objectTypes": {
+        "note": "Note",
+        "photo": "Ảnh",
+        "sticker": "Sticker",
+        "tape": "Tape"
+      }
     },
     "publicPage": {
       "eyebrow": "Nhật ký được chia sẻ",

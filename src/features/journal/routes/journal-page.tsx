@@ -1,19 +1,32 @@
 import { type ReactNode, useEffect, useState } from 'react';
-import { Link, Navigate, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+  ArrowDown,
   ArrowLeft,
+  ArrowUp,
   BookOpenText,
   Image,
   RefreshCw,
+  RotateCcw,
+  RotateCw,
   Save,
   Sparkles,
+  Trash2,
 } from 'lucide-react';
 import {
   getTripJournal,
   saveTripJournal,
 } from '@/features/journal/api/journal-api';
 import { JournalSceneRenderer } from '@/features/journal/components/journal-scene-renderer';
+import {
+  areJournalObjectListsEqual,
+  areJournalScenesEqual,
+  canMoveObjectLayer,
+  type JournalLayerDirection,
+  moveObjectLayer,
+  normalizeRotation,
+} from '@/features/journal/lib/journal-scene-editing';
 import { journalQueryKeys } from '@/features/journal/lib/journal-query-keys';
 import type {
   JournalObjectType,
@@ -28,8 +41,9 @@ import { useI18n } from '@/shared/i18n/use-i18n';
 export function JournalPage() {
   const { t } = useI18n();
   const queryClient = useQueryClient();
+  const { tripId: routeTripId } = useParams<{ tripId: string }>();
   const [searchParams] = useSearchParams();
-  const tripId = searchParams.get('tripId')?.trim() ?? '';
+  const tripId = routeTripId?.trim() || searchParams.get('tripId')?.trim() || '';
   const [draftJournal, setDraftJournal] = useState<TripJournal | null>(null);
   const [noteText, setNoteText] = useState(t('journalPage.editor.defaultNote'));
   const [imageUrl, setImageUrl] = useState('');
@@ -43,6 +57,13 @@ export function JournalPage() {
     enabled: Boolean(tripId),
   });
   const activeJournal = draftJournal ?? journalQuery.data?.journal ?? null;
+  const savedJournal = journalQuery.data?.journal ?? null;
+  const selectedObject =
+    activeJournal?.objects.find((object) => object.id === selectedObjectId) ??
+    null;
+  const isDirty = activeJournal
+    ? !areJournalScenesEqual(activeJournal, savedJournal)
+    : false;
   const saveJournalMutation = useMutation({
     mutationFn: async () => {
       if (!activeJournal) {
@@ -278,10 +299,92 @@ export function JournalPage() {
           </div>
         </div>
 
+        <div className="mt-4 rounded-[0.95rem] border border-[#d7b88f]/35 bg-[#fffaf0]/75 p-3">
+          {selectedObject ? (
+            <>
+              <div className="flex flex-wrap items-start justify-between gap-2">
+                <div>
+                  <p className="font-marker text-[1.02rem] font-bold leading-none text-[#4f382c]">
+                    {t('journalPage.editor.selectionTitle')}
+                  </p>
+                  <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#8a6d51]">
+                    {t(`journalPage.editor.objectTypes.${selectedObject.type}`)}
+                  </p>
+                </div>
+                <span className="rounded-full bg-white/70 px-3 py-1 font-marker text-[0.9rem] leading-none text-[#6b4938]">
+                  {t('journalPage.editor.objectPosition', {
+                    x: Math.round(selectedObject.x),
+                    y: Math.round(selectedObject.y),
+                  })}
+                </span>
+              </div>
+
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5 lg:grid-cols-2">
+                <button
+                  aria-label={t('journalPage.editor.sendBackward')}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#8b6244]/25 bg-white/70 px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#6b4938] transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-45"
+                  disabled={!canMoveObjectLayer(journal.objects, selectedObject.id, 'backward')}
+                  onClick={() => moveSelectedObjectLayer('backward')}
+                  title={t('journalPage.editor.sendBackward')}
+                  type="button"
+                >
+                  <ArrowDown aria-hidden="true" className="h-4 w-4" />
+                  {t('journalPage.editor.sendBackwardShort')}
+                </button>
+                <button
+                  aria-label={t('journalPage.editor.bringForward')}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#8b6244]/25 bg-white/70 px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#6b4938] transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-45"
+                  disabled={!canMoveObjectLayer(journal.objects, selectedObject.id, 'forward')}
+                  onClick={() => moveSelectedObjectLayer('forward')}
+                  title={t('journalPage.editor.bringForward')}
+                  type="button"
+                >
+                  <ArrowUp aria-hidden="true" className="h-4 w-4" />
+                  {t('journalPage.editor.bringForwardShort')}
+                </button>
+                <button
+                  aria-label={t('journalPage.editor.rotateLeft')}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#407456]/25 bg-[#eff9e8] px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#27513b] transition hover:-translate-y-0.5"
+                  onClick={() => rotateSelectedObject(-8)}
+                  title={t('journalPage.editor.rotateLeft')}
+                  type="button"
+                >
+                  <RotateCcw aria-hidden="true" className="h-4 w-4" />
+                  {t('journalPage.editor.rotateLeftShort')}
+                </button>
+                <button
+                  aria-label={t('journalPage.editor.rotateRight')}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#407456]/25 bg-[#eff9e8] px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#27513b] transition hover:-translate-y-0.5"
+                  onClick={() => rotateSelectedObject(8)}
+                  title={t('journalPage.editor.rotateRight')}
+                  type="button"
+                >
+                  <RotateCw aria-hidden="true" className="h-4 w-4" />
+                  {t('journalPage.editor.rotateRightShort')}
+                </button>
+                <button
+                  aria-label={t('journalPage.editor.deleteObject')}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#b42318] transition hover:-translate-y-0.5 sm:col-span-1 lg:col-span-2"
+                  onClick={deleteSelectedObject}
+                  title={t('journalPage.editor.deleteObject')}
+                  type="button"
+                >
+                  <Trash2 aria-hidden="true" className="h-4 w-4" />
+                  {t('journalPage.editor.deleteObjectShort')}
+                </button>
+              </div>
+            </>
+          ) : (
+            <p className="font-marker text-[1rem] leading-tight text-[#6b4938]">
+              {t('journalPage.editor.noSelection')}
+            </p>
+          )}
+        </div>
+
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <button
             className="inline-flex items-center gap-2 rounded-full border border-[#2f5d34]/30 bg-[#b9e177] px-5 py-2.5 font-marker text-[1.02rem] font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={saveJournalMutation.isPending}
+            disabled={saveJournalMutation.isPending || !isDirty}
             onClick={() => saveJournalMutation.mutate()}
             type="button"
           >
@@ -295,9 +398,19 @@ export function JournalPage() {
               count: journal.objects.length,
             })}
           </span>
+          <span
+            className="font-marker text-[1rem] leading-none text-[#6b4938]"
+            role="status"
+          >
+            {saveJournalMutation.isPending
+              ? t('journalPage.editor.saving')
+              : isDirty
+                ? t('journalPage.editor.unsavedChanges')
+                : t('journalPage.editor.savedState')}
+          </span>
         </div>
 
-        {saveJournalMutation.isSuccess ? (
+        {saveJournalMutation.isSuccess && !isDirty ? (
           <p
             className="mt-3 font-marker text-[1rem] leading-tight text-[#31521c]"
             role="status"
@@ -375,6 +488,69 @@ export function JournalPage() {
             updatedAt: new Date().toISOString(),
           }
         : journal;
+    });
+  }
+
+  function deleteSelectedObject() {
+    if (!selectedObjectId) {
+      return;
+    }
+
+    updateDraftObjects((objects) =>
+      objects.filter((object) => object.id !== selectedObjectId),
+    );
+    setSelectedObjectId(null);
+  }
+
+  function moveSelectedObjectLayer(direction: JournalLayerDirection) {
+    if (!selectedObjectId) {
+      return;
+    }
+
+    updateDraftObjects((objects) =>
+      moveObjectLayer(objects, selectedObjectId, direction),
+    );
+  }
+
+  function rotateSelectedObject(delta: number) {
+    if (!selectedObjectId) {
+      return;
+    }
+
+    updateDraftObjects((objects) =>
+      objects.map((object) =>
+        object.id === selectedObjectId
+          ? {
+              ...object,
+              rotation: normalizeRotation(object.rotation + delta),
+            }
+          : object,
+      ),
+    );
+  }
+
+  function updateDraftObjects(
+    resolveObjects: (objects: JournalSceneObject[]) => JournalSceneObject[],
+  ) {
+    saveJournalMutation.reset();
+    setDraftJournal((currentJournal) => {
+      const journal = currentJournal ?? journalQuery.data?.journal;
+
+      if (!journal) {
+        return currentJournal;
+      }
+
+      const objects = resolveObjects(journal.objects);
+
+      if (objects === journal.objects || areJournalObjectListsEqual(objects, journal.objects)) {
+        return journal;
+      }
+
+      return {
+        ...journal,
+        objects,
+        updatedAt: new Date().toISOString(),
+      };
     });
   }
 

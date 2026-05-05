@@ -8,11 +8,11 @@
 
 ## Ghi chú trạng thái hiện tại
 
-- Frontend đang ở giai đoạn rebuild hiện tại, nhưng runtime production đã có homepage, community, auth, planner compatibility flow, profile, journal editor tối giản, và public read-only plan/journal routes.
+- Frontend đang ở giai đoạn rebuild hiện tại, nhưng runtime production đã có homepage, community, auth, planner canonical flow, profile, journal editor tối giản, và public read-only plan/journal routes.
 - Vì vậy checklist smoke cần tách rõ:
   - smoke tối thiểu cho public runtime và asset pipeline
-  - smoke đầy đủ cho compatibility routes hiện tại
-  - smoke sau này cho canonical planner/journal cutover
+  - smoke đầy đủ cho canonical planner/journal routes hiện tại
+  - smoke compatibility redirects cũ để tránh gãy link đã chia sẻ nội bộ
 
 ## Checklist hardening verify sau deploy
 
@@ -120,8 +120,7 @@ Frontend có các script:
    - `https://buicojourney.com`
    - `https://www.buicojourney.com`
 6. Test theo đúng giai đoạn hiện tại của app:
-   - verify public runtime, asset pipeline, auth/community, planner compatibility route, profile, và journal compatibility route
-   - sau canonical planner/journal cutover, verify thêm route target theo checklist riêng bên dưới
+   - verify public runtime, asset pipeline, auth/community, planner canonical route, profile, journal canonical route, và compatibility redirects
 
 ## Post-deploy checklist tối thiểu
 
@@ -143,25 +142,25 @@ Sau mỗi deploy production, ưu tiên verify nhanh theo đúng thứ tự này:
    - expected: vào được app shell và session boot ổn
 7. Mở `/app/planner`
    - expected: planner tạo mới mở trực tiếp spread nhập thông tin, cụm progress bên dưới chỉ có bước `1` và `2`
-8. Mở `/app/planner?tripId=<owned-trip-id>`
+8. Mở `/app/trips/:tripId/planner`
    - expected: planner đã lưu load được thông tin chung và danh sách activity
 9. Mở `/app/profile`
    - expected: tab kế hoạch/nhật ký load được dữ liệu hoặc empty state hợp lệ
-10. Mở `/app/journal?tripId=<owned-trip-id>`
+10. Mở `/app/trips/:tripId/journal`
     - expected: journal editor render được scene, thêm object và lưu qua `PUT /trips/:tripId/journal`
 11. Mở public route `/public/trips/:tripId` và `/public/trips/:tripId/journal`
     - expected: read-only plan/journal load được khi trip đang public, hoặc hiện trạng thái lỗi hợp lệ khi không public
 12. Đăng xuất từ `/app/profile`
     - expected: quay lại flow public/auth với notice hợp lệ
 
-### Sau canonical planner/journal cutover
+### Compatibility redirects cần giữ
 
-- Mở `/app/trips/:tripId/planner`
-  - expected: planner workspace load trực tiếp, không còn phụ thuộc compatibility query string
-- Mở `/app/trips/:tripId/journal`
-  - expected: journal viewer/editor load trực tiếp theo route param
 - Mở `/app/trips/:tripId`
   - expected: redirect về planner đúng route canonical
+- Mở `/app/planner?tripId=<owned-trip-id>`
+  - expected: redirect về `/app/trips/:tripId/planner`
+- Mở `/app/journal?tripId=<owned-trip-id>`
+  - expected: redirect về `/app/trips/:tripId/journal`
 
 Nếu đang verify phase budget hardening, bổ sung thêm một trip có planner cost để rà lại budget summary owner flow.
 
@@ -193,7 +192,7 @@ Scope: frontend/main @ <commit>
 Local verify: pass
 Public smoke: landing pass, homepage baseline pass
 Warnings / advisory: public domain health có warning Cloudflare nhưng local runtime vẫn healthy
-Deferred / next action: verify canonical planner/journal routes sau route cutover hoặc journal renderer rollout
+Deferred / next action: verify compatibility redirects hoặc journal editor controls nếu deploy vừa chạm route/editor
 ```
 
 ## Kiểm tra sau reboot

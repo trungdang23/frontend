@@ -11,9 +11,9 @@
 
 - `src/main.tsx` đã bootstrap app thật với `AppProviders + router`.
 - `app/providers`, `shared/api`, `auth/session`, `trips` API, `community` API, và i18n baseline vẫn còn.
-- Route `/`, `/community`, `/auth/login`, `/auth/register`, `/app/planner`, `/app/journal`, `/app/profile`, `/public/trips/:tripId`, và `/public/trips/:tripId/journal` đã có screen thật; journal hiện là read-only scene renderer phase đầu.
-- Route target `/app/trips/:tripId`, `/app/trips/:tripId/planner`, và `/app/trips/:tripId/journal` hiện là compatibility aliases redirect về `/app/planner?tripId=...` hoặc `/app/journal?tripId=...`.
-- Journal feature hiện có API client, query key, type model, owner journal listing for profile, trip picker, scene renderer, public read-only journal route, và editor controls tối giản trên route journal. Editor shell tách riêng, object transforms, asset upload, và autosave vẫn deferred.
+- Route `/`, `/community`, `/auth/login`, `/auth/register`, `/app/planner`, `/app/profile`, `/app/trips/:tripId/planner`, `/app/trips/:tripId/journal`, `/public/trips/:tripId`, và `/public/trips/:tripId/journal` đã có screen thật.
+- Route target `/app/trips/:tripId/planner` và `/app/trips/:tripId/journal` hiện là route chính thật; `/app/trips/:tripId`, `/app/planner?tripId=...`, và `/app/journal?tripId=...` là compatibility redirects.
+- Journal feature hiện có API client, query key, type model, owner journal listing for profile, scene renderer, public read-only journal route, drag object, selected-object controls, manual save dirty state, và editor controls tối giản trên route journal. Editor shell tách riêng, resize handles, asset upload, và autosave vẫn deferred.
 
 ## Kiến trúc mục tiêu
 
@@ -190,8 +190,9 @@ frontend/
 Compatibility:
 
 - `/app/trips/:tripId` là compatibility alias về planner.
-- Trong source hiện tại, `/app/trips/:tripId/planner` redirect về `/app/planner?tripId=...` và `/app/trips/:tripId/journal` redirect về `/app/journal?tripId=...`.
-- Khi cutover sang canonical route, cần cập nhật router, shared navigation/profile links, tests, deploy smoke checklist, và docs trong cùng slice.
+- `/app/planner?tripId=...` redirect về `/app/trips/:tripId/planner`.
+- `/app/journal?tripId=...` redirect về `/app/trips/:tripId/journal`.
+- `/app/planner` không có `tripId` vẫn là entry tạo trip/planner mới; `/app/journal` không có `tripId` redirect về profile.
 
 ## Reuse chiến lược giữa viewer và editor
 

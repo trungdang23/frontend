@@ -704,6 +704,30 @@ Bắt đầu biến journal editor từ creator tĩnh thành editor trực tiế
 - autosave/debounce
 - asset upload thật
 
+## FR-J6 - Journal MVP editing controls and route cutover
+
+### Mục tiêu
+
+Đưa journal editor từ drag baseline sang MVP usable hơn, đồng thời chuyển planner/journal sang canonical trip routes để demo flow end-to-end không còn lệch route map.
+
+### Scope của lượt triển khai này
+
+- [x] chuyển `/app/trips/:tripId/planner` thành route planner chính thật
+- [x] chuyển `/app/trips/:tripId/journal` thành route journal chính thật
+- [x] giữ `/app/planner?tripId=...` và `/app/journal?tripId=...` làm compatibility redirect
+- [x] cập nhật profile/public copy links sang canonical route mới
+- [x] thêm panel object đang chọn trong journal editor
+- [x] thêm delete object và đổi layer order tối thiểu
+- [x] thêm dirty/saved state cho manual save hiện tại
+- [x] cập nhật test route/presenter/editor helper liên quan
+
+### Deferred
+
+- resize handles
+- rotate handles trực tiếp trên object
+- autosave/debounce production-ready
+- asset upload thật
+
 ## FR-J4 - Profile share controls and public read-only pages
 
 ### Mục tiêu
@@ -1243,6 +1267,20 @@ Thêm nền route theo route map mới mà không thay đổi UI hiện tại, n
 - [x] redirect alias về route hiện tại tương ứng để giữ nguyên flow đang dùng
 - [x] giữ nguyên toàn bộ link hiện tại như `/app/planner?tripId=...`, `/app/planner`, `/app/journal`
 - [x] bổ sung test nhỏ cho redirect path builder để khóa behavior không đổi UI
+
+### FR-C1 - Canonical planner and journal route cutover
+
+### Mục tiêu
+
+Đổi route target trong source thành route chính, giữ route compatibility cũ như cửa vào chuyển tiếp thay vì để target canonical tiếp tục redirect ngược.
+
+### Scope của lượt triển khai này
+
+- [x] route `/app/trips/:tripId/planner` render planner trực tiếp
+- [x] route `/app/trips/:tripId/journal` render journal trực tiếp
+- [x] route `/app/trips/:tripId` redirect về planner canonical
+- [x] route `/app/planner?tripId=...` và `/app/journal?tripId=...` redirect về canonical tương ứng
+- [x] route `/app/planner` không có `tripId` vẫn là entry tạo planner/trip mới
 
 ### Scope của lượt triển khai này
 

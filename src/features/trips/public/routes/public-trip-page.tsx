@@ -41,7 +41,7 @@ export function PublicTripPage() {
     onSuccess: (result) => {
       queryClient.setQueryData(plannerQueryKeys.detail(result.trip.id), result);
       void queryClient.invalidateQueries({ queryKey: ['trips', 'list'] });
-      navigate(`/app/planner?tripId=${encodeURIComponent(result.trip.id)}`);
+      navigate(`/app/trips/${encodeURIComponent(result.trip.id)}/planner`);
     },
   });
   const errorStatus =

@@ -72,7 +72,7 @@ export function buildProfileJournalEntries(
   shareBadgeLabels: ProfileJournalShareBadgeLabels = {},
 ): ProfileGridEntry[] {
   return journals.map(({ journal, trip }, index) => ({
-    actionHref: `/app/journal?tripId=${encodeURIComponent(trip.id)}`,
+    actionHref: `/app/trips/${encodeURIComponent(trip.id)}/journal`,
     actionLabel,
     id: trip.id,
     image:
@@ -94,13 +94,13 @@ export function buildProfileTripEntries(
   shareBadgeLabels: ProfileShareBadgeLabels = {},
 ): ProfileGridEntry[] {
   return trips.map((trip, index) => ({
-    actionHref: `/app/planner?tripId=${encodeURIComponent(trip.id)}`,
+    actionHref: `/app/trips/${encodeURIComponent(trip.id)}/planner`,
     actionLabel,
     id: trip.id,
     image: trip.coverImageUrl || resolveFallbackImage(index),
     metadata: `${formatProfileDate(trip.startDate)} • ${formatTripDuration(trip.startDate, trip.endDate)}`,
     rotationClass: resolveRotationClass(index),
-    secondaryActionHref: `/app/journal?tripId=${encodeURIComponent(trip.id)}`,
+    secondaryActionHref: `/app/trips/${encodeURIComponent(trip.id)}/journal`,
     secondaryActionLabel,
     shareBadgeLabel: resolveShareBadgeLabel(trip.visibility, shareBadgeLabels),
     summary: trip.destination || trip.summaryNotes || undefined,

@@ -21,7 +21,7 @@ Nhận xét quan trọng:
 - Runtime UI hiện đã wiring thật cho homepage, community, auth, planner compatibility flow, profile, và journal read-only renderer.
 - `trip-planning-api.ts` vẫn là bridge cũ cho semantics `itinerary + budget`; không nên mở rộng file này cho journal editor.
 - Planner `PlanNode` client đã được tách tại `src/features/trips/planning/api/planner-api.ts`.
-- Route canonical mục tiêu là `/app/trips/:tripId/planner`, nhưng source hiện vẫn dùng compatibility route `/app/planner?tripId=...` và alias redirect để giữ flow ổn định trong giai đoạn chuyển tiếp.
+- Route canonical `/app/trips/:tripId/planner` hiện là planner route chính cho trip đã lưu; `/app/planner?tripId=...` chỉ còn là compatibility redirect.
 
 ## Backend base hiện tại
 

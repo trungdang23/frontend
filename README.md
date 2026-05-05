@@ -7,7 +7,7 @@ Frontend package cho sản phẩm `journey`.
 - `frontend/` đang dùng `React + Vite + TypeScript`.
 - Runtime UI không còn chỉ là placeholder. Route `/` đã được dựng thành homepage scrapbook đầu tiên để chốt visual direction cho lần rebuild này.
 - Route `/community`, auth, planner, journal read-only renderer, và profile đã có route thật trong app router.
-- Planner hiện đang chạy bằng compatibility route `/app/planner?tripId=...` và dùng `PlanNode` API client riêng; route target `/app/trips/:tripId/planner` đang redirect về flow này để tránh gãy link trong giai đoạn chuyển tiếp.
+- Planner trip-specific hiện chạy trực tiếp ở `/app/trips/:tripId/planner` và dùng `PlanNode` API client riêng; `/app/planner?tripId=...` được giữ làm compatibility redirect.
 - Profile đã bind dữ liệu thật từ `journals/mine` và `trips`; journal hiện có API client, trip picker, renderer và editor tối giản để thêm note/ảnh/sticker/tape rồi lưu qua `PUT /trips/:tripId/journal`. Profile cũng có share modal cho kế hoạch và nhật ký với `private | public` riêng từng loại; route read-only `/public/trips/:tripId` có CTA copy kế hoạch vào tài khoản, còn `/public/trips/:tripId/journal` đọc theo journal visibility riêng. Community feed đang gộp public posts, public trips, và public journals. Drag/drop/autosave vẫn chưa dựng.
 - Những phần nền vẫn còn giá trị và đang được giữ:
   - shared API client + API error handling
@@ -25,8 +25,8 @@ Frontend package cho sản phẩm `journey`.
 - `planner` và `journal` là hai workspace riêng:
   - `/app/trips/:tripId/planner`
   - `/app/trips/:tripId/journal`
-- Route cũ `/app/trips/:tripId` nên được giữ như compatibility redirect về `planner`.
-- Trong source hiện tại, các route target này vẫn là alias/redirect về `/app/planner?tripId=...` và `/app/journal?tripId=...`; cutover sang canonical path là việc riêng cần chốt trước khi đổi navigation chính.
+- Route cũ `/app/trips/:tripId` được giữ như compatibility redirect về `planner`.
+- Trong source hiện tại, `/app/trips/:tripId/planner` và `/app/trips/:tripId/journal` là route chính thật; `/app/planner?tripId=...` và `/app/journal?tripId=...` chỉ còn là compatibility redirects.
 - Hướng lưu trữ hiện tại là `PostgreSQL + JSONB` cho scene journal phase đầu, chưa nên đổi hẳn sang `MongoDB`.
 
 ## Docs nên đọc theo thứ tự

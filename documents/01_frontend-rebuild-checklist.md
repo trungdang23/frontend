@@ -18,16 +18,16 @@
 - [x] route `/` đã có homepage scrapbook baseline thật
 - [x] route `/community` đã có feed public đầu tiên
 - [x] auth routes đã có shared chrome và session flow
-- [x] planner route hiện tại đã dùng `PlanNode` API client qua compatibility route `/app/planner?tripId=...`
+- [~] planner route hiện tại đã dùng `PlanNode` API client; lượt cutover đang chuyển trip-specific planner sang `/app/trips/:tripId/planner` và giữ `/app/planner?tripId=...` làm compatibility redirect
 - [x] profile route đã bind `journals/mine` và `trips`, có share modal cho kế hoạch/nhật ký
-- [~] journal route đã có API client, trip picker, renderer, và editor tối giản; drag/drop/autosave chưa có
+- [~] journal route đã có API client, trip picker, renderer, editor tối giản và drag object; autosave/inspector đầy đủ chưa có
 - [x] shared API client vẫn còn
 - [x] auth session modules vẫn còn
 - [x] `trips` và `community` API modules vẫn còn
 - [x] `planner-api.ts` cho `PlanNode` đã tồn tại dưới `features/trips/planning/api`
 - [x] i18n baseline vẫn còn
 - [x] test baseline vẫn còn
-- [~] runtime router/shell/UI primitives đã có cho các surface chính và route public read-only cho plan/journal, nhưng route canonical planner/journal và journal engine vẫn chưa cutover hoàn chỉnh
+- [~] runtime router/shell/UI primitives đã có cho các surface chính và route public read-only cho plan/journal; canonical planner/journal cutover đang được thực hiện trong slice `FR-J6`
 
 ## Bộ docs active cần giữ
 
@@ -68,11 +68,11 @@ Status: `In progress`
 - [x] chốt ranh giới `fixed-layout vs freeform`
 - [x] chốt route map mức nền cho `planner` và `journal`
 - [x] dựng homepage scrapbook baseline ở `/`
-- [~] dựng lại router và app shell
+- [~] dựng lại router và app shell, bao gồm cutover canonical planner/journal routes
 - [ ] dựng design token system mới
 - [~] dựng fixed-layout public/auth/protected surfaces
 - [x] dựng journal scene renderer
-- [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape; drag/drop/inspector còn deferred
+- [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape và drag object; inspector đầy đủ còn deferred
 - [~] chốt journal API contract với backend phase đầu `GET/PUT /trips/:tripId/journal`; page-level contract còn deferred
 - [ ] chốt asset flow
 - [x] cập nhật deploy smoke checklist theo route mới

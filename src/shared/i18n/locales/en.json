@@ -484,8 +484,29 @@
       "saving": "Saving...",
       "saveSuccess": "Journal saved.",
       "saveError": "Unable to save journal.",
+      "savedState": "Saved",
+      "unsavedChanges": "Unsaved changes",
+      "selectionTitle": "Selected piece",
+      "noSelection": "Select a piece on the page to change layers, rotate, or delete it.",
+      "objectPosition": "x {{x}} · y {{y}}",
+      "sendBackward": "Send piece backward",
+      "sendBackwardShort": "Back",
+      "bringForward": "Bring piece forward",
+      "bringForwardShort": "Front",
+      "rotateLeft": "Rotate left",
+      "rotateLeftShort": "Left",
+      "rotateRight": "Rotate right",
+      "rotateRightShort": "Right",
+      "deleteObject": "Delete piece",
+      "deleteObjectShort": "Delete",
       "objectControlLabel": "Select and move journal piece",
-      "objectCount": "{{count}} pieces"
+      "objectCount": "{{count}} pieces",
+      "objectTypes": {
+        "note": "Note",
+        "photo": "Photo",
+        "sticker": "Sticker",
+        "tape": "Tape"
+      }
     },
     "publicPage": {
       "eyebrow": "Shared journal",
