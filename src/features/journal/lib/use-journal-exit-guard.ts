@@ -1,94 +1,97 @@
 import { useEffect } from 'react';
-import { useBeforeUnload } from 'react-router-dom';
+import { useBeforeUnload, useBlocker } from 'react-router-dom';
 
 type UseJournalExitGuardOptions = {
   message: string;
   when: boolean;
 };
 
+type JournalGuardLocation = {
+  hash: string;
+  pathname: string;
+  search: string;
+};
+
+type BeforeUnloadGuardEvent = Pick<
+  BeforeUnloadEvent,
+  'preventDefault' | 'returnValue'
+>;
+
+type ResolveJournalNavigationBlockInput = {
+  blockerState: 'blocked' | 'proceeding' | 'unblocked';
+  confirmLeave: () => boolean;
+  proceed?: () => void;
+  reset?: () => void;
+};
+
+export function shouldBlockJournalNavigation(input: {
+  currentLocation: JournalGuardLocation;
+  nextLocation: JournalGuardLocation;
+  when: boolean;
+}) {
+  if (!input.when) {
+    return false;
+  }
+
+  return (
+    input.currentLocation.pathname !== input.nextLocation.pathname ||
+    input.currentLocation.search !== input.nextLocation.search ||
+    input.currentLocation.hash !== input.nextLocation.hash
+  );
+}
+
+export function applyBeforeUnloadJournalGuard(
+  event: BeforeUnloadGuardEvent,
+  when: boolean,
+) {
+  if (!when) {
+    return;
+  }
+
+  event.preventDefault();
+  event.returnValue = '';
+}
+
+export function resolveJournalNavigationBlock(
+  input: ResolveJournalNavigationBlockInput,
+) {
+  if (input.blockerState !== 'blocked') {
+    return;
+  }
+
+  if (input.confirmLeave()) {
+    input.proceed?.();
+    return;
+  }
+
+  input.reset?.();
+}
+
 export function useJournalExitGuard({
   message,
   when,
 }: UseJournalExitGuardOptions) {
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => {
+    return shouldBlockJournalNavigation({
+      currentLocation,
+      nextLocation,
+      when,
+    });
+  });
+
   useBeforeUnload(
     (event) => {
-      if (!when) {
-        return;
-      }
-
-      event.preventDefault();
-      event.returnValue = '';
+      applyBeforeUnloadJournalGuard(event, when);
     },
     { capture: true },
   );
 
   useEffect(() => {
-    if (!when) {
-      return;
-    }
-
-    const handleDocumentClick = (event: MouseEvent) => {
-      if (
-        event.defaultPrevented ||
-        event.button !== 0 ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey
-      ) {
-        return;
-      }
-
-      const target = event.target;
-
-      if (!(target instanceof Element)) {
-        return;
-      }
-
-      const anchor = target.closest('a[href]');
-
-      if (!(anchor instanceof HTMLAnchorElement)) {
-        return;
-      }
-
-      if (
-        anchor.target &&
-        anchor.target !== '_self' &&
-        anchor.target !== ''
-      ) {
-        return;
-      }
-
-      if (anchor.hasAttribute('download')) {
-        return;
-      }
-
-      const nextUrl = new URL(anchor.href, window.location.href);
-      const currentUrl = new URL(window.location.href);
-
-      if (nextUrl.origin !== currentUrl.origin) {
-        return;
-      }
-
-      if (
-        nextUrl.pathname === currentUrl.pathname &&
-        nextUrl.search === currentUrl.search
-      ) {
-        return;
-      }
-
-      if (window.confirm(message)) {
-        return;
-      }
-
-      event.preventDefault();
-      event.stopPropagation();
-    };
-
-    document.addEventListener('click', handleDocumentClick, true);
-
-    return () => {
-      document.removeEventListener('click', handleDocumentClick, true);
-    };
-  }, [message, when]);
+    resolveJournalNavigationBlock({
+      blockerState: blocker.state,
+      confirmLeave: () => window.confirm(message),
+      proceed: blocker.proceed,
+      reset: blocker.reset,
+    });
+  }, [blocker, message]);
 }

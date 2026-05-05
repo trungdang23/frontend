@@ -147,7 +147,7 @@ Sau mỗi deploy production, ưu tiên verify nhanh theo đúng thứ tự này:
 9. Mở `/app/profile`
    - expected: tab kế hoạch/nhật ký load được dữ liệu hoặc empty state hợp lệ
 10. Mở `/app/trips/:tripId/journal`
-    - expected: journal editor render được scene, thêm object, autosave debounce hoặc lưu tay vẫn persist qua `PUT /trips/:tripId/journal`, và nếu còn dirty state thì reload hoặc click link nội bộ sẽ hiện confirm
+    - expected: journal editor render được scene, thêm object, autosave debounce hoặc lưu tay vẫn persist qua `PUT /trips/:tripId/journal`, và nếu còn dirty state thì reload, click link nội bộ, hoặc browser back/forward sẽ hiện confirm
 11. Mở public route `/public/trips/:tripId` và `/public/trips/:tripId/journal`
     - expected: read-only plan/journal load được khi trip đang public, hoặc hiện trạng thái lỗi hợp lệ khi không public
 12. Đăng xuất từ `/app/profile`

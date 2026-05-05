@@ -745,11 +745,31 @@ Giảm rủi ro mất dữ liệu trong journal editor hiện tại trước khi
 
 ### Deferred
 
-- browser back/forward history guard đầy đủ trong kiến trúc `BrowserRouter` hiện tại
 - route-level guard test ổn định cho navigation confirm
 - conflict resolution cho multi-tab editing
 - revision history
 - background retry queue ngoài session hiện tại
+
+## FR-J8 - Data router migration for full journal navigation blocking
+
+### Mục tiêu
+
+Đổi app router sang data-router để journal editor có thể chặn điều hướng trong app đầy đủ hơn, bao gồm cả browser back/forward, thay vì chỉ xử lý reload/tab close và click link nội bộ.
+
+### Scope của lượt triển khai này
+
+- [x] chuyển `AppRouter` từ `BrowserRouter + Routes` sang `createBrowserRouter + RouterProvider`
+- [x] giữ nguyên route map hiện tại, bao gồm canonical routes và compatibility redirects
+- [x] chuyển journal exit guard sang `useBlocker` trên data router
+- [x] chặn điều hướng nội bộ, bao gồm browser back/forward, khi journal còn dirty hoặc đang save
+- [x] giữ `beforeunload` guard cho reload/close tab
+- [x] bổ sung test helper nhỏ cho blocker flow của journal guard
+
+### Deferred
+
+- confirm UI tùy biến thay cho `window.confirm`
+- scroll restoration/pending navigation UX riêng cho data router
+- route loader/action refactor cho planner hoặc journal
 
 ## FR-J4 - Profile share controls and public read-only pages
 

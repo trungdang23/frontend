@@ -1,8 +1,9 @@
 import {
-  BrowserRouter,
   Navigate,
   Route,
-  Routes,
+  RouterProvider,
+  createBrowserRouter,
+  createRoutesFromElements,
   useLocation,
   useParams,
 } from 'react-router-dom';
@@ -62,88 +63,90 @@ function JournalCompatibilityRoute() {
   );
 }
 
+const appRouter = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route element={<HomePage />} path="/" />
+      <Route element={<CommunityFeedPage />} path="/community" />
+      <Route element={<PublicTripPage />} path="/public/trips/:tripId" />
+      <Route element={<PublicJournalPage />} path="/public/trips/:tripId/journal" />
+      <Route
+        element={(
+          <GuestRoute>
+            <LoginPage />
+          </GuestRoute>
+        )}
+        path="/auth/login"
+      />
+      <Route
+        element={(
+          <GuestRoute>
+            <RegisterPage />
+          </GuestRoute>
+        )}
+        path="/auth/register"
+      />
+      <Route
+        element={(
+          <ProtectedRoute>
+            <Navigate replace to="/app/planner" />
+          </ProtectedRoute>
+        )}
+        path="/app"
+      />
+      <Route
+        element={(
+          <ProtectedRoute>
+            <PlannerTripRouteRedirect />
+          </ProtectedRoute>
+        )}
+        path="/app/trips/:tripId"
+      />
+      <Route
+        element={(
+          <ProtectedRoute>
+            <PlannerPage />
+          </ProtectedRoute>
+        )}
+        path="/app/trips/:tripId/planner"
+      />
+      <Route
+        element={(
+          <ProtectedRoute>
+            <JournalPage />
+          </ProtectedRoute>
+        )}
+        path="/app/trips/:tripId/journal"
+      />
+      <Route
+        element={(
+          <ProtectedRoute>
+            <PlannerCompatibilityRoute />
+          </ProtectedRoute>
+        )}
+        path="/app/planner"
+      />
+      <Route
+        element={(
+          <ProtectedRoute>
+            <JournalCompatibilityRoute />
+          </ProtectedRoute>
+        )}
+        path="/app/journal"
+      />
+      <Route
+        element={(
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        )}
+        path="/app/profile"
+      />
+      <Route element={<Navigate replace to="/" />} path="*" />
+    </>,
+  ),
+);
+
 export function AppRouter() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<HomePage />} path="/" />
-        <Route element={<CommunityFeedPage />} path="/community" />
-        <Route element={<PublicTripPage />} path="/public/trips/:tripId" />
-        <Route element={<PublicJournalPage />} path="/public/trips/:tripId/journal" />
-        <Route
-          element={(
-            <GuestRoute>
-              <LoginPage />
-            </GuestRoute>
-          )}
-          path="/auth/login"
-        />
-        <Route
-          element={(
-            <GuestRoute>
-              <RegisterPage />
-            </GuestRoute>
-          )}
-          path="/auth/register"
-        />
-        <Route
-          element={(
-            <ProtectedRoute>
-              <Navigate replace to="/app/planner" />
-            </ProtectedRoute>
-          )}
-          path="/app"
-        />
-        <Route
-          element={(
-            <ProtectedRoute>
-              <PlannerTripRouteRedirect />
-            </ProtectedRoute>
-          )}
-          path="/app/trips/:tripId"
-        />
-        <Route
-          element={(
-            <ProtectedRoute>
-              <PlannerPage />
-            </ProtectedRoute>
-          )}
-          path="/app/trips/:tripId/planner"
-        />
-        <Route
-          element={(
-            <ProtectedRoute>
-              <JournalPage />
-            </ProtectedRoute>
-          )}
-          path="/app/trips/:tripId/journal"
-        />
-        <Route
-          element={(
-            <ProtectedRoute>
-              <PlannerCompatibilityRoute />
-            </ProtectedRoute>
-          )}
-          path="/app/planner"
-        />
-        <Route
-          element={(
-            <ProtectedRoute>
-              <JournalCompatibilityRoute />
-            </ProtectedRoute>
-          )}
-          path="/app/journal"
-        />
-        <Route
-          element={(
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          )}
-          path="/app/profile"
-        />
-        <Route element={<Navigate replace to="/" />} path="*" />
-      </Routes>
-    </BrowserRouter>
-  );
+  return <RouterProvider router={appRouter} />;
 }
