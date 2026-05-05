@@ -18,16 +18,16 @@
 - [x] route `/` đã có homepage scrapbook baseline thật
 - [x] route `/community` đã có feed public đầu tiên
 - [x] auth routes đã có shared chrome và session flow
-- [~] planner route hiện tại đã dùng `PlanNode` API client; lượt cutover đang chuyển trip-specific planner sang `/app/trips/:tripId/planner` và giữ `/app/planner?tripId=...` làm compatibility redirect
+- [x] planner route hiện tại đã dùng `PlanNode` API client; trip-specific planner đã cut over sang `/app/trips/:tripId/planner` và giữ `/app/planner?tripId=...` làm compatibility redirect
 - [x] profile route đã bind `journals/mine` và `trips`, có share modal cho kế hoạch/nhật ký
-- [~] journal route đã có API client, trip picker, renderer, editor tối giản và drag object; autosave/inspector đầy đủ chưa có
+- [~] journal route đã có API client, renderer, editor tối giản, drag object, selected-object controls, autosave debounce và leave guard mức thực dụng; inspector/handles đầy đủ chưa có
 - [x] shared API client vẫn còn
 - [x] auth session modules vẫn còn
 - [x] `trips` và `community` API modules vẫn còn
 - [x] `planner-api.ts` cho `PlanNode` đã tồn tại dưới `features/trips/planning/api`
 - [x] i18n baseline vẫn còn
 - [x] test baseline vẫn còn
-- [~] runtime router/shell/UI primitives đã có cho các surface chính và route public read-only cho plan/journal; canonical planner/journal cutover đang được thực hiện trong slice `FR-J6`
+- [~] runtime router/shell/UI primitives đã có cho các surface chính và route public read-only cho plan/journal; canonical planner/journal cutover đã xong và compatibility redirects vẫn đang được giữ trong giai đoạn chuyển tiếp
 
 ## Bộ docs active cần giữ
 
@@ -68,11 +68,11 @@ Status: `In progress`
 - [x] chốt ranh giới `fixed-layout vs freeform`
 - [x] chốt route map mức nền cho `planner` và `journal`
 - [x] dựng homepage scrapbook baseline ở `/`
-- [~] dựng lại router và app shell, bao gồm cutover canonical planner/journal routes
+- [~] dựng lại router và app shell; cutover canonical planner/journal routes đã xong, cleanup transition vẫn còn
 - [ ] dựng design token system mới
 - [~] dựng fixed-layout public/auth/protected surfaces
 - [x] dựng journal scene renderer
-- [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape và drag object; inspector đầy đủ còn deferred
+- [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape, drag object, selected-object controls, autosave debounce và leave guard mức thực dụng; inspector đầy đủ còn deferred
 - [~] chốt journal API contract với backend phase đầu `GET/PUT /trips/:tripId/journal`; page-level contract còn deferred
 - [ ] chốt asset flow
 - [x] cập nhật deploy smoke checklist theo route mới
@@ -91,4 +91,4 @@ Status: `In progress`
 - [x] docs không còn claim sai trạng thái source
 - [x] foundation đã ghi rõ quyết định storage
 - [x] backlog đã có slice cụ thể cho journal renderer/editor
-- [~] deploy runbook đã được refresh cho staged deploy và cần cập nhật tiếp khi canonical planner/journal routes hoặc journal renderer lên đầy đủ
+- [~] deploy runbook đã được refresh cho staged deploy và cần cập nhật tiếp khi planner/journal route hoặc journal editor flow thay đổi thêm

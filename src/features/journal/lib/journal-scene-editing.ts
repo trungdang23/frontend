@@ -70,9 +70,7 @@ export function areJournalScenesEqual(
   }
 
   return (
-    left.sceneVersion === right.sceneVersion &&
-    JSON.stringify(left.page) === JSON.stringify(right.page) &&
-    areJournalObjectListsEqual(left.objects, right.objects)
+    serializeJournalScene(left) === serializeJournalScene(right)
   );
 }
 
@@ -81,6 +79,40 @@ export function areJournalObjectListsEqual(
   right: JournalSceneObject[],
 ) {
   return JSON.stringify(left) === JSON.stringify(right);
+}
+
+export function serializeJournalScene(
+  journal: Pick<TripJournal, 'objects' | 'page' | 'sceneVersion'>,
+) {
+  return JSON.stringify({
+    objects: journal.objects,
+    page: journal.page,
+    sceneVersion: journal.sceneVersion,
+  });
+}
+
+export function shouldAutosaveJournalScene(input: {
+  activeFingerprint: string | null;
+  isDirty: boolean;
+  isPending: boolean;
+  lastAutosaveFingerprint: string | null;
+}) {
+  return Boolean(
+    input.activeFingerprint &&
+      input.isDirty &&
+      !input.isPending &&
+      input.lastAutosaveFingerprint !== input.activeFingerprint,
+  );
+}
+
+export function shouldReplaceDraftWithSavedScene(
+  currentDraft: TripJournal | null,
+  requestedFingerprint: string,
+) {
+  return (
+    !currentDraft ||
+    serializeJournalScene(currentDraft) === requestedFingerprint
+  );
 }
 
 function getLayerOrderedObjects(objects: JournalSceneObject[]) {

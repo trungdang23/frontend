@@ -2,7 +2,7 @@
 
 ## Trạng thái
 
-- Date: `2026-04-22`
+- Date: `2026-05-05`
 - Status: `Active rebuild baseline`
 - Owner area:
   - `frontend/documents`
@@ -728,6 +728,29 @@ Bắt đầu biến journal editor từ creator tĩnh thành editor trực tiế
 - autosave/debounce production-ready
 - asset upload thật
 
+## FR-J7 - Journal autosave and exit guard
+
+### Mục tiêu
+
+Giảm rủi ro mất dữ liệu trong journal editor hiện tại trước khi mở rộng thêm asset flow hoặc handles phức tạp hơn.
+
+### Scope của lượt triển khai này
+
+- [x] thêm autosave debounce cho scene journal khi có thay đổi
+- [x] giữ manual save như fallback rõ ràng
+- [x] thêm trạng thái đang tự lưu và đã tự lưu
+- [x] chặn reload/close tab khi còn thay đổi chưa lưu hoặc đang lưu
+- [x] chặn điều hướng nội bộ khỏi journal khi còn thay đổi chưa lưu hoặc đang lưu
+- [~] bổ sung test helper cho autosave và stale-save protection; route-level navigation guard test còn deferred
+
+### Deferred
+
+- browser back/forward history guard đầy đủ trong kiến trúc `BrowserRouter` hiện tại
+- route-level guard test ổn định cho navigation confirm
+- conflict resolution cho multi-tab editing
+- revision history
+- background retry queue ngoài session hiện tại
+
 ## FR-J4 - Profile share controls and public read-only pages
 
 ### Mục tiêu
@@ -1352,7 +1375,7 @@ Biến renderer thành editor usable thật.
 - [ ] duplicate/delete object
 - [ ] mở asset tray cho ảnh/sticker
 - [ ] inspector cho style cơ bản
-- [ ] dirty state + autosave indicator
+- [~] dirty state + autosave indicator
 
 ### Acceptance criteria
 
@@ -1368,10 +1391,10 @@ Kết nối editor với backend theo một contract bền vững.
 ### Việc cần làm
 
 - [ ] chốt API draft cho journal page CRUD
-- [ ] chốt save strategy:
-  - [ ] snapshot save
-  - [ ] debounce autosave
-  - [ ] manual save fallback
+- [~] chốt save strategy:
+  - [~] snapshot save
+  - [~] debounce autosave
+  - [x] manual save fallback
 - [ ] chốt revision model tối thiểu
 - [ ] tách asset metadata khỏi scene payload
 - [ ] dựng publish/read-only flow

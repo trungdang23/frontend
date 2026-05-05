@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect, useState } from 'react';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useParams, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -26,8 +26,12 @@ import {
   type JournalLayerDirection,
   moveObjectLayer,
   normalizeRotation,
+  serializeJournalScene,
+  shouldAutosaveJournalScene,
+  shouldReplaceDraftWithSavedScene,
 } from '@/features/journal/lib/journal-scene-editing';
 import { journalQueryKeys } from '@/features/journal/lib/journal-query-keys';
+import { useJournalExitGuard } from '@/features/journal/lib/use-journal-exit-guard';
 import type {
   JournalObjectType,
   JournalSceneObject,
@@ -37,6 +41,10 @@ import type {
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { useI18n } from '@/shared/i18n/use-i18n';
+
+const JOURNAL_AUTOSAVE_DELAY_MS = 1500;
+
+type JournalSaveReason = 'autosave' | 'manual';
 
 export function JournalPage() {
   const { t } = useI18n();
@@ -64,20 +72,36 @@ export function JournalPage() {
   const isDirty = activeJournal
     ? !areJournalScenesEqual(activeJournal, savedJournal)
     : false;
+  const lastCompletedSaveReasonRef = useRef<JournalSaveReason | null>(null);
+  const lastAutosaveFingerprintRef = useRef<string | null>(null);
+  const activeSceneFingerprint = activeJournal
+    ? serializeJournalScene(activeJournal)
+    : null;
   const saveJournalMutation = useMutation({
-    mutationFn: async () => {
-      if (!activeJournal) {
-        throw new Error('Journal is not loaded.');
-      }
-
+    mutationFn: async ({
+      fingerprint,
+      journal,
+      reason,
+    }: {
+      fingerprint: string;
+      journal: TripJournal;
+      reason: JournalSaveReason;
+    }) => {
       return saveTripJournal(tripId, {
-        sceneVersion: activeJournal.sceneVersion,
-        page: activeJournal.page,
-        objects: activeJournal.objects,
+        sceneVersion: journal.sceneVersion,
+        page: journal.page,
+        objects: journal.objects,
       });
     },
-    onSuccess: (result) => {
-      setDraftJournal(result.journal);
+    onSuccess: (result, variables) => {
+      lastCompletedSaveReasonRef.current = variables.reason;
+      setDraftJournal((currentDraft) => {
+        if (!shouldReplaceDraftWithSavedScene(currentDraft, variables.fingerprint)) {
+          return currentDraft;
+        }
+
+        return result.journal;
+      });
       queryClient.setQueryData<TripJournalResult>(
         journalQueryKeys.detail(tripId),
         result,
@@ -87,6 +111,7 @@ export function JournalPage() {
       });
     },
   });
+  const mutateJournalSave = saveJournalMutation.mutate;
 
   useEffect(() => {
     if (journalQuery.data?.journal) {
@@ -103,6 +128,47 @@ export function JournalPage() {
       setSelectedObjectId(null);
     }
   }, [activeJournal, selectedObjectId]);
+
+  useEffect(() => {
+    if (
+      !shouldAutosaveJournalScene({
+        activeFingerprint: activeSceneFingerprint,
+        isDirty,
+        isPending: saveJournalMutation.isPending,
+        lastAutosaveFingerprint: lastAutosaveFingerprintRef.current,
+      })
+    ) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      if (!activeJournal) {
+        return;
+      }
+
+      lastAutosaveFingerprintRef.current = activeSceneFingerprint;
+      mutateJournalSave({
+        fingerprint: activeSceneFingerprint!,
+        journal: activeJournal,
+        reason: 'autosave',
+      });
+    }, JOURNAL_AUTOSAVE_DELAY_MS);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [
+    activeJournal,
+    activeSceneFingerprint,
+    isDirty,
+    mutateJournalSave,
+    saveJournalMutation.isPending,
+  ]);
+
+  useJournalExitGuard({
+    message: t('journalPage.editor.leaveConfirm'),
+    when: isDirty || saveJournalMutation.isPending,
+  });
 
   if (!tripId) {
     return <Navigate replace to="/app/profile" />;
@@ -183,6 +249,22 @@ export function JournalPage() {
     }
 
     return t('journalPage.description');
+  }
+
+  function resolveSaveStatusLabel() {
+    if (saveJournalMutation.isPending) {
+      return saveJournalMutation.variables?.reason === 'autosave'
+        ? t('journalPage.editor.autosaving')
+        : t('journalPage.editor.saving');
+    }
+
+    if (isDirty) {
+      return t('journalPage.editor.unsavedChanges');
+    }
+
+    return lastCompletedSaveReasonRef.current === 'autosave'
+      ? t('journalPage.editor.autosavedState')
+      : t('journalPage.editor.savedState');
   }
 
   function renderJournalSurface() {
@@ -385,12 +467,24 @@ export function JournalPage() {
           <button
             className="inline-flex items-center gap-2 rounded-full border border-[#2f5d34]/30 bg-[#b9e177] px-5 py-2.5 font-marker text-[1.02rem] font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
             disabled={saveJournalMutation.isPending || !isDirty}
-            onClick={() => saveJournalMutation.mutate()}
+            onClick={() => {
+              if (!activeJournal) {
+                return;
+              }
+
+              mutateJournalSave({
+                fingerprint: serializeJournalScene(activeJournal),
+                journal: activeJournal,
+                reason: 'manual',
+              });
+            }}
             type="button"
           >
             <Save aria-hidden="true" className="h-4 w-4" />
             {saveJournalMutation.isPending
-              ? t('journalPage.editor.saving')
+              ? saveJournalMutation.variables?.reason === 'autosave'
+                ? t('journalPage.editor.autosaving')
+                : t('journalPage.editor.saving')
               : t('journalPage.editor.save')}
           </button>
           <span className="font-marker text-[1rem] leading-none text-[#6b4938]">
@@ -402,15 +496,13 @@ export function JournalPage() {
             className="font-marker text-[1rem] leading-none text-[#6b4938]"
             role="status"
           >
-            {saveJournalMutation.isPending
-              ? t('journalPage.editor.saving')
-              : isDirty
-                ? t('journalPage.editor.unsavedChanges')
-                : t('journalPage.editor.savedState')}
+            {resolveSaveStatusLabel()}
           </span>
         </div>
 
-        {saveJournalMutation.isSuccess && !isDirty ? (
+        {saveJournalMutation.isSuccess &&
+        !isDirty &&
+        saveJournalMutation.variables?.reason === 'manual' ? (
           <p
             className="mt-3 font-marker text-[1rem] leading-tight text-[#31521c]"
             role="status"

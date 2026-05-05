@@ -6,9 +6,9 @@ Frontend package cho sản phẩm `journey`.
 
 - `frontend/` đang dùng `React + Vite + TypeScript`.
 - Runtime UI không còn chỉ là placeholder. Route `/` đã được dựng thành homepage scrapbook đầu tiên để chốt visual direction cho lần rebuild này.
-- Route `/community`, auth, planner, journal read-only renderer, và profile đã có route thật trong app router.
+- Route `/community`, auth, planner, journal editor, và profile đã có route thật trong app router.
 - Planner trip-specific hiện chạy trực tiếp ở `/app/trips/:tripId/planner` và dùng `PlanNode` API client riêng; `/app/planner?tripId=...` được giữ làm compatibility redirect.
-- Profile đã bind dữ liệu thật từ `journals/mine` và `trips`; journal hiện có API client, trip picker, renderer và editor tối giản để thêm note/ảnh/sticker/tape rồi lưu qua `PUT /trips/:tripId/journal`. Profile cũng có share modal cho kế hoạch và nhật ký với `private | public` riêng từng loại; route read-only `/public/trips/:tripId` có CTA copy kế hoạch vào tài khoản, còn `/public/trips/:tripId/journal` đọc theo journal visibility riêng. Community feed đang gộp public posts, public trips, và public journals. Drag/drop/autosave vẫn chưa dựng.
+- Profile đã bind dữ liệu thật từ `journals/mine` và `trips`; journal hiện có API client, renderer và editor tối giản để thêm note/ảnh/sticker/tape, kéo object, đổi layer, xoay nhẹ, autosave debounce và lưu qua `PUT /trips/:tripId/journal`. Profile cũng có share modal cho kế hoạch và nhật ký với `private | public` riêng từng loại; route read-only `/public/trips/:tripId` có CTA copy kế hoạch vào tài khoản, còn `/public/trips/:tripId/journal` đọc theo journal visibility riêng. Community feed đang gộp public posts, public trips, và public journals. Leave guard thực dụng hiện chặn reload/close tab và click điều hướng nội bộ khi còn thay đổi chưa lưu hoặc đang lưu; resize handles, asset upload thật, history/revision và multi-tab conflict handling vẫn chưa dựng.
 - Những phần nền vẫn còn giá trị và đang được giữ:
   - shared API client + API error handling
   - auth session modules
