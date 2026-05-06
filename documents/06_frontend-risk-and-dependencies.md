@@ -12,16 +12,16 @@
 
 - shared API client còn sống
 - auth/session modules còn sống
-- `trips`, `community`, i18n baseline còn sống
-- runtime UI đã có homepage, community, auth, planner compatibility flow, profile, và journal placeholder route
-- planner hiện dùng `PlanNode` API client riêng qua compatibility route `/app/planner?tripId=...`
-- journal scene renderer/editor vẫn chưa có
+- `trips`, `community`, `journal`, và i18n baseline còn sống
+- runtime UI đã có homepage, community, auth, planner canonical flow, profile, journal editor tối giản, public read-only plan/journal routes, và compatibility redirects
+- planner hiện dùng `PlanNode` API client riêng ở `/app/trips/:tripId/planner`; `/app/planner?tripId=...` chỉ còn là compatibility redirect
+- journal hiện có API client, scene renderer/editor tối giản, autosave debounce, manual save, layer/rotate controls, public read-only route, và leave guard
 
 ### Từ backend
 
 - backend đang đi theo `NestJS + Prisma + PostgreSQL`
-- auth, trips, planner `PlanNode`, budget summary, public trips/planner, posts, và itinerary compatibility bridge đã có nền
-- journal API riêng chưa có trong repo hiện tại
+- auth, trips, planner `PlanNode`, budget summary, public trips/planner, posts, journal persistence/share, và itinerary compatibility bridge đã có nền
+- journal API riêng hiện đã có `GET/PUT/PATCH/DELETE /trips/:tripId/journal`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`
 
 ### Từ product direction
 
@@ -106,10 +106,10 @@ Hướng xử lý:
 
 ## Dependency mở cần theo dõi
 
-- contract backend cuối cùng cho journal pages
+- contract dài hạn cho journal page-level CRUD, revisions, publish snapshot, và asset upload
 - asset upload/storage provider
-- quyết định cutover từ compatibility route `/app/planner?tripId=...` sang canonical `/app/trips/:tripId/planner`
-- deploy smoke checklist sau khi canonical planner/journal routes hoặc journal renderer lên đầy đủ
+- thời điểm loại bỏ compatibility redirects sau khi link cũ không còn caller
+- deploy smoke checklist cho journal editor controls, autosave, public read-only route, và compatibility redirects
 
 ## Điều cần giữ kỷ luật
 

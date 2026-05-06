@@ -10,11 +10,11 @@
 
 - Build the user-facing experience for the `journey` product.
 - Prioritize clear trip planning flows, community content browsing, and responsive layouts.
-- Keep the UI implementation aligned with product concepts shown in `../UI_demo.txt` without copying prototype code wholesale.
+- Keep the UI implementation aligned with product concepts shown in `../demo.txt` without copying prototype code wholesale.
 
 ## Frontend Rules
 
-- Organize code by feature or route once the app is scaffolded; avoid dumping all UI into a single large file.
+- Keep code organized by feature or route; avoid dumping UI into a single large file.
 - Before implementing any frontend task, write or update a task-specific backlog/checklist in the nearest relevant frontend document so scope, rollout order, and deferred items are explicit.
 - Reuse shared UI primitives for buttons, inputs, dialogs, cards, and layout patterns before adding one-off variants.
 - Keep display text centralized when the project introduces internationalization.

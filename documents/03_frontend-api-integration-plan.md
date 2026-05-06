@@ -15,13 +15,15 @@ Các API modules còn giữ trong repo:
 - `src/features/trips/api/trip-planning-api.ts`
 - `src/features/trips/planning/api/planner-api.ts`
 - `src/features/community/api/posts-api.ts`
+- `src/features/journal/api/journal-api.ts`
 
 Nhận xét quan trọng:
 
-- Runtime UI hiện đã wiring thật cho homepage, community, auth, planner compatibility flow, profile, và journal read-only renderer.
+- Runtime UI hiện đã wiring thật cho homepage, community, auth, planner canonical flow, profile, journal editor tối giản, và public read-only plan/journal routes.
 - `trip-planning-api.ts` vẫn là bridge cũ cho semantics `itinerary + budget`; không nên mở rộng file này cho journal editor.
 - Planner `PlanNode` client đã được tách tại `src/features/trips/planning/api/planner-api.ts`.
 - Route canonical `/app/trips/:tripId/planner` hiện là planner route chính cho trip đã lưu; `/app/planner?tripId=...` chỉ còn là compatibility redirect.
+- Route canonical `/app/trips/:tripId/journal` hiện là journal route chính cho trip đã lưu; `/app/journal?tripId=...` chỉ còn là compatibility redirect.
 
 ## Backend base hiện tại
 
@@ -89,7 +91,17 @@ Nhận xét quan trọng:
 - `GET /posts/mine`
 - `POST /posts`
 
-## Hướng contract mới cần bổ sung cho sản phẩm mới
+### Journal current contract
+
+- `GET /journals/mine`
+- `GET /trips/:tripId/journal`
+- `PUT /trips/:tripId/journal`
+- `PATCH /trips/:tripId/journal`
+- `DELETE /trips/:tripId/journal`
+- `GET /public/journals`
+- `GET /public/trips/:tripId/journal`
+
+## Contract dài hạn cần bổ sung cho sản phẩm mới
 
 ### Structured planner
 
@@ -119,12 +131,17 @@ Nhóm endpoint dài hạn đề xuất:
 - `POST /trips/:tripId/journal/pages/:pageId/publish`
 - `POST /trips/:tripId/journal/assets`
 
-Phase đầu hiện đã bắt đầu bằng:
+Phase đầu hiện đã có:
 
 - `GET /trips/:tripId/journal`
 - `PUT /trips/:tripId/journal`
+- `PATCH /trips/:tripId/journal` để đổi riêng visibility của journal
+- `DELETE /trips/:tripId/journal`
+- `GET /journals/mine`
+- `GET /public/journals`
+- `GET /public/trips/:tripId/journal`
 
-Nhưng cách này sẽ khó mở rộng revision/page-level publish về sau.
+Cách lưu một scene trên một record `trip_journals` đang đủ cho editor tối giản, nhưng sẽ khó mở rộng revision/page-level publish về sau nếu không tách page/assets/revisions thành contract riêng.
 
 ## Shape đề xuất cho journal page
 

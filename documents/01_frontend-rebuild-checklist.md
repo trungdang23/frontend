@@ -73,7 +73,7 @@ Status: `In progress`
 - [~] dựng fixed-layout public/auth/protected surfaces
 - [x] dựng journal scene renderer
 - [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape, drag object, selected-object controls, autosave debounce và leave guard qua data router; inspector đầy đủ còn deferred
-- [~] chốt journal API contract với backend phase đầu `GET/PUT /trips/:tripId/journal`; page-level contract còn deferred
+- [~] chốt journal API contract phase đầu với `GET/PUT/PATCH/DELETE /trips/:tripId/journal`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`; page-level contract còn deferred
 - [ ] chốt asset flow
 - [x] cập nhật deploy smoke checklist theo route mới
 
