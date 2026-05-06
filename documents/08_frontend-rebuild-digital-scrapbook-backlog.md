@@ -788,10 +788,31 @@ Cho journal editor thêm ảnh từ file local thay vì chỉ nhập URL thủ c
 
 ### Deferred
 
-- asset library/list/delete UI
 - signed/private asset delivery
 - cloud/object storage provider production-ready
 - cleanup file vật lý khi asset không còn được scene nào dùng
+
+## FR-J10 - Journal asset library and delete controls
+
+### Mục tiêu
+
+Cho owner xem lại các ảnh đã upload trong journal editor, thêm nhanh ảnh cũ vào scene, và xóa asset không còn cần dùng bằng contract backend lifecycle mới.
+
+### Scope của lượt triển khai này
+
+- [x] thêm `GET /trips/:tripId/journal/assets` vào journal API client
+- [x] thêm `DELETE /trips/:tripId/journal/assets/:assetId` vào journal API client
+- [x] hiển thị asset library gọn trong journal editor
+- [x] cho chọn asset đã upload để thêm lại thành object `photo`
+- [x] cho xóa asset chưa được scene hiện tại dùng
+- [x] chặn xóa asset đang được scene hiện tại hoặc scene đã lưu tham chiếu để tránh ảnh hỏng trong page
+
+### Deferred
+
+- asset search/filter/pagination
+- cleanup orphan asset tự động sau autosave failure hoặc user rời trang
+- signed/private asset delivery
+- cloud/object storage provider production-ready
 
 ## FR-J4 - Profile share controls and public read-only pages
 

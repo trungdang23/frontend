@@ -1,11 +1,12 @@
-import { env } from '@/app/config/env';
-import { request } from '@/shared/api/http-client';
+import { env } from "@/app/config/env";
+import { request } from "@/shared/api/http-client";
 import type {
   SaveTripJournalPayload,
+  TripJournalAssetListResult,
   TripJournalAssetResult,
   TripJournalResult,
   UpdateTripJournalPayload,
-} from '@/features/journal/types/journal';
+} from "@/features/journal/types/journal";
 
 type RequestOptions = {
   signal?: AbortSignal;
@@ -31,14 +32,14 @@ export async function getPublicTripJournal(
 }
 
 export async function listMyJournals(options: RequestOptions = {}) {
-  return request<TripJournalResult[]>('/journals/mine', {
+  return request<TripJournalResult[]>("/journals/mine", {
     auth: true,
     signal: options.signal,
   });
 }
 
 export async function listPublicJournals(options: RequestOptions = {}) {
-  return request<TripJournalResult[]>('/public/journals', {
+  return request<TripJournalResult[]>("/public/journals", {
     signal: options.signal,
   });
 }
@@ -50,7 +51,7 @@ export async function saveTripJournal(
   return request<TripJournalResult, SaveTripJournalPayload>(
     `/trips/${tripId}/journal`,
     {
-      method: 'PUT',
+      method: "PUT",
       auth: true,
       body: payload,
     },
@@ -60,12 +61,12 @@ export async function saveTripJournal(
 export async function uploadTripJournalAsset(tripId: string, file: File) {
   const formData = new FormData();
 
-  formData.set('file', file);
+  formData.set("file", file);
 
   const result = await request<TripJournalAssetResult, FormData>(
     `/trips/${tripId}/journal/assets`,
     {
-      method: 'POST',
+      method: "POST",
       auth: true,
       body: formData,
     },
@@ -79,15 +80,42 @@ export async function uploadTripJournalAsset(tripId: string, file: File) {
   };
 }
 
+export async function listTripJournalAssets(
+  tripId: string,
+  options: RequestOptions = {},
+) {
+  const result = await request<TripJournalAssetListResult>(
+    `/trips/${tripId}/journal/assets`,
+    {
+      auth: true,
+      signal: options.signal,
+    },
+  );
+
+  return {
+    assets: result.assets.map((asset) => ({
+      ...asset,
+      url: resolveJournalAssetUrl(asset.url),
+    })),
+  };
+}
+
+export async function deleteTripJournalAsset(tripId: string, assetId: string) {
+  return request<void>(`/trips/${tripId}/journal/assets/${assetId}`, {
+    method: "DELETE",
+    auth: true,
+  });
+}
+
 export function resolveJournalAssetUrl(pathOrUrl: string) {
   if (/^https?:\/\//i.test(pathOrUrl)) {
     return pathOrUrl;
   }
 
-  const normalizedPath = pathOrUrl.startsWith('/')
+  const normalizedPath = pathOrUrl.startsWith("/")
     ? pathOrUrl.slice(1)
     : pathOrUrl;
-  const normalizedBaseUrl = env.apiBaseUrl.endsWith('/')
+  const normalizedBaseUrl = env.apiBaseUrl.endsWith("/")
     ? env.apiBaseUrl
     : `${env.apiBaseUrl}/`;
 
@@ -101,7 +129,7 @@ export async function updateTripJournalVisibility(
   return request<TripJournalResult, UpdateTripJournalPayload>(
     `/trips/${tripId}/journal`,
     {
-      method: 'PATCH',
+      method: "PATCH",
       auth: true,
       body: payload,
     },
@@ -110,7 +138,7 @@ export async function updateTripJournalVisibility(
 
 export async function deleteTripJournal(tripId: string) {
   return request<void>(`/trips/${tripId}/journal`, {
-    method: 'DELETE',
+    method: "DELETE",
     auth: true,
   });
 }

@@ -1,7 +1,7 @@
-import type { Trip } from '@/features/trips/types/trip';
+import type { Trip } from "@/features/trips/types/trip";
 
-export type JournalObjectType = 'photo' | 'sticker' | 'note' | 'tape';
-export type JournalVisibility = 'private' | 'public';
+export type JournalObjectType = "photo" | "sticker" | "note" | "tape";
+export type JournalVisibility = "private" | "public";
 
 export type JournalPage = {
   width: number;
@@ -52,6 +52,10 @@ export type TripJournalAsset = {
 
 export type TripJournalAssetResult = {
   asset: TripJournalAsset;
+};
+
+export type TripJournalAssetListResult = {
+  assets: TripJournalAsset[];
 };
 
 export type SaveTripJournalPayload = {
