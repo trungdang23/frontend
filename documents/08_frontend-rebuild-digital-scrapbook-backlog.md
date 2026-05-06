@@ -151,6 +151,24 @@ Giai đoạn rebuild này chưa xử lý:
 
 ## Slice implementation đề xuất
 
+## Follow-up journal signed asset delivery support
+
+### Mục tiêu
+
+Giữ journal editor/public renderer tương thích khi backend đổi journal asset URL sang signed URL co query string, nhung khong doi model tuong tac tren UI.
+
+### Scope của lượt triển khai này
+
+- [ ] giu `resolveJournalAssetUrl()` resolve dung relative URL co query string
+- [ ] normalize signed relative `imageUrl` trong owner/public journal response thanh absolute API URL truoc khi dua vao renderer/editor
+- [ ] dam bao asset-backed object tiep tuc dua tren `assetId` la chinh khi xac dinh asset dang duoc su dung
+- [ ] bo sung test nho cho helper resolve signed relative asset URL
+
+### Deferred
+
+- tu dong refresh signed URL cho journal da mo lau hon TTL neu sau nay can
+- asset cache invalidation/tai lai anh khi signed URL thay doi trong session dai
+
 ## FR-PL1 - Planner step 1 local trip draft
 
 ### Mục tiêu

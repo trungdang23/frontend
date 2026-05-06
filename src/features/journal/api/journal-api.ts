@@ -1,6 +1,7 @@
 import { env } from "@/app/config/env";
 import { request } from "@/shared/api/http-client";
 import type {
+  JournalSceneObject,
   SaveTripJournalPayload,
   TripJournalAssetListResult,
   TripJournalAssetResult,
@@ -16,39 +17,50 @@ export async function getTripJournal(
   tripId: string,
   options: RequestOptions = {},
 ) {
-  return request<TripJournalResult>(`/trips/${tripId}/journal`, {
+  const result = await request<TripJournalResult>(`/trips/${tripId}/journal`, {
     auth: true,
     signal: options.signal,
   });
+
+  return normalizeTripJournalAssetUrls(result);
 }
 
 export async function getPublicTripJournal(
   tripId: string,
   options: RequestOptions = {},
 ) {
-  return request<TripJournalResult>(`/public/trips/${tripId}/journal`, {
-    signal: options.signal,
-  });
+  const result = await request<TripJournalResult>(
+    `/public/trips/${tripId}/journal`,
+    {
+      signal: options.signal,
+    },
+  );
+
+  return normalizeTripJournalAssetUrls(result);
 }
 
 export async function listMyJournals(options: RequestOptions = {}) {
-  return request<TripJournalResult[]>("/journals/mine", {
+  const results = await request<TripJournalResult[]>("/journals/mine", {
     auth: true,
     signal: options.signal,
   });
+
+  return results.map(normalizeTripJournalAssetUrls);
 }
 
 export async function listPublicJournals(options: RequestOptions = {}) {
-  return request<TripJournalResult[]>("/public/journals", {
+  const results = await request<TripJournalResult[]>("/public/journals", {
     signal: options.signal,
   });
+
+  return results.map(normalizeTripJournalAssetUrls);
 }
 
 export async function saveTripJournal(
   tripId: string,
   payload: SaveTripJournalPayload,
 ) {
-  return request<TripJournalResult, SaveTripJournalPayload>(
+  const result = await request<TripJournalResult, SaveTripJournalPayload>(
     `/trips/${tripId}/journal`,
     {
       method: "PUT",
@@ -56,6 +68,8 @@ export async function saveTripJournal(
       body: payload,
     },
   );
+
+  return normalizeTripJournalAssetUrls(result);
 }
 
 export async function uploadTripJournalAsset(tripId: string, file: File) {
@@ -126,7 +140,7 @@ export async function updateTripJournalVisibility(
   tripId: string,
   payload: UpdateTripJournalPayload,
 ) {
-  return request<TripJournalResult, UpdateTripJournalPayload>(
+  const result = await request<TripJournalResult, UpdateTripJournalPayload>(
     `/trips/${tripId}/journal`,
     {
       method: "PATCH",
@@ -134,6 +148,8 @@ export async function updateTripJournalVisibility(
       body: payload,
     },
   );
+
+  return normalizeTripJournalAssetUrls(result);
 }
 
 export async function deleteTripJournal(tripId: string) {
@@ -141,4 +157,54 @@ export async function deleteTripJournal(tripId: string) {
     method: "DELETE",
     auth: true,
   });
+}
+
+export function normalizeTripJournalAssetUrls(
+  result: TripJournalResult,
+): TripJournalResult {
+  return {
+    ...result,
+    journal: {
+      ...result.journal,
+      objects: result.journal.objects.map(normalizeJournalSceneObject),
+    },
+  };
+}
+
+function normalizeJournalSceneObject(
+  object: JournalSceneObject,
+): JournalSceneObject {
+  if (object.type !== "photo") {
+    return object;
+  }
+
+  const props = object.props ?? {};
+  const imageUrl = getStringProp(props, "imageUrl");
+  const src = getStringProp(props, "src");
+  const assetId = getStringProp(props, "assetId");
+
+  if (!assetId && !isJournalAssetUrl(imageUrl) && !isJournalAssetUrl(src)) {
+    return object;
+  }
+
+  return {
+    ...object,
+    props: {
+      ...props,
+      ...(imageUrl ? { imageUrl: resolveJournalAssetUrl(imageUrl) } : {}),
+      ...(src && isJournalAssetUrl(src)
+        ? { src: resolveJournalAssetUrl(src) }
+        : {}),
+    },
+  };
+}
+
+function getStringProp(props: Record<string, unknown>, key: string) {
+  const value = props[key];
+
+  return typeof value === "string" && value.trim().length > 0 ? value : null;
+}
+
+function isJournalAssetUrl(pathOrUrl: string | null) {
+  return pathOrUrl !== null && /(?:^|\/)journal-assets\//.test(pathOrUrl);
 }
