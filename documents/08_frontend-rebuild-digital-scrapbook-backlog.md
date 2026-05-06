@@ -814,6 +814,28 @@ Cho owner xem lại các ảnh đã upload trong journal editor, thêm nhanh ả
 - signed/private asset delivery
 - cloud/object storage provider production-ready
 
+## FR-J11 - Journal resize handles baseline
+
+### Muc tieu
+
+Cho owner doi kich thuoc `photo` va `note` truc tiep tren scene de journal editor biet "dan trang" thuc su, nhung van giu scope gon o mot handle resize co ban va khong mo them inspector phuc tap.
+
+### Scope cua luot trien khai nay
+
+- [x] them resize handle cho object `photo` va `note` trong journal editor
+- [x] giu `sticker` va `tape` ngoai scope resize cua phase nay
+- [x] resize giu goc tren trai lam diem neo va cap nhat `width/height` theo pointer
+- [x] clamp kich thuoc de object khong tran khoi page
+- [x] them test helper nho cho resize math/coercion
+
+### Deferred
+
+- multiple resize anchors theo tung canh/goc
+- giu fixed aspect ratio toggle cho photo
+- resize inspector field chinh xac theo pixel
+- resize cho sticker va tape
+- rotate-aware resize handles chinh xac hon
+
 ## FR-J4 - Profile share controls and public read-only pages
 
 ### Mục tiêu

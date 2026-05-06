@@ -516,6 +516,7 @@
       "rotateLeftShort": "Trái",
       "rotateRight": "Xoay phải",
       "rotateRightShort": "Phải",
+      "resizeObject": "Đổi kích thước mảnh",
       "deleteObject": "Xoá mảnh",
       "deleteObjectShort": "Xoá",
       "objectControlLabel": "Chọn và di chuyển mảnh nhật ký",

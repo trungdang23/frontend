@@ -516,6 +516,7 @@
       "rotateLeftShort": "Left",
       "rotateRight": "Rotate right",
       "rotateRightShort": "Right",
+      "resizeObject": "Resize piece",
       "deleteObject": "Delete piece",
       "deleteObjectShort": "Delete",
       "objectControlLabel": "Select and move journal piece",

@@ -4,13 +4,17 @@ import {
   type PointerEvent,
   useRef,
   useState,
-} from 'react';
-import { ImageOff } from 'lucide-react';
+} from "react";
+import { ImageOff } from "lucide-react";
+import {
+  canResizeJournalObject,
+  resizeJournalObject,
+} from "@/features/journal/lib/journal-scene-editing";
 import type {
   JournalSceneObject,
   TripJournal,
-} from '@/features/journal/types/journal';
-import { cn } from '@/shared/lib/cn';
+} from "@/features/journal/types/journal";
+import { cn } from "@/shared/lib/cn";
 
 type JournalSceneRendererProps = {
   journal: TripJournal;
@@ -20,7 +24,12 @@ type JournalSceneRendererProps = {
   emptyTitle: string;
   interactiveObjectLabel?: string;
   onObjectMove?: (objectId: string, position: { x: number; y: number }) => void;
+  onObjectResize?: (
+    objectId: string,
+    size: { width: number; height: number },
+  ) => void;
   onObjectSelect?: (objectId: string | null) => void;
+  resizeHandleLabel?: string;
   selectedObjectId?: string | null;
 };
 
@@ -32,13 +41,17 @@ export function JournalSceneRenderer({
   journal,
   className,
   onObjectMove,
+  onObjectResize,
   onObjectSelect,
+  resizeHandleLabel,
   selectedObjectId,
 }: JournalSceneRendererProps) {
   const sceneRef = useRef<HTMLDivElement>(null);
   const [dragState, setDragState] = useState<JournalObjectDragState | null>(
     null,
   );
+  const [resizeState, setResizeState] =
+    useState<JournalObjectResizeState | null>(null);
   const orderedObjects = [...journal.objects].sort((left, right) => {
     if (left.zIndex !== right.zIndex) {
       return left.zIndex - right.zIndex;
@@ -47,12 +60,12 @@ export function JournalSceneRenderer({
     return left.id.localeCompare(right.id);
   });
   const aspectRatio = `${journal.page.width} / ${journal.page.height}`;
-  const canEdit = editable && Boolean(onObjectMove);
+  const canEdit = editable && Boolean(onObjectMove || onObjectResize);
 
   return (
     <div
       className={cn(
-        'relative mx-auto w-full max-w-[min(74vh,46rem)] rounded-[1.5rem] border border-[#c79b70]/45 bg-[#fff8ea] shadow-[0_22px_50px_rgba(82,61,42,0.18),inset_0_1px_0_rgba(255,255,255,0.85)]',
+        "relative mx-auto w-full max-w-[min(74vh,46rem)] rounded-[1.5rem] border border-[#c79b70]/45 bg-[#fff8ea] shadow-[0_22px_50px_rgba(82,61,42,0.18),inset_0_1px_0_rgba(255,255,255,0.85)]",
         className,
       )}
       style={{
@@ -85,14 +98,17 @@ export function JournalSceneRenderer({
             <JournalSceneObjectView
               isDragging={dragState?.objectId === object.id}
               isEditable={canEdit}
+              isResizable={canResizeJournalObject(object)}
               isSelected={selectedObjectId === object.id}
               key={object.id}
               object={object}
               onKeyMove={moveObjectFromKeyboard}
               onPointerDown={startObjectDrag}
+              onResizePointerDown={startObjectResize}
               onSelect={selectObject}
               pageHeight={journal.page.height}
               pageWidth={journal.page.width}
+              resizeHandleLabel={resizeHandleLabel}
               selectedLabel={interactiveObjectLabel}
             />
           ))}
@@ -133,6 +149,7 @@ export function JournalSceneRenderer({
     }
 
     sceneRef.current?.setPointerCapture(event.pointerId);
+    setResizeState(null);
     setDragState({
       height: object.height,
       objectId: object.id,
@@ -143,10 +160,6 @@ export function JournalSceneRenderer({
   }
 
   function handleScenePointerMove(event: PointerEvent<HTMLDivElement>) {
-    if (!dragState || !canEdit || !onObjectMove) {
-      return;
-    }
-
     const pointerPosition = getPagePointFromPointerEvent(
       event,
       sceneRef.current,
@@ -155,6 +168,31 @@ export function JournalSceneRenderer({
     );
 
     if (!pointerPosition) {
+      return;
+    }
+
+    if (resizeState && canEdit && onObjectResize) {
+      event.preventDefault();
+      const resizedObject = resizeJournalObject({
+        nextHeight:
+          resizeState.initialHeight +
+          (pointerPosition.y - resizeState.originPointerY),
+        nextWidth:
+          resizeState.initialWidth +
+          (pointerPosition.x - resizeState.originPointerX),
+        object: resizeState.object,
+        pageHeight: journal.page.height,
+        pageWidth: journal.page.width,
+      });
+
+      onObjectResize(resizeState.objectId, {
+        height: resizedObject.height,
+        width: resizedObject.width,
+      });
+      return;
+    }
+
+    if (!dragState || !canEdit || !onObjectMove) {
       return;
     }
 
@@ -178,7 +216,7 @@ export function JournalSceneRenderer({
   }
 
   function finishObjectDrag(event: PointerEvent<HTMLDivElement>) {
-    if (!dragState) {
+    if (!dragState && !resizeState) {
       return;
     }
 
@@ -187,6 +225,7 @@ export function JournalSceneRenderer({
     }
 
     setDragState(null);
+    setResizeState(null);
   }
 
   function selectObject(objectId: string) {
@@ -224,11 +263,47 @@ export function JournalSceneRenderer({
       ),
     });
   }
+
+  function startObjectResize(
+    event: PointerEvent<HTMLDivElement>,
+    object: JournalSceneObject,
+  ) {
+    if (!canEdit || !onObjectResize || !canResizeJournalObject(object)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    onObjectSelect?.(object.id);
+
+    const pointerPosition = getPagePointFromPointerEvent(
+      event,
+      sceneRef.current,
+      journal.page.width,
+      journal.page.height,
+    );
+
+    if (!pointerPosition) {
+      return;
+    }
+
+    sceneRef.current?.setPointerCapture(event.pointerId);
+    setDragState(null);
+    setResizeState({
+      initialHeight: object.height,
+      initialWidth: object.width,
+      object,
+      objectId: object.id,
+      originPointerX: pointerPosition.x,
+      originPointerY: pointerPosition.y,
+    });
+  }
 }
 
 type JournalSceneObjectViewProps = {
   isDragging: boolean;
   isEditable: boolean;
+  isResizable: boolean;
   isSelected: boolean;
   object: JournalSceneObject;
   onKeyMove: (
@@ -239,22 +314,30 @@ type JournalSceneObjectViewProps = {
     event: PointerEvent<HTMLDivElement>,
     object: JournalSceneObject,
   ) => void;
+  onResizePointerDown: (
+    event: PointerEvent<HTMLDivElement>,
+    object: JournalSceneObject,
+  ) => void;
   onSelect: (objectId: string) => void;
   pageWidth: number;
   pageHeight: number;
+  resizeHandleLabel?: string;
   selectedLabel?: string;
 };
 
 function JournalSceneObjectView({
   isDragging,
   isEditable,
+  isResizable,
   isSelected,
   object,
   onKeyMove,
   onPointerDown,
+  onResizePointerDown,
   onSelect,
   pageHeight,
   pageWidth,
+  resizeHandleLabel,
   selectedLabel,
 }: JournalSceneObjectViewProps) {
   const style: CSSProperties = {
@@ -273,14 +356,14 @@ function JournalSceneObjectView({
       }
       aria-pressed={isEditable && !object.locked ? isSelected : undefined}
       className={cn(
-        'absolute origin-center',
+        "absolute origin-center",
         isEditable && !object.locked
-          ? 'touch-none cursor-grab select-none rounded-[0.9rem] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#4d8f72]/45'
+          ? "touch-none cursor-grab select-none rounded-[0.9rem] focus:outline-none focus-visible:ring-4 focus-visible:ring-[#4d8f72]/45"
           : undefined,
         isSelected
-          ? 'ring-4 ring-[#4d8f72] ring-offset-2 ring-offset-[#fff8ea]'
+          ? "ring-4 ring-[#4d8f72] ring-offset-2 ring-offset-[#fff8ea]"
           : undefined,
-        isDragging ? 'cursor-grabbing' : undefined,
+        isDragging ? "cursor-grabbing" : undefined,
       )}
       onClick={(event) => {
         if (!isEditable || object.locked) {
@@ -292,24 +375,36 @@ function JournalSceneObjectView({
       }}
       onKeyDown={(event) => onKeyMove(event, object)}
       onPointerDown={(event) => onPointerDown(event, object)}
-      role={isEditable && !object.locked ? 'button' : undefined}
+      role={isEditable && !object.locked ? "button" : undefined}
       style={style}
       tabIndex={isEditable && !object.locked ? 0 : undefined}
     >
       {renderJournalObject(object)}
+      {isEditable && isSelected && isResizable ? (
+        <div
+          aria-label={resizeHandleLabel}
+          className="absolute -bottom-3 -right-3 h-6 w-6 touch-none rounded-full border-2 border-white bg-[#4d8f72] shadow-[0_6px_14px_rgba(39,81,59,0.28)] transition hover:scale-105"
+          onPointerDown={(event) => onResizePointerDown(event, object)}
+          role="button"
+          tabIndex={-1}
+          title={resizeHandleLabel}
+        >
+          <span className="absolute inset-[0.32rem] rounded-full border border-white/70" />
+        </div>
+      ) : null}
     </div>
   );
 }
 
 function renderJournalObject(object: JournalSceneObject) {
   switch (object.type) {
-    case 'photo':
+    case "photo":
       return <PhotoObject object={object} />;
-    case 'sticker':
+    case "sticker":
       return <StickerObject object={object} />;
-    case 'tape':
+    case "tape":
       return <TapeObject object={object} />;
-    case 'note':
+    case "note":
     default:
       return <NoteObject object={object} />;
   }
@@ -317,8 +412,8 @@ function renderJournalObject(object: JournalSceneObject) {
 
 function PhotoObject({ object }: { object: JournalSceneObject }) {
   const imageUrl =
-    getUrlProp(object.props, 'imageUrl') ?? getUrlProp(object.props, 'src');
-  const alt = getStringProp(object.props, 'alt') ?? '';
+    getUrlProp(object.props, "imageUrl") ?? getUrlProp(object.props, "src");
+  const alt = getStringProp(object.props, "alt") ?? "";
 
   return (
     <div className="h-full w-full rounded-[0.7rem] border-[0.55rem] border-white bg-white shadow-[0_14px_26px_rgba(70,50,32,0.2)]">
@@ -339,8 +434,8 @@ function PhotoObject({ object }: { object: JournalSceneObject }) {
 }
 
 function NoteObject({ object }: { object: JournalSceneObject }) {
-  const text = getStringProp(object.props, 'text') ?? '';
-  const color = getColorProp(object.props, 'color') ?? '#fff4c7';
+  const text = getStringProp(object.props, "text") ?? "";
+  const color = getColorProp(object.props, "color") ?? "#fff4c7";
 
   return (
     <div
@@ -354,10 +449,10 @@ function NoteObject({ object }: { object: JournalSceneObject }) {
 
 function StickerObject({ object }: { object: JournalSceneObject }) {
   const label =
-    getStringProp(object.props, 'label') ??
-    getStringProp(object.props, 'stickerKey') ??
-    '';
-  const color = getColorProp(object.props, 'color') ?? '#f2a088';
+    getStringProp(object.props, "label") ??
+    getStringProp(object.props, "stickerKey") ??
+    "";
+  const color = getColorProp(object.props, "color") ?? "#f2a088";
 
   return (
     <div
@@ -370,7 +465,7 @@ function StickerObject({ object }: { object: JournalSceneObject }) {
 }
 
 function TapeObject({ object }: { object: JournalSceneObject }) {
-  const color = getColorProp(object.props, 'color') ?? '#f2cc6f';
+  const color = getColorProp(object.props, "color") ?? "#f2cc6f";
 
   return (
     <div
@@ -383,7 +478,7 @@ function TapeObject({ object }: { object: JournalSceneObject }) {
 function getStringProp(props: Record<string, unknown>, key: string) {
   const value = props[key];
 
-  return typeof value === 'string' && value.trim() ? value.trim() : null;
+  return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
 function getUrlProp(props: Record<string, unknown>, key: string) {
@@ -393,14 +488,14 @@ function getUrlProp(props: Record<string, unknown>, key: string) {
     return null;
   }
 
-  if (value.startsWith('/')) {
+  if (value.startsWith("/")) {
     return value;
   }
 
   try {
     const url = new URL(value);
 
-    return url.protocol === 'http:' || url.protocol === 'https:' ? value : null;
+    return url.protocol === "http:" || url.protocol === "https:" ? value : null;
   } catch {
     return null;
   }
@@ -422,6 +517,15 @@ type JournalObjectDragState = {
   offsetX: number;
   offsetY: number;
   width: number;
+};
+
+type JournalObjectResizeState = {
+  initialHeight: number;
+  initialWidth: number;
+  object: JournalSceneObject;
+  objectId: string;
+  originPointerX: number;
+  originPointerY: number;
 };
 
 function getPagePointFromPointerEvent(
@@ -448,13 +552,13 @@ function getPagePointFromPointerEvent(
 
 function resolveKeyboardMovement(key: string, step: number) {
   switch (key) {
-    case 'ArrowDown':
+    case "ArrowDown":
       return { x: 0, y: step };
-    case 'ArrowLeft':
+    case "ArrowLeft":
       return { x: -step, y: 0 };
-    case 'ArrowRight':
+    case "ArrowRight":
       return { x: step, y: 0 };
-    case 'ArrowUp':
+    case "ArrowUp":
       return { x: 0, y: -step };
     default:
       return null;

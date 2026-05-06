@@ -1,9 +1,12 @@
 import type {
   JournalSceneObject,
   TripJournal,
-} from '@/features/journal/types/journal';
+} from "@/features/journal/types/journal";
 
-export type JournalLayerDirection = 'backward' | 'forward';
+export type JournalLayerDirection = "backward" | "forward";
+export type ResizableJournalObjectType = "note" | "photo";
+
+const RESIZABLE_OBJECT_TYPES: ResizableJournalObjectType[] = ["note", "photo"];
 
 export function canMoveObjectLayer(
   objects: JournalSceneObject[],
@@ -18,7 +21,7 @@ export function canMoveObjectLayer(
     return false;
   }
 
-  return direction === 'forward'
+  return direction === "forward"
     ? objectIndex < objects.length - 1
     : objectIndex > 0;
 }
@@ -29,8 +32,11 @@ export function moveObjectLayer(
   direction: JournalLayerDirection,
 ) {
   const orderedObjects = getLayerOrderedObjects(objects);
-  const objectIndex = orderedObjects.findIndex((object) => object.id === objectId);
-  const targetIndex = direction === 'forward' ? objectIndex + 1 : objectIndex - 1;
+  const objectIndex = orderedObjects.findIndex(
+    (object) => object.id === objectId,
+  );
+  const targetIndex =
+    direction === "forward" ? objectIndex + 1 : objectIndex - 1;
   const currentObject = orderedObjects[objectIndex];
   const targetObject = orderedObjects[targetIndex];
 
@@ -57,6 +63,51 @@ export function moveObjectLayer(
   });
 }
 
+export function canResizeJournalObject(object: JournalSceneObject) {
+  return (
+    !object.locked &&
+    RESIZABLE_OBJECT_TYPES.includes(object.type as ResizableJournalObjectType)
+  );
+}
+
+export function resizeJournalObject(input: {
+  object: JournalSceneObject;
+  nextHeight: number;
+  nextWidth: number;
+  pageHeight: number;
+  pageWidth: number;
+}) {
+  if (!canResizeJournalObject(input.object)) {
+    return input.object;
+  }
+
+  const minDimensions = getMinimumObjectDimensions(input.object.type);
+  const maxWidth = Math.max(
+    minDimensions.width,
+    input.pageWidth - input.object.x,
+  );
+  const maxHeight = Math.max(
+    minDimensions.height,
+    input.pageHeight - input.object.y,
+  );
+  const width = clampDimension(input.nextWidth, minDimensions.width, maxWidth);
+  const height = clampDimension(
+    input.nextHeight,
+    minDimensions.height,
+    maxHeight,
+  );
+
+  if (width === input.object.width && height === input.object.height) {
+    return input.object;
+  }
+
+  return {
+    ...input.object,
+    width,
+    height,
+  };
+}
+
 export function normalizeRotation(rotation: number) {
   return ((((rotation + 180) % 360) + 360) % 360) - 180;
 }
@@ -69,9 +120,7 @@ export function areJournalScenesEqual(
     return false;
   }
 
-  return (
-    serializeJournalScene(left) === serializeJournalScene(right)
-  );
+  return serializeJournalScene(left) === serializeJournalScene(right);
 }
 
 export function areJournalObjectListsEqual(
@@ -82,7 +131,7 @@ export function areJournalObjectListsEqual(
 }
 
 export function serializeJournalScene(
-  journal: Pick<TripJournal, 'objects' | 'page' | 'sceneVersion'>,
+  journal: Pick<TripJournal, "objects" | "page" | "sceneVersion">,
 ) {
   return JSON.stringify({
     objects: journal.objects,
@@ -99,9 +148,9 @@ export function shouldAutosaveJournalScene(input: {
 }) {
   return Boolean(
     input.activeFingerprint &&
-      input.isDirty &&
-      !input.isPending &&
-      input.lastAutosaveFingerprint !== input.activeFingerprint,
+    input.isDirty &&
+    !input.isPending &&
+    input.lastAutosaveFingerprint !== input.activeFingerprint,
   );
 }
 
@@ -123,4 +172,20 @@ function getLayerOrderedObjects(objects: JournalSceneObject[]) {
 
     return left.id.localeCompare(right.id);
   });
+}
+
+function getMinimumObjectDimensions(type: JournalSceneObject["type"]) {
+  switch (type) {
+    case "photo":
+      return { width: 160, height: 120 };
+    case "note":
+    default:
+      return { width: 180, height: 120 };
+  }
+}
+
+function clampDimension(value: number, min: number, max: number) {
+  const roundedValue = Math.round(value);
+
+  return Math.min(Math.max(roundedValue, min), Math.max(min, max));
 }

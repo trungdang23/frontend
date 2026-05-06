@@ -329,7 +329,9 @@ export function JournalPage() {
         interactiveObjectLabel={t("journalPage.editor.objectControlLabel")}
         journal={activeJournal}
         onObjectMove={moveJournalObject}
+        onObjectResize={resizeJournalObjectOnPage}
         onObjectSelect={setSelectedObjectId}
+        resizeHandleLabel={t("journalPage.editor.resizeObject")}
         selectedObjectId={selectedObjectId}
       />
     );
@@ -828,6 +830,47 @@ export function JournalPage() {
       });
 
       return didMove
+        ? {
+            ...journal,
+            objects,
+            updatedAt: new Date().toISOString(),
+          }
+        : journal;
+    });
+  }
+
+  function resizeJournalObjectOnPage(
+    objectId: string,
+    size: { width: number; height: number },
+  ) {
+    saveJournalMutation.reset();
+    setDraftJournal((currentJournal) => {
+      const journal = currentJournal ?? journalQuery.data?.journal;
+
+      if (!journal) {
+        return currentJournal;
+      }
+
+      let didResize = false;
+      const objects = journal.objects.map((object) => {
+        if (object.id !== objectId) {
+          return object;
+        }
+
+        if (object.width === size.width && object.height === size.height) {
+          return object;
+        }
+
+        didResize = true;
+
+        return {
+          ...object,
+          height: size.height,
+          width: size.width,
+        };
+      });
+
+      return didResize
         ? {
             ...journal,
             objects,
