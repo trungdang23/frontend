@@ -771,6 +771,28 @@ Giảm rủi ro mất dữ liệu trong journal editor hiện tại trước khi
 - scroll restoration/pending navigation UX riêng cho data router
 - route loader/action refactor cho planner hoặc journal
 
+## FR-J9 - Journal owner image upload phase 1
+
+### Mục tiêu
+
+Cho journal editor thêm ảnh từ file local thay vì chỉ nhập URL thủ công, nhưng chưa biến asset thành thư viện quản lý đầy đủ.
+
+### Scope của lượt triển khai này
+
+- [x] thêm `POST /trips/:tripId/journal/assets` vào journal API client
+- [x] gửi multipart `file` với auth session hiện tại
+- [x] đổi URL asset backend trả về thành absolute API URL để `<img>` render được trên frontend domain
+- [x] thêm file picker trong journal editor, vẫn giữ URL input làm fallback
+- [x] khi upload thành công, tạo object `photo` với `imageUrl`, `assetId`, `fileName`, và `contentType`
+- [x] hiển thị trạng thái đang upload và lỗi upload cơ bản
+
+### Deferred
+
+- asset library/list/delete UI
+- signed/private asset delivery
+- cloud/object storage provider production-ready
+- cleanup file vật lý khi asset không còn được scene nào dùng
+
 ## FR-J4 - Profile share controls and public read-only pages
 
 ### Mục tiêu
@@ -1549,7 +1571,7 @@ Làm giai đoạn rebuild này đủ sạch để bước vào implementation th
 - [ ] thư viện editor runtime cụ thể sẽ là `react-konva` hay phương án tương đương
 - [ ] contract backend cuối cùng cho journal pages
 - [ ] scope mobile editing giai đoạn đầu rộng tới đâu
-- [ ] asset upload provider/storage strategy
+- [ ] cloud/signed asset delivery strategy sau phase upload local đầu tiên
 
 ## Non-goals cần nhắc lại
 

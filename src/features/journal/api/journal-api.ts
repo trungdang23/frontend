@@ -1,6 +1,8 @@
+import { env } from '@/app/config/env';
 import { request } from '@/shared/api/http-client';
 import type {
   SaveTripJournalPayload,
+  TripJournalAssetResult,
   TripJournalResult,
   UpdateTripJournalPayload,
 } from '@/features/journal/types/journal';
@@ -53,6 +55,43 @@ export async function saveTripJournal(
       body: payload,
     },
   );
+}
+
+export async function uploadTripJournalAsset(tripId: string, file: File) {
+  const formData = new FormData();
+
+  formData.set('file', file);
+
+  const result = await request<TripJournalAssetResult, FormData>(
+    `/trips/${tripId}/journal/assets`,
+    {
+      method: 'POST',
+      auth: true,
+      body: formData,
+    },
+  );
+
+  return {
+    asset: {
+      ...result.asset,
+      url: resolveJournalAssetUrl(result.asset.url),
+    },
+  };
+}
+
+export function resolveJournalAssetUrl(pathOrUrl: string) {
+  if (/^https?:\/\//i.test(pathOrUrl)) {
+    return pathOrUrl;
+  }
+
+  const normalizedPath = pathOrUrl.startsWith('/')
+    ? pathOrUrl.slice(1)
+    : pathOrUrl;
+  const normalizedBaseUrl = env.apiBaseUrl.endsWith('/')
+    ? env.apiBaseUrl
+    : `${env.apiBaseUrl}/`;
+
+  return new URL(normalizedPath, normalizedBaseUrl).toString();
 }
 
 export async function updateTripJournalVisibility(

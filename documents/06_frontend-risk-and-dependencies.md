@@ -15,7 +15,7 @@
 - `trips`, `community`, `journal`, và i18n baseline còn sống
 - runtime UI đã có homepage, community, auth, planner canonical flow, profile, journal editor tối giản, public read-only plan/journal routes, và compatibility redirects
 - planner hiện dùng `PlanNode` API client riêng ở `/app/trips/:tripId/planner`; `/app/planner?tripId=...` chỉ còn là compatibility redirect
-- journal hiện có API client, scene renderer/editor tối giản, autosave debounce, manual save, layer/rotate controls, public read-only route, và leave guard
+- journal hiện có API client, scene renderer/editor tối giản, owner-only image upload phase đầu, autosave debounce, manual save, layer/rotate controls, public read-only route, và leave guard
 
 ### Từ backend
 
@@ -106,8 +106,8 @@ Hướng xử lý:
 
 ## Dependency mở cần theo dõi
 
-- contract dài hạn cho journal page-level CRUD, revisions, publish snapshot, và asset upload
-- asset upload/storage provider
+- contract dài hạn cho journal page-level CRUD, revisions, publish snapshot, và asset lifecycle
+- cloud/object storage provider hoặc signed asset delivery nếu private asset protection trở thành yêu cầu
 - thời điểm loại bỏ compatibility redirects sau khi link cũ không còn caller
 - deploy smoke checklist cho journal editor controls, autosave, public read-only route, và compatibility redirects
 

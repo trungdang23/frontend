@@ -100,6 +100,8 @@ Nhận xét quan trọng:
 - `DELETE /trips/:tripId/journal`
 - `GET /public/journals`
 - `GET /public/trips/:tripId/journal`
+- `POST /trips/:tripId/journal/assets`
+- `GET /journal-assets/:publicId`
 
 ## Contract dài hạn cần bổ sung cho sản phẩm mới
 
@@ -140,6 +142,8 @@ Phase đầu hiện đã có:
 - `GET /journals/mine`
 - `GET /public/journals`
 - `GET /public/trips/:tripId/journal`
+- `POST /trips/:tripId/journal/assets` để upload ảnh owner-only
+- `GET /journal-assets/:publicId` để browser render ảnh đã upload bằng URL public/unlisted
 
 Cách lưu một scene trên một record `trip_journals` đang đủ cho editor tối giản, nhưng sẽ khó mở rộng revision/page-level publish về sau nếu không tách page/assets/revisions thành contract riêng.
 
@@ -263,7 +267,7 @@ Cách lưu một scene trên một record `trip_journals` đang đủ cho editor
   - `features/journal/api/journal-api.ts`
   - `features/journal/lib/journal-query-keys.ts`
   - `features/journal/types/journal.ts`
-  - `features/journal/api/journal-assets-api.ts` khi asset upload thật bắt đầu
+  - chỉ tách `features/journal/api/journal-assets-api.ts` nếu asset lifecycle/list/delete phình lớn hơn upload phase đầu hiện tại
 
 ## Khuyến nghị storage từ góc nhìn API
 

@@ -17,6 +17,7 @@ import {
 import {
   getTripJournal,
   saveTripJournal,
+  uploadTripJournalAsset,
 } from '@/features/journal/api/journal-api';
 import { JournalSceneRenderer } from '@/features/journal/components/journal-scene-renderer';
 import {
@@ -55,10 +56,12 @@ export function JournalPage() {
   const [draftJournal, setDraftJournal] = useState<TripJournal | null>(null);
   const [noteText, setNoteText] = useState(t('journalPage.editor.defaultNote'));
   const [imageUrl, setImageUrl] = useState('');
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
   const [stickerLabel, setStickerLabel] = useState(
     t('journalPage.editor.defaultSticker'),
   );
   const [selectedObjectId, setSelectedObjectId] = useState<string | null>(null);
+  const imageFileInputRef = useRef<HTMLInputElement>(null);
   const journalQuery = useQuery({
     queryKey: journalQueryKeys.detail(tripId),
     queryFn: ({ signal }) => getTripJournal(tripId, { signal }),
@@ -110,6 +113,9 @@ export function JournalPage() {
         queryKey: journalQueryKeys.mine(),
       });
     },
+  });
+  const uploadJournalAssetMutation = useMutation({
+    mutationFn: async (file: File) => uploadTripJournalAsset(tripId, file),
   });
   const mutateJournalSave = saveJournalMutation.mutate;
 
@@ -334,6 +340,19 @@ export function JournalPage() {
               {t('journalPage.editor.imageLabel')}
             </span>
             <input
+              accept="image/gif,image/jpeg,image/png,image/webp"
+              className="rounded-[0.75rem] border border-dashed border-[#c9a77e]/60 bg-[#fffaf0] px-3 py-2 font-marker text-[1rem] text-[#3d332b] file:mr-3 file:rounded-full file:border-0 file:bg-[#dff2dc] file:px-3 file:py-1.5 file:font-marker file:font-bold file:text-[#27513b] focus:bg-white focus:ring-2 focus:ring-[#d7a957]/25"
+              onChange={(event) => {
+                uploadJournalAssetMutation.reset();
+                setSelectedImageFile(event.target.files?.[0] ?? null);
+              }}
+              ref={imageFileInputRef}
+              type="file"
+            />
+            <span className="text-xs font-medium text-[#8a6d51]">
+              {t('journalPage.editor.imageHelp')}
+            </span>
+            <input
               className="rounded-[0.75rem] border border-dashed border-[#c9a77e]/60 bg-[#fffaf0] px-3 py-2 font-marker text-[1.05rem] text-[#3d332b] outline-none focus:bg-white focus:ring-2 focus:ring-[#d7a957]/25"
               onChange={(event) => setImageUrl(event.target.value)}
               placeholder="https://..."
@@ -343,13 +362,28 @@ export function JournalPage() {
           </label>
           <button
             className="inline-flex items-center justify-center gap-2 rounded-full border border-[#407456]/30 bg-[#dff2dc] px-4 py-2 font-marker text-[1rem] font-bold leading-none text-[#27513b] shadow-[0_5px_0_#9dcc94] transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
-            disabled={!imageUrl.trim()}
-            onClick={() => addJournalObject('photo', journal)}
+            disabled={
+              uploadJournalAssetMutation.isPending ||
+              (!selectedImageFile && !imageUrl.trim())
+            }
+            onClick={() => {
+              void addPhotoObject(journal);
+            }}
             type="button"
           >
             <Image aria-hidden="true" className="h-4 w-4" />
-            {t('journalPage.editor.addPhoto')}
+            {uploadJournalAssetMutation.isPending
+              ? t('journalPage.editor.uploadingPhoto')
+              : t('journalPage.editor.addPhoto')}
           </button>
+          {uploadJournalAssetMutation.isError ? (
+            <p
+              className="font-marker text-[1rem] leading-tight text-[#b42318]"
+              role="alert"
+            >
+              {t('journalPage.editor.uploadPhotoError')}
+            </p>
+          ) : null}
 
           <div className="grid gap-2 sm:grid-cols-[1fr_auto_auto] sm:items-end lg:grid-cols-1">
             <label className="grid gap-1.5">
@@ -522,9 +556,13 @@ export function JournalPage() {
     );
   }
 
-  function addJournalObject(type: JournalObjectType, journal: TripJournal) {
+  function addJournalObject(
+    type: JournalObjectType,
+    journal: TripJournal,
+    photoProps: Record<string, unknown> = {},
+  ) {
     saveJournalMutation.reset();
-    const nextObject = createJournalObject(type, journal);
+    const nextObject = createJournalObject(type, journal, photoProps);
 
     setDraftJournal({
       ...journal,
@@ -539,6 +577,38 @@ export function JournalPage() {
 
     if (type === 'photo') {
       setImageUrl('');
+      setSelectedImageFile(null);
+      if (imageFileInputRef.current) {
+        imageFileInputRef.current.value = '';
+      }
+    }
+  }
+
+  async function addPhotoObject(journal: TripJournal) {
+    saveJournalMutation.reset();
+    uploadJournalAssetMutation.reset();
+
+    if (selectedImageFile) {
+      try {
+        const result = await uploadJournalAssetMutation.mutateAsync(
+          selectedImageFile,
+        );
+
+        addJournalObject('photo', journal, {
+          assetId: result.asset.id,
+          contentType: result.asset.contentType,
+          fileName: result.asset.fileName,
+          imageUrl: result.asset.url,
+        });
+      } catch {
+        return;
+      }
+
+      return;
+    }
+
+    if (imageUrl.trim()) {
+      addJournalObject('photo', journal);
     }
   }
 
@@ -649,6 +719,7 @@ export function JournalPage() {
   function createJournalObject(
     type: JournalObjectType,
     journal: TripJournal,
+    photoProps: Record<string, unknown> = {},
   ): JournalSceneObject {
     const nextIndex = journal.objects.length;
     const baseObject = buildJournalObjectBase(type, nextIndex, journal);
@@ -659,8 +730,9 @@ export function JournalPage() {
         width: 360,
         height: 300,
         props: {
-          imageUrl: imageUrl.trim(),
           alt: journalQuery.data?.trip.name ?? '',
+          imageUrl: imageUrl.trim(),
+          ...photoProps,
         },
       };
     }

@@ -74,7 +74,7 @@ Status: `In progress`
 - [x] dựng journal scene renderer
 - [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape, drag object, selected-object controls, autosave debounce và leave guard qua data router; inspector đầy đủ còn deferred
 - [~] chốt journal API contract phase đầu với `GET/PUT/PATCH/DELETE /trips/:tripId/journal`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`; page-level contract còn deferred
-- [ ] chốt asset flow
+- [~] chốt asset flow phase đầu bằng owner-only journal image upload; asset management/cloud storage còn deferred
 - [x] cập nhật deploy smoke checklist theo route mới
 
 ## Điểm cần giữ kỷ luật trong giai đoạn này

@@ -40,6 +40,20 @@ export type TripJournalResult = {
   journal: TripJournal;
 };
 
+export type TripJournalAsset = {
+  id: string | null;
+  tripId: string;
+  fileName: string;
+  contentType: string;
+  byteSize: number;
+  url: string;
+  createdAt: string;
+};
+
+export type TripJournalAssetResult = {
+  asset: TripJournalAsset;
+};
+
 export type SaveTripJournalPayload = {
   sceneVersion: number;
   page: JournalPage;

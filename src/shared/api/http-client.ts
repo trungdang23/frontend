@@ -43,10 +43,13 @@ async function requestRaw<TResponse, TMeta = undefined, TBody = unknown>(
 ): Promise<ApiSuccess<TResponse, TMeta>> {
   const method = options.method || 'GET';
   const headers = new Headers(options.headers);
+  const hasBody = options.body !== undefined;
+  const isFormDataBody =
+    typeof FormData !== 'undefined' && options.body instanceof FormData;
 
   headers.set('Accept', 'application/json');
 
-  if (options.body !== undefined) {
+  if (hasBody && !isFormDataBody) {
     headers.set('Content-Type', 'application/json');
   }
 
@@ -61,7 +64,11 @@ async function requestRaw<TResponse, TMeta = undefined, TBody = unknown>(
   const response = await fetch(`${env.apiBaseUrl}${path}`, {
     method,
     headers,
-    body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+    body: hasBody
+      ? isFormDataBody
+        ? (options.body as BodyInit)
+        : JSON.stringify(options.body)
+      : undefined,
     signal: options.signal,
   });
 
