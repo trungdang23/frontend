@@ -78,7 +78,8 @@
       "mountainLabel": "Mountain",
       "beachLabel": "Beach",
       "cityLabel": "City",
-      "avatarLabel": "Upload Avatar",
+      "avatarLabel": "Choose avatar",
+      "avatarHelp": "PNG, JPG, WebP, or GIF up to 2MB",
       "footerQuestion": "Already have an account?",
       "footerAction": "Log in"
     },
@@ -88,7 +89,9 @@
       "displayNameMin": "Display name must be at least 2 characters long.",
       "displayNameMax": "Display name is too long.",
       "passwordLetter": "Password must include at least 1 letter.",
-      "passwordNumber": "Password must include at least 1 number."
+      "passwordNumber": "Password must include at least 1 number.",
+      "avatarUnsupported": "Avatar must be a PNG, JPG, WebP, or GIF image.",
+      "avatarTooLarge": "Avatar must be smaller than {{size}}."
     },
     "errors": {
       "invalidCredentials": "Email or password is incorrect.",
@@ -418,6 +421,20 @@
       "deletePlannerError": "Unable to delete \"{{title}}\" right now.",
       "viewMoreJournal": "VIEW MORE MEMORIES",
       "viewMorePlans": "VIEW MORE PLANS"
+    },
+    "edit": {
+      "displayNameLabel": "Display name",
+      "chooseAvatar": "Choose photo",
+      "avatarHelp": "PNG, JPG, WebP, or GIF up to 2MB",
+      "clearSelectedAvatar": "Clear selected",
+      "deleteAvatar": "Delete avatar",
+      "deletingAvatar": "Deleting...",
+      "deleteAvatarSuccess": "Default avatar restored.",
+      "deleteAvatarError": "Unable to delete avatar right now.",
+      "save": "SAVE PROFILE",
+      "saving": "SAVING...",
+      "saveSuccess": "Profile updated.",
+      "saveError": "Unable to update profile right now."
     },
     "share": {
       "eyebrow": "Share",

@@ -1,4 +1,9 @@
-import { FormEvent, useState } from 'react';
+import {
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Building2,
   Camera,
@@ -15,8 +20,13 @@ import { localizeAuthError } from '@/features/auth/lib/localize-auth-error';
 import { validateRegisterForm } from '@/features/auth/lib/register-validation';
 import { readPostAuthPathFromState } from '@/features/auth/lib/resolve-post-auth-path';
 import { useAuth } from '@/features/auth/session/use-auth';
+import { defaultAvatarUrl } from '@/features/profile/content/profile-sample-content';
 import { ApiError } from '@/shared/api/api-error';
 import { useI18n } from '@/shared/i18n/use-i18n';
+import {
+  USER_AVATAR_ACCEPT,
+  validateUserAvatarFile,
+} from '@/shared/lib/avatar-file-validation';
 
 export function RegisterPage() {
   const auth = useAuth();
@@ -29,10 +39,45 @@ export function RegisterPage() {
   const [likesMountain, setLikesMountain] = useState(true);
   const [likesBeach, setLikesBeach] = useState(true);
   const [likesCity, setLikesCity] = useState(true);
+  const [selectedAvatarFile, setSelectedAvatarFile] = useState<File | null>(null);
+  const [avatarPreviewUrl, setAvatarPreviewUrl] = useState<string | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const redirectTo = readPostAuthPathFromState(location.state);
+
+  useEffect(() => {
+    if (!selectedAvatarFile) {
+      setAvatarPreviewUrl(null);
+      return;
+    }
+
+    const nextPreviewUrl = URL.createObjectURL(selectedAvatarFile);
+    setAvatarPreviewUrl(nextPreviewUrl);
+
+    return () => URL.revokeObjectURL(nextPreviewUrl);
+  }, [selectedAvatarFile]);
+
+  function handleAvatarChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0] ?? null;
+
+    if (!file) {
+      setSelectedAvatarFile(null);
+      return;
+    }
+
+    const avatarError = validateUserAvatarFile(file, t);
+
+    if (avatarError) {
+      setSubmitError(avatarError);
+      setSelectedAvatarFile(null);
+      event.target.value = '';
+      return;
+    }
+
+    setSubmitError(null);
+    setSelectedAvatarFile(file);
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -60,6 +105,7 @@ export function RegisterPage() {
 
     try {
       await auth.register({
+        ...(selectedAvatarFile ? { avatarFile: selectedAvatarFile } : {}),
         displayName: displayName.trim(),
         email: email.trim(),
         password,
@@ -100,7 +146,7 @@ export function RegisterPage() {
                 autoComplete="name"
                 id="register-display-name"
                 label={t('auth.register.nameLabel')}
-                maxLength={120}
+                maxLength={80}
                 minLength={2}
                 name="displayName"
                 onChange={(event) => setDisplayName(event.target.value)}
@@ -192,14 +238,35 @@ export function RegisterPage() {
               </div>
             </div>
 
-            <div className="mx-auto w-full max-w-[11rem] rotate-[-3deg] bg-white p-3 pb-8 shadow-[0_18px_32px_rgba(68,49,34,0.16)]">
-              <div className="flex aspect-square items-center justify-center rounded-[0.15rem] bg-[#111]">
-                <Camera className="h-9 w-9 text-white/35" strokeWidth={1.4} />
+            <label
+              className="mx-auto w-full max-w-[11rem] rotate-[-3deg] cursor-pointer bg-white p-3 pb-8 shadow-[0_18px_32px_rgba(68,49,34,0.16)] transition hover:-translate-y-0.5 focus-within:ring-2 focus-within:ring-[#8b6244]/25"
+              htmlFor="register-avatar"
+            >
+              <input
+                accept={USER_AVATAR_ACCEPT}
+                className="sr-only"
+                id="register-avatar"
+                name="avatar"
+                onChange={handleAvatarChange}
+                type="file"
+              />
+              <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[0.15rem] bg-[#d7e5f5]">
+                <img
+                  alt=""
+                  className="h-full w-full object-cover"
+                  src={avatarPreviewUrl || defaultAvatarUrl}
+                />
+                <span className="absolute bottom-2 right-2 rounded-full bg-[#111]/75 p-2 text-white shadow-md">
+                  <Camera className="h-5 w-5" strokeWidth={1.6} />
+                </span>
               </div>
               <p className="mt-3 text-center font-hand text-[1.65rem] leading-none text-[#453128]">
                 {t('auth.register.avatarLabel')}
               </p>
-            </div>
+              <p className="mt-2 text-center font-marker text-[0.72rem] leading-tight text-[#7b6b5c]">
+                {selectedAvatarFile?.name || t('auth.register.avatarHelp')}
+              </p>
+            </label>
 
             <button
               className="auth-stamp-button auth-stamp-button--small self-end"

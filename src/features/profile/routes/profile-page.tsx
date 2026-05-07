@@ -1,8 +1,10 @@
 import {
+  ChangeEvent,
+  useEffect,
   useState,
 } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { LogOut } from 'lucide-react';
+import { Camera, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import {
   deleteTripJournal,
@@ -31,6 +33,10 @@ import { deleteTrip, listTrips, updateTrip } from '@/features/trips/api/trips-ap
 import type { Trip, TripVisibility } from '@/features/trips/types/trip';
 import { useAuth } from '@/features/auth/session/use-auth';
 import { useI18n } from '@/shared/i18n/use-i18n';
+import {
+  USER_AVATAR_ACCEPT,
+  validateUserAvatarFile,
+} from '@/shared/lib/avatar-file-validation';
 import { cn } from '@/shared/lib/cn';
 
 const PROFILE_TRIP_QUERY = {
@@ -63,8 +69,13 @@ export function ProfilePage() {
   const [deletingJournalTripId, setDeletingJournalTripId] = useState<string | null>(null);
   const [deletingTripId, setDeletingTripId] = useState<string | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [isDeletingProfileAvatar, setIsDeletingProfileAvatar] = useState(false);
   const [isSavingShare, setIsSavingShare] = useState(false);
   const [profileFeedback, setProfileFeedback] = useState<ProfileFeedback | null>(null);
+  const [profileDisplayName, setProfileDisplayName] = useState(auth.user?.displayName ?? '');
+  const [selectedProfileAvatarFile, setSelectedProfileAvatarFile] = useState<File | null>(null);
+  const [profileAvatarPreviewUrl, setProfileAvatarPreviewUrl] = useState<string | null>(null);
   const [shareTarget, setShareTarget] = useState<ProfileShareTarget | null>(null);
   const journalsQuery = useQuery({
     queryFn: ({ signal }) => listMyJournals({ signal }),
@@ -98,6 +109,137 @@ export function ProfilePage() {
   const joinedDate = auth.user?.createdAt
     ? formatProfileDate(auth.user.createdAt)
     : t('profile.memberSinceFallback');
+  const profileAvatarImage =
+    profileAvatarPreviewUrl || auth.user?.avatarUrl || profilePlaceholderPhotoUrl;
+  const hasPendingProfileChanges =
+    profileDisplayName.trim() !== (auth.user?.displayName ?? '') ||
+    selectedProfileAvatarFile !== null;
+
+  useEffect(() => {
+    setProfileDisplayName(auth.user?.displayName ?? '');
+  }, [auth.user?.displayName]);
+
+  useEffect(() => {
+    if (!selectedProfileAvatarFile) {
+      setProfileAvatarPreviewUrl(null);
+      return;
+    }
+
+    const nextPreviewUrl = URL.createObjectURL(selectedProfileAvatarFile);
+    setProfileAvatarPreviewUrl(nextPreviewUrl);
+
+    return () => URL.revokeObjectURL(nextPreviewUrl);
+  }, [selectedProfileAvatarFile]);
+
+  const handleProfileAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0] ?? null;
+
+    if (!file) {
+      setSelectedProfileAvatarFile(null);
+      return;
+    }
+
+    const avatarError = validateUserAvatarFile(file, t);
+
+    if (avatarError) {
+      setProfileFeedback({
+        kind: 'error',
+        message: avatarError,
+      });
+      setSelectedProfileAvatarFile(null);
+      event.target.value = '';
+      return;
+    }
+
+    setProfileFeedback(null);
+    setSelectedProfileAvatarFile(file);
+  };
+
+  const saveProfileChanges = async () => {
+    if (!auth.user || isSavingProfile) {
+      return;
+    }
+
+    const nextDisplayName = profileDisplayName.trim();
+
+    if (nextDisplayName.length < 2) {
+      setProfileFeedback({
+        kind: 'error',
+        message: t('auth.validation.displayNameMin'),
+      });
+      return;
+    }
+
+    if (nextDisplayName.length > 80) {
+      setProfileFeedback({
+        kind: 'error',
+        message: t('auth.validation.displayNameMax'),
+      });
+      return;
+    }
+
+    if (!hasPendingProfileChanges) {
+      return;
+    }
+
+    setIsSavingProfile(true);
+    setProfileFeedback(null);
+
+    try {
+      if (nextDisplayName !== (auth.user.displayName ?? '')) {
+        await auth.updateProfile({
+          displayName: nextDisplayName,
+        });
+      }
+
+      if (selectedProfileAvatarFile) {
+        await auth.uploadAvatar(selectedProfileAvatarFile);
+        setSelectedProfileAvatarFile(null);
+      }
+
+      setProfileFeedback({
+        kind: 'success',
+        message: t('profile.edit.saveSuccess'),
+      });
+    } catch {
+      setProfileFeedback({
+        kind: 'error',
+        message: t('profile.edit.saveError'),
+      });
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
+  const deleteOrClearProfileAvatar = async () => {
+    if (selectedProfileAvatarFile) {
+      setSelectedProfileAvatarFile(null);
+      setProfileFeedback(null);
+      return;
+    }
+
+    if (!auth.user?.avatarUrl || isDeletingProfileAvatar) {
+      return;
+    }
+
+    setIsDeletingProfileAvatar(true);
+    setProfileFeedback(null);
+
+    try {
+      await auth.deleteAvatar();
+      setProfileFeedback({
+        kind: 'success',
+        message: t('profile.edit.deleteAvatarSuccess'),
+      });
+    } catch {
+      setProfileFeedback({
+        kind: 'error',
+        message: t('profile.edit.deleteAvatarError'),
+      });
+    } finally {
+      setIsDeletingProfileAvatar(false);
+    }
+  };
 
   const deleteProfileTrip = async (entryId: string | undefined, entryTitle: string) => {
     if (!entryId || deletingTripId) {
@@ -295,26 +437,99 @@ export function ProfilePage() {
     >
       <div className="mx-auto flex h-full min-h-0 w-full max-w-6xl flex-col gap-6 overflow-hidden rounded-[1rem] border border-[#efe2ca] bg-[#fff8ea]/70 p-4 shadow-[0_18px_36px_rgba(76,51,33,0.1)] sm:p-5 lg:flex-row lg:items-stretch">
         <aside className="lg:w-[20rem] lg:flex-none">
-          <ProfileSampleCard
-            badge={t('profile.badge')}
-            image={profilePlaceholderPhotoUrl}
-            name={auth.user?.displayName || t('common.userFallback')}
-            stats={[
-              {
-                labelLines: [t('profile.stats.journalsLine1'), t('profile.stats.journalsLine2')],
-                value: String(journalsQuery.data?.length || 0),
-              },
-              {
-                labelLines: [t('profile.stats.plansLine1'), t('profile.stats.plansLine2')],
-                value: String(tripsQuery.data?.meta.totalElements || 0),
-              },
-              {
-                labelLines: [t('profile.stats.publicLine1'), t('profile.stats.publicLine2')],
-                value: String(publicTripCount),
-              },
-            ]}
-            summary={t('profile.memberSince', { date: joinedDate })}
-          />
+          <div className="flex flex-col gap-4">
+            <ProfileSampleCard
+              badge={t('profile.badge')}
+              image={profileAvatarImage}
+              name={auth.user?.displayName || t('common.userFallback')}
+              stats={[
+                {
+                  labelLines: [t('profile.stats.journalsLine1'), t('profile.stats.journalsLine2')],
+                  value: String(journalsQuery.data?.length || 0),
+                },
+                {
+                  labelLines: [t('profile.stats.plansLine1'), t('profile.stats.plansLine2')],
+                  value: String(tripsQuery.data?.meta.totalElements || 0),
+                },
+                {
+                  labelLines: [t('profile.stats.publicLine1'), t('profile.stats.publicLine2')],
+                  value: String(publicTripCount),
+                },
+              ]}
+              summary={t('profile.memberSince', { date: joinedDate })}
+            />
+
+            <form
+              className="rounded-[0.85rem] border border-[#e7d6bd] bg-[#fffdfa]/85 p-4 shadow-[0_12px_22px_rgba(76,51,33,0.08)]"
+              onSubmit={(event) => {
+                event.preventDefault();
+                void saveProfileChanges();
+              }}
+            >
+              <label
+                className="mb-3 flex flex-col gap-1 font-marker text-[0.85rem] font-bold uppercase tracking-[0.08em] text-[#6b4938]"
+                htmlFor="profile-display-name"
+              >
+                {t('profile.edit.displayNameLabel')}
+                <input
+                  className="rounded-[0.65rem] border border-[#d8c5ab] bg-white/85 px-3 py-2 font-marker text-[1rem] normal-case tracking-normal text-[#251913] outline-none transition focus:border-[#8b6244] focus:ring-2 focus:ring-[#8b6244]/15"
+                  id="profile-display-name"
+                  maxLength={80}
+                  minLength={2}
+                  onChange={(event) => setProfileDisplayName(event.target.value)}
+                  type="text"
+                  value={profileDisplayName}
+                />
+              </label>
+
+              <div className="mb-3 flex flex-wrap gap-2">
+                <label
+                  className="inline-flex min-h-9 cursor-pointer items-center justify-center gap-2 rounded-full border border-[#8b6244]/30 bg-[#fff1d9] px-3 py-2 font-marker text-[0.85rem] font-bold leading-none text-[#6b4938] shadow-[0_4px_0_#d7b17a] transition hover:-translate-y-0.5 focus-within:ring-2 focus-within:ring-[#8b6244]/25"
+                  htmlFor="profile-avatar"
+                >
+                  <Camera className="h-4 w-4" strokeWidth={2.2} />
+                  {t('profile.edit.chooseAvatar')}
+                  <input
+                    accept={USER_AVATAR_ACCEPT}
+                    className="sr-only"
+                    id="profile-avatar"
+                    onChange={handleProfileAvatarChange}
+                    type="file"
+                  />
+                </label>
+
+                <button
+                  className="inline-flex min-h-9 items-center justify-center rounded-full border border-[#d92d20]/20 bg-[#fff1f0] px-3 py-2 font-marker text-[0.85rem] font-bold leading-none text-[#b42318] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#d92d20]/20 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-50"
+                  disabled={
+                    isDeletingProfileAvatar ||
+                    (!selectedProfileAvatarFile && !auth.user?.avatarUrl)
+                  }
+                  onClick={() => void deleteOrClearProfileAvatar()}
+                  type="button"
+                >
+                  {selectedProfileAvatarFile
+                    ? t('profile.edit.clearSelectedAvatar')
+                    : isDeletingProfileAvatar
+                    ? t('profile.edit.deletingAvatar')
+                    : t('profile.edit.deleteAvatar')}
+                </button>
+              </div>
+
+              <p className="mb-3 font-marker text-[0.78rem] leading-tight text-[#7b6b5c]">
+                {selectedProfileAvatarFile?.name || t('profile.edit.avatarHelp')}
+              </p>
+
+              <button
+                className="w-full rounded-full border border-[#3a5d25]/30 bg-[#b9e177] px-4 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/25 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={!hasPendingProfileChanges || isSavingProfile}
+                type="submit"
+              >
+                {isSavingProfile
+                  ? t('profile.edit.saving')
+                  : t('profile.edit.save')}
+              </button>
+            </form>
+          </div>
         </aside>
 
         <section className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">

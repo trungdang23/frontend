@@ -9,11 +9,14 @@ import {
 } from "react";
 import {
   AuthSession,
+  deleteCurrentUserAvatar,
   getCurrentUser,
   login as loginRequest,
   logout as logoutRequest,
   refreshTokens,
   register as registerRequest,
+  updateCurrentUserProfile,
+  uploadCurrentUserAvatar,
 } from "@/features/auth/api/auth-api";
 import {
   AuthNoticeTone,
@@ -76,6 +79,22 @@ export function AuthProvider({ children }: PropsWithChildren) {
       setNoticeTone("info");
     });
   }, []);
+
+  const syncAuthenticatedUser = useCallback(
+    (nextUser: User) => {
+      const activeSession = sessionRef.current;
+
+      if (!activeSession) {
+        return;
+      }
+
+      syncAuthenticatedSession({
+        ...activeSession,
+        user: nextUser,
+      });
+    },
+    [syncAuthenticatedSession],
+  );
 
   const refreshSession = useCallback(async () => {
     if (refreshPromiseRef.current) {
@@ -198,15 +217,49 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
   const register = useCallback(
     async (payload: {
+      avatarFile?: File;
       displayName: string;
       email: string;
       password: string;
     }) => {
-      const session = await registerRequest(payload);
+      const { avatarFile, ...registerPayload } = payload;
+      const session = await registerRequest(registerPayload);
       syncAuthenticatedSession(createStoredSession(session));
+
+      if (avatarFile) {
+        const result = await uploadCurrentUserAvatar(avatarFile);
+        syncAuthenticatedUser(result.user);
+      }
     },
-    [syncAuthenticatedSession],
+    [syncAuthenticatedSession, syncAuthenticatedUser],
   );
+
+  const updateProfile = useCallback(
+    async (payload: { displayName: string }) => {
+      const result = await updateCurrentUserProfile(payload);
+      syncAuthenticatedUser(result.user);
+
+      return result.user;
+    },
+    [syncAuthenticatedUser],
+  );
+
+  const uploadAvatar = useCallback(
+    async (file: File) => {
+      const result = await uploadCurrentUserAvatar(file);
+      syncAuthenticatedUser(result.user);
+
+      return result.user;
+    },
+    [syncAuthenticatedUser],
+  );
+
+  const deleteAvatar = useCallback(async () => {
+    const result = await deleteCurrentUserAvatar();
+    syncAuthenticatedUser(result.user);
+
+    return result.user;
+  }, [syncAuthenticatedUser]);
 
   const logout = useCallback(async () => {
     const activeSession = sessionRef.current;
@@ -242,9 +295,24 @@ export function AuthProvider({ children }: PropsWithChildren) {
       login,
       logout,
       register,
+      updateProfile,
+      uploadAvatar,
+      deleteAvatar,
       clearNotice,
     }),
-    [clearNotice, login, logout, notice, noticeTone, register, status, user],
+    [
+      clearNotice,
+      deleteAvatar,
+      login,
+      logout,
+      notice,
+      noticeTone,
+      register,
+      status,
+      updateProfile,
+      uploadAvatar,
+      user,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

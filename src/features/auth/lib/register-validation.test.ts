@@ -4,6 +4,9 @@ import {
   it,
 } from 'vitest';
 import {
+  validateUserAvatarFile,
+} from '@/shared/lib/avatar-file-validation';
+import {
   validateRegisterForm,
   validateRegisterPassword,
 } from '@/features/auth/lib/register-validation';
@@ -60,5 +63,20 @@ describe('register validation', () => {
         t,
       ),
     ).toBeNull();
+  });
+
+  it('validates avatar files before upload', () => {
+    expect(
+      validateUserAvatarFile(
+        new File(['avatar'], 'avatar.png', { type: 'image/png' }),
+        t,
+      ),
+    ).toBeNull();
+    expect(
+      validateUserAvatarFile(
+        new File(['avatar'], 'avatar.txt', { type: 'text/plain' }),
+        t,
+      ),
+    ).toBe('auth.validation.avatarUnsupported');
   });
 });

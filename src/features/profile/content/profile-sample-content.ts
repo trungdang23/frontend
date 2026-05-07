@@ -1,5 +1,5 @@
-export const profilePlaceholderPhotoUrl =
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&h=200&auto=format&fit=crop';
+export const defaultAvatarUrl = '/images/defaults/avatar-default.svg';
+export const profilePlaceholderPhotoUrl = defaultAvatarUrl;
 
 export const profileEntryRotationClasses = [
   '-rotate-2',

@@ -1609,6 +1609,21 @@ Giữ lỗi đăng ký bằng copy sản phẩm tiếng Việt, tránh để tr�
 - [x] dùng message i18n hiện có cho email, tên hiển thị và mật khẩu
 - [ ] smoke test thủ công form đăng ký sau deploy
 
+## Follow-up editable profile avatar
+
+### Mục tiêu
+
+Cho người dùng cập nhật tên hiển thị và avatar thật thay vì dùng avatar placeholder chung, đồng thời giữ avatar mặc định local trung tính giới tính khi tài khoản chưa upload ảnh.
+
+### Việc cần làm
+
+- [x] thêm default avatar local trong `public/images/defaults/`
+- [x] thay placeholder profile cũ bằng default avatar chung trung tính giới tính
+- [x] cho upload avatar ngay trong form đăng ký
+- [x] thêm form chỉnh tên hiển thị và avatar trong `/app/profile`
+- [x] đồng bộ auth session sau khi cập nhật tên/avatar
+- [x] hiển thị lỗi file không hợp lệ trước khi gọi API
+
 ## Follow-up site favicon wiring
 
 ### Mục tiêu

@@ -32,7 +32,7 @@ export function validateRegisterForm(values: RegisterFormValues, t: RegisterTran
     return t('auth.validation.displayNameMin');
   }
 
-  if (displayName.length > 120) {
+  if (displayName.length > 80) {
     return t('auth.validation.displayNameMax');
   }
 

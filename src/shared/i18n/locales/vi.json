@@ -78,7 +78,8 @@
       "mountainLabel": "Núi (Mountain)",
       "beachLabel": "Biển (Beach)",
       "cityLabel": "Thành phố (City)",
-      "avatarLabel": "Upload Avatar",
+      "avatarLabel": "Chọn avatar",
+      "avatarHelp": "PNG, JPG, WebP hoặc GIF tối đa 2MB",
       "footerQuestion": "Đã có tài khoản?",
       "footerAction": "Đăng nhập"
     },
@@ -88,7 +89,9 @@
       "displayNameMin": "Tên hiển thị phải có ít nhất 2 ký tự.",
       "displayNameMax": "Tên hiển thị quá dài.",
       "passwordLetter": "Mật khẩu cần có ít nhất 1 chữ cái.",
-      "passwordNumber": "Mật khẩu cần có ít nhất 1 chữ số."
+      "passwordNumber": "Mật khẩu cần có ít nhất 1 chữ số.",
+      "avatarUnsupported": "Avatar phải là ảnh PNG, JPG, WebP hoặc GIF.",
+      "avatarTooLarge": "Avatar phải nhỏ hơn {{size}}."
     },
     "errors": {
       "invalidCredentials": "Email hoặc mật khẩu không đúng.",
@@ -418,6 +421,20 @@
       "deletePlannerError": "Không thể xóa kế hoạch \"{{title}}\" lúc này.",
       "viewMoreJournal": "XEM THÊM KÝ ỨC",
       "viewMorePlans": "XEM THÊM KẾ HOẠCH"
+    },
+    "edit": {
+      "displayNameLabel": "Tên hiển thị",
+      "chooseAvatar": "Chọn ảnh",
+      "avatarHelp": "PNG, JPG, WebP hoặc GIF tối đa 2MB",
+      "clearSelectedAvatar": "Bỏ ảnh chọn",
+      "deleteAvatar": "Xóa avatar",
+      "deletingAvatar": "Đang xóa...",
+      "deleteAvatarSuccess": "Đã quay về avatar mặc định.",
+      "deleteAvatarError": "Không thể xóa avatar lúc này.",
+      "save": "LƯU HỒ SƠ",
+      "saving": "ĐANG LƯU...",
+      "saveSuccess": "Đã cập nhật hồ sơ.",
+      "saveError": "Không thể cập nhật hồ sơ lúc này."
     },
     "share": {
       "eyebrow": "Chia sẻ",

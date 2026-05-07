@@ -13,10 +13,14 @@ export type AuthContextValue = {
   login: (payload: { email: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
   register: (payload: {
+    avatarFile?: File;
     displayName: string;
     email: string;
     password: string;
   }) => Promise<void>;
+  updateProfile: (payload: { displayName: string }) => Promise<User>;
+  uploadAvatar: (file: File) => Promise<User>;
+  deleteAvatar: () => Promise<User>;
   clearNotice: () => void;
 };
 
