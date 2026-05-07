@@ -69,12 +69,12 @@ Status: `In progress`
 - [x] chốt route map mức nền cho `planner` và `journal`
 - [x] dựng homepage scrapbook baseline ở `/`
 - [~] dựng lại router và app shell; cutover canonical planner/journal routes và data-router migration đã xong, cleanup transition vẫn còn
-- [ ] dựng design token system mới
+- [~] dựng design token system mới; `@theme` tokens màu/font/paper đã có trong CSS, nhưng component-level spacing/radius/shadow primitives còn cần chuẩn hóa
 - [~] dựng fixed-layout public/auth/protected surfaces
 - [x] dựng journal scene renderer
 - [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape, drag object, selected-object controls, autosave debounce và leave guard qua data router; inspector đầy đủ còn deferred
 - [~] chốt journal API contract phase đầu với `GET/PUT/PATCH/DELETE /trips/:tripId/journal`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`; page-level contract còn deferred
-- [~] chốt asset flow phase đầu bằng owner-only journal image upload; asset management/cloud storage còn deferred
+- [~] chốt asset flow phase đầu bằng owner-only journal image upload, asset library/delete, và signed URL delivery; cloud storage, orphan cleanup, và trip-delete cleanup còn deferred
 - [x] cập nhật deploy smoke checklist theo route mới
 
 ## Điểm cần giữ kỷ luật trong giai đoạn này

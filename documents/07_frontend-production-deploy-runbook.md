@@ -175,6 +175,29 @@ Nếu deploy vừa đụng tới planner/budget owner flow, ưu tiên rà thêm 
 4. Nếu planner có mixed currency
    - expected: note mixed-currency và breakdown theo currency khớp với summary mới nhất, không bị stale sau mutation
 
+## Beta smoke end-to-end trước feature lớn
+
+Trước khi mở thêm feature lớn như comments, revision history, hoặc editor inspector phức tạp, chạy một vòng beta smoke trên production hoặc staging giống production để khóa lại core flow hiện có:
+
+1. Auth/session
+   - tạo tài khoản mới hoặc dùng tài khoản test, đăng nhập, refresh trang, rồi xác nhận session vẫn vào được `/app/profile`
+2. Planner create flow
+   - mở `/app/planner`, nhập thông tin chuyến đi, thêm ít nhất hai activity có ngày/giờ hợp lệ, có cost, rồi tạo trip
+3. Planner saved flow
+   - từ `/app/trips/:tripId/planner`, sửa thông tin chung, thêm/sửa/xóa activity, và xác nhận budget summary cập nhật đúng sau mỗi mutation
+4. Journal owner flow
+   - mở `/app/trips/:tripId/journal`, thêm note/sticker/tape, upload một ảnh local, resize ảnh hoặc note, chờ autosave, refresh trang, rồi xác nhận scene load lại đúng
+5. Journal signed asset flow
+   - mở ảnh journal trong editor và public journal, xác nhận URL asset có `expiresAt` và `signature`; thử bỏ query string ở URL asset phải không đọc được file
+6. Share independence
+   - để planner `private`, journal `public`, xác nhận `/public/trips/:tripId/journal` đọc được journal nhưng không mở lộ planner private; sau đó bật planner `public` và kiểm tra CTA planner trên public journal
+7. Community discovery
+   - mở `/community`, xác nhận public posts, public trips, và public journals render được hoặc empty state hợp lệ; journal public mới phải xuất hiện sau refetch/deploy cache ổn định
+8. Compatibility redirects
+   - mở `/app/trips/:tripId`, `/app/planner?tripId=<id>`, và `/app/journal?tripId=<id>` để xác nhận redirect về canonical planner/journal route
+9. Logout
+   - đăng xuất từ `/app/profile`, refresh trang private và xác nhận bị đưa về auth flow thay vì giữ stale private state
+
 ## Mẫu báo cáo sau deploy
 
 Khi handoff kết quả deploy hoặc hardening verify, ưu tiên dùng format ngắn này:

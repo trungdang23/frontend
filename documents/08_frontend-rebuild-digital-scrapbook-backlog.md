@@ -153,16 +153,18 @@ Giai đoạn rebuild này chưa xử lý:
 
 ## Follow-up journal signed asset delivery support
 
+Status: `Completed in source`
+
 ### Mục tiêu
 
 Giữ journal editor/public renderer tương thích khi backend đổi journal asset URL sang signed URL co query string, nhung khong doi model tuong tac tren UI.
 
 ### Scope của lượt triển khai này
 
-- [ ] giu `resolveJournalAssetUrl()` resolve dung relative URL co query string
-- [ ] normalize signed relative `imageUrl` trong owner/public journal response thanh absolute API URL truoc khi dua vao renderer/editor
-- [ ] dam bao asset-backed object tiep tuc dua tren `assetId` la chinh khi xac dinh asset dang duoc su dung
-- [ ] bo sung test nho cho helper resolve signed relative asset URL
+- [x] giu `resolveJournalAssetUrl()` resolve dung relative URL co query string
+- [x] normalize signed relative `imageUrl` trong owner/public journal response thanh absolute API URL truoc khi dua vao renderer/editor
+- [x] dam bao asset-backed object tiep tuc dua tren `assetId` la chinh khi xac dinh asset dang duoc su dung
+- [x] bo sung test nho cho helper resolve signed relative asset URL
 
 ### Deferred
 
@@ -806,7 +808,6 @@ Cho journal editor thêm ảnh từ file local thay vì chỉ nhập URL thủ c
 
 ### Deferred
 
-- signed/private asset delivery
 - cloud/object storage provider production-ready
 - cleanup file vật lý khi asset không còn được scene nào dùng
 
@@ -829,7 +830,6 @@ Cho owner xem lại các ảnh đã upload trong journal editor, thêm nhanh ả
 
 - asset search/filter/pagination
 - cleanup orphan asset tự động sau autosave failure hoặc user rời trang
-- signed/private asset delivery
 - cloud/object storage provider production-ready
 
 ## FR-J11 - Journal resize handles baseline
@@ -1610,6 +1610,7 @@ Làm giai đoạn rebuild này đủ sạch để bước vào implementation th
 - [x] cập nhật smoke test plan theo route mới
 - [x] đổi deploy workflow sang staged `dist` swap để tránh cửa sổ runtime đọc bundle lỗi khi build trực tiếp trên máy đích
 - [x] cập nhật deploy smoke checklist cho compatibility routes hiện tại rồi cho canonical planner/journal cutover
+- [x] bổ sung beta smoke checklist end-to-end cho planner, budget, journal signed asset, share, và community
 - [ ] gỡ các tham chiếu cũ còn sót tới route/workspace model cũ
 - [ ] rà README và docs active list một lần cuối
 
