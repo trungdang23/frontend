@@ -854,6 +854,26 @@ Cho owner doi kich thuoc `photo` va `note` truc tiep tren scene de journal edito
 - resize cho sticker va tape
 - rotate-aware resize handles chinh xac hon
 
+## FR-J12 - Journal direct rotate handle baseline
+
+### Muc tieu
+
+Cho owner xoay object truc tiep tren scene bang handle thay vi chi bam nut xoay trai/phai trong inspector, de journal editor co cam giac dan trang truc tiep hon ma van giu scope gon.
+
+### Scope cua luot trien khai nay
+
+- [x] them rotate handle cho object dang duoc chon va khong bi khoa
+- [x] rotate theo pointer quanh tam object trong canonical page space
+- [x] normalize rotation ve khoang signed on dinh `-180..180`
+- [x] giu nut xoay trai/phai inspector hien co lam fallback chinh xac
+- [x] them test helper nho cho rotation math theo pointer
+
+### Deferred
+
+- snap rotation theo buoc 15 do khi giu modifier key
+- hien live angle tooltip trong luc xoay
+- rotate-aware resize handles chinh xac hon
+
 ## FR-J4 - Profile share controls and public read-only pages
 
 ### Mục tiêu

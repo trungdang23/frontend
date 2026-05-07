@@ -514,6 +514,7 @@
       "bringForwardShort": "Lên",
       "rotateLeft": "Xoay trái",
       "rotateLeftShort": "Trái",
+      "rotateObject": "Xoay mảnh trực tiếp",
       "rotateRight": "Xoay phải",
       "rotateRightShort": "Phải",
       "resizeObject": "Đổi kích thước mảnh",

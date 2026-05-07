@@ -8,6 +8,11 @@ export type ResizableJournalObjectType = "note" | "photo";
 
 const RESIZABLE_OBJECT_TYPES: ResizableJournalObjectType[] = ["note", "photo"];
 
+type JournalPoint = {
+  x: number;
+  y: number;
+};
+
 export function canMoveObjectLayer(
   objects: JournalSceneObject[],
   objectId: string,
@@ -70,6 +75,10 @@ export function canResizeJournalObject(object: JournalSceneObject) {
   );
 }
 
+export function canRotateJournalObject(object: JournalSceneObject) {
+  return !object.locked;
+}
+
 export function resizeJournalObject(input: {
   object: JournalSceneObject;
   nextHeight: number;
@@ -110,6 +119,30 @@ export function resizeJournalObject(input: {
 
 export function normalizeRotation(rotation: number) {
   return ((((rotation + 180) % 360) + 360) % 360) - 180;
+}
+
+export function getJournalObjectCenter(object: JournalSceneObject) {
+  return {
+    x: object.x + object.width / 2,
+    y: object.y + object.height / 2,
+  };
+}
+
+export function rotateJournalObjectFromPointer(input: {
+  center: JournalPoint;
+  currentPointer: JournalPoint;
+  initialRotation: number;
+  originPointer: JournalPoint;
+}) {
+  const originAngle = getPointAngleInDegrees(input.center, input.originPointer);
+  const currentAngle = getPointAngleInDegrees(
+    input.center,
+    input.currentPointer,
+  );
+
+  return normalizeRotation(
+    input.initialRotation + currentAngle - originAngle,
+  );
 }
 
 export function areJournalScenesEqual(
@@ -188,4 +221,10 @@ function clampDimension(value: number, min: number, max: number) {
   const roundedValue = Math.round(value);
 
   return Math.min(Math.max(roundedValue, min), Math.max(min, max));
+}
+
+function getPointAngleInDegrees(center: JournalPoint, point: JournalPoint) {
+  return (
+    (Math.atan2(point.y - center.y, point.x - center.x) * 180) / Math.PI
+  );
 }

@@ -330,8 +330,10 @@ export function JournalPage() {
         journal={activeJournal}
         onObjectMove={moveJournalObject}
         onObjectResize={resizeJournalObjectOnPage}
+        onObjectRotate={rotateJournalObjectOnPage}
         onObjectSelect={setSelectedObjectId}
         resizeHandleLabel={t("journalPage.editor.resizeObject")}
+        rotateHandleLabel={t("journalPage.editor.rotateObject")}
         selectedObjectId={selectedObjectId}
       />
     );
@@ -871,6 +873,43 @@ export function JournalPage() {
       });
 
       return didResize
+        ? {
+            ...journal,
+            objects,
+            updatedAt: new Date().toISOString(),
+          }
+        : journal;
+    });
+  }
+
+  function rotateJournalObjectOnPage(objectId: string, rotation: number) {
+    saveJournalMutation.reset();
+    setDraftJournal((currentJournal) => {
+      const journal = currentJournal ?? journalQuery.data?.journal;
+
+      if (!journal) {
+        return currentJournal;
+      }
+
+      let didRotate = false;
+      const objects = journal.objects.map((object) => {
+        if (object.id !== objectId) {
+          return object;
+        }
+
+        if (object.rotation === rotation) {
+          return object;
+        }
+
+        didRotate = true;
+
+        return {
+          ...object,
+          rotation,
+        };
+      });
+
+      return didRotate
         ? {
             ...journal,
             objects,

@@ -514,6 +514,7 @@
       "bringForwardShort": "Front",
       "rotateLeft": "Rotate left",
       "rotateLeftShort": "Left",
+      "rotateObject": "Rotate piece directly",
       "rotateRight": "Rotate right",
       "rotateRightShort": "Right",
       "resizeObject": "Resize piece",

@@ -7,8 +7,11 @@ import {
 } from "react";
 import { ImageOff } from "lucide-react";
 import {
+  canRotateJournalObject,
   canResizeJournalObject,
+  getJournalObjectCenter,
   resizeJournalObject,
+  rotateJournalObjectFromPointer,
 } from "@/features/journal/lib/journal-scene-editing";
 import type {
   JournalSceneObject,
@@ -28,8 +31,10 @@ type JournalSceneRendererProps = {
     objectId: string,
     size: { width: number; height: number },
   ) => void;
+  onObjectRotate?: (objectId: string, rotation: number) => void;
   onObjectSelect?: (objectId: string | null) => void;
   resizeHandleLabel?: string;
+  rotateHandleLabel?: string;
   selectedObjectId?: string | null;
 };
 
@@ -42,8 +47,10 @@ export function JournalSceneRenderer({
   className,
   onObjectMove,
   onObjectResize,
+  onObjectRotate,
   onObjectSelect,
   resizeHandleLabel,
+  rotateHandleLabel,
   selectedObjectId,
 }: JournalSceneRendererProps) {
   const sceneRef = useRef<HTMLDivElement>(null);
@@ -52,6 +59,8 @@ export function JournalSceneRenderer({
   );
   const [resizeState, setResizeState] =
     useState<JournalObjectResizeState | null>(null);
+  const [rotateState, setRotateState] =
+    useState<JournalObjectRotateState | null>(null);
   const orderedObjects = [...journal.objects].sort((left, right) => {
     if (left.zIndex !== right.zIndex) {
       return left.zIndex - right.zIndex;
@@ -60,7 +69,8 @@ export function JournalSceneRenderer({
     return left.id.localeCompare(right.id);
   });
   const aspectRatio = `${journal.page.width} / ${journal.page.height}`;
-  const canEdit = editable && Boolean(onObjectMove || onObjectResize);
+  const canEdit =
+    editable && Boolean(onObjectMove || onObjectResize || onObjectRotate);
 
   return (
     <div
@@ -105,10 +115,12 @@ export function JournalSceneRenderer({
               onKeyMove={moveObjectFromKeyboard}
               onPointerDown={startObjectDrag}
               onResizePointerDown={startObjectResize}
+              onRotatePointerDown={startObjectRotate}
               onSelect={selectObject}
               pageHeight={journal.page.height}
               pageWidth={journal.page.width}
               resizeHandleLabel={resizeHandleLabel}
+              rotateHandleLabel={rotateHandleLabel}
               selectedLabel={interactiveObjectLabel}
             />
           ))}
@@ -150,6 +162,7 @@ export function JournalSceneRenderer({
 
     sceneRef.current?.setPointerCapture(event.pointerId);
     setResizeState(null);
+    setRotateState(null);
     setDragState({
       height: object.height,
       objectId: object.id,
@@ -168,6 +181,19 @@ export function JournalSceneRenderer({
     );
 
     if (!pointerPosition) {
+      return;
+    }
+
+    if (rotateState && canEdit && onObjectRotate) {
+      event.preventDefault();
+      const rotation = rotateJournalObjectFromPointer({
+        center: rotateState.center,
+        currentPointer: pointerPosition,
+        initialRotation: rotateState.initialRotation,
+        originPointer: rotateState.originPointer,
+      });
+
+      onObjectRotate(rotateState.objectId, rotation);
       return;
     }
 
@@ -216,7 +242,7 @@ export function JournalSceneRenderer({
   }
 
   function finishObjectDrag(event: PointerEvent<HTMLDivElement>) {
-    if (!dragState && !resizeState) {
+    if (!dragState && !resizeState && !rotateState) {
       return;
     }
 
@@ -226,6 +252,7 @@ export function JournalSceneRenderer({
 
     setDragState(null);
     setResizeState(null);
+    setRotateState(null);
   }
 
   function selectObject(objectId: string) {
@@ -289,6 +316,7 @@ export function JournalSceneRenderer({
 
     sceneRef.current?.setPointerCapture(event.pointerId);
     setDragState(null);
+    setRotateState(null);
     setResizeState({
       initialHeight: object.height,
       initialWidth: object.width,
@@ -296,6 +324,40 @@ export function JournalSceneRenderer({
       objectId: object.id,
       originPointerX: pointerPosition.x,
       originPointerY: pointerPosition.y,
+    });
+  }
+
+  function startObjectRotate(
+    event: PointerEvent<HTMLDivElement>,
+    object: JournalSceneObject,
+  ) {
+    if (!canEdit || !onObjectRotate || !canRotateJournalObject(object)) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+    onObjectSelect?.(object.id);
+
+    const pointerPosition = getPagePointFromPointerEvent(
+      event,
+      sceneRef.current,
+      journal.page.width,
+      journal.page.height,
+    );
+
+    if (!pointerPosition) {
+      return;
+    }
+
+    sceneRef.current?.setPointerCapture(event.pointerId);
+    setDragState(null);
+    setResizeState(null);
+    setRotateState({
+      center: getJournalObjectCenter(object),
+      initialRotation: object.rotation,
+      objectId: object.id,
+      originPointer: pointerPosition,
     });
   }
 }
@@ -318,10 +380,15 @@ type JournalSceneObjectViewProps = {
     event: PointerEvent<HTMLDivElement>,
     object: JournalSceneObject,
   ) => void;
+  onRotatePointerDown: (
+    event: PointerEvent<HTMLDivElement>,
+    object: JournalSceneObject,
+  ) => void;
   onSelect: (objectId: string) => void;
   pageWidth: number;
   pageHeight: number;
   resizeHandleLabel?: string;
+  rotateHandleLabel?: string;
   selectedLabel?: string;
 };
 
@@ -334,10 +401,12 @@ function JournalSceneObjectView({
   onKeyMove,
   onPointerDown,
   onResizePointerDown,
+  onRotatePointerDown,
   onSelect,
   pageHeight,
   pageWidth,
   resizeHandleLabel,
+  rotateHandleLabel,
   selectedLabel,
 }: JournalSceneObjectViewProps) {
   const style: CSSProperties = {
@@ -380,6 +449,20 @@ function JournalSceneObjectView({
       tabIndex={isEditable && !object.locked ? 0 : undefined}
     >
       {renderJournalObject(object)}
+      {isEditable && isSelected && !object.locked ? (
+        <div
+          aria-label={rotateHandleLabel}
+          className="absolute left-1/2 top-0 h-9 w-9 -translate-x-1/2 -translate-y-[calc(100%+0.9rem)] touch-none rounded-full border-2 border-white bg-[#f2cc6f] shadow-[0_8px_18px_rgba(92,68,43,0.24)] transition hover:scale-105"
+          onPointerDown={(event) => onRotatePointerDown(event, object)}
+          role="button"
+          tabIndex={-1}
+          title={rotateHandleLabel}
+        >
+          <span className="absolute left-1/2 top-full h-4 w-0.5 -translate-x-1/2 bg-[#7a4b39]/55" />
+          <span className="absolute inset-[0.45rem] rounded-full border-2 border-[#7a4b39]/70 border-r-transparent" />
+          <span className="absolute right-[0.48rem] top-[0.42rem] h-2 w-2 rotate-45 border-r-2 border-t-2 border-[#7a4b39]/70" />
+        </div>
+      ) : null}
       {isEditable && isSelected && isResizable ? (
         <div
           aria-label={resizeHandleLabel}
@@ -526,6 +609,19 @@ type JournalObjectResizeState = {
   objectId: string;
   originPointerX: number;
   originPointerY: number;
+};
+
+type JournalObjectRotateState = {
+  center: {
+    x: number;
+    y: number;
+  };
+  initialRotation: number;
+  objectId: string;
+  originPointer: {
+    x: number;
+    y: number;
+  };
 };
 
 function getPagePointFromPointerEvent(

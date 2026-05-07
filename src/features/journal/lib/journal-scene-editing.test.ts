@@ -3,9 +3,12 @@ import {
   areJournalScenesEqual,
   canResizeJournalObject,
   canMoveObjectLayer,
+  canRotateJournalObject,
+  getJournalObjectCenter,
   moveObjectLayer,
   normalizeRotation,
   resizeJournalObject,
+  rotateJournalObjectFromPointer,
   serializeJournalScene,
   shouldAutosaveJournalScene,
   shouldReplaceDraftWithSavedScene,
@@ -68,6 +71,16 @@ describe("journal scene editing helpers", () => {
     ).toBe(false);
   });
 
+  it("exposes direct rotation for unlocked objects", () => {
+    expect(canRotateJournalObject(createObject("note-rotate", 2))).toBe(true);
+    expect(
+      canRotateJournalObject({
+        ...createObject("locked-note", 2),
+        locked: true,
+      }),
+    ).toBe(false);
+  });
+
   it("clamps resized objects to page bounds and minimum dimensions", () => {
     const resized = resizeJournalObject({
       nextHeight: 999,
@@ -102,6 +115,36 @@ describe("journal scene editing helpers", () => {
   it("normalizes rotation into a stable signed range", () => {
     expect(normalizeRotation(188)).toBe(-172);
     expect(normalizeRotation(-188)).toBe(172);
+  });
+
+  it("calculates direct pointer rotation around the object center", () => {
+    const object = {
+      ...createObject("photo-rotate", 2),
+      height: 200,
+      rotation: 170,
+      width: 300,
+      x: 100,
+      y: 200,
+    };
+    const center = getJournalObjectCenter(object);
+
+    expect(center).toEqual({ x: 250, y: 300 });
+    expect(
+      rotateJournalObjectFromPointer({
+        center,
+        currentPointer: { x: 250, y: 100 },
+        initialRotation: 0,
+        originPointer: { x: 450, y: 300 },
+      }),
+    ).toBe(-90);
+    expect(
+      rotateJournalObjectFromPointer({
+        center,
+        currentPointer: { x: 250, y: 100 },
+        initialRotation: object.rotation,
+        originPointer: { x: 450, y: 300 },
+      }),
+    ).toBe(80);
   });
 
   it("compares scene payload without treating updatedAt as dirty state", () => {
