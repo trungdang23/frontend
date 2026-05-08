@@ -153,6 +153,30 @@ Sau mỗi deploy production, ưu tiên verify nhanh theo đúng thứ tự này:
 12. Đăng xuất từ `/app/profile`
     - expected: quay lại flow public/auth với notice hợp lệ
 
+### Browser smoke script có thể tái chạy
+
+Khi muốn khóa nhanh ba flow public/auth dễ regress mà không click tay toàn bộ:
+
+```bash
+cd /mnt/c/TrungDang/journey/frontend
+pnpm exec playwright install chromium
+pnpm smoke:production
+```
+
+Script hiện verify:
+
+- copy validation tiếng Việt ở `/auth/register`
+- login -> `/app/profile` -> logout -> chặn quay lại route private
+- `/public/trips/:tripId/journal` vẫn render được khi planner private và không lộ CTA `Xem kế hoạch`
+
+Có thể override target bằng:
+
+```bash
+SMOKE_BASE_URL=https://buicojourney.com \
+SMOKE_API_BASE_URL=https://api.buicojourney.com/api/v1 \
+pnpm smoke:production
+```
+
 ### Compatibility redirects cần giữ
 
 - Mở `/app/trips/:tripId`

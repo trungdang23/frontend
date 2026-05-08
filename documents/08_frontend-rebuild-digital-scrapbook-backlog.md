@@ -1676,10 +1676,11 @@ Khóa lại các flow public/auth/journal đã vừa hoàn tất trong source b�
 
 - [x] verify flow `planner private` + `journal public` trên production ở mức API/runtime data
 - [x] verify public journal discovery vẫn xuất hiện trong `GET /public/journals` khi planner còn private
-- [ ] verify public route `/public/trips/:tripId/journal` ở mức browser render khi planner private
-- [ ] verify public journal không lộ CTA planner khi planner còn private
-- [ ] verify logout từ `/app/profile` và refresh route private không giữ stale session
-- [ ] verify đăng ký tài khoản mới vẫn dùng copy validation tiếng Việt đúng như source hiện tại
+- [x] thêm browser smoke script có thể tái chạy cho public journal, logout, và register validation copy
+- [x] verify public route `/public/trips/:tripId/journal` ở mức browser render khi planner private
+- [x] verify public journal không lộ CTA planner khi planner còn private
+- [x] verify logout từ `/app/profile` và refresh route private không giữ stale session
+- [x] verify đăng ký tài khoản mới vẫn dùng copy validation tiếng Việt đúng như source hiện tại
 - [x] nếu có drift production/source, vá route hoặc state handling rồi cập nhật smoke checklist
 
 ### Kết quả đã có
@@ -1688,7 +1689,7 @@ Khóa lại các flow public/auth/journal đã vừa hoàn tất trong source b�
 - `GET /public/trips/:tripId/journal` trả được journal public với `trip.visibility = private`
 - `GET /public/trips/:tripId` tiếp tục bị chặn `403`, nên planner private không bị lộ qua public trip route
 - `GET /public/journals` vẫn discovery được journal public của trip private
-- Chưa có browser automation sẵn trong workspace để claim nốt các mục render/logout/register validation
+- `pnpm smoke:production` hiện đã verify browser render cho public journal, logout guard ở route private, và copy validation tiếng Việt của `/auth/register`
 
 ### Deferred
 

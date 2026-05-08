@@ -56,6 +56,20 @@ pnpm test:run
 pnpm build
 ```
 
+Browser smoke production tối thiểu có thể chạy bằng:
+
+```bash
+pnpm smoke:production
+```
+
+Lệnh này mặc định verify trên `https://buicojourney.com` và `https://api.buicojourney.com/api/v1`.
+Có thể override bằng `SMOKE_BASE_URL`, `SMOKE_API_BASE_URL`, và `SMOKE_HEADLESS=false`.
+Lần đầu trên máy mới cần cài browser cho Playwright:
+
+```bash
+pnpm exec playwright install chromium
+```
+
 ## Ghi chú quan trọng
 
 - Bộ doc trong `frontend/documents/` hiện là source of truth cho lần rebuild này.

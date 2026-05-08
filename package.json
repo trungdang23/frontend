@@ -9,6 +9,7 @@
     "lint": "eslint src vite.config.ts eslint.config.js",
     "format": "prettier --write .",
     "preview": "vite preview",
+    "smoke:production": "node ./scripts/production-browser-smoke.mjs",
     "test": "vitest",
     "test:run": "vitest --run"
   },
@@ -37,6 +38,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.4.0",
     "jsdom": "^27.0.0",
+    "playwright": "^1.59.1",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3",
