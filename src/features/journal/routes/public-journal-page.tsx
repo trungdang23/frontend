@@ -12,6 +12,7 @@ import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { ApiError } from '@/shared/api/api-error';
 import { useI18n } from '@/shared/i18n/use-i18n';
+import { canShowPublicJournalPlannerLink } from '@/features/journal/lib/public-journal-page';
 
 export function PublicJournalPage() {
   const { tripId = '' } = useParams<{ tripId: string }>();
@@ -76,7 +77,7 @@ export function PublicJournalPage() {
           />
 
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            {journalQuery.data.trip.visibility === 'public' ? (
+            {canShowPublicJournalPlannerLink(journalQuery.data.trip.visibility) ? (
               <Link
                 className="inline-flex items-center gap-1.5 rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-4 py-2 font-marker font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5"
                 to={`/public/trips/${encodeURIComponent(journalQuery.data.trip.id)}`}

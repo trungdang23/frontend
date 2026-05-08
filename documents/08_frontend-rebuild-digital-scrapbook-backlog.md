@@ -1666,6 +1666,35 @@ Làm giai đoạn rebuild này đủ sạch để bước vào implementation th
 - team đọc docs là hiểu đúng product direction ngay
 - deploy/test docs không còn mô tả nhầm app cũ
 
+## Follow-up deploy smoke hardening - 2026-05-08
+
+### Mục tiêu
+
+Khóa lại các flow public/auth/journal đã vừa hoàn tất trong source bằng production smoke thật, trước khi mở thêm feature mới hoặc bắt đầu cleanup sâu hơn.
+
+### Việc cần làm
+
+- [x] verify flow `planner private` + `journal public` trên production ở mức API/runtime data
+- [x] verify public journal discovery vẫn xuất hiện trong `GET /public/journals` khi planner còn private
+- [ ] verify public route `/public/trips/:tripId/journal` ở mức browser render khi planner private
+- [ ] verify public journal không lộ CTA planner khi planner còn private
+- [ ] verify logout từ `/app/profile` và refresh route private không giữ stale session
+- [ ] verify đăng ký tài khoản mới vẫn dùng copy validation tiếng Việt đúng như source hiện tại
+- [x] nếu có drift production/source, vá route hoặc state handling rồi cập nhật smoke checklist
+
+### Kết quả đã có
+
+- Production API pass cho `journal public` trong khi `trip.visibility = private`
+- `GET /public/trips/:tripId/journal` trả được journal public với `trip.visibility = private`
+- `GET /public/trips/:tripId` tiếp tục bị chặn `403`, nên planner private không bị lộ qua public trip route
+- `GET /public/journals` vẫn discovery được journal public của trip private
+- Chưa có browser automation sẵn trong workspace để claim nốt các mục render/logout/register validation
+
+### Deferred
+
+- browser gesture coverage đầy đủ cho journal drag/resize/rotate trên mobile
+- smoke toàn bộ visual spacing của fixed-layout surfaces
+
 ## Decision log ngắn cần giữ trong giai đoạn này
 
 ### Chốt
