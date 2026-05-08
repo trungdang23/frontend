@@ -46,13 +46,10 @@ export function SharedHeader() {
           }}
         >
           {homeNavItems.map((item, index) => {
-            const isProtectedPlanner = item.href === '/app/planner';
             const isProtectedWorkspace = item.href.startsWith('/app/');
             const navTarget = isProtectedWorkspace && auth.status !== 'authenticated'
               ? '/auth/login'
-              : isProtectedPlanner
-                ? '/app/planner'
-                : item.href;
+              : item.href;
             const navState = isProtectedWorkspace && auth.status !== 'authenticated'
               ? { from: { pathname: item.href } }
               : undefined;

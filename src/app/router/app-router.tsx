@@ -22,6 +22,7 @@ import { PublicJournalPage } from '@/features/journal/routes/public-journal-page
 import { ProfilePage } from '@/features/profile/routes/profile-page';
 import { PublicTripPage } from '@/features/trips/public/routes/public-trip-page';
 import { PlannerPage } from '@/features/trips/routes/planner-page';
+import { TripsPage } from '@/features/trips/routes/trips-page';
 
 function PlannerTripRouteRedirect() {
   const location = useLocation();
@@ -63,6 +64,25 @@ function JournalCompatibilityRoute() {
   );
 }
 
+function TripEditCompatibilityRoute() {
+  const location = useLocation();
+  const { tripId } = useParams<{ tripId: string }>();
+
+  if (!tripId) {
+    return <Navigate replace to="/app/trips" />;
+  }
+
+  const searchParams = new URLSearchParams(location.search);
+  searchParams.set('mode', 'trip');
+
+  return (
+    <Navigate
+      replace
+      to={buildPlannerTripPath(tripId, `?${searchParams.toString()}`)}
+    />
+  );
+}
+
 const appRouter = createBrowserRouter(
   createRoutesFromElements(
     <>
@@ -89,10 +109,26 @@ const appRouter = createBrowserRouter(
       <Route
         element={(
           <ProtectedRoute>
-            <Navigate replace to="/app/planner" />
+            <Navigate replace to="/app/trips" />
           </ProtectedRoute>
         )}
         path="/app"
+      />
+      <Route
+        element={(
+          <ProtectedRoute>
+            <TripsPage />
+          </ProtectedRoute>
+        )}
+        path="/app/trips"
+      />
+      <Route
+        element={(
+          <ProtectedRoute>
+            <PlannerPage />
+          </ProtectedRoute>
+        )}
+        path="/app/trips/new"
       />
       <Route
         element={(
@@ -101,6 +137,14 @@ const appRouter = createBrowserRouter(
           </ProtectedRoute>
         )}
         path="/app/trips/:tripId"
+      />
+      <Route
+        element={(
+          <ProtectedRoute>
+            <TripEditCompatibilityRoute />
+          </ProtectedRoute>
+        )}
+        path="/app/trips/:tripId/edit"
       />
       <Route
         element={(

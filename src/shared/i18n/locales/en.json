@@ -585,6 +585,8 @@
     "listCardEyebrow": "Trip plan",
     "listCardFallback": "Add a cover image and a quick summary so each trip feels more tangible directly from the list.",
     "listSummary": "You currently have {{count}} trips in your account.",
+    "loadingTitle": "Loading your trips",
+    "loadingDescription": "Journey is opening the current trips workspace from your account.",
     "createEyebrow": "Create trip",
     "createTitle": "Start a new trip",
     "createDescription": "Fill in the high-level trip frame so Journey can open the detailed planner right after creation succeeds.",
@@ -645,11 +647,19 @@
       "save": "Save changes",
       "saving": "Saving changes...",
       "edit": "Edit trip",
+      "openPlanner": "Open planner",
+      "openJournal": "Open journal",
+      "openPublic": "Open public page",
       "delete": "Delete trip",
       "deleting": "Deleting trip...",
       "retry": "Try again",
       "backToList": "Back to trips list",
       "cancel": "Cancel"
+    },
+    "stats": {
+      "total": "Total trips",
+      "public": "Public trips",
+      "private": "Private trips"
     },
     "feedback": {
       "createSuccess": "The new trip was created successfully.",

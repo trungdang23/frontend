@@ -19,7 +19,7 @@ type PrivatePageShellProps = PropsWithChildren<{
 const privateNavItems = [
   {
     id: 'planner',
-    href: '/app/planner',
+    href: '/app/trips',
     labelKey: 'home.navigation.planner',
   },
   {

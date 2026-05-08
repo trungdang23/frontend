@@ -18,6 +18,7 @@
 - [x] route `/` đã có homepage scrapbook baseline thật
 - [x] route `/community` đã có feed public đầu tiên
 - [x] auth routes đã có shared chrome và session flow
+- [x] route `/app/trips` đã có workspace list thật dùng dữ liệu trips hiện tại; `/app` redirect về đây
 - [x] planner route hiện tại đã dùng `PlanNode` API client; trip-specific planner đã cut over sang `/app/trips/:tripId/planner` và giữ `/app/planner?tripId=...` làm compatibility redirect
 - [x] profile route đã bind `journals/mine` và `trips`, có share modal cho kế hoạch/nhật ký
 - [~] journal route đã có API client, renderer, editor tối giản, drag object, selected-object controls, autosave debounce và leave guard qua data router cho internal navigation; inspector/handles đầy đủ chưa có
@@ -28,7 +29,7 @@
 - [x] i18n baseline vẫn còn
 - [x] test baseline vẫn còn
 - [x] dead frontend itinerary bridge files đã được cleanup sau khi backend gỡ legacy itinerary support
-- [~] runtime router/shell/UI primitives đã có cho các surface chính và route public read-only cho plan/journal; canonical planner/journal cutover đã xong, app router đã lên data-router, và compatibility redirects vẫn đang được giữ trong giai đoạn chuyển tiếp
+- [~] runtime router/shell/UI primitives đã có cho các surface chính, `trips` workspace entry, và route public read-only cho plan/journal; canonical planner/journal cutover đã xong, app router đã lên data-router, và compatibility redirects vẫn đang được giữ trong giai đoạn chuyển tiếp
 
 ## Bộ docs active cần giữ
 
@@ -72,6 +73,7 @@ Status: `In progress`
 - [~] dựng lại router và app shell; cutover canonical planner/journal routes và data-router migration đã xong, cleanup transition vẫn còn
 - [~] dựng design token system mới; `@theme` tokens màu/font/paper đã có trong CSS, nhưng component-level spacing/radius/shadow primitives còn cần chuẩn hóa
 - [~] dựng fixed-layout public/auth/protected surfaces
+- [~] dựng `trips` workspace entry tại `/app/trips`; create flow đã có route `/app/trips/new` dùng lại planner create engine hiện tại, còn dedicated fixed-layout create/edit form vẫn deferred
 - [x] dựng journal scene renderer
 - [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape, drag object, selected-object controls, autosave debounce và leave guard qua data router; inspector đầy đủ còn deferred
 - [~] chốt journal API contract phase đầu với `GET/PUT/PATCH/DELETE /trips/:tripId/journal`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`; page-level contract còn deferred

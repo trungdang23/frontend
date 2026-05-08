@@ -1083,7 +1083,17 @@ function PlannerCreateSpread({
   );
 }
 
-function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => void; tripId: string }) {
+function PlannerSavedTripSpread({
+  initialMode = 'list',
+  onCreateNew,
+  onExitTripInfoMode,
+  tripId,
+}: {
+  initialMode?: 'list' | 'trip';
+  onCreateNew: () => void;
+  onExitTripInfoMode?: () => void;
+  tripId: string;
+}) {
   const { t } = useI18n();
   const queryClient = useQueryClient();
   const [activityMode, setActivityMode] = useState<SavedPlannerActivityMode>({ kind: 'list' });
@@ -1131,10 +1141,26 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
     setTripMutationProgress(null);
   };
 
+  useEffect(() => {
+    if (initialMode !== 'trip' || !trip || activityMode.kind === 'trip') {
+      return;
+    }
+
+    setActivityMutationError(null);
+    setActivityMutationProgress(null);
+    setTripMutationError(null);
+    setTripMutationProgress(null);
+    setSavedPlannerFeedback(null);
+    setSavedTripDraft(buildPlannerTripDraftFromTrip(trip));
+    setSavedTripDraftErrors({});
+    setActivityMode({ kind: 'trip' });
+  }, [activityMode.kind, initialMode, trip]);
+
   const openAddActivityForm = () => {
     clearActivityMutationState();
     clearTripMutationState();
     setSavedPlannerFeedback(null);
+    onExitTripInfoMode?.();
     setActivityMode({ kind: 'add' });
   };
 
@@ -1142,6 +1168,7 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
     clearActivityMutationState();
     clearTripMutationState();
     setSavedPlannerFeedback(null);
+    onExitTripInfoMode?.();
     setActivityMode({ kind: 'edit', nodeId });
   };
 
@@ -1166,6 +1193,7 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
   const closeTripInfoForm = () => {
     clearTripMutationState();
     setSavedTripDraftErrors({});
+    onExitTripInfoMode?.();
     setActivityMode({ kind: 'list' });
   };
 
@@ -1421,6 +1449,7 @@ function PlannerSavedTripSpread({ onCreateNew, tripId }: { onCreateNew: () => vo
         kind: 'success',
         message: t('trips.planner.board.savedSpread.feedback.tripUpdateSuccess'),
       });
+      onExitTripInfoMode?.();
       setActivityMode({ kind: 'list' });
     } catch {
       setTripMutationError(t('trips.planner.board.savedSpread.feedback.tripUpdateError'));
@@ -1730,6 +1759,7 @@ export function PlannerPage() {
   const selectedTripId = routeTripId?.trim() || searchParams.get('tripId');
   const isEditingActivities = !selectedTripId && plannerPage === 'activities';
   const isViewingSavedPlanner = Boolean(selectedTripId) && !isEditingActivities;
+  const isTripInfoMode = Boolean(selectedTripId) && searchParams.get('mode') === 'trip';
   const activeNodeId = searchParams.get('nodeId');
 
   const updateTripDraft: PlannerTripDraftChangeHandler = (field, value) => {
@@ -1779,7 +1809,7 @@ export function PlannerPage() {
   };
 
   const openFreshPlannerDraft = () => {
-    navigate('/app/planner', { replace: true });
+    navigate('/app/trips/new', { replace: true });
     setTripDraft(createDefaultPlannerTripDraft());
     setTripDraftErrors({});
     setCreateTripWithActivitiesError(null);
@@ -1945,6 +1975,16 @@ export function PlannerPage() {
     setCreateTripWithActivitiesSuccess(null);
   };
 
+  const clearTripInfoMode = () => {
+    if (!searchParams.has('mode')) {
+      return;
+    }
+
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete('mode');
+    setSearchParams(nextParams, { replace: true });
+  };
+
   return (
     <PublicPageShell
       mainClassName={publicPageMainLayouts.planner}
@@ -1980,7 +2020,12 @@ export function PlannerPage() {
                   }}
                 />
               ) : isViewingSavedPlanner && selectedTripId ? (
-                <PlannerSavedTripSpread onCreateNew={openFreshPlannerDraft} tripId={selectedTripId} />
+                <PlannerSavedTripSpread
+                  initialMode={isTripInfoMode ? 'trip' : 'list'}
+                  onCreateNew={openFreshPlannerDraft}
+                  onExitTripInfoMode={clearTripInfoMode}
+                  tripId={selectedTripId}
+                />
               ) : (
                 <PlannerCreateSpread
                   draft={tripDraft}
@@ -2007,7 +2052,12 @@ export function PlannerPage() {
                   }}
                 />
               ) : isViewingSavedPlanner && selectedTripId ? (
-                <PlannerSavedTripSpread onCreateNew={openFreshPlannerDraft} tripId={selectedTripId} />
+                <PlannerSavedTripSpread
+                  initialMode={isTripInfoMode ? 'trip' : 'list'}
+                  onCreateNew={openFreshPlannerDraft}
+                  onExitTripInfoMode={clearTripInfoMode}
+                  tripId={selectedTripId}
+                />
               ) : (
                 <PlannerCreateSpread
                   draft={tripDraft}

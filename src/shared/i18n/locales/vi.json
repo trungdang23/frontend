@@ -585,6 +585,8 @@
     "listCardEyebrow": "Kế hoạch chuyến đi",
     "listCardFallback": "Thêm ảnh bìa và ghi chú tổng quan để mỗi chuyến đi có ngữ cảnh rõ ràng hơn ngay từ danh sách.",
     "listSummary": "Hiện có {{count}} chuyến đi trong tài khoản của bạn.",
+    "loadingTitle": "Đang tải chuyến đi của bạn",
+    "loadingDescription": "Journey đang mở không gian chuyến đi hiện tại từ tài khoản của bạn.",
     "createEyebrow": "Tạo chuyến đi",
     "createTitle": "Bắt đầu một chuyến đi mới",
     "createDescription": "Điền khung tổng quan của chuyến đi để Journey mở planner chi tiết ngay sau khi tạo thành công.",
@@ -645,11 +647,19 @@
       "save": "Lưu thay đổi",
       "saving": "Đang lưu thay đổi...",
       "edit": "Chỉnh sửa",
+      "openPlanner": "Mở planner",
+      "openJournal": "Mở nhật ký",
+      "openPublic": "Mở trang công khai",
       "delete": "Xoá chuyến đi",
       "deleting": "Đang xoá chuyến đi...",
       "retry": "Thử lại",
       "backToList": "Quay lại danh sách chuyến đi",
       "cancel": "Huỷ"
+    },
+    "stats": {
+      "total": "Tổng chuyến đi",
+      "public": "Chuyến đi công khai",
+      "private": "Chuyến đi riêng tư"
     },
     "feedback": {
       "createSuccess": "Chuyến đi mới đã được tạo thành công.",

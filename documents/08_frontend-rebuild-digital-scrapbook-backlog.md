@@ -1467,6 +1467,37 @@ Thêm nền route theo route map mới mà không thay đổi UI hiện tại, n
 - budget/planner data đọc dễ hơn UI cũ
 - thay đổi layout của một public page không tự động làm lệch width, gutter hoặc spacing của public page khác
 
+## Follow-up trips entrypoint and route alignment
+
+### Mục tiêu
+
+Biến `/app/trips` thành entrypoint thật cho core loop hiện tại để người dùng có nơi quản lý toàn bộ chuyến đi trước khi đi sâu vào planner và journal.
+
+### Scope của lượt triển khai này
+
+- [x] thêm route `/app/trips` dùng dữ liệu thật từ `GET /trips`
+- [x] render list chuyến đi với loading, error, empty state rõ ràng
+- [x] thêm CTA tạo chuyến đi mới từ list
+- [x] thêm link trực tiếp sang planner và journal của từng trip
+- [x] điều hướng workspace:
+  - [x] `/app` -> `/app/trips`
+  - [x] `/app/trips/new` dùng trực tiếp flow tạo hiện tại trên `PlannerPage`
+  - [x] `/app/trips/:tripId/edit` redirect sang planner canonical với trip-info mode
+- [x] giữ nguyên `PlannerPage` hiện tại làm engine tạo/sửa tạm thời, không tách form trip mới trong lượt này
+
+### Deferred
+
+- form fixed-layout riêng cho `/app/trips/new`
+- form fixed-layout riêng cho `/app/trips/:tripId/edit`
+- planner tree workspace mới tách khỏi notebook create flow
+- bulk action, filter, sort nâng cao cho trip list
+
+### Acceptance criteria
+
+- người dùng đăng nhập đi vào `/app` không còn rơi thẳng vào flow tạo planner
+- từ `/app/trips` có thể mở planner, journal, và tạo chuyến đi mới mà không cần đi qua profile
+- route mới không làm gãy compatibility redirects hiện có cho planner/journal
+
 ## FR-D - Journal scene renderer
 
 ### Mục tiêu
