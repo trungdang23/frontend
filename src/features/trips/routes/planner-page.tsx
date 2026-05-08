@@ -25,6 +25,7 @@ import {
   type PlannerActivityDraftErrors,
   type PlannerActivityReservedTime,
 } from '@/features/trips/planning/components/planner-activity-spread';
+import { TripPlannerWorkspace } from '@/features/trips/planning/components/trip-planner-workspace';
 import {
   resolvePlannerActivityServerError,
   type PlannerActivityServerError,
@@ -1761,6 +1762,10 @@ export function PlannerPage() {
   const isViewingSavedPlanner = Boolean(selectedTripId) && !isEditingActivities;
   const isTripInfoMode = Boolean(selectedTripId) && searchParams.get('mode') === 'trip';
   const activeNodeId = searchParams.get('nodeId');
+
+  if (selectedTripId && isViewingSavedPlanner && !isTripInfoMode) {
+    return <TripPlannerWorkspace tripId={selectedTripId} />;
+  }
 
   const updateTripDraft: PlannerTripDraftChangeHandler = (field, value) => {
     setTripDraft((currentDraft) => ({

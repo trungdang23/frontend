@@ -19,7 +19,7 @@
 - [x] route `/community` đã có feed public đầu tiên
 - [x] auth routes đã có shared chrome và session flow
 - [x] route `/app/trips` đã có workspace list thật dùng dữ liệu trips hiện tại; `/app` redirect về đây
-- [x] planner route hiện tại đã dùng `PlanNode` API client; trip-specific planner đã cut over sang `/app/trips/:tripId/planner` và giữ `/app/planner?tripId=...` làm compatibility redirect
+- [x] planner route hiện tại đã dùng `PlanNode` API client; trip-specific planner đã cut over sang `/app/trips/:tripId/planner`, route canonical owner-side đã có structured tree workspace + budget summary baseline, và `/app/planner?tripId=...` vẫn là compatibility redirect
 - [x] profile route đã bind `journals/mine` và `trips`, có share modal cho kế hoạch/nhật ký
 - [~] journal route đã có API client, renderer, editor tối giản, drag object, selected-object controls, autosave debounce và leave guard qua data router cho internal navigation; inspector/handles đầy đủ chưa có
 - [x] shared API client vẫn còn
@@ -74,6 +74,7 @@ Status: `In progress`
 - [~] dựng design token system mới; `@theme` tokens màu/font/paper đã có trong CSS, nhưng component-level spacing/radius/shadow primitives còn cần chuẩn hóa
 - [~] dựng fixed-layout public/auth/protected surfaces
 - [~] dựng `trips` workspace entry tại `/app/trips`; create flow đã có route `/app/trips/new` dùng lại planner create engine hiện tại, còn dedicated fixed-layout create/edit form vẫn deferred
+- [~] dựng planner canonical workspace tại `/app/trips/:tripId/planner`; tree owner flow, node CRUD cơ bản, và budget summary đã có, nhưng trip info form riêng và reorder/editor chuyên biệt còn deferred
 - [x] dựng journal scene renderer
 - [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape, drag object, selected-object controls, autosave debounce và leave guard qua data router; inspector đầy đủ còn deferred
 - [~] chốt journal API contract phase đầu với `GET/PUT/PATCH/DELETE /trips/:tripId/journal`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`; page-level contract còn deferred

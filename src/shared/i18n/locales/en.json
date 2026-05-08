@@ -922,12 +922,14 @@
         "deleteNode": "Delete the node \"{{title}}\" and all of its child nodes?"
       },
       "metrics": {
-        "totalBudget": "Total budget",
-        "plannedBudget": "Planned",
-        "remainingBudget": "Remaining",
-        "totalNodes": "Planner density",
-        "totalNodesValue": "{{roots}} root nodes / {{children}} child nodes",
-        "currencyBreakdown": "Currency breakdown"
+      "totalBudget": "Total budget",
+      "plannedBudget": "Planned",
+      "remainingBudget": "Remaining",
+      "totalActivities": "Total activities",
+      "totalNodes": "Planner density",
+      "totalNodesValue": "{{roots}} root nodes / {{children}} child nodes",
+      "nodeCount": "{{count}} nodes",
+      "currencyBreakdown": "Currency breakdown"
       },
       "types": {
         "section": "Section",

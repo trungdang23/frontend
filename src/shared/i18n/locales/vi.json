@@ -922,12 +922,14 @@
         "deleteNode": "Bạn có chắc muốn xoá node \"{{title}}\" và toàn bộ node con của nó không?"
       },
       "metrics": {
-        "totalBudget": "Ngân sách tổng",
-        "plannedBudget": "Đã lên kế hoạch",
-        "remainingBudget": "Còn lại",
-        "totalNodes": "Mật độ planner",
-        "totalNodesValue": "{{roots}} node gốc / {{children}} node con",
-        "currencyBreakdown": "Phân tách theo tiền tệ"
+      "totalBudget": "Ngân sách tổng",
+      "plannedBudget": "Đã lên kế hoạch",
+      "remainingBudget": "Còn lại",
+      "totalActivities": "Tổng hoạt động",
+      "totalNodes": "Mật độ planner",
+      "totalNodesValue": "{{roots}} node gốc / {{children}} node con",
+      "nodeCount": "{{count}} node",
+      "currencyBreakdown": "Phân tách theo tiền tệ"
       },
       "types": {
         "section": "Section",

@@ -1455,11 +1455,11 @@ Thêm nền route theo route map mới mà không thay đổi UI hiện tại, n
 
 ### Việc cần làm
 
-- [ ] dựng trip list
+- [x] dựng trip list
 - [ ] dựng trip create/edit form
-- [ ] dựng planner workspace theo structured layout
+- [~] dựng planner workspace theo structured layout
 - [x] gỡ dead itinerary bridge files sau khi backend cleanup legacy itinerary support
-- [ ] xử lý loading/error/empty states nhất quán
+- [~] xử lý loading/error/empty states nhất quán
 
 ### Acceptance criteria
 
@@ -1497,6 +1497,37 @@ Biến `/app/trips` thành entrypoint thật cho core loop hiện tại để ng
 - người dùng đăng nhập đi vào `/app` không còn rơi thẳng vào flow tạo planner
 - từ `/app/trips` có thể mở planner, journal, và tạo chuyến đi mới mà không cần đi qua profile
 - route mới không làm gãy compatibility redirects hiện có cho planner/journal
+
+## Follow-up canonical planner workspace
+
+### Mục tiêu
+
+Biến `/app/trips/:tripId/planner` thành workspace planner dữ liệu có cấu trúc thật sự, tách rõ khỏi notebook create flow đang dùng cho `/app/trips/new`.
+
+### Scope của lượt triển khai này
+
+- [x] thêm budget client riêng cho `GET /trips/:tripId/budget-summary`
+- [x] render planner tree thật trên route canonical với loading/error/empty state rõ ràng
+- [x] hiển thị budget summary owner flow ngay trong planner workspace
+- [x] cho thêm root node
+- [x] cho thêm child node
+- [x] cho sửa node
+- [x] cho xóa node
+- [x] giữ `/app/trips/new` tiếp tục dùng notebook create flow hiện tại
+- [x] giữ `/app/trips/:tripId/edit` còn đi qua trip-info mode tạm thời cho đến khi có fixed-layout trip form riêng
+
+### Deferred
+
+- reorder tree nâng cao bằng drag/drop
+- grouped day/location editor chuyên biệt
+- trip info fixed-layout form riêng thay cho trip-info mode tạm thời
+- merge hẳn saved activity notebook flow vào planner tree CRUD
+
+### Acceptance criteria
+
+- `/app/trips/:tripId/planner` không còn mở notebook saved spread mặc định
+- owner xem được planner tree, budget summary, và thao tác CRUD node trong cùng route
+- `/app/trips/new` vẫn tạo chuyến đi mới như hiện tại
 
 ## FR-D - Journal scene renderer
 
