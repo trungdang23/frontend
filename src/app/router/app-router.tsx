@@ -32,7 +32,7 @@ function PlannerTripRouteRedirect() {
   return (
     <Navigate
       replace
-      to={tripId ? buildPlannerTripPath(tripId, location.search) : '/app/planner'}
+      to={tripId ? buildPlannerTripPath(tripId, location.search) : '/app/trips/new'}
     />
   );
 }
@@ -42,13 +42,11 @@ function PlannerCompatibilityRoute() {
   const searchParams = new URLSearchParams(location.search);
   const tripId = searchParams.get('tripId')?.trim();
 
-  return tripId ? (
+  return (
     <Navigate
       replace
-      to={buildPlannerTripPath(tripId, location.search)}
+      to={tripId ? buildPlannerTripPath(tripId, location.search) : '/app/trips/new'}
     />
-  ) : (
-    <PlannerPage />
   );
 }
 

@@ -1437,7 +1437,7 @@ Thêm nền route theo route map mới mà không thay đổi UI hiện tại, n
 - [x] route `/app/trips/:tripId/journal` render journal trực tiếp
 - [x] route `/app/trips/:tripId` redirect về planner canonical
 - [x] route `/app/planner?tripId=...` và `/app/journal?tripId=...` redirect về canonical tương ứng
-- [x] route `/app/planner` không có `tripId` vẫn là entry tạo planner/trip mới
+- [x] route `/app/planner` không có `tripId` nay redirect sang `/app/trips/new`
 
 ### Scope của lượt triển khai này
 
@@ -1483,12 +1483,6 @@ Biến `/app/trips` thành entrypoint thật cho core loop hiện tại để ng
   - [x] `/app` -> `/app/trips`
   - [x] `/app/trips/new` dùng fixed-layout trip form riêng
   - [x] `/app/trips/:tripId/edit` dùng fixed-layout trip form riêng
-- [x] giữ `/app/planner` không có `tripId` như cửa vào compatibility cho notebook create flow cũ trong giai đoạn chuyển tiếp
-
-### Deferred
-
-- gỡ hẳn notebook create flow cũ khỏi `/app/planner`
-- xóa trip-info mode còn sót lại trong `PlannerPage`
 - bulk action, filter, sort nâng cao cho trip list
 
 ### Acceptance criteria
@@ -1538,14 +1532,12 @@ Biến `/app/trips/:tripId/planner` thành workspace planner dữ liệu có c�
 - [x] thêm page fixed-layout riêng cho create/edit trip
 - [x] route `/app/trips/new` render form mới và điều hướng sang planner canonical sau khi tạo thành công
 - [x] route `/app/trips/:tripId/edit` render form mới và lưu trực tiếp về trip hiện tại
-- [x] giữ `/app/planner` không có `tripId` như cửa vào compatibility cho notebook create cũ trong giai đoạn chuyển tiếp
+- [x] giữ `/app/planner` chỉ còn làm compatibility redirect, không còn render notebook create flow
 - [x] bỏ redirect `/app/trips/:tripId/edit` sang planner `trip-info mode`
 - [x] invalidate cache `trips`, `planner`, `journal`, và public trip/journal liên quan sau khi lưu
 
 ### Deferred
 
-- gỡ hẳn notebook create flow cũ khỏi `/app/planner`
-- xóa trip-info mode còn sót lại trong `PlannerPage` sau khi cleanup compatibility route
 - hợp nhất các CTA chỉnh sửa metadata giữa trip form và planner workspace nếu sau này cần
 
 ### Acceptance criteria
@@ -1553,6 +1545,32 @@ Biến `/app/trips/:tripId/planner` thành workspace planner dữ liệu có c�
 - tạo và chỉnh sửa chuyến đi đi qua fixed-layout form thay vì notebook page
 - tạo mới thành công mở thẳng `/app/trips/:tripId/planner`
 - chỉnh sửa metadata không còn phụ thuộc route redirect sang planner `trip-info mode`
+
+## Follow-up planner compatibility cleanup
+
+### Mục tiêu
+
+Kết thúc giai đoạn compatibility của notebook planner cũ để route metadata và route planner không còn chồng vai trò.
+
+### Scope của lượt triển khai này
+
+- [x] route `/app/planner` không có `tripId` redirect sang `/app/trips/new`
+- [x] giữ `/app/planner?tripId=...` tiếp tục redirect sang planner canonical như compatibility path
+- [x] gỡ `trip-info mode` khỏi `PlannerPage`
+- [x] gỡ notebook create/edit trip flow cũ khỏi `PlannerPage`
+- [x] giữ `PlannerPage` chỉ còn là route canonical mỏng cho workspace planner theo `tripId`
+- [x] cập nhật CTA/test/doc để flow metadata không còn trỏ về compatibility planner path
+
+### Deferred
+
+- xóa hẳn helper notebook-only còn lại nếu sau này không còn route nào dùng
+- gộp hoặc bỏ `PlannerPage` nếu app router chuyển thẳng sang `TripPlannerWorkspace`
+
+### Acceptance criteria
+
+- `/app/planner` không còn là màn create notebook thật
+- metadata create/edit chỉ đi qua `/app/trips/new` và `/app/trips/:tripId/edit`
+- canonical planner route không còn branch `trip-info mode`
 
 ## FR-D - Journal scene renderer
 
