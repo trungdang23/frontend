@@ -1456,7 +1456,7 @@ Thêm nền route theo route map mới mà không thay đổi UI hiện tại, n
 ### Việc cần làm
 
 - [x] dựng trip list
-- [ ] dựng trip create/edit form
+- [x] dựng trip create/edit form
 - [~] dựng planner workspace theo structured layout
 - [x] gỡ dead itinerary bridge files sau khi backend cleanup legacy itinerary support
 - [~] xử lý loading/error/empty states nhất quán
@@ -1481,15 +1481,14 @@ Biến `/app/trips` thành entrypoint thật cho core loop hiện tại để ng
 - [x] thêm link trực tiếp sang planner và journal của từng trip
 - [x] điều hướng workspace:
   - [x] `/app` -> `/app/trips`
-  - [x] `/app/trips/new` dùng trực tiếp flow tạo hiện tại trên `PlannerPage`
-  - [x] `/app/trips/:tripId/edit` redirect sang planner canonical với trip-info mode
-- [x] giữ nguyên `PlannerPage` hiện tại làm engine tạo/sửa tạm thời, không tách form trip mới trong lượt này
+  - [x] `/app/trips/new` dùng fixed-layout trip form riêng
+  - [x] `/app/trips/:tripId/edit` dùng fixed-layout trip form riêng
+- [x] giữ `/app/planner` không có `tripId` như cửa vào compatibility cho notebook create flow cũ trong giai đoạn chuyển tiếp
 
 ### Deferred
 
-- form fixed-layout riêng cho `/app/trips/new`
-- form fixed-layout riêng cho `/app/trips/:tripId/edit`
-- planner tree workspace mới tách khỏi notebook create flow
+- gỡ hẳn notebook create flow cũ khỏi `/app/planner`
+- xóa trip-info mode còn sót lại trong `PlannerPage`
 - bulk action, filter, sort nâng cao cho trip list
 
 ### Acceptance criteria
@@ -1513,21 +1512,47 @@ Biến `/app/trips/:tripId/planner` thành workspace planner dữ liệu có c�
 - [x] cho thêm child node
 - [x] cho sửa node
 - [x] cho xóa node
-- [x] giữ `/app/trips/new` tiếp tục dùng notebook create flow hiện tại
-- [x] giữ `/app/trips/:tripId/edit` còn đi qua trip-info mode tạm thời cho đến khi có fixed-layout trip form riêng
+- [x] tách metadata create/edit trip ra fixed-layout form riêng, để canonical planner tập trung vào node tree và budget summary
 
 ### Deferred
 
 - reorder tree nâng cao bằng drag/drop
 - grouped day/location editor chuyên biệt
-- trip info fixed-layout form riêng thay cho trip-info mode tạm thời
 - merge hẳn saved activity notebook flow vào planner tree CRUD
 
 ### Acceptance criteria
 
 - `/app/trips/:tripId/planner` không còn mở notebook saved spread mặc định
 - owner xem được planner tree, budget summary, và thao tác CRUD node trong cùng route
-- `/app/trips/new` vẫn tạo chuyến đi mới như hiện tại
+- route create/edit trip không còn phụ thuộc notebook planner để nhập metadata
+
+## Follow-up fixed-layout trip form routes
+
+### Mục tiêu
+
+Đưa tạo và chỉnh sửa chuyến đi về đúng các route fixed-layout `/app/trips/new` và `/app/trips/:tripId/edit`, đồng thời giảm vai trò của notebook planner cũ xuống mức compatibility.
+
+### Scope của lượt triển khai này
+
+- [x] tách helper draft/payload/validation của trip form khỏi `PlannerPage`
+- [x] thêm page fixed-layout riêng cho create/edit trip
+- [x] route `/app/trips/new` render form mới và điều hướng sang planner canonical sau khi tạo thành công
+- [x] route `/app/trips/:tripId/edit` render form mới và lưu trực tiếp về trip hiện tại
+- [x] giữ `/app/planner` không có `tripId` như cửa vào compatibility cho notebook create cũ trong giai đoạn chuyển tiếp
+- [x] bỏ redirect `/app/trips/:tripId/edit` sang planner `trip-info mode`
+- [x] invalidate cache `trips`, `planner`, `journal`, và public trip/journal liên quan sau khi lưu
+
+### Deferred
+
+- gỡ hẳn notebook create flow cũ khỏi `/app/planner`
+- xóa trip-info mode còn sót lại trong `PlannerPage` sau khi cleanup compatibility route
+- hợp nhất các CTA chỉnh sửa metadata giữa trip form và planner workspace nếu sau này cần
+
+### Acceptance criteria
+
+- tạo và chỉnh sửa chuyến đi đi qua fixed-layout form thay vì notebook page
+- tạo mới thành công mở thẳng `/app/trips/:tripId/planner`
+- chỉnh sửa metadata không còn phụ thuộc route redirect sang planner `trip-info mode`
 
 ## FR-D - Journal scene renderer
 

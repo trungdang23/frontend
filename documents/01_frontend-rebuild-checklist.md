@@ -73,8 +73,8 @@ Status: `In progress`
 - [~] dựng lại router và app shell; cutover canonical planner/journal routes và data-router migration đã xong, cleanup transition vẫn còn
 - [~] dựng design token system mới; `@theme` tokens màu/font/paper đã có trong CSS, nhưng component-level spacing/radius/shadow primitives còn cần chuẩn hóa
 - [~] dựng fixed-layout public/auth/protected surfaces
-- [~] dựng `trips` workspace entry tại `/app/trips`; create flow đã có route `/app/trips/new` dùng lại planner create engine hiện tại, còn dedicated fixed-layout create/edit form vẫn deferred
-- [~] dựng planner canonical workspace tại `/app/trips/:tripId/planner`; tree owner flow, node CRUD cơ bản, và budget summary đã có, nhưng trip info form riêng và reorder/editor chuyên biệt còn deferred
+- [~] dựng `trips` workspace entry tại `/app/trips`; list thật cùng dedicated fixed-layout create/edit form đã có, nhưng bulk action/filter/sort nâng cao và cleanup compatibility vẫn deferred
+- [~] dựng planner canonical workspace tại `/app/trips/:tripId/planner`; tree owner flow, node CRUD cơ bản, budget summary, và edit metadata qua route riêng đã có, nhưng reorder/editor chuyên biệt và notebook compatibility cleanup còn deferred
 - [x] dựng journal scene renderer
 - [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape, drag object, selected-object controls, autosave debounce và leave guard qua data router; inspector đầy đủ còn deferred
 - [~] chốt journal API contract phase đầu với `GET/PUT/PATCH/DELETE /trips/:tripId/journal`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`; page-level contract còn deferred

@@ -37,7 +37,17 @@ import type {
   PlanNodeUpdatePayload,
   TripPlannerResult,
 } from '@/features/trips/planning/types/plan-node';
-import type { Trip, TripBudgetMode, TripUpsertPayload, TripVisibility } from '@/features/trips/types/trip';
+import {
+  buildTripFormDraftFromTrip as buildPlannerTripDraftFromTrip,
+  buildTripUpsertPayload as buildTripCreatePayload,
+  createDefaultTripFormDraft as createDefaultPlannerTripDraft,
+  isValidHttpUrl,
+  type TripFormChangeHandler as PlannerTripDraftChangeHandler,
+  type TripFormDraft as PlannerTripDraft,
+  type TripFormDraftErrors as PlannerTripDraftErrors,
+  validateTripFormDraft as validatePlannerTripDraft,
+} from '@/features/trips/lib/trip-form';
+import type { Trip } from '@/features/trips/types/trip';
 import { buildPlannerTripPath } from '@/app/router/trip-route-redirects';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -47,25 +57,6 @@ const pageDotStyle: CSSProperties = {
   backgroundSize: '28px 28px',
 };
 
-type PlannerTripDraft = {
-  name: string;
-  destination: string;
-  summaryNotes: string;
-  coverImageUrl: string;
-  startDate: string;
-  endDate: string;
-  budgetMode: TripBudgetMode;
-  manualBudgetAmount: string;
-  manualBudgetCurrency: string;
-  visibility: TripVisibility;
-};
-
-type PlannerTripDraftField = keyof PlannerTripDraft;
-type PlannerTripDraftErrors = Partial<Record<PlannerTripDraftField, string>>;
-type PlannerTripDraftChangeHandler = <Field extends PlannerTripDraftField>(
-  field: Field,
-  value: PlannerTripDraft[Field],
-) => void;
 type PlannerCalendarView = 'day' | 'month' | 'year';
 type SavedPlannerActivityMode =
   | {
@@ -85,105 +76,11 @@ type SavedPlannerFeedback = {
   kind: 'error' | 'success';
   message: string;
 };
-type PlannerTranslate = (key: string, values?: Record<string, number | string>) => string;
-
-const createDefaultPlannerTripDraft = (): PlannerTripDraft => ({
-  name: '',
-  destination: '',
-  summaryNotes: '',
-  coverImageUrl: '',
-  startDate: '',
-  endDate: '',
-  budgetMode: 'auto',
-  manualBudgetAmount: '',
-  manualBudgetCurrency: 'VND',
-  visibility: 'private',
-});
-
-function buildPlannerTripDraftFromTrip(trip: Trip): PlannerTripDraft {
-  return {
-    name: trip.name,
-    destination: trip.destination ?? '',
-    summaryNotes: trip.summaryNotes ?? '',
-    coverImageUrl: trip.coverImageUrl ?? '',
-    startDate: trip.startDate,
-    endDate: trip.endDate,
-    budgetMode: trip.budgetMode,
-    manualBudgetAmount: trip.manualBudgetAmount === null ? '' : String(trip.manualBudgetAmount),
-    manualBudgetCurrency: trip.manualBudgetCurrency ?? 'VND',
-    visibility: trip.visibility,
-  };
-}
 
 function toNullableTrimmedValue(value: string) {
   const trimmedValue = value.trim();
 
   return trimmedValue || null;
-}
-
-function buildTripCreatePayload(draft: PlannerTripDraft): TripUpsertPayload {
-  const isManualBudget = draft.budgetMode === 'manual';
-
-  return {
-    name: draft.name.trim(),
-    destination: toNullableTrimmedValue(draft.destination),
-    summaryNotes: toNullableTrimmedValue(draft.summaryNotes),
-    coverImageUrl: toNullableTrimmedValue(draft.coverImageUrl),
-    startDate: draft.startDate,
-    endDate: draft.endDate,
-    budgetMode: draft.budgetMode,
-    manualBudgetAmount: isManualBudget ? Number(draft.manualBudgetAmount.trim()) : null,
-    manualBudgetCurrency: isManualBudget ? draft.manualBudgetCurrency.trim().toUpperCase() : null,
-    visibility: draft.visibility,
-  };
-}
-
-function validatePlannerTripDraft(draft: PlannerTripDraft, t: PlannerTranslate) {
-  const nextErrors: PlannerTripDraftErrors = {};
-  const coverImageUrl = draft.coverImageUrl.trim();
-  const summaryNotes = draft.summaryNotes.trim();
-  const manualBudgetAmount = draft.manualBudgetAmount.trim();
-  const manualBudgetCurrency = draft.manualBudgetCurrency.trim();
-
-  if (!draft.name.trim()) {
-    nextErrors.name = t('trips.validation.nameRequired');
-  }
-
-  if (!draft.startDate) {
-    nextErrors.startDate = t('trips.validation.startDateRequired');
-  }
-
-  if (!draft.endDate) {
-    nextErrors.endDate = t('trips.validation.endDateRequired');
-  }
-
-  if (draft.startDate && draft.endDate && draft.endDate < draft.startDate) {
-    nextErrors.endDate = t('trips.validation.dateRangeInvalid');
-  }
-
-  if (summaryNotes.length > 2000) {
-    nextErrors.summaryNotes = t('trips.validation.summaryNotesLength');
-  }
-
-  if (coverImageUrl && !isValidHttpUrl(coverImageUrl)) {
-    nextErrors.coverImageUrl = t('trips.validation.coverImageUrlInvalid');
-  }
-
-  if (draft.budgetMode === 'manual') {
-    if (!manualBudgetAmount) {
-      nextErrors.manualBudgetAmount = t('trips.validation.manualBudgetAmountRequired');
-    } else if (Number(manualBudgetAmount) < 0) {
-      nextErrors.manualBudgetAmount = t('trips.validation.manualBudgetAmountPositive');
-    }
-
-    if (!manualBudgetCurrency) {
-      nextErrors.manualBudgetCurrency = t('trips.validation.manualBudgetCurrencyRequired');
-    } else if (manualBudgetCurrency.length !== 3) {
-      nextErrors.manualBudgetCurrency = t('trips.validation.manualBudgetCurrencyLength');
-    }
-  }
-
-  return nextErrors;
 }
 
 function buildActivityDateTime(date: string, time: string) {
@@ -389,16 +286,6 @@ function buildPlannerCalendarDays(monthKey: string) {
       isCurrentMonth: date.getMonth() === month - 1,
     };
   });
-}
-
-function isValidHttpUrl(value: string) {
-  try {
-    const url = new URL(value);
-
-    return url.protocol === 'http:' || url.protocol === 'https:';
-  } catch {
-    return false;
-  }
 }
 
 function PlannerTapeTitle({ children, className }: { children: string; className?: string }) {

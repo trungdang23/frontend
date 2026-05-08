@@ -22,6 +22,7 @@ import { PublicJournalPage } from '@/features/journal/routes/public-journal-page
 import { ProfilePage } from '@/features/profile/routes/profile-page';
 import { PublicTripPage } from '@/features/trips/public/routes/public-trip-page';
 import { PlannerPage } from '@/features/trips/routes/planner-page';
+import { TripFormPage } from '@/features/trips/routes/trip-form-page';
 import { TripsPage } from '@/features/trips/routes/trips-page';
 
 function PlannerTripRouteRedirect() {
@@ -60,25 +61,6 @@ function JournalCompatibilityRoute() {
     <Navigate
       replace
       to={tripId ? buildJournalTripPath(tripId, location.search) : '/app/profile'}
-    />
-  );
-}
-
-function TripEditCompatibilityRoute() {
-  const location = useLocation();
-  const { tripId } = useParams<{ tripId: string }>();
-
-  if (!tripId) {
-    return <Navigate replace to="/app/trips" />;
-  }
-
-  const searchParams = new URLSearchParams(location.search);
-  searchParams.set('mode', 'trip');
-
-  return (
-    <Navigate
-      replace
-      to={buildPlannerTripPath(tripId, `?${searchParams.toString()}`)}
     />
   );
 }
@@ -125,7 +107,7 @@ const appRouter = createBrowserRouter(
       <Route
         element={(
           <ProtectedRoute>
-            <PlannerPage />
+            <TripFormPage />
           </ProtectedRoute>
         )}
         path="/app/trips/new"
@@ -141,7 +123,7 @@ const appRouter = createBrowserRouter(
       <Route
         element={(
           <ProtectedRoute>
-            <TripEditCompatibilityRoute />
+            <TripFormPage />
           </ProtectedRoute>
         )}
         path="/app/trips/:tripId/edit"
