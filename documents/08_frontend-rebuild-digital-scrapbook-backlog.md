@@ -1138,6 +1138,18 @@ Biến các điểm vào `Lập Kế Hoạch` và `Cá Nhân` từ homepage thà
 - [x] thay số liệu chính trên card trái bằng dữ liệu thật có thể lấy được từ auth/posts/trips hiện tại
 - [x] cập nhật test/check nhỏ nhất liên quan đến contract mới
 
+### Auth login response compatibility hotfix
+
+### Mục tiêu
+
+Giữ flow `Đăng Nhập` không fail ở frontend khi backend omit các field user optional như `avatarUrl` trong payload `POST /auth/login`.
+
+### Scope của lượt triển khai này
+
+- [x] chấp nhận `avatarUrl` bị thiếu trong auth user response và normalize an toàn về `null`
+- [x] giữ nguyên behavior resolve avatar URL tương đối sang absolute API URL khi field này có mặt
+- [x] thêm test nhỏ mô phỏng response login success không có `avatarUrl`
+
 ### FR-B1 - Homepage scrapbook implementation
 
 ### Mục tiêu
