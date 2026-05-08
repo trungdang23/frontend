@@ -100,7 +100,6 @@ Giai đoạn rebuild này chưa xử lý:
 - `src/features/auth/api/*`
 - `src/features/auth/session/*`
 - `src/features/trips/api/trips-api.ts`
-- `src/features/trips/api/trip-planning-api.ts`
 - `src/features/community/api/posts-api.ts`
 - `src/shared/i18n/*`
 - `src/tests/*`
@@ -120,7 +119,7 @@ Giai đoạn rebuild này chưa xử lý:
 
 - mọi mô tả cũ coi `/app/trips/:tripId` là workspace duy nhất
 - các assumptions cũ kiểu "mọi page đều chỉ cần reskin"
-- việc mở rộng tiếp `trip-planning-api.ts` như file trung tâm cho editor mới
+- mọi bridge kiểu `trip-planning-api.ts` cho semantics itinerary cũ
 
 ## Các nguyên tắc rollout
 
@@ -1459,7 +1458,7 @@ Thêm nền route theo route map mới mà không thay đổi UI hiện tại, n
 - [ ] dựng trip list
 - [ ] dựng trip create/edit form
 - [ ] dựng planner workspace theo structured layout
-- [ ] tách planner API client mới khỏi `trip-planning-api.ts` nếu backend `PlanNode` đã sẵn
+- [x] gỡ dead itinerary bridge files sau khi backend cleanup legacy itinerary support
 - [ ] xử lý loading/error/empty states nhất quán
 
 ### Acceptance criteria

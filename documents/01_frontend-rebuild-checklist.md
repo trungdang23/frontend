@@ -27,6 +27,7 @@
 - [x] `planner-api.ts` cho `PlanNode` đã tồn tại dưới `features/trips/planning/api`
 - [x] i18n baseline vẫn còn
 - [x] test baseline vẫn còn
+- [x] dead frontend itinerary bridge files đã được cleanup sau khi backend gỡ legacy itinerary support
 - [~] runtime router/shell/UI primitives đã có cho các surface chính và route public read-only cho plan/journal; canonical planner/journal cutover đã xong, app router đã lên data-router, và compatibility redirects vẫn đang được giữ trong giai đoạn chuyển tiếp
 
 ## Bộ docs active cần giữ
@@ -83,6 +84,7 @@ Status: `In progress`
 - [ ] không dùng editor engine cho các page fixed-layout
 - [x] không lưu journal object theo pixel viewport hiện tại
 - [x] không mở rộng tiếp `trip-planning-api.ts` cho journal editor; planner `PlanNode` client đã được tách riêng
+- [x] không giữ lại dead itinerary bridge files sau khi backend đã drop route/schema legacy
 - [ ] không đổi storage platform chỉ vì scene data nhìn giống document
 
 ## Definition of done cho đợt sync doc này

@@ -20,7 +20,7 @@
 ### Từ backend
 
 - backend đang đi theo `NestJS + Prisma + PostgreSQL`
-- auth, trips, planner `PlanNode`, budget summary, public trips/planner, posts, journal persistence/share, và itinerary compatibility bridge đã có nền
+- auth, trips, planner `PlanNode`, budget summary, public trips/planner, posts, và journal persistence/share đã có nền
 - journal API riêng hiện đã có `GET/PUT/PATCH/DELETE /trips/:tripId/journal`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`
 
 ### Từ product direction
@@ -110,6 +110,7 @@ Hướng xử lý:
 - cloud/object storage provider hoặc signed asset delivery nếu private asset protection trở thành yêu cầu
 - thời điểm loại bỏ compatibility redirects sau khi link cũ không còn caller
 - deploy smoke checklist cho journal editor controls, autosave, public read-only route, và compatibility redirects
+- nếu budget owner UI cần active query riêng, thêm budget API client chuyên dụng thay vì phục hồi itinerary bridge
 
 ## Điều cần giữ kỷ luật
 

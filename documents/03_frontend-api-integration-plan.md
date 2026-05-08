@@ -12,7 +12,6 @@ Các API modules còn giữ trong repo:
 
 - `src/features/auth/api/auth-api.ts`
 - `src/features/trips/api/trips-api.ts`
-- `src/features/trips/api/trip-planning-api.ts`
 - `src/features/trips/planning/api/planner-api.ts`
 - `src/features/community/api/posts-api.ts`
 - `src/features/journal/api/journal-api.ts`
@@ -20,10 +19,10 @@ Các API modules còn giữ trong repo:
 Nhận xét quan trọng:
 
 - Runtime UI hiện đã wiring thật cho homepage, community, auth, planner canonical flow, profile, journal editor tối giản, và public read-only plan/journal routes.
-- `trip-planning-api.ts` vẫn là bridge cũ cho semantics `itinerary + budget`; không nên mở rộng file này cho journal editor.
 - Planner `PlanNode` client đã được tách tại `src/features/trips/planning/api/planner-api.ts`.
 - Route canonical `/app/trips/:tripId/planner` hiện là planner route chính cho trip đã lưu; `/app/planner?tripId=...` chỉ còn là compatibility redirect.
 - Route canonical `/app/trips/:tripId/journal` hiện là journal route chính cho trip đã lưu; `/app/journal?tripId=...` chỉ còn là compatibility redirect.
+- `2026-05-08`: dead frontend itinerary bridge files `trip-planning-api.ts` và `trip-planning.ts` đã bị gỡ sau khi backend production cleanup legacy itinerary endpoints và smoke xác nhận không còn caller active.
 
 ## Backend base hiện tại
 
@@ -73,16 +72,15 @@ Nhận xét quan trọng:
 - `PATCH /trips/:tripId`
 - `DELETE /trips/:tripId`
 
-### Legacy itinerary + budget bridge đang còn trong source
+### Budget hiện còn là contract backend độc lập
 
-- `GET /trips/:tripId/itinerary`
-- `POST /trips/:tripId/itinerary/days`
-- `PATCH /trips/:tripId/itinerary/days/:dayId`
-- `DELETE /trips/:tripId/itinerary/days/:dayId`
-- `POST /trips/:tripId/itinerary/days/:dayId/activities`
-- `PATCH /trips/:tripId/itinerary/days/:dayId/activities/:activityId`
-- `DELETE /trips/:tripId/itinerary/days/:dayId/activities/:activityId`
 - `GET /trips/:tripId/budget-summary`
+
+Ghi chú:
+
+- backend đã gỡ legacy itinerary endpoints khỏi source active và production docs
+- frontend hiện không còn API client active nào cho `/trips/:tripId/itinerary...`
+- nếu owner budget UI cần wiring lại sau này, nên tạo budget client riêng thay vì tái sinh `trip-planning-api.ts`
 
 ### Community posts
 
@@ -258,9 +256,23 @@ Cách lưu một scene trên một record `trip_journals` đang đủ cho editor
 | `['journal-page', pageId]` | stale `0s` khi edit | có save/load vòng kín |
 | `['posts', 'list']` | stale `30s` | community feed |
 
+## Cleanup sub-slice - 2026-05-08
+
+- Trigger:
+  - backend production đã cleanup legacy itinerary support và smoke runtime xác nhận `/api/v1/trips/:id/itinerary` trả `404`
+- Scope:
+  - [x] rà static references tới itinerary API cũ trong frontend source
+  - [x] xác nhận `trip-planning-api.ts` không còn import/caller active
+  - [x] gỡ dead files:
+    - `src/features/trips/api/trip-planning-api.ts`
+    - `src/features/trips/types/trip-planning.ts`
+  - [x] cập nhật doc API plan để không còn claim sai rằng itinerary bridge vẫn active trong frontend source
+- Deferred:
+  - nếu future UI cần owner budget summary screen riêng, tạo API client budget chuyên dụng
+
 ## Khuyến nghị file/module ở frontend
 
-- Không tiếp tục bơm editor logic vào `trip-planning-api.ts`.
+- Không tạo lại một bridge kiểu `trip-planning-api.ts` cho planner/journal.
 - Giữ planner client hiện tại tại:
   - `features/trips/planning/api/planner-api.ts`
 - Khi mở journal, tách thành:
