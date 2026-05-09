@@ -1,3 +1,4 @@
+import { Suspense, lazy, type ReactNode } from 'react';
 import {
   Navigate,
   Route,
@@ -12,18 +13,58 @@ import {
   buildPlannerTripPath,
 } from '@/app/router/trip-route-redirects';
 import { GuestRoute } from '@/features/auth/routes/guest-route';
-import { LoginPage } from '@/features/auth/routes/login-page';
 import { ProtectedRoute } from '@/features/auth/routes/protected-route';
-import { RegisterPage } from '@/features/auth/routes/register-page';
-import { CommunityFeedPage } from '@/features/community/routes/community-feed-page';
-import { HomePage } from '@/features/home/routes/home-page';
-import { JournalPage } from '@/features/journal/routes/journal-page';
-import { PublicJournalPage } from '@/features/journal/routes/public-journal-page';
-import { ProfilePage } from '@/features/profile/routes/profile-page';
-import { PublicTripPage } from '@/features/trips/public/routes/public-trip-page';
-import { PlannerPage } from '@/features/trips/routes/planner-page';
-import { TripFormPage } from '@/features/trips/routes/trip-form-page';
-import { TripsPage } from '@/features/trips/routes/trips-page';
+
+const HomePage = lazy(async () => ({
+  default: (await import('@/features/home/routes/home-page')).HomePage,
+}));
+const CommunityFeedPage = lazy(async () => ({
+  default: (await import('@/features/community/routes/community-feed-page')).CommunityFeedPage,
+}));
+const PublicTripPage = lazy(async () => ({
+  default: (await import('@/features/trips/public/routes/public-trip-page')).PublicTripPage,
+}));
+const PublicJournalPage = lazy(async () => ({
+  default: (await import('@/features/journal/routes/public-journal-page')).PublicJournalPage,
+}));
+const LoginPage = lazy(async () => ({
+  default: (await import('@/features/auth/routes/login-page')).LoginPage,
+}));
+const RegisterPage = lazy(async () => ({
+  default: (await import('@/features/auth/routes/register-page')).RegisterPage,
+}));
+const TripsPage = lazy(async () => ({
+  default: (await import('@/features/trips/routes/trips-page')).TripsPage,
+}));
+const TripFormPage = lazy(async () => ({
+  default: (await import('@/features/trips/routes/trip-form-page')).TripFormPage,
+}));
+const PlannerPage = lazy(async () => ({
+  default: (await import('@/features/trips/routes/planner-page')).PlannerPage,
+}));
+const JournalPage = lazy(async () => ({
+  default: (await import('@/features/journal/routes/journal-page')).JournalPage,
+}));
+const ProfilePage = lazy(async () => ({
+  default: (await import('@/features/profile/routes/profile-page')).ProfilePage,
+}));
+
+function RouteFallback() {
+  return (
+    <div aria-busy="true" className="page-backdrop flex min-h-screen items-center justify-center px-6 py-10">
+      <div className="paper-panel flex w-full max-w-md flex-col items-center gap-4 px-8 py-10" role="status">
+        <span className="sr-only">Loading page</span>
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-[rgba(122,75,57,0.16)] border-t-[var(--color-warm-red)]" />
+        <div className="h-3 w-32 animate-pulse rounded-full bg-[rgba(122,75,57,0.16)]" />
+        <div className="h-3 w-24 animate-pulse rounded-full bg-[rgba(122,75,57,0.1)]" />
+      </div>
+    </div>
+  );
+}
+
+function withRouteFallback(element: ReactNode) {
+  return <Suspense fallback={<RouteFallback />}>{element}</Suspense>;
+}
 
 function PlannerTripRouteRedirect() {
   const location = useLocation();
@@ -66,28 +107,31 @@ function JournalCompatibilityRoute() {
 const appRouter = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route element={<HomePage />} path="/" />
-      <Route element={<CommunityFeedPage />} path="/community" />
-      <Route element={<PublicTripPage />} path="/public/trips/:tripId" />
-      <Route element={<PublicJournalPage />} path="/public/trips/:tripId/journal" />
+      <Route element={withRouteFallback(<HomePage />)} path="/" />
+      <Route element={withRouteFallback(<CommunityFeedPage />)} path="/community" />
+      <Route element={withRouteFallback(<PublicTripPage />)} path="/public/trips/:tripId" />
       <Route
-        element={(
+        element={withRouteFallback(<PublicJournalPage />)}
+        path="/public/trips/:tripId/journal"
+      />
+      <Route
+        element={withRouteFallback(
           <GuestRoute>
             <LoginPage />
-          </GuestRoute>
+          </GuestRoute>,
         )}
         path="/auth/login"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <GuestRoute>
             <RegisterPage />
-          </GuestRoute>
+          </GuestRoute>,
         )}
         path="/auth/register"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <ProtectedRoute>
             <Navigate replace to="/app/trips" />
           </ProtectedRoute>
@@ -95,7 +139,7 @@ const appRouter = createBrowserRouter(
         path="/app"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <ProtectedRoute>
             <TripsPage />
           </ProtectedRoute>
@@ -103,7 +147,7 @@ const appRouter = createBrowserRouter(
         path="/app/trips"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <ProtectedRoute>
             <TripFormPage />
           </ProtectedRoute>
@@ -111,7 +155,7 @@ const appRouter = createBrowserRouter(
         path="/app/trips/new"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <ProtectedRoute>
             <PlannerTripRouteRedirect />
           </ProtectedRoute>
@@ -119,7 +163,7 @@ const appRouter = createBrowserRouter(
         path="/app/trips/:tripId"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <ProtectedRoute>
             <TripFormPage />
           </ProtectedRoute>
@@ -127,7 +171,7 @@ const appRouter = createBrowserRouter(
         path="/app/trips/:tripId/edit"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <ProtectedRoute>
             <PlannerPage />
           </ProtectedRoute>
@@ -135,7 +179,7 @@ const appRouter = createBrowserRouter(
         path="/app/trips/:tripId/planner"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <ProtectedRoute>
             <JournalPage />
           </ProtectedRoute>
@@ -143,7 +187,7 @@ const appRouter = createBrowserRouter(
         path="/app/trips/:tripId/journal"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <ProtectedRoute>
             <PlannerCompatibilityRoute />
           </ProtectedRoute>
@@ -151,7 +195,7 @@ const appRouter = createBrowserRouter(
         path="/app/planner"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <ProtectedRoute>
             <JournalCompatibilityRoute />
           </ProtectedRoute>
@@ -159,7 +203,7 @@ const appRouter = createBrowserRouter(
         path="/app/journal"
       />
       <Route
-        element={(
+        element={withRouteFallback(
           <ProtectedRoute>
             <ProfilePage />
           </ProtectedRoute>

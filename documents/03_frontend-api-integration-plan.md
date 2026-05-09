@@ -111,9 +111,9 @@ Backend đã có `PlanNode` contract ổn định và frontend hiện đã có c
 - `POST /nodes`
 - `PATCH /nodes/:nodeId`
 - `DELETE /nodes/:nodeId`
-- legacy/experimental sticker endpoints hiện vẫn có client:
-  - `GET /nodes/:nodeId/stickers`
-  - `PUT /nodes/:nodeId/stickers`
+
+Planner sticker endpoints `GET/PUT /nodes/:nodeId/stickers` chỉ là legacy/experimental artifact của flow planner cũ và không còn nên được coi là active contract của planner canonical workspace.
+Frontend source active cũng đã gỡ client/types cho path này trong cleanup slice `2026-05-09`.
 
 Planner là workspace dữ liệu có cấu trúc, không phải scrapbook scene.
 

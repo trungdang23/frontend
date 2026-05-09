@@ -1800,6 +1800,31 @@ Khóa lại các flow public/auth/journal đã vừa hoàn tất trong source b�
 - browser gesture coverage đầy đủ cho journal drag/resize/rotate trên mobile
 - smoke toàn bộ visual spacing của fixed-layout surfaces
 
+## Follow-up router performance and planner sticker cleanup - 2026-05-09
+
+### Mục tiêu
+
+Giảm bundle đầu vào cho app shell hiện tại và gỡ hẳn planner sticker API legacy path sau khi đã xác nhận planner canonical workspace không còn dùng nó.
+
+### Việc cần làm
+
+- [x] chuyển app router sang route-level lazy loading cho các page chính
+- [x] giữ nguyên canonical routes `/app/trips/:tripId/planner` và `/app/trips/:tripId/journal`
+- [x] gỡ planner sticker API client/types không còn caller trong `frontend/src/features/trips/planning`
+- [x] cập nhật docs active để không còn coi planner sticker API là active contract
+
+### Acceptance criteria
+
+- `pnpm build` vẫn pass sau lazy loading
+- app router không đổi route behavior hiện tại
+- frontend source không còn import `getPlanNodeStickers` hoặc `savePlanNodeStickers`
+
+### Kết quả đã có
+
+- `pnpm build` pass với route chunk tách riêng thay vì dồn phần lớn page code vào một entry chunk duy nhất như trước
+- canonical planner/journal routes và compatibility redirects hiện vẫn giữ nguyên behavior
+- planner sticker API client/types legacy đã bị gỡ khỏi source active
+
 ## Decision log ngắn cần giữ trong giai đoạn này
 
 ### Chốt
