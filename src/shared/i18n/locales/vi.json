@@ -592,8 +592,8 @@
     "listCardEyebrow": "Kế hoạch chuyến đi",
     "listCardFallback": "Thêm ảnh bìa và ghi chú tổng quan để mỗi chuyến đi có ngữ cảnh rõ ràng hơn ngay từ danh sách.",
     "listSummary": "Hiện có {{count}} chuyến đi trong tài khoản của bạn.",
-    "loadingTitle": "Đang tải chuyến đi của bạn",
-    "loadingDescription": "Journey đang mở không gian chuyến đi hiện tại từ tài khoản của bạn.",
+    "loadingTitle": "Đang tải...",
+    "loadingDescription": "Đang tải...",
     "createEyebrow": "Tạo chuyến đi",
     "createTitle": "Bắt đầu một chuyến đi mới",
     "createDescription": "Điền khung tổng quan của chuyến đi để Journey mở planner chi tiết ngay sau khi tạo thành công.",
@@ -699,8 +699,8 @@
     "notesEmpty": "Bạn chưa thêm ghi chú tổng quan cho chuyến đi này.",
     "planner": {
       "eyebrow": "Planner",
-      "title": "Workspace planner dạng cây",
-      "description": "Xây toàn bộ chuyến đi thành cây gồm section, day, location, activity và note ngay trong một route.",
+      "title": "Kế hoạch",
+      "description": "Lên kế hoạch chuyến đi theo từng điểm đến và hoạt động.",
       "board": {
         "titleLine1": "LẬP KẾ HOẠCH",
         "titleLine2": "CHUYẾN ĐI SÁNG TẠO",
@@ -882,8 +882,8 @@
       "scheduleEmpty": "Chưa có lịch thời gian",
       "costEmpty": "Chưa có chi phí",
       "notesEmpty": "Node này chưa có ghi chú.",
-      "emptyTitle": "Planner chưa có node nào",
-      "empty": "Hãy thêm node gốc đầu tiên để bắt đầu dựng planner tree cho chuyến đi này.",
+      "emptyTitle": "Chưa có điểm đến",
+      "empty": "Thêm điểm đến đầu tiên để bắt đầu lên kế hoạch.",
       "fields": {
         "nodeType": "Loại node",
         "title": "Tên node",

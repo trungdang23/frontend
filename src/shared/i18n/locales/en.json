@@ -585,8 +585,8 @@
     "listCardEyebrow": "Trip plan",
     "listCardFallback": "Add a cover image and a quick summary so each trip feels more tangible directly from the list.",
     "listSummary": "You currently have {{count}} trips in your account.",
-    "loadingTitle": "Loading your trips",
-    "loadingDescription": "Journey is opening the current trips workspace from your account.",
+    "loadingTitle": "Loading...",
+    "loadingDescription": "Loading...",
     "createEyebrow": "Create trip",
     "createTitle": "Start a new trip",
     "createDescription": "Fill in the high-level trip frame so Journey can open the detailed planner right after creation succeeds.",
@@ -692,8 +692,8 @@
     "notesEmpty": "This trip does not have summary notes yet.",
     "planner": {
       "eyebrow": "Planner",
-      "title": "Planner tree workspace",
-      "description": "Build the whole trip as a tree of sections, days, locations, activities, and notes without leaving this route.",
+      "title": "Plan",
+      "description": "Plan your trip with destinations and activities.",
       "board": {
         "titleLine1": "PLAN YOUR",
         "titleLine2": "CREATIVE JOURNEY",
@@ -875,8 +875,8 @@
       "scheduleEmpty": "No schedule yet",
       "costEmpty": "No cost yet",
       "notesEmpty": "This node does not have notes yet.",
-      "emptyTitle": "There are no planner nodes yet",
-      "empty": "Add the first root node to start shaping the trip as a full planning tree.",
+      "emptyTitle": "No destinations yet",
+      "empty": "Add your first destination to start planning.",
       "fields": {
         "nodeType": "Node type",
         "title": "Node title",
