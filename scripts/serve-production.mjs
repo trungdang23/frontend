@@ -15,6 +15,7 @@ const appName = process.env.APP_NAME || 'journey-frontend';
 
 const mimeTypes = new Map([
   ['.css', 'text/css; charset=utf-8'],
+  ['.glb', 'model/gltf-binary'],
   ['.gif', 'image/gif'],
   ['.html', 'text/html; charset=utf-8'],
   ['.ico', 'image/x-icon'],
