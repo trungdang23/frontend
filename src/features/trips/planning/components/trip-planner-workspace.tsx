@@ -22,11 +22,6 @@ import { useI18n } from '@/shared/i18n/use-i18n';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import {
-  getTripBudgetSummary,
-} from '@/features/trips/budgets/api/budget-summary-api';
-import { budgetQueryKeys } from '@/features/trips/budgets/lib/budget-query-keys';
-import type { TripBudgetSummary } from '@/features/trips/budgets/types/trip-budget-summary';
-import {
   createPlanNode,
   deletePlanNode,
   getTripPlanner,
@@ -91,11 +86,6 @@ export function TripPlannerWorkspace({ tripId }: TripPlannerWorkspaceProps) {
     enabled: Boolean(tripId),
     queryFn: ({ signal }) => getTripPlanner(tripId, { signal }),
     queryKey: plannerQueryKeys.detail(tripId),
-  });
-  const budgetQuery = useQuery({
-    enabled: Boolean(tripId),
-    queryFn: ({ signal }) => getTripBudgetSummary(tripId, { signal }),
-    queryKey: budgetQueryKeys.detail(tripId),
   });
   const trip = plannerQuery.data?.trip ?? null;
   const nodes = [...(plannerQuery.data?.nodes ?? [])].sort(comparePlanNodes);
@@ -227,7 +217,6 @@ export function TripPlannerWorkspace({ tripId }: TripPlannerWorkspaceProps) {
 
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: plannerQueryKeys.detail(tripId) }),
-        queryClient.invalidateQueries({ queryKey: budgetQueryKeys.detail(tripId) }),
       ]);
       closeNodeForm();
       setFeedback({
@@ -273,7 +262,6 @@ export function TripPlannerWorkspace({ tripId }: TripPlannerWorkspaceProps) {
       await deletePlanNode(node.id);
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: plannerQueryKeys.detail(tripId) }),
-        queryClient.invalidateQueries({ queryKey: budgetQueryKeys.detail(tripId) }),
       ]);
       setFeedback({
         kind: 'success',
@@ -330,13 +318,6 @@ export function TripPlannerWorkspace({ tripId }: TripPlannerWorkspaceProps) {
               trip={trip}
             />
 
-            <PlannerBudgetSummarySection
-              budgetSummary={budgetQuery.data ?? null}
-              budgetSummaryError={budgetQuery.isError ? t('trips.planner.feedback.budgetLoadError') : null}
-              childNodeCount={Math.max(nodes.length - rootNodes.length, 0)}
-              rootNodeCount={rootNodes.length}
-            />
-
             {feedback ? (
               <p
                 className={cn(
@@ -367,13 +348,7 @@ export function TripPlannerWorkspace({ tripId }: TripPlannerWorkspaceProps) {
 
             {rootNodes.length > 0 ? (
               <section className="space-y-4">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <p className="section-label">{t('trips.planner.eyebrow')}</p>
-                    <h2 className="font-display text-[2.05rem] leading-tight text-[#2c1f18] sm:text-[2.5rem]">
-                      {t('trips.planner.title')}
-                    </h2>
-                  </div>
+                <div className="flex items-center justify-end">
                   <button
                     className="inline-flex items-center gap-2 rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-4 py-2 font-marker font-bold leading-none text-[#172612] shadow-[0_5px_0_#6f9e44] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/30"
                     onClick={openRootNodeForm}
@@ -448,7 +423,6 @@ function PlannerWorkspaceHero({
 
       <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div className="max-w-3xl space-y-3">
-          <p className="section-label">{t('trips.planner.eyebrow')}</p>
           <h1 className="font-display text-[2.45rem] leading-tight text-[#2c1f18] sm:text-[3.4rem]">
             {trip.name}
           </h1>
@@ -508,131 +482,6 @@ function PlannerHeroPill({
       {icon}
       {children}
     </span>
-  );
-}
-
-function PlannerBudgetSummarySection({
-  budgetSummary,
-  budgetSummaryError,
-  childNodeCount,
-  rootNodeCount,
-}: {
-  budgetSummary: TripBudgetSummary | null;
-  budgetSummaryError: string | null;
-  childNodeCount: number;
-  rootNodeCount: number;
-}) {
-  const { t } = useI18n();
-
-  return (
-    <section className="rounded-[1.15rem] border border-[#eadbc5] bg-[#fffdfa] p-5 shadow-[0_18px_34px_rgba(76,51,33,0.1)] sm:p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div className="max-w-2xl">
-          <p className="section-label">{t('trips.planner.budgetEyebrow')}</p>
-          <h2 className="font-display text-[2.05rem] leading-tight text-[#2c1f18] sm:text-[2.45rem]">
-            {t('trips.planner.budgetTitle')}
-          </h2>
-        </div>
-
-        <div className="rounded-[1rem] border border-[#eadbc5] bg-[#fff8ea] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8d7f72]">
-            {t('trips.planner.metrics.totalNodes')}
-          </p>
-        </div>
-      </div>
-
-      {budgetSummaryError ? (
-        <p className="mt-5 rounded-[0.85rem] border border-[#d92d20]/25 bg-[#fff1f0] px-4 py-3 text-sm leading-6 text-[#b42318]">
-          {budgetSummaryError}
-        </p>
-      ) : null}
-
-      {budgetSummary ? (
-        <>
-          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <PlannerMetricCard
-              label={t('trips.planner.metrics.totalBudget')}
-              tone="paper"
-              value={formatMoney(budgetSummary.totalBudgetAmount, budgetSummary.currency)}
-            />
-            <PlannerMetricCard
-              label={t('trips.planner.metrics.plannedBudget')}
-              tone="leaf"
-              value={formatMoney(budgetSummary.totalPlannedAmount, budgetSummary.currency)}
-            />
-            <PlannerMetricCard
-              label={t('trips.planner.metrics.remainingBudget')}
-              tone={budgetSummary.isOverBudget ? 'coral' : 'sun'}
-              value={formatMoney(budgetSummary.remainingAmount, budgetSummary.currency)}
-            />
-            <PlannerMetricCard
-              label={t('trips.planner.metrics.totalActivities')}
-              tone="sky"
-              value={String(budgetSummary.totalActivities)}
-            />
-          </div>
-
-          {budgetSummary.totalsByCurrency.length > 0 ? (
-            <div className="mt-5 rounded-[1rem] border border-[#eadbc5] bg-[#fff8ea]/55 p-4">
-              <p className="font-marker text-[0.92rem] font-bold uppercase leading-none tracking-[0.12em] text-[#8b6244]">
-                {t('trips.planner.metrics.currencyBreakdown')}
-              </p>
-              <ul className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-                {budgetSummary.totalsByCurrency.map((total) => (
-                  <li
-                    className="rounded-[0.8rem] border border-[#eadbc5] bg-white/85 px-4 py-3 shadow-[0_10px_18px_rgba(76,51,33,0.06)]"
-                    key={total.currency}
-                  >
-                    <p className="font-marker text-[0.9rem] font-bold uppercase leading-none text-[#8b6244]">
-                      {total.currency}
-                    </p>
-                    <p className="mt-2 font-cursive text-[1.45rem] font-bold leading-none text-[#251b15]">
-                      {formatMoney(total.plannedAmount, total.currency)}
-                    </p>
-                    <p className="mt-2 text-sm leading-6 text-[#5f5146]">
-                      {t('trips.planner.metrics.nodeCount', { count: total.nodeCount })}
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ) : null}
-        </>
-      ) : null}
-    </section>
-  );
-}
-
-function PlannerMetricCard({
-  label,
-  tone,
-  value,
-}: {
-  label: string;
-  tone: 'coral' | 'leaf' | 'paper' | 'sky' | 'sun';
-  value: string;
-}) {
-  const toneClassName = {
-    coral: 'bg-[#fff1f0] text-[#8b2d20]',
-    leaf: 'bg-[#eef8d8] text-[#31521c]',
-    paper: 'bg-[#fff8ea] text-[#5f5146]',
-    sky: 'bg-[#eff9ff] text-[#24546d]',
-    sun: 'bg-[#fff1d9] text-[#6b3b18]',
-  }[tone];
-
-  return (
-    <article className={cn(
-      'rounded-[1rem] border border-[#eadbc5] px-4 py-4 shadow-[0_12px_22px_rgba(76,51,33,0.08)]',
-      toneClassName,
-    )}
-    >
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] opacity-75">
-        {label}
-      </p>
-      <p className="mt-3 font-cursive text-[1.8rem] font-bold leading-tight">
-        {value}
-      </p>
-    </article>
   );
 }
 

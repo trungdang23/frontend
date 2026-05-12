@@ -57,8 +57,6 @@ export function TripsPage() {
     queryKey: ['trips', 'list', 'workspace', WORKSPACE_TRIP_QUERY],
   });
   const trips = tripsQuery.data?.data ?? [];
-  const publicTripCount = trips.filter((trip) => trip.visibility === 'public').length;
-  const privateTripCount = trips.length - publicTripCount;
 
   const handleDeleteTrip = async (trip: Trip) => {
     if (deletingTripId) {
@@ -123,24 +121,6 @@ export function TripsPage() {
               </Link>
             </div>
           </div>
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-3">
-          <TripsMetricCard
-            label={t('trips.stats.total')}
-            tone="paper"
-            value={String(trips.length)}
-          />
-          <TripsMetricCard
-            label={t('trips.stats.public')}
-            tone="leaf"
-            value={String(publicTripCount)}
-          />
-          <TripsMetricCard
-            label={t('trips.stats.private')}
-            tone="sun"
-            value={String(privateTripCount)}
-          />
         </section>
 
         {feedback ? (
@@ -210,37 +190,6 @@ export function TripsPage() {
         ) : null}
       </div>
     </PublicPageShell>
-  );
-}
-
-function TripsMetricCard({
-  label,
-  tone,
-  value,
-}: {
-  label: string;
-  tone: 'leaf' | 'paper' | 'sun';
-  value: string;
-}) {
-  const toneClassName = {
-    leaf: 'bg-[#eef8d8] text-[#31521c]',
-    paper: 'bg-[#fff8ea] text-[#5f5146]',
-    sun: 'bg-[#fff1d9] text-[#6b3b18]',
-  }[tone];
-
-  return (
-    <article className={cn(
-      'rounded-[1rem] border border-[#eadbc5] px-4 py-4 shadow-[0_12px_22px_rgba(76,51,33,0.08)]',
-      toneClassName,
-    )}
-    >
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] opacity-75">
-        {label}
-      </p>
-      <p className="mt-3 font-cursive text-[2rem] font-bold leading-none">
-        {value}
-      </p>
-    </article>
   );
 }
 
