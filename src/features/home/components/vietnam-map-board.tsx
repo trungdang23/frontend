@@ -1,5 +1,6 @@
 import { MapPin } from 'lucide-react';
 import { mapStops } from '@/features/home/content/home-content';
+import { VietnamMapModel } from '@/features/home/components/vietnam-map-model';
 import type { AccentTone } from '@/features/shell/content/public-chrome-content';
 import { cn } from '@/shared/lib/cn';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -32,12 +33,7 @@ export function VietnamMapBoard() {
       <div className="absolute inset-0 -rotate-1 rounded-sm border border-[#e5c9a3] bg-[#fdf2d0] shadow-xl">
 
         <div className="pointer-events-none absolute inset-4 z-10 flex items-center justify-center">
-          <img
-            alt="Bản đồ Việt Nam"
-            className="h-full w-full object-contain opacity-90 mix-blend-multiply contrast-110"
-            src="/images/defaults/vietnam-map.svg"
-            style={{ filter: 'sepia(0.3)' }}
-          />
+          <VietnamMapModel />
         </div>
 
         <div className="pointer-events-none absolute right-0 top-0 h-32 w-32 -translate-y-12 translate-x-12 rounded-full bg-amber-900/10 blur-3xl" />
