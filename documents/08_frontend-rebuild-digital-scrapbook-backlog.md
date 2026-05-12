@@ -1405,6 +1405,18 @@ Cân lại shared header/footer trên mobile để navigation dãn đều theo �
 - [x] footer mobile đặt logo và social stamps trên cùng một hàng
 - [x] giữ footer link navigation tách hàng dưới để không làm hàng logo/social bị quá tải
 
+### FR-B1Q - Homepage 3D map render recovery
+
+### Mục tiêu
+
+Khôi phục model 3D bản đồ Việt Nam ở trang chủ sau khi mesh GLB render trắng do pivot/bounding box lệch khỏi camera.
+
+### Scope của lượt triển khai này
+
+- [x] center mesh theo bounding box thay vì dựa vào pivot export của file GLB
+- [x] giữ canvas có kích thước ổn định trên desktop/mobile
+- [x] smoke test homepage bằng browser để xác nhận canvas không trắng
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

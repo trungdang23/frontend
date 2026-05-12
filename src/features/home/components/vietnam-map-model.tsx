@@ -1,62 +1,44 @@
 import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { useGLTF, Environment, ContactShadows } from '@react-three/drei';
+import { Center, ContactShadows, useGLTF } from '@react-three/drei';
 import type { Group } from 'three';
 
-useGLTF.preload('/model/Map3d.glb');
+const VIETNAM_MAP_MODEL_URL = '/model/Map3d.glb';
+
+useGLTF.preload(VIETNAM_MAP_MODEL_URL);
 
 function VietnamMapMesh() {
-  const { scene } = useGLTF('/model/Map3d.glb') as { scene: Group };
+  const { scene } = useGLTF(VIETNAM_MAP_MODEL_URL) as { scene: Group };
 
   return (
-    <primitive
-      object={scene}
-      position={[0, -0.4, 0]}
-      rotation={[0.35, 0, 0]}
-      scale={2.6}
-    />
-  );
-}
-
-function FallbackMap() {
-  return (
-    <mesh>
-      <boxGeometry args={[2, 3, 0.1]} />
-      <meshStandardMaterial color="#d4b483" wireframe />
-    </mesh>
+    <Center
+      cacheKey={VIETNAM_MAP_MODEL_URL}
+      position={[0, -0.05, 0]}
+      precise
+      rotation={[0.38, -0.08, -0.02]}
+      scale={0.74}
+    >
+      <primitive object={scene} />
+    </Center>
   );
 }
 
 export function VietnamMapModel() {
   return (
     <Canvas
-      camera={{ position: [0, 0.3, 5.5], fov: 32 }}
+      camera={{ position: [0, 0.1, 6.2], fov: 35 }}
       dpr={[1, 1.5]}
-      gl={{ antialias: true, alpha: true }}
+      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       style={{ background: 'transparent', width: '100%', height: '100%' }}
     >
       <ambientLight intensity={1.2} color="#fdf2d0" />
-      <directionalLight
-        intensity={1.6}
-        position={[5, 8, 5]}
-        color="#fff8ea"
-      />
-      <directionalLight
-        intensity={0.6}
-        position={[-3, 2, -2]}
-        color="#d4b483"
-      />
-      <Suspense fallback={<FallbackMap />}>
+      <directionalLight intensity={1.6} position={[5, 8, 5]} color="#fff8ea" />
+      <directionalLight intensity={0.6} position={[-3, 2, -2]} color="#d4b483" />
+
+      <Suspense fallback={null}>
         <VietnamMapMesh />
-        <ContactShadows
-          blur={2}
-          far={3}
-          opacity={0.25}
-          position={[0, -1.8, 0]}
-          scale={6}
-        />
+        <ContactShadows blur={2} far={3} opacity={0.25} position={[0, -1.8, 0]} scale={6} />
       </Suspense>
-      <Environment preset="studio" />
     </Canvas>
   );
 }
