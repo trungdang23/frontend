@@ -317,39 +317,73 @@ export function TripFormPage() {
             </section>
 
             <section className="rounded-[1rem] border border-[#eadbc5] bg-[#fffdfa] p-5 shadow-[0_14px_28px_rgba(76,51,33,0.1)] sm:p-6">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="font-marker text-[0.85rem] font-bold uppercase tracking-[0.08em] text-[#6b4938]">
-                  {t('trips.fields.budgetMode')}
-                </span>
-                <div className="flex rounded-full border border-[#d8c5ab] bg-[#faf6ef] p-0.5">
-                  <button
-                    className={cn(
-                      'rounded-full px-4 py-1.5 font-marker text-[0.92rem] font-bold leading-none transition',
-                      draft.budgetMode === 'auto'
-                        ? 'bg-[#b9e177] text-[#172612] shadow-[0_2px_0_#6f9e44]'
-                        : 'text-[#6b4938] hover:text-[#3d2b22]',
-                    )}
-                    onClick={() => updateDraft('budgetMode', 'auto')}
-                    type="button"
-                  >
-                    {t('trips.budget.modeAuto')}
-                  </button>
-                  <button
-                    className={cn(
-                      'rounded-full px-4 py-1.5 font-marker text-[0.92rem] font-bold leading-none transition',
-                      draft.budgetMode === 'manual'
-                        ? 'bg-[#b9e177] text-[#172612] shadow-[0_2px_0_#6f9e44]'
-                        : 'text-[#6b4938] hover:text-[#3d2b22]',
-                    )}
-                    onClick={() => updateDraft('budgetMode', 'manual')}
-                    type="button"
-                  >
-                    {t('trips.budget.modeManual')}
-                  </button>
+              <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="font-marker text-[0.85rem] font-bold uppercase tracking-[0.08em] text-[#6b4938]">
+                    {t('trips.fields.budgetMode')}
+                  </span>
+                  <div className="flex rounded-full border border-[#d8c5ab] bg-[#faf6ef] p-0.5">
+                    <button
+                      className={cn(
+                        'rounded-full px-4 py-1.5 font-marker text-[0.92rem] font-bold leading-none transition',
+                        draft.budgetMode === 'auto'
+                          ? 'bg-[#b9e177] text-[#172612] shadow-[0_2px_0_#6f9e44]'
+                          : 'text-[#6b4938] hover:text-[#3d2b22]',
+                      )}
+                      onClick={() => updateDraft('budgetMode', 'auto')}
+                      type="button"
+                    >
+                      {t('trips.budget.modeAuto')}
+                    </button>
+                    <button
+                      className={cn(
+                        'rounded-full px-4 py-1.5 font-marker text-[0.92rem] font-bold leading-none transition',
+                        draft.budgetMode === 'manual'
+                          ? 'bg-[#b9e177] text-[#172612] shadow-[0_2px_0_#6f9e44]'
+                          : 'text-[#6b4938] hover:text-[#3d2b22]',
+                      )}
+                      onClick={() => updateDraft('budgetMode', 'manual')}
+                      type="button"
+                    >
+                      {t('trips.budget.modeManual')}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span className="font-marker text-[0.85rem] font-bold uppercase tracking-[0.08em] text-[#6b4938]">
+                    {t('trips.fields.visibility')}
+                  </span>
+                  <div className="flex rounded-full border border-[#d8c5ab] bg-[#faf6ef] p-0.5">
+                    <button
+                      className={cn(
+                        'rounded-full px-4 py-1.5 font-marker text-[0.92rem] font-bold leading-none transition',
+                        draft.visibility === 'private'
+                          ? 'bg-[#fff1d9] text-[#6b4938] shadow-[0_2px_0_rgba(139,98,68,0.25)]'
+                          : 'text-[#6b4938] hover:text-[#3d2b22]',
+                      )}
+                      onClick={() => updateDraft('visibility', 'private')}
+                      type="button"
+                    >
+                      {t('trips.visibility.private')}
+                    </button>
+                    <button
+                      className={cn(
+                        'rounded-full px-4 py-1.5 font-marker text-[0.92rem] font-bold leading-none transition',
+                        draft.visibility === 'public'
+                          ? 'bg-[#b9e177] text-[#172612] shadow-[0_2px_0_#6f9e44]'
+                          : 'text-[#6b4938] hover:text-[#3d2b22]',
+                      )}
+                      onClick={() => updateDraft('visibility', 'public')}
+                      type="button"
+                    >
+                      {t('trips.visibility.public')}
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              {draft.budgetMode === 'manual' ? (
+              {draft.budgetMode === 'manual' && (
                 <div className="mt-5 grid gap-4 sm:grid-cols-[minmax(0,1fr)_10rem]">
                   <TripFormInput
                     error={errors.manualBudgetAmount}
@@ -372,45 +406,7 @@ export function TripFormPage() {
                     value={draft.manualBudgetCurrency}
                   />
                 </div>
-              ) : (
-                <p className="mt-5 rounded-[0.95rem] border border-[#d8e7bf] bg-[#f4fbdf] px-4 py-3 text-sm leading-6 text-[#31521c]">
-                  {t('trips.budget.autoLabel')}
-                </p>
               )}
-            </section>
-
-            <section className="rounded-[1rem] border border-[#eadbc5] bg-[#fffdfa] p-5 shadow-[0_14px_28px_rgba(76,51,33,0.1)] sm:p-6">
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="font-marker text-[0.85rem] font-bold uppercase tracking-[0.08em] text-[#6b4938]">
-                  {t('trips.fields.visibility')}
-                </span>
-                <div className="flex rounded-full border border-[#d8c5ab] bg-[#faf6ef] p-0.5">
-                  <button
-                    className={cn(
-                      'rounded-full px-4 py-1.5 font-marker text-[0.92rem] font-bold leading-none transition',
-                      draft.visibility === 'private'
-                        ? 'bg-[#fff1d9] text-[#6b4938] shadow-[0_2px_0_rgba(139,98,68,0.25)]'
-                        : 'text-[#6b4938] hover:text-[#3d2b22]',
-                    )}
-                    onClick={() => updateDraft('visibility', 'private')}
-                    type="button"
-                  >
-                    {t('trips.visibility.private')}
-                  </button>
-                  <button
-                    className={cn(
-                      'rounded-full px-4 py-1.5 font-marker text-[0.92rem] font-bold leading-none transition',
-                      draft.visibility === 'public'
-                        ? 'bg-[#b9e177] text-[#172612] shadow-[0_2px_0_#6f9e44]'
-                        : 'text-[#6b4938] hover:text-[#3d2b22]',
-                    )}
-                    onClick={() => updateDraft('visibility', 'public')}
-                    type="button"
-                  >
-                    {t('trips.visibility.public')}
-                  </button>
-                </div>
-              </div>
             </section>
 
             <div className="flex flex-wrap items-center gap-3">

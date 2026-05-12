@@ -625,7 +625,7 @@
       "budgetMode": "Chế độ ngân sách",
       "manualBudgetAmount": "Ngân sách thủ công",
       "manualBudgetCurrency": "Tiền tệ ngân sách thủ công",
-      "visibility": "Mức hiển thị",
+      "visibility": "Chế độ hiển thị",
       "createdAt": "Ngày tạo",
       "updatedAt": "Cập nhật lần cuối"
     },
