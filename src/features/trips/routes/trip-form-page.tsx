@@ -69,7 +69,6 @@ export function TripFormPage() {
   const shouldShowCoverImage = Boolean(coverImageUrl) && isValidHttpUrl(coverImageUrl);
   const pageEyebrow = t(isEditMode ? 'trips.editEyebrow' : 'trips.createEyebrow');
   const pageTitle = t(isEditMode ? 'trips.editTitle' : 'trips.createTitle');
-  const pageDescription = t(isEditMode ? 'trips.editDescription' : 'trips.createDescription');
   const submitLabel = isSubmitting
     ? t(isEditMode ? 'trips.actions.saving' : 'trips.actions.creating')
     : t(isEditMode ? 'trips.actions.save' : 'trips.actions.create');
@@ -219,8 +218,6 @@ export function TripFormPage() {
               {t('trips.actions.backToList')}
             </Link>
           )}
-          description={t(errorStatus === 404 ? 'trips.notFoundDescription' : 'trips.loadErrorDescription')}
-          eyebrow={pageEyebrow}
           title={t(errorStatus === 404 ? 'trips.notFoundTitle' : 'trips.loadErrorTitle')}
         />
       </PublicPageShell>
@@ -240,14 +237,11 @@ export function TripFormPage() {
           <div className="pointer-events-none absolute -left-4 bottom-5 h-12 w-28 -rotate-[8deg] bg-[#a8dfd5]/70 shadow-[0_10px_16px_rgba(72,109,98,0.12)]" />
 
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl space-y-3">
+            <div className="max-w-3xl space-y-2">
               <p className="section-label">{pageEyebrow}</p>
               <h1 className="font-display text-[2.4rem] leading-tight text-[#2c1f18] sm:text-[3.35rem]">
                 {pageTitle}
               </h1>
-              <p className="max-w-2xl text-sm leading-7 text-[var(--color-ink-soft)] sm:text-base">
-                {pageDescription}
-              </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
@@ -293,9 +287,6 @@ export function TripFormPage() {
                 <h2 className="font-display text-[1.85rem] leading-tight text-[#2c1f18]">
                   {t('trips.overviewTitle')}
                 </h2>
-                <p className="text-sm leading-7 text-[var(--color-ink-soft)] sm:text-base">
-                  {t('trips.overviewDescription')}
-                </p>
               </div>
 
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
@@ -365,7 +356,6 @@ export function TripFormPage() {
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   <TripFormChoiceCard
                     checked={draft.budgetMode === 'auto'}
-                    description={t('trips.budget.autoDescription')}
                     label={t('trips.budget.modeAuto')}
                     name="trip-budget-mode"
                     onChange={() => updateDraft('budgetMode', 'auto')}
@@ -459,7 +449,7 @@ export function TripFormPage() {
           <aside className="space-y-4">
             <article className="overflow-hidden rounded-[1rem] border border-[#eadbc5] bg-[#fffdfa] shadow-[0_14px_28px_rgba(76,51,33,0.1)]">
               <img
-                alt={draft.name.trim() || t('trips.preview.coverAltFallback')}
+                alt={draft.name.trim() || ''}
                 className="h-52 w-full object-cover"
                 src={shouldShowCoverImage ? coverImageUrl : fallbackCoverImage}
               />
@@ -467,10 +457,10 @@ export function TripFormPage() {
                 <div>
                   <p className="section-label">{t('trips.overviewEyebrow')}</p>
                   <h2 className="mt-2 font-display text-[1.8rem] leading-tight text-[#2c1f18]">
-                    {draft.name.trim() || t('trips.preview.titleFallback')}
+                    {draft.name.trim()}
                   </h2>
                   <p className="mt-3 text-sm leading-7 text-[var(--color-ink-soft)]">
-                    {draft.summaryNotes.trim() || t('trips.notesEmpty')}
+                    {draft.summaryNotes.trim()}
                   </p>
                 </div>
 
@@ -504,10 +494,7 @@ export function TripFormPage() {
             {isEditMode ? (
               <article className="rounded-[1rem] border border-[#eadbc5] bg-[#fffdfa] p-5 shadow-[0_14px_28px_rgba(76,51,33,0.1)]">
                 <p className="section-label">{t('trips.detailEyebrow')}</p>
-                <p className="mt-2 text-sm leading-7 text-[var(--color-ink-soft)]">
-                  {t('trips.detailDescription')}
-                </p>
-                <div className="mt-4 flex flex-col gap-3">
+                <div className="mt-3 flex flex-col gap-3">
                   <TripActionLink to={buildPlannerTripPath(tripId)}>
                     <ArrowRight className="h-4 w-4" strokeWidth={2.3} />
                     {t('trips.actions.openPlanner')}
@@ -539,19 +526,21 @@ function TripFormState({
   title,
 }: {
   action?: ReactNode;
-  description: string;
-  eyebrow: string;
+  description?: string;
+  eyebrow?: string;
   title: string;
 }) {
   return (
     <section className="mx-auto max-w-2xl rounded-[1rem] border border-[#eadbc5] bg-[#fffdfa] px-5 py-14 text-center shadow-[0_14px_28px_rgba(76,51,33,0.1)] sm:px-8">
-      <p className="section-label">{eyebrow}</p>
+      {eyebrow ? <p className="section-label">{eyebrow}</p> : null}
       <h1 className="mt-2 font-display text-[2.2rem] leading-tight text-[#2c1f18] sm:text-[2.8rem]">
         {title}
       </h1>
+      {description ? (
       <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-[var(--color-ink-soft)] sm:text-base">
         {description}
       </p>
+      ) : null}
       {action ? <div className="mt-6 flex justify-center">{action}</div> : null}
     </section>
   );
@@ -675,7 +664,7 @@ function TripFormChoiceCard({
   value,
 }: {
   checked: boolean;
-  description: string;
+  description?: string;
   label: string;
   name: string;
   onChange: () => void;
@@ -701,9 +690,11 @@ function TripFormChoiceCard({
       <span className="font-marker text-[1rem] font-bold leading-none text-[#2c1f18]">
         {label}
       </span>
+      {description ? (
       <span className="text-sm leading-6 text-[var(--color-ink-soft)]">
         {description}
       </span>
+      ) : null}
     </label>
   );
 }

@@ -452,10 +452,7 @@ function PlannerWorkspaceHero({
           <h1 className="font-display text-[2.45rem] leading-tight text-[#2c1f18] sm:text-[3.4rem]">
             {trip.name}
           </h1>
-          <p className="max-w-2xl text-sm leading-7 text-[var(--color-ink-soft)] sm:text-base">
-            {trip.summaryNotes || t('trips.planner.description')}
-          </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2">
             {trip.destination ? (
               <PlannerHeroPill icon={<MapPin className="h-4 w-4" strokeWidth={2.3} />}>
                 {trip.destination}
@@ -526,10 +523,6 @@ function PlannerBudgetSummarySection({
   rootNodeCount: number;
 }) {
   const { t } = useI18n();
-  const rootMetricValue = t('trips.planner.metrics.totalNodesValue', {
-    children: childNodeCount,
-    roots: rootNodeCount,
-  });
 
   return (
     <section className="rounded-[1.15rem] border border-[#eadbc5] bg-[#fffdfa] p-5 shadow-[0_18px_34px_rgba(76,51,33,0.1)] sm:p-6">
@@ -539,17 +532,11 @@ function PlannerBudgetSummarySection({
           <h2 className="font-display text-[2.05rem] leading-tight text-[#2c1f18] sm:text-[2.45rem]">
             {t('trips.planner.budgetTitle')}
           </h2>
-          <p className="mt-2 text-sm leading-7 text-[var(--color-ink-soft)] sm:text-base">
-            {t('trips.planner.budgetDescription')}
-          </p>
         </div>
 
         <div className="rounded-[1rem] border border-[#eadbc5] bg-[#fff8ea] px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.82)]">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8d7f72]">
             {t('trips.planner.metrics.totalNodes')}
-          </p>
-          <p className="mt-2 max-w-xs font-marker text-[1.05rem] leading-6 text-[#37261e]">
-            {rootMetricValue}
           </p>
         </div>
       </div>
@@ -584,14 +571,6 @@ function PlannerBudgetSummarySection({
               value={String(budgetSummary.totalActivities)}
             />
           </div>
-
-          {budgetSummary.hasMixedCurrencies && budgetSummary.totalsByCurrency.length > 0 ? (
-            <p className="mt-5 rounded-[0.85rem] border border-[#6aa7c7]/25 bg-[#eff9ff] px-4 py-3 text-sm leading-6 text-[#24546d]">
-              {t('trips.planner.feedback.mixedCurrencyInfo', {
-                currency: budgetSummary.currency,
-              })}
-            </p>
-          ) : null}
 
           {budgetSummary.totalsByCurrency.length > 0 ? (
             <div className="mt-5 rounded-[1rem] border border-[#eadbc5] bg-[#fff8ea]/55 p-4">
@@ -764,11 +743,7 @@ function PlannerNodeBranch({
           <p className="mt-4 text-sm leading-7 text-[#5f5146]">
             {node.notes}
           </p>
-        ) : (
-          <p className="mt-4 text-sm leading-7 text-[#8b7b6e]">
-            {t('trips.planner.notesEmpty')}
-          </p>
-        )}
+        ) : null}
 
         {node.imageUrl ? (
           <img
@@ -871,9 +846,6 @@ function PlannerNodeFormCard({
           <h4 className="font-display text-[1.55rem] leading-tight text-[#2c1f18]">
             {title}
           </h4>
-          <p className="mt-1 text-sm leading-6 text-[#5f5146]">
-            {t('trips.planner.formDescription')}
-          </p>
         </div>
       </div>
 

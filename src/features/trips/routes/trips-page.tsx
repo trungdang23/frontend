@@ -106,14 +106,11 @@ export function TripsPage() {
           <div className="pointer-events-none absolute -left-4 bottom-5 h-12 w-28 -rotate-[8deg] bg-[#a8dfd5]/70 shadow-[0_10px_16px_rgba(72,109,98,0.12)]" />
 
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl space-y-3">
+            <div className="max-w-3xl space-y-2">
               <p className="section-label">{t('trips.listEyebrow')}</p>
               <h1 className="font-display text-[2.4rem] leading-tight text-[#2c1f18] sm:text-[3.35rem]">
                 {t('trips.listTitle')}
               </h1>
-              <p className="max-w-2xl text-sm leading-7 text-[var(--color-ink-soft)] sm:text-base">
-                {t('trips.listDescription')}
-              </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
@@ -146,10 +143,6 @@ export function TripsPage() {
           />
         </section>
 
-        <p className="px-1 text-sm leading-6 text-[#6b5b4f]">
-          {t('trips.listSummary', { count: trips.length })}
-        </p>
-
         {feedback ? (
           <p
             className={cn(
@@ -166,8 +159,6 @@ export function TripsPage() {
 
         {tripsQuery.isLoading ? (
           <TripsWorkspaceState
-            description={t('trips.loadingDescription')}
-            eyebrow={t('trips.listEyebrow')}
             title={t('trips.loadingTitle')}
           />
         ) : null}
@@ -184,8 +175,6 @@ export function TripsPage() {
                 {t('trips.actions.retry')}
               </button>
             )}
-            description={t('trips.loadErrorDescription')}
-            eyebrow={t('trips.listEyebrow')}
             title={t('trips.loadErrorTitle')}
           />
         ) : null}
@@ -201,8 +190,6 @@ export function TripsPage() {
                 {t('trips.actions.create')}
               </Link>
             )}
-            description={t('trips.emptyDescription')}
-            eyebrow={t('trips.emptyEyebrow')}
             title={t('trips.emptyTitle')}
           />
         ) : null}
@@ -337,7 +324,7 @@ function TripWorkspaceCard({
           </div>
 
           <p className="mt-4 text-sm leading-7 text-[#5f5146]">
-            {trip.summaryNotes || t('trips.listCardFallback')}
+            {trip.summaryNotes}
           </p>
 
           <p className="mt-5 text-xs leading-6 text-[#8b7b6e]">
@@ -404,19 +391,21 @@ function TripsWorkspaceState({
   title,
 }: {
   action?: ReactNode;
-  description: string;
-  eyebrow: string;
+  description?: string;
+  eyebrow?: string;
   title: string;
 }) {
   return (
     <section className="rounded-[1rem] border border-[#eadbc5] bg-[#fffdfa] px-5 py-12 text-center shadow-[0_14px_28px_rgba(76,51,33,0.1)] sm:px-8">
-      <p className="section-label">{eyebrow}</p>
+      {eyebrow ? <p className="section-label">{eyebrow}</p> : null}
       <h2 className="mt-2 font-display text-[2rem] leading-tight text-[#2c1f18] sm:text-[2.5rem]">
         {title}
       </h2>
+      {description ? (
       <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-[#5f5146] sm:text-base">
         {description}
       </p>
+      ) : null}
       {action ? (
         <div className="mt-5 flex justify-center">
           {action}
