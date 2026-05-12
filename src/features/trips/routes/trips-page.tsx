@@ -103,23 +103,18 @@ export function TripsPage() {
           <div className="pointer-events-none absolute -right-8 top-3 h-16 w-36 rotate-[10deg] bg-[#f6d78d]/60 shadow-[0_12px_18px_rgba(93,67,40,0.12)]" />
           <div className="pointer-events-none absolute -left-4 bottom-5 h-12 w-28 -rotate-[8deg] bg-[#a8dfd5]/70 shadow-[0_10px_16px_rgba(72,109,98,0.12)]" />
 
-          <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-3xl space-y-2">
-              <p className="section-label">{t('trips.listEyebrow')}</p>
-              <h1 className="font-display text-[2.4rem] leading-tight text-[#2c1f18] sm:text-[3.35rem]">
-                {t('trips.listTitle')}
-              </h1>
-            </div>
+          <div className="relative flex items-center justify-between gap-4">
+            <h1 className="font-cursive text-[3rem] leading-none text-[#2c1f18] sm:text-[3.8rem]">
+              {t('trips.listEyebrow')}
+            </h1>
 
-            <div className="flex flex-wrap gap-3">
-              <Link
-                className="inline-flex items-center gap-2 rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-5 py-3 font-marker font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/30"
-                to="/app/trips/new"
-              >
-                <Plus className="h-4 w-4" strokeWidth={2.5} />
-                {t('trips.actions.create')}
-              </Link>
-            </div>
+            <Link
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-[#3a5d25]/40 bg-[#b9e177] px-5 py-3 font-marker font-bold leading-none text-[#172612] shadow-[0_6px_0_#6f9e44,0_14px_24px_rgba(55,83,34,0.18)] transition hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#6f9e44]/30"
+              to="/app/trips/new"
+            >
+              <Plus className="h-4 w-4" strokeWidth={2.5} />
+              {t('trips.actions.create')}
+            </Link>
           </div>
         </section>
 
@@ -241,7 +236,7 @@ function TripWorkspaceCard({
         <div className="flex min-h-full flex-col p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-2">
-              <h2 className="font-display text-[1.95rem] leading-tight text-[#2c1f18]">
+              <h2 className="font-cursive text-[1.95rem] leading-tight text-[#2c1f18]">
                 {trip.name}
               </h2>
               {trip.destination ? (
