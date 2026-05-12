@@ -14,7 +14,7 @@ type CommunityFeedCardProps = {
 
 export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
   const { t } = useI18n();
-  const authorName = card.authorName || t('community.authorFallback');
+  const showAuthorName = Boolean(card.authorName);
   const className =
     'group relative flex flex-col items-center bg-white p-3 pb-8 text-left shadow-[4px_4px_15px_rgba(0,0,0,0.15)] transition-transform duration-300 [transform:rotate(var(--card-rotate))] hover:z-10 hover:[transform:rotate(0deg)_scale(1.02)]';
   const style = {
@@ -62,13 +62,15 @@ export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
           <div className="flex min-w-0 items-center gap-2">
             <div className="h-7 w-7 overflow-hidden rounded-full border border-black/10 bg-gray-200">
               <img
-                alt={authorName}
+                alt=""
                 className="h-full w-full object-cover"
                 referrerPolicy="no-referrer"
                 src={card.avatarUrl}
               />
             </div>
-            <p className="min-w-0 truncate text-xs font-semibold text-slate-800">{authorName}</p>
+            {showAuthorName ? (
+              <p className="min-w-0 truncate text-xs font-semibold text-slate-800">{card.authorName}</p>
+            ) : null}
           </div>
 
           <div className="flex shrink-0 items-center gap-2.5">
