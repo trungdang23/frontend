@@ -422,11 +422,19 @@ function PlannerWorkspaceHero({
       <div className="pointer-events-none absolute -left-5 bottom-5 h-12 w-28 -rotate-[8deg] bg-[#a8dfd5]/70 shadow-[0_10px_16px_rgba(72,109,98,0.12)]" />
 
       <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-        <div className="max-w-3xl space-y-3">
-          <h1 className="font-display text-[2.45rem] leading-tight text-[#2c1f18] sm:text-[3.4rem]">
-            {trip.name}
-          </h1>
-          <div className="mt-3 flex flex-wrap gap-2">
+        <div className="flex items-start gap-5">
+          {trip.coverImageUrl ? (
+            <img
+              alt={trip.name}
+              className="h-28 w-28 shrink-0 rounded-[1rem] object-cover shadow-[0_10px_20px_rgba(76,51,33,0.15)]"
+              src={trip.coverImageUrl}
+            />
+          ) : null}
+          <div className="max-w-3xl space-y-3">
+            <h1 className="font-display text-[2.45rem] leading-tight text-[#2c1f18] sm:text-[3.4rem]">
+              {trip.name}
+            </h1>
+            <div className="mt-3 flex flex-wrap gap-2">
             {trip.destination ? (
               <PlannerHeroPill icon={<MapPin className="h-4 w-4" strokeWidth={2.3} />}>
                 {trip.destination}
@@ -439,6 +447,7 @@ function PlannerWorkspaceHero({
               {t(`trips.visibility.${trip.visibility}`)}
             </PlannerHeroPill>
           </div>
+        </div>
         </div>
 
         <div className="flex flex-wrap gap-3">

@@ -864,9 +864,9 @@
           }
         }
       },
-      "createRootTitle": "Add root node",
-      "createChildTitle": "Add child node",
-      "editNodeTitle": "Edit planner node",
+      "createRootTitle": "Add destination",
+      "createChildTitle": "Add activity",
+      "editNodeTitle": "Edit",
       "editDescription": "Update the node title, type, schedule, cost, notes, and image without leaving the tree.",
       "formDescription": "Each node can keep a schedule, cost, notes, and one representative image for quick scanning.",
       "budgetEyebrow": "Budget",
@@ -893,16 +893,16 @@
         "imageUrl": "https://images.example.com/arrival-day.jpg"
       },
       "actions": {
-        "addRoot": "Add root node",
+        "addRoot": "Add destination",
         "hideRootForm": "Hide root form",
-        "addFirstRoot": "Add the first root node",
-        "addChild": "Add child node",
-        "addNode": "Save node",
+        "addFirstRoot": "Add first destination",
+        "addChild": "Add activity",
+        "addNode": "Save",
         "saveNode": "Save changes",
-        "savingNode": "Saving node...",
-        "collapseChildren": "Collapse children",
-        "expandChildren": "Expand children",
-        "deleteNode": "Delete node"
+        "savingNode": "Saving...",
+        "collapseChildren": "Collapse",
+        "expandChildren": "Expand",
+        "deleteNode": "Delete"
       },
       "validation": {
         "titleRequired": "Enter the node title first.",

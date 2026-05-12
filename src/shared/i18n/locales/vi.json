@@ -871,9 +871,9 @@
           }
         }
       },
-      "createRootTitle": "Thêm node gốc",
-      "createChildTitle": "Thêm node con",
-      "editNodeTitle": "Sửa planner node",
+      "createRootTitle": "Thêm điểm đến",
+      "createChildTitle": "Thêm hoạt động",
+      "editNodeTitle": "Sửa",
       "editDescription": "Cập nhật tiêu đề, loại node, lịch thời gian, chi phí, ghi chú và ảnh đại diện ngay trong cây planner.",
       "formDescription": "Mỗi node có thể lưu lịch thời gian, chi phí, ghi chú và một ảnh đại diện để quét nhanh toàn cây.",
       "budgetEyebrow": "Ngân sách",
@@ -900,16 +900,16 @@
         "imageUrl": "https://images.example.com/arrival-day.jpg"
       },
       "actions": {
-        "addRoot": "Thêm node gốc",
+        "addRoot": "Thêm điểm đến",
         "hideRootForm": "Ẩn form node gốc",
-        "addFirstRoot": "Thêm node gốc đầu tiên",
-        "addChild": "Thêm node con",
-        "addNode": "Lưu node",
+        "addFirstRoot": "Thêm điểm đến đầu tiên",
+        "addChild": "Thêm hoạt động",
+        "addNode": "Lưu",
         "saveNode": "Lưu thay đổi",
-        "savingNode": "Đang lưu node...",
-        "collapseChildren": "Thu gọn node con",
-        "expandChildren": "Mở node con",
-        "deleteNode": "Xoá node"
+        "savingNode": "Đang lưu...",
+        "collapseChildren": "Thu gọn",
+        "expandChildren": "Mở rộng",
+        "deleteNode": "Xoá"
       },
       "validation": {
         "titleRequired": "Bạn cần nhập tên node.",

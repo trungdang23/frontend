@@ -23,6 +23,7 @@ import {
   buildTripFormDraftFromTrip,
   buildTripUpsertPayload,
   createDefaultTripFormDraft,
+  isValidHttpUrl,
   type TripFormChangeHandler,
   type TripFormDraft,
   type TripFormDraftErrors,
@@ -58,6 +59,8 @@ export function TripFormPage() {
     queryKey: tripDetailQueryKey,
   });
   const errorStatus = tripQuery.error instanceof ApiError ? tripQuery.error.status : null;
+  const coverImageUrl = draft.coverImageUrl.trim();
+  const shouldShowCoverImage = Boolean(coverImageUrl) && isValidHttpUrl(coverImageUrl);
   const pageEyebrow = t(isEditMode ? 'trips.editEyebrow' : 'trips.createEyebrow');
   const pageTitle = t(isEditMode ? 'trips.editTitle' : 'trips.createTitle');
   const submitLabel = isSubmitting
@@ -305,6 +308,13 @@ export function TripFormPage() {
                   type="url"
                   value={draft.coverImageUrl}
                 />
+                {shouldShowCoverImage ? (
+                  <img
+                    alt=""
+                    className="h-40 w-full rounded-[0.85rem] object-cover"
+                    src={coverImageUrl}
+                  />
+                ) : null}
                 <TripFormTextarea
                   error={errors.summaryNotes}
                   id="trip-summary-notes"
