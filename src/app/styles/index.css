@@ -21,6 +21,23 @@
   --color-warm-coral: #f2a088;
   --color-warm-red: #d76355;
   --color-warm-brown: #7a4b39;
+
+  --radius-polaroid: 0.15rem;
+  --radius-tape: 0.4rem;
+  --radius-stamp: 0.95rem;
+  --radius-card: 0.75rem;
+  --radius-input: 0.8rem;
+  --radius-panel: 1.2rem;
+  --radius-notebook: 2rem;
+
+  --shadow-paper: 2px 5px 15px rgba(0, 0, 0, 0.08);
+  --shadow-card: 0 18px 28px rgba(96, 72, 50, 0.16);
+  --shadow-card-hover: 0 24px 36px rgba(96, 72, 50, 0.22);
+  --shadow-raised: 0 16px 28px rgba(98, 74, 51, 0.14);
+  --shadow-raised-hover: 0 22px 34px rgba(98, 74, 51, 0.2);
+  --shadow-floating: 0 22px 48px rgba(96, 72, 50, 0.12);
+  --shadow-notebook: 0 30px 55px rgba(73, 51, 34, 0.24), 0 8px 14px rgba(73, 51, 34, 0.14);
+  --shadow-stamp: 0 12px 18px rgba(96, 72, 50, 0.16);
 }
 
 @layer base {
@@ -100,7 +117,7 @@
   }
 
   .paper-shadow {
-    box-shadow: 2px 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-paper);
   }
 
   .text-shadow-custom {
@@ -110,18 +127,19 @@
   .paper-panel {
     position: relative;
     border: 1px solid rgba(122, 75, 57, 0.16);
-    border-radius: 2rem;
+    border-radius: var(--radius-notebook);
     background:
       linear-gradient(180deg, rgba(255, 252, 245, 0.94), rgba(255, 247, 233, 0.92));
     box-shadow:
-      0 22px 48px rgba(96, 72, 50, 0.12),
+      var(--shadow-floating),
       inset 0 1px 0 rgba(255, 255, 255, 0.72);
   }
 
   .glass-panel {
     border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: var(--radius-panel);
     background: rgba(255, 249, 239, 0.78);
-    box-shadow: 0 18px 35px rgba(96, 72, 50, 0.12);
+    box-shadow: var(--shadow-floating);
     backdrop-filter: blur(12px);
   }
 
@@ -532,8 +550,9 @@
     padding: 0.85rem 1.35rem;
     overflow: hidden;
     border: 1px solid rgba(107, 84, 63, 0.18);
+    border-radius: var(--radius-panel);
     box-shadow:
-      0 16px 28px rgba(98, 74, 51, 0.14),
+      var(--shadow-raised),
       inset 0 1px 0 rgba(255, 255, 255, 0.72);
     font-family: var(--font-hand);
     font-size: 1.4rem;
@@ -561,7 +580,7 @@
   .nav-note-shell:hover .nav-note,
   .nav-note-shell:focus-visible .nav-note {
     box-shadow:
-      0 22px 34px rgba(98, 74, 51, 0.2),
+      var(--shadow-raised-hover),
       inset 0 1px 0 rgba(255, 255, 255, 0.72);
     filter: brightness(1.02) saturate(1.05);
     outline: none;
@@ -667,7 +686,7 @@
   }
 
   .nav-note--straight {
-    border-radius: 1.2rem;
+    border-radius: var(--radius-panel);
   }
 
   .nav-note--fold-left {
@@ -679,7 +698,7 @@
     width: 4.4rem;
     height: 1rem;
     border: 1px solid rgba(255, 255, 255, 0.7);
-    border-radius: 0.4rem;
+    border-radius: var(--radius-tape);
     box-shadow: 0 10px 18px rgba(122, 75, 57, 0.1);
     opacity: 0.92;
   }
@@ -716,9 +735,9 @@
   .polaroid-card {
     position: relative;
     border: 1px solid rgba(96, 72, 50, 0.12);
-    border-radius: 0.15rem;
+    border-radius: var(--radius-polaroid);
     background: rgba(255, 253, 248, 0.98);
-    box-shadow: 0 18px 28px rgba(96, 72, 50, 0.16);
+    box-shadow: var(--shadow-card);
     cursor: pointer;
     transition:
       transform 240ms ease,
@@ -745,7 +764,7 @@
 
   .polaroid-card:hover,
   .polaroid-card:focus-within {
-    box-shadow: 0 24px 36px rgba(96, 72, 50, 0.22);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .polaroid-card--hover-lift:hover,
@@ -866,7 +885,7 @@
     transform: rotate(var(--stamp-rotate, 0deg)) translateY(0) scale(1);
     transform-origin: center;
     box-shadow:
-      0 12px 18px rgba(96, 72, 50, 0.16),
+      var(--shadow-stamp),
       inset 0 1px 0 rgba(255, 255, 255, 0.58);
     transition:
       transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
@@ -952,11 +971,10 @@
   .auth-notebook {
     padding: 0.85rem;
     border: 1px solid rgba(85, 56, 31, 0.26);
-    border-radius: 2.1rem;
+    border-radius: var(--radius-notebook);
     background: linear-gradient(135deg, #8d5b36 0%, #734522 48%, #a56e3c 100%);
     box-shadow:
-      0 30px 55px rgba(73, 51, 34, 0.24),
-      0 8px 14px rgba(73, 51, 34, 0.14),
+      var(--shadow-notebook),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
 
@@ -1085,14 +1103,14 @@
     min-height: 3.6rem;
     padding: 0.55rem 1.6rem;
     border: 3px solid rgba(131, 87, 62, 0.68);
-    border-radius: 0.95rem;
+    border-radius: var(--radius-stamp);
     background: rgba(255, 251, 245, 0.8);
     color: #84503b;
     font-family: var(--font-hand);
     font-size: 2rem;
     font-weight: 700;
     line-height: 1;
-    box-shadow: 0 12px 18px rgba(83, 62, 44, 0.14);
+    box-shadow: var(--shadow-stamp);
     transform: rotate(-8deg);
     transition:
       transform 180ms ease,

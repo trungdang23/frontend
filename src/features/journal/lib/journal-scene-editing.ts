@@ -223,6 +223,10 @@ function clampDimension(value: number, min: number, max: number) {
   return Math.min(Math.max(roundedValue, min), Math.max(min, max));
 }
 
+export function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max);
+}
+
 function getPointAngleInDegrees(center: JournalPoint, point: JournalPoint) {
   return (
     (Math.atan2(point.y - center.y, point.x - center.x) * 180) / Math.PI

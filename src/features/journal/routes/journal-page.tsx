@@ -7,9 +7,9 @@ import {
   ArrowUp,
   BookOpenText,
   Image,
+  Lock,
+  LockOpen,
   RefreshCw,
-  RotateCcw,
-  RotateCw,
   Save,
   Sparkles,
   Trash2,
@@ -26,6 +26,7 @@ import {
   areJournalObjectListsEqual,
   areJournalScenesEqual,
   canMoveObjectLayer,
+  clamp,
   type JournalLayerDirection,
   moveObjectLayer,
   normalizeRotation,
@@ -45,6 +46,7 @@ import type {
 import { PublicPageShell } from "@/features/shell/components/public-page-shell";
 import { publicPageMainLayouts } from "@/features/shell/content/public-page-layouts";
 import { useI18n } from "@/shared/i18n/use-i18n";
+import { cn } from "@/shared/lib/cn";
 
 const JOURNAL_AUTOSAVE_DELAY_MS = 1500;
 
@@ -458,15 +460,150 @@ export function JournalPage() {
                     {t(`journalPage.editor.objectTypes.${selectedObject.type}`)}
                   </p>
                 </div>
-                <span className="rounded-full bg-white/70 px-3 py-1 font-marker text-[0.9rem] leading-none text-[#6b4938]">
-                  {t("journalPage.editor.objectPosition", {
-                    x: Math.round(selectedObject.x),
-                    y: Math.round(selectedObject.y),
-                  })}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="rounded-full bg-white/70 px-2.5 py-1 font-marker text-[0.85rem] leading-none text-[#6b4938]">
+                    z: {selectedObject.zIndex}
+                  </span>
+                  <button
+                    aria-label={
+                      selectedObject.locked
+                        ? t("journalPage.editor.unlockObject")
+                        : t("journalPage.editor.lockObject")
+                    }
+                    className={cn(
+                      "inline-flex items-center justify-center rounded-full px-2.5 py-1 font-marker text-[0.85rem] font-bold leading-none transition",
+                      selectedObject.locked
+                        ? "border border-[#d92d20]/25 bg-[#fff1f0] text-[#b42318]"
+                        : "border border-[#407456]/25 bg-[#eff9e8] text-[#27513b]",
+                    )}
+                    onClick={toggleSelectedObjectLock}
+                    title={
+                      selectedObject.locked
+                        ? t("journalPage.editor.unlockObject")
+                        : t("journalPage.editor.lockObject")
+                    }
+                    type="button"
+                  >
+                    {selectedObject.locked ? (
+                      <Lock aria-hidden="true" className="h-3.5 w-3.5" />
+                    ) : (
+                      <LockOpen aria-hidden="true" className="h-3.5 w-3.5" />
+                    )}
+                  </button>
+                </div>
               </div>
 
-              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-5 lg:grid-cols-2">
+              <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
+                <div className="grid gap-1">
+                  <label className="text-[0.78rem] font-semibold text-[#8a6d51]">
+                    {t("journalPage.editor.inspectorX")}
+                  </label>
+                  <input
+                    className="rounded-[0.55rem] border border-[#c9a77e]/50 bg-white px-2.5 py-1.5 font-marker text-[0.95rem] leading-none text-[#3d332b] outline-none focus:ring-2 focus:ring-[#d7a957]/25"
+                    max={journal.page.width}
+                    min={0}
+                    onChange={(event) =>
+                      updateSelectedObjectProp("x", Number(event.target.value))
+                    }
+                    step={1}
+                    type="number"
+                    value={Math.round(selectedObject.x)}
+                  />
+                </div>
+                <div className="grid gap-1">
+                  <label className="text-[0.78rem] font-semibold text-[#8a6d51]">
+                    {t("journalPage.editor.inspectorY")}
+                  </label>
+                  <input
+                    className="rounded-[0.55rem] border border-[#c9a77e]/50 bg-white px-2.5 py-1.5 font-marker text-[0.95rem] leading-none text-[#3d332b] outline-none focus:ring-2 focus:ring-[#d7a957]/25"
+                    max={journal.page.height}
+                    min={0}
+                    onChange={(event) =>
+                      updateSelectedObjectProp("y", Number(event.target.value))
+                    }
+                    step={1}
+                    type="number"
+                    value={Math.round(selectedObject.y)}
+                  />
+                </div>
+                <div className="grid gap-1">
+                  <label className="text-[0.78rem] font-semibold text-[#8a6d51]">
+                    {t("journalPage.editor.inspectorWidth")}
+                  </label>
+                  <input
+                    className="rounded-[0.55rem] border border-[#c9a77e]/50 bg-white px-2.5 py-1.5 font-marker text-[0.95rem] leading-none text-[#3d332b] outline-none focus:ring-2 focus:ring-[#d7a957]/25"
+                    max={journal.page.width}
+                    min={1}
+                    onChange={(event) =>
+                      updateSelectedObjectProp(
+                        "width",
+                        Number(event.target.value),
+                      )
+                    }
+                    step={1}
+                    type="number"
+                    value={Math.round(selectedObject.width)}
+                  />
+                </div>
+                <div className="grid gap-1">
+                  <label className="text-[0.78rem] font-semibold text-[#8a6d51]">
+                    {t("journalPage.editor.inspectorHeight")}
+                  </label>
+                  <input
+                    className="rounded-[0.55rem] border border-[#c9a77e]/50 bg-white px-2.5 py-1.5 font-marker text-[0.95rem] leading-none text-[#3d332b] outline-none focus:ring-2 focus:ring-[#d7a957]/25"
+                    max={journal.page.height}
+                    min={1}
+                    onChange={(event) =>
+                      updateSelectedObjectProp(
+                        "height",
+                        Number(event.target.value),
+                      )
+                    }
+                    step={1}
+                    type="number"
+                    value={Math.round(selectedObject.height)}
+                  />
+                </div>
+                <div className="col-span-2 grid gap-1">
+                  <label className="text-[0.78rem] font-semibold text-[#8a6d51]">
+                    {t("journalPage.editor.inspectorRotation")}
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <button
+                      aria-label={t("journalPage.editor.rotateLeftShort")}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#407456]/25 bg-[#eff9e8] font-bold text-[#27513b] transition hover:bg-[#dff2dc]"
+                      onClick={() => rotateSelectedObject(-5)}
+                      type="button"
+                    >
+                      −
+                    </button>
+                    <input
+                      className="flex-1 rounded-[0.55rem] border border-[#c9a77e]/50 bg-white px-2.5 py-1.5 text-center font-marker text-[0.95rem] leading-none text-[#3d332b] outline-none focus:ring-2 focus:ring-[#d7a957]/25"
+                      max={180}
+                      min={-180}
+                      onChange={(event) =>
+                        updateSelectedObjectProp(
+                          "rotation",
+                          Number(event.target.value),
+                        )
+                      }
+                      step={1}
+                      type="number"
+                      value={Math.round(selectedObject.rotation)}
+                    />
+                    <button
+                      aria-label={t("journalPage.editor.rotateRightShort")}
+                      className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#407456]/25 bg-[#eff9e8] font-bold text-[#27513b] transition hover:bg-[#dff2dc]"
+                      onClick={() => rotateSelectedObject(5)}
+                      type="button"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2">
                 <button
                   aria-label={t("journalPage.editor.sendBackward")}
                   className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#8b6244]/25 bg-white/70 px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#6b4938] transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-45"
@@ -502,28 +639,8 @@ export function JournalPage() {
                   {t("journalPage.editor.bringForwardShort")}
                 </button>
                 <button
-                  aria-label={t("journalPage.editor.rotateLeft")}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#407456]/25 bg-[#eff9e8] px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#27513b] transition hover:-translate-y-0.5"
-                  onClick={() => rotateSelectedObject(-8)}
-                  title={t("journalPage.editor.rotateLeft")}
-                  type="button"
-                >
-                  <RotateCcw aria-hidden="true" className="h-4 w-4" />
-                  {t("journalPage.editor.rotateLeftShort")}
-                </button>
-                <button
-                  aria-label={t("journalPage.editor.rotateRight")}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#407456]/25 bg-[#eff9e8] px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#27513b] transition hover:-translate-y-0.5"
-                  onClick={() => rotateSelectedObject(8)}
-                  title={t("journalPage.editor.rotateRight")}
-                  type="button"
-                >
-                  <RotateCw aria-hidden="true" className="h-4 w-4" />
-                  {t("journalPage.editor.rotateRightShort")}
-                </button>
-                <button
                   aria-label={t("journalPage.editor.deleteObject")}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#b42318] transition hover:-translate-y-0.5 sm:col-span-1 lg:col-span-2"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-full border border-[#d92d20]/25 bg-[#fff1f0] px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#b42318] transition hover:-translate-y-0.5 sm:col-span-2 lg:col-span-2"
                   onClick={deleteSelectedObject}
                   title={t("journalPage.editor.deleteObject")}
                   type="button"
@@ -843,7 +960,7 @@ export function JournalPage() {
 
   function resizeJournalObjectOnPage(
     objectId: string,
-    size: { width: number; height: number },
+    size: { width: number; height: number; x?: number; y?: number },
   ) {
     saveJournalMutation.reset();
     setDraftJournal((currentJournal) => {
@@ -859,7 +976,12 @@ export function JournalPage() {
           return object;
         }
 
-        if (object.width === size.width && object.height === size.height) {
+        if (
+          object.width === size.width &&
+          object.height === size.height &&
+          (size.x === undefined || object.x === size.x) &&
+          (size.y === undefined || object.y === size.y)
+        ) {
           return object;
         }
 
@@ -869,6 +991,8 @@ export function JournalPage() {
           ...object,
           height: size.height,
           width: size.width,
+          ...(size.x !== undefined ? { x: size.x } : {}),
+          ...(size.y !== undefined ? { y: size.y } : {}),
         };
       });
 
@@ -952,6 +1076,61 @@ export function JournalPage() {
               ...object,
               rotation: normalizeRotation(object.rotation + delta),
             }
+          : object,
+      ),
+    );
+  }
+
+  function updateSelectedObjectProp(
+    prop: "x" | "y" | "width" | "height" | "rotation",
+    value: number,
+  ) {
+    if (!selectedObjectId || !Number.isFinite(value)) {
+      return;
+    }
+
+    updateDraftObjects((objects) =>
+      objects.map((object) => {
+        if (object.id !== selectedObjectId) {
+          return object;
+        }
+
+        let next: Partial<JournalSceneObject> = { ...object };
+
+        if (prop === "rotation") {
+          next.rotation = normalizeRotation(value);
+        } else if (prop === "x") {
+          next.x = clamp(value, 0, activeJournal!.page.width - object.width);
+        } else if (prop === "y") {
+          next.y = clamp(value, 0, activeJournal!.page.height - object.height);
+        } else if (prop === "width") {
+          next.width = clamp(
+            value,
+            1,
+            activeJournal!.page.width - object.x,
+          );
+        } else if (prop === "height") {
+          next.height = clamp(
+            value,
+            1,
+            activeJournal!.page.height - object.y,
+          );
+        }
+
+        return next as JournalSceneObject;
+      }),
+    );
+  }
+
+  function toggleSelectedObjectLock() {
+    if (!selectedObjectId) {
+      return;
+    }
+
+    updateDraftObjects((objects) =>
+      objects.map((object) =>
+        object.id === selectedObjectId
+          ? { ...object, locked: !object.locked }
           : object,
       ),
     );

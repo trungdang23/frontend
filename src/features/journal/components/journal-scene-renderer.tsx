@@ -9,6 +9,7 @@ import { ImageOff } from "lucide-react";
 import {
   canRotateJournalObject,
   canResizeJournalObject,
+  clamp,
   getJournalObjectCenter,
   resizeJournalObject,
   rotateJournalObjectFromPointer,
@@ -29,7 +30,7 @@ type JournalSceneRendererProps = {
   onObjectMove?: (objectId: string, position: { x: number; y: number }) => void;
   onObjectResize?: (
     objectId: string,
-    size: { width: number; height: number },
+    size: { width: number; height: number; x?: number; y?: number },
   ) => void;
   onObjectRotate?: (objectId: string, rotation: number) => void;
   onObjectSelect?: (objectId: string | null) => void;
@@ -199,21 +200,49 @@ export function JournalSceneRenderer({
 
     if (resizeState && canEdit && onObjectResize) {
       event.preventDefault();
-      const resizedObject = resizeJournalObject({
-        nextHeight:
-          resizeState.initialHeight +
-          (pointerPosition.y - resizeState.originPointerY),
-        nextWidth:
-          resizeState.initialWidth +
-          (pointerPosition.x - resizeState.originPointerX),
-        object: resizeState.object,
-        pageHeight: journal.page.height,
-        pageWidth: journal.page.width,
-      });
+      const dx = pointerPosition.x - resizeState.originPointerX;
+      const dy = pointerPosition.y - resizeState.originPointerY;
+      const { anchor, initialHeight, initialWidth, object } = resizeState;
+
+      let nextWidth = initialWidth;
+      let nextHeight = initialHeight;
+      let nextX = object.x;
+      let nextY = object.y;
+
+      switch (anchor) {
+        case "right":
+        case "bottom-right":
+        case "top-right":
+          nextWidth = clamp(initialWidth + dx, 1, journal.page.width - object.x);
+          break;
+        case "left":
+        case "bottom-left":
+        case "top-left":
+          nextWidth = clamp(initialWidth - dx, 1, journal.page.width);
+          nextX = clamp(object.x + dx, 0, journal.page.width - 1);
+          break;
+      }
+
+      switch (anchor) {
+        case "bottom":
+        case "bottom-left":
+        case "bottom-right":
+          nextHeight = clamp(initialHeight + dy, 1, journal.page.height - object.y);
+          break;
+        case "top":
+        case "top-left":
+        case "top-right":
+          nextHeight = clamp(initialHeight - dy, 1, journal.page.height);
+          nextY = clamp(object.y + dy, 0, journal.page.height - 1);
+          break;
+      }
 
       onObjectResize(resizeState.objectId, {
-        height: resizedObject.height,
-        width: resizedObject.width,
+        height: nextHeight,
+        width: nextWidth,
+        ...(nextX !== object.x || nextY !== object.y
+          ? { x: nextX, y: nextY }
+          : {}),
       });
       return;
     }
@@ -294,6 +323,7 @@ export function JournalSceneRenderer({
   function startObjectResize(
     event: PointerEvent<HTMLDivElement>,
     object: JournalSceneObject,
+    anchor: ResizeAnchor = "bottom-right",
   ) {
     if (!canEdit || !onObjectResize || !canResizeJournalObject(object)) {
       return;
@@ -318,6 +348,7 @@ export function JournalSceneRenderer({
     setDragState(null);
     setRotateState(null);
     setResizeState({
+      anchor,
       initialHeight: object.height,
       initialWidth: object.width,
       object,
@@ -379,6 +410,7 @@ type JournalSceneObjectViewProps = {
   onResizePointerDown: (
     event: PointerEvent<HTMLDivElement>,
     object: JournalSceneObject,
+    anchor?: ResizeAnchor,
   ) => void;
   onRotatePointerDown: (
     event: PointerEvent<HTMLDivElement>,
@@ -464,16 +496,72 @@ function JournalSceneObjectView({
         </div>
       ) : null}
       {isEditable && isSelected && isResizable ? (
-        <div
-          aria-label={resizeHandleLabel}
-          className="absolute -bottom-3 -right-3 h-6 w-6 touch-none rounded-full border-2 border-white bg-[#4d8f72] shadow-[0_6px_14px_rgba(39,81,59,0.28)] transition hover:scale-105"
-          onPointerDown={(event) => onResizePointerDown(event, object)}
-          role="button"
-          tabIndex={-1}
-          title={resizeHandleLabel}
-        >
-          <span className="absolute inset-[0.32rem] rounded-full border border-white/70" />
-        </div>
+        <>
+          <ResizeHandle
+            anchor="top-left"
+            className="-left-3 -top-3"
+            label={resizeHandleLabel}
+            onPointerDown={(event) =>
+              onResizePointerDown(event, object, "top-left")
+            }
+          />
+          <ResizeHandle
+            anchor="top"
+            className="left-1/2 -top-3 -translate-x-1/2"
+            label={resizeHandleLabel}
+            onPointerDown={(event) =>
+              onResizePointerDown(event, object, "top")
+            }
+          />
+          <ResizeHandle
+            anchor="top-right"
+            className="-right-3 -top-3"
+            label={resizeHandleLabel}
+            onPointerDown={(event) =>
+              onResizePointerDown(event, object, "top-right")
+            }
+          />
+          <ResizeHandle
+            anchor="right"
+            className="-right-3 top-1/2 -translate-y-1/2"
+            label={resizeHandleLabel}
+            onPointerDown={(event) =>
+              onResizePointerDown(event, object, "right")
+            }
+          />
+          <ResizeHandle
+            anchor="bottom-right"
+            className="-bottom-3 -right-3"
+            label={resizeHandleLabel}
+            onPointerDown={(event) =>
+              onResizePointerDown(event, object, "bottom-right")
+            }
+          />
+          <ResizeHandle
+            anchor="bottom"
+            className="-bottom-3 left-1/2 -translate-x-1/2"
+            label={resizeHandleLabel}
+            onPointerDown={(event) =>
+              onResizePointerDown(event, object, "bottom")
+            }
+          />
+          <ResizeHandle
+            anchor="bottom-left"
+            className="-bottom-3 -left-3"
+            label={resizeHandleLabel}
+            onPointerDown={(event) =>
+              onResizePointerDown(event, object, "bottom-left")
+            }
+          />
+          <ResizeHandle
+            anchor="left"
+            className="-left-3 top-1/2 -translate-y-1/2"
+            label={resizeHandleLabel}
+            onPointerDown={(event) =>
+              onResizePointerDown(event, object, "left")
+            }
+          />
+        </>
       ) : null}
     </div>
   );
@@ -603,6 +691,7 @@ type JournalObjectDragState = {
 };
 
 type JournalObjectResizeState = {
+  anchor: ResizeAnchor;
   initialHeight: number;
   initialWidth: number;
   object: JournalSceneObject;
@@ -610,6 +699,8 @@ type JournalObjectResizeState = {
   originPointerX: number;
   originPointerY: number;
 };
+
+type ResizeAnchor = "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "left";
 
 type JournalObjectRotateState = {
   center: {
@@ -661,6 +752,37 @@ function resolveKeyboardMovement(key: string, step: number) {
   }
 }
 
-function clamp(value: number, min: number, max: number) {
-  return Math.min(Math.max(value, min), Math.max(min, max));
+function ResizeHandle({
+  anchor,
+  className,
+  label,
+  onPointerDown,
+}: {
+  anchor: ResizeAnchor;
+  className: string;
+  label?: string;
+  onPointerDown: (event: PointerEvent<HTMLDivElement>) => void;
+}) {
+  const isCorner = anchor.includes("-");
+
+  return (
+    <div
+      aria-label={label}
+      className={cn(
+        "absolute h-5 w-5 touch-none rounded-full border-2 border-white transition hover:scale-110",
+        isCorner
+          ? "bg-[#4d8f72] h-6 w-6 shadow-[0_6px_14px_rgba(39,81,59,0.28)]"
+          : "bg-[#7aac9a] shadow-[0_4px_10px_rgba(39,81,59,0.18)]",
+        className,
+      )}
+      onPointerDown={onPointerDown}
+      role="button"
+      tabIndex={-1}
+      title={label}
+    >
+      {isCorner ? (
+        <span className="absolute inset-[0.32rem] rounded-full border border-white/70" />
+      ) : null}
+    </div>
+  );
 }

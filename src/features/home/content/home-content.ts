@@ -34,7 +34,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'tape',
     id: 'ha-long-clouds',
     image:
-      'https://images.unsplash.com/photo-1524230507669-5ff97982bb5e?q=80&w=700&auto=format&fit=crop',
+      '/images/defaults/polaroid-ha-long.svg',
     noteKey: 'home.polaroids.haLong.note',
     rotate: -7,
     tone: 'leaf',
@@ -45,7 +45,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'pin',
     id: 'hue-wall',
     image:
-      'https://images.unsplash.com/photo-1739843752812-f87723746525?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000',
+      '/images/defaults/polaroid-hue.svg',
     rotate: 8,
     tone: 'sun',
     titleKey: 'home.polaroids.hue.title',
@@ -55,7 +55,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'washi',
     id: 'hoi-an-lantern',
     image:
-      'https://images.unsplash.com/photo-1552014342-fa1a88c10d33?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000',
+      '/images/defaults/polaroid-hoi-an.svg',
     noteKey: 'home.polaroids.hoiAn.note',
     rotate: -6,
     tone: 'sky',
@@ -66,7 +66,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'tape',
     id: 'nha-trang-wave',
     image:
-      'https://images.unsplash.com/photo-1570366290364-5e76a15ae408?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000',
+      '/images/defaults/polaroid-nha-trang.svg',
     rotate: 11,
     tone: 'coral',
     titleKey: 'home.polaroids.nhaTrang.title',
@@ -76,7 +76,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'pin',
     id: 'tam-coc-morning',
     image:
-      'https://images.unsplash.com/photo-1528127269322-539801943592?q=80&w=700&auto=format&fit=crop',
+      '/images/defaults/polaroid-tam-coc.svg',
     noteKey: 'home.polaroids.tamCoc.note',
     rotate: -10,
     tone: 'sun',
@@ -87,7 +87,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'washi',
     id: 'mekong-evening',
     image:
-      'https://images.unsplash.com/photo-1583417319070-4a69db38a482?q=80&w=700&auto=format&fit=crop',
+      '/images/defaults/polaroid-mekong.svg',
     rotate: 6,
     tone: 'leaf',
     titleKey: 'home.polaroids.mekong.title',
@@ -97,7 +97,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'tape',
     id: 'da-lat-mist',
     image:
-      'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?q=80&w=700&auto=format&fit=crop',
+      '/images/defaults/polaroid-da-lat.svg',
     noteKey: 'home.polaroids.daLat.note',
     rotate: -8,
     tone: 'sky',
@@ -108,7 +108,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'pin',
     id: 'sapa-dawn',
     image:
-      'https://images.unsplash.com/photo-1579613035165-708cc6bc87d4?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000',
+      '/images/defaults/polaroid-sapa.svg',
     rotate: 7,
     tone: 'coral',
     titleKey: 'home.polaroids.sapa.title',
@@ -118,7 +118,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'washi',
     id: 'ha-giang-pass',
     image:
-      'https://images.unsplash.com/photo-1529154036614-a60975f5c760?q=80&w=700&auto=format&fit=crop',
+      '/images/defaults/polaroid-ha-giang.svg',
     noteKey: 'home.polaroids.haGiang.note',
     rotate: -5,
     tone: 'sky',
@@ -129,7 +129,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'tape',
     id: 'da-nang-shore',
     image:
-      'https://images.unsplash.com/photo-1583417319070-4a69db38a482?q=80&w=700&auto=format&fit=crop',
+      '/images/defaults/polaroid-da-nang.svg',
     rotate: 9,
     tone: 'sun',
     titleKey: 'home.polaroids.daNang.title',
@@ -139,7 +139,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'pin',
     id: 'phu-quoc-sunset',
     image:
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=700&auto=format&fit=crop',
+      '/images/defaults/polaroid-phu-quoc.svg',
     noteKey: 'home.polaroids.phuQuoc.note',
     rotate: -9,
     tone: 'coral',
@@ -150,7 +150,7 @@ export const polaroidMoments: PolaroidMoment[] = [
     fastenerType: 'tape',
     id: 'can-tho-market',
     image:
-      'https://images.unsplash.com/photo-1500375592092-40eb2168fd21?q=80&w=700&auto=format&fit=crop',
+      '/images/defaults/polaroid-can-tho.svg',
     rotate: 5,
     tone: 'leaf',
     titleKey: 'home.polaroids.canTho.title',

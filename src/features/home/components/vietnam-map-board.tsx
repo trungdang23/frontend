@@ -30,20 +30,12 @@ export function VietnamMapBoard() {
       <div className="absolute inset-0 translate-x-1 translate-y-1 rounded-sm border border-[#d4b483] bg-[#f4e4bc] shadow-inner rotate-1" />
 
       <div className="absolute inset-0 -rotate-1 rounded-sm border border-[#e5c9a3] bg-[#fdf2d0] shadow-xl">
-        <div
-          className="absolute inset-0 opacity-25 mix-blend-multiply pointer-events-none"
-          style={{
-            backgroundImage:
-              "url('https://www.transparenttextures.com/patterns/stained-paper.png')",
-          }}
-        />
 
         <div className="pointer-events-none absolute inset-4 z-10 flex items-center justify-center">
           <img
             alt="Bản đồ Việt Nam"
             className="h-full w-full object-contain opacity-90 mix-blend-multiply contrast-110"
-            referrerPolicy="no-referrer"
-            src="https://images.unsplash.com/photo-1596402184320-417d7108b4eb?auto=format&fit=crop&q=80&w=800"
+            src="/images/defaults/vietnam-map.svg"
             style={{ filter: 'sepia(0.3)' }}
           />
         </div>

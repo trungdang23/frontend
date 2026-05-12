@@ -69,14 +69,14 @@ Status: `In progress`
 - [x] chốt hướng visual `Digital Scrapbook`
 - [x] chốt ranh giới `fixed-layout vs freeform`
 - [x] chốt route map mức nền cho `planner` và `journal`
-- [x] dựng homepage scrapbook baseline ở `/`
+- [x] dựng homepage scrapbook baseline ở `/` với 12 polaroid thẻ local SVG + bản đồ local
 - [~] dựng lại router và app shell; cutover canonical planner/journal routes và data-router migration đã xong, cleanup transition vẫn còn
-- [~] dựng design token system mới; `@theme` tokens màu/font/paper đã có trong CSS, nhưng component-level spacing/radius/shadow primitives còn cần chuẩn hóa
+- [x] dựng design token system mới; `@theme` tokens màu/font/paper đã có trong CSS, spacing/radius/shadow primitives đã được chuẩn hóa trong `@theme` block và CSS component classes
 - [~] dựng fixed-layout public/auth/protected surfaces
 - [~] dựng `trips` workspace entry tại `/app/trips`; list thật cùng dedicated fixed-layout create/edit form đã có, nhưng bulk action/filter/sort nâng cao và cleanup compatibility vẫn deferred
 - [~] dựng planner canonical workspace tại `/app/trips/:tripId/planner`; tree owner flow, node CRUD cơ bản, budget summary, edit metadata qua route riêng, và cleanup planner compatibility cơ bản đã có, nhưng reorder/editor chuyên biệt và notebook helper cleanup sâu hơn còn deferred
 - [x] dựng journal scene renderer
-- [~] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape, drag object, selected-object controls, autosave debounce và leave guard qua data router; inspector đầy đủ còn deferred
+- [x] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape, drag object, selected-object controls, autosave debounce và leave guard qua data router; inspector property panel (x/y/width/height/rotation/lock) và multi-anchor resize handles đã có
 - [~] chốt journal API contract phase đầu với `GET/PUT/PATCH/DELETE /trips/:tripId/journal`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`; page-level contract còn deferred
 - [~] chốt asset flow phase đầu bằng owner-only journal image upload, asset library/delete, và signed URL delivery; cloud storage, orphan cleanup, và trip-delete cleanup còn deferred
 - [x] cập nhật deploy smoke checklist theo route mới
