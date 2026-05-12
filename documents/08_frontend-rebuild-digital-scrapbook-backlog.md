@@ -379,6 +379,7 @@ Mở route `community` thật đầu tiên sau homepage, dùng body bám sát m�
 - [x] bind feed vào contract `CommunityPost` hiện tại thay vì data model riêng của mẫu
 - [x] derive `region`, `rotation`, `tapeColor` ở frontend cho phase đầu
 - [x] giữ `likes/comments` ở mức visual decoration, chưa đòi backend field mới
+- [x] hiển thị tên và avatar thật của người đăng cho post/planner/journal cards khi backend trả author summary
 
 ### FR-B3 - Planner board card alignment cleanup
 
@@ -1417,6 +1418,7 @@ Khôi phục model 3D bản đồ Việt Nam ở trang chủ sau khi mesh GLB re
 - [x] giữ canvas có kích thước ổn định trên desktop/mobile
 - [x] smoke test homepage bằng browser để xác nhận canvas không trắng
 - [x] tinh chỉnh góc nhìn chính diện, scale mặc định lớn hơn, và bật xoay/zoom model
+- [x] nới khung chứa bản đồ và cho zoom gần hơn mà không làm model bị bó trong canvas
 
 ## FR-C - Structured planner surfaces
 

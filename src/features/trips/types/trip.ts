@@ -1,9 +1,16 @@
 export type TripBudgetMode = "auto" | "manual";
 export type TripVisibility = "private" | "public";
 
+export type TripAuthor = {
+  id: string;
+  displayName: string | null;
+  avatarUrl?: string | null;
+};
+
 export type Trip = {
   id: string;
   userId: string;
+  author?: TripAuthor | null;
   name: string;
   destination: string | null;
   summaryNotes: string | null;

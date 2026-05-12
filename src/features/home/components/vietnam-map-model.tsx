@@ -15,7 +15,7 @@ function VietnamMapMesh() {
       cacheKey={VIETNAM_MAP_MODEL_URL}
       position={[0, 0, 0]}
       precise
-      scale={0.84}
+      scale={0.96}
     >
       <primitive object={scene} />
     </Center>
@@ -42,8 +42,8 @@ export function VietnamMapModel() {
         enableDamping
         enablePan={false}
         makeDefault
-        maxDistance={8}
-        minDistance={3.5}
+        maxDistance={9}
+        minDistance={2.2}
         target={[0, 0, 0]}
       />
     </Canvas>

@@ -270,7 +270,7 @@
   .home-map-panel {
     position: relative;
     width: 100%;
-    max-width: min(21rem, calc(100vw - 1.25rem));
+    max-width: min(24rem, calc(100vw - 1.25rem));
     aspect-ratio: 1 / 1.4;
     justify-self: center;
     padding-bottom: 4rem;
@@ -355,7 +355,7 @@
     }
 
     .home-map-panel {
-      max-width: clamp(8rem, 34vh, 12rem);
+      max-width: clamp(9rem, 38vh, 14rem);
       aspect-ratio: 1 / 1.4;
       justify-self: end;
       padding-bottom: 0;
@@ -505,7 +505,7 @@
     }
 
     .home-map-panel {
-      max-width: 20rem;
+      max-width: 24rem;
       aspect-ratio: 1 / 1.4;
       justify-self: end;
       padding-top: 0.5rem;

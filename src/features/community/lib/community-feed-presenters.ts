@@ -1,6 +1,7 @@
 import type { CommunityPost } from '@/features/community/types/post';
 import type { TripJournalResult } from '@/features/journal/types/journal';
-import type { Trip } from '@/features/trips/types/trip';
+import type { Trip, TripAuthor } from '@/features/trips/types/trip';
+import { resolveUserAvatarUrl } from '@/features/auth/api/auth-api';
 
 export type CommunityRegion = 'All' | 'North' | 'Central' | 'South';
 export type CommunityFeedCardSource = 'journal' | 'planner' | 'post';
@@ -145,14 +146,32 @@ function getCommunityCardTitle(post: CommunityPost) {
   return post.trip?.name?.trim() || post.id;
 }
 
+function createAvatarFallbackUrl(seed: string) {
+  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(seed)}`;
+}
+
+function resolveAuthorName(
+  author: { displayName: string | null } | null | undefined,
+  fallback: string,
+) {
+  return author?.displayName?.trim() || fallback;
+}
+
+function resolveAuthorAvatarUrl(
+  author: { avatarUrl?: string | null } | null | undefined,
+  seed: string,
+) {
+  return resolveUserAvatarUrl(author?.avatarUrl) || createAvatarFallbackUrl(seed);
+}
+
 export function decorateCommunityPosts(posts: CommunityPost[]): CommunityFeedCard[] {
   return posts.map((post) => {
     const hash = hashString(post.id);
-    const displayName = post.author.displayName || post.userId || post.id;
+    const displayName = resolveAuthorName(post.author, post.userId || post.id);
 
     return {
       authorName: displayName,
-      avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`,
+      avatarUrl: resolveAuthorAvatarUrl(post.author, displayName),
       coverImageUrl: post.coverImageUrl || post.trip?.coverImageUrl || null,
       decorativeCommentCount: (hash % 18) + 6,
       decorativeLikeCount: (hash % 260) + 48,
@@ -242,6 +261,8 @@ function createTripFeedCard({
   trip: Trip;
 }): CommunityFeedCard {
   const hash = hashString(seed);
+  const author = resolveTripAuthor(trip);
+  const authorName = resolveAuthorName(author, trip.userId || trip.id);
   const normalized = [
     trip.name,
     trip.destination,
@@ -253,8 +274,8 @@ function createTripFeedCard({
     .toLocaleLowerCase('vi-VN');
 
   return {
-    authorName: null,
-    avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(trip.userId || trip.id)}`,
+    authorName,
+    avatarUrl: resolveAuthorAvatarUrl(author, authorName),
     coverImageUrl,
     decorativeCommentCount: (hash % 18) + 6,
     decorativeLikeCount: (hash % 260) + 48,
@@ -268,6 +289,10 @@ function createTripFeedCard({
     source,
     tapeClassName: TAPE_CLASSES[hash % TAPE_CLASSES.length],
   };
+}
+
+function resolveTripAuthor(trip: Trip): TripAuthor | null {
+  return trip.author ?? null;
 }
 
 function getJournalText(objects: TripJournalResult['journal']['objects']) {

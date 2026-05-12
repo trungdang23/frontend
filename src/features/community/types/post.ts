@@ -3,6 +3,7 @@ export type PostVisibility = 'public';
 export type CommunityPostAuthor = {
   id: string;
   displayName: string | null;
+  avatarUrl?: string | null;
 };
 
 export type CommunityPostTrip = {
