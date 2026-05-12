@@ -1416,6 +1416,7 @@ Khôi phục model 3D bản đồ Việt Nam ở trang chủ sau khi mesh GLB re
 - [x] center mesh theo bounding box thay vì dựa vào pivot export của file GLB
 - [x] giữ canvas có kích thước ổn định trên desktop/mobile
 - [x] smoke test homepage bằng browser để xác nhận canvas không trắng
+- [x] tinh chỉnh góc nhìn chính diện, scale mặc định lớn hơn, và bật xoay/zoom model
 
 ## FR-C - Structured planner surfaces
 
