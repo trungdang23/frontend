@@ -3,7 +3,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { PolaroidCluster } from '@/features/home/components/polaroid-cluster';
-import { VietnamMapBoard } from '@/features/home/components/vietnam-map-board';
+import { VietnamMapModel } from '@/features/home/components/vietnam-map-model';
 import { PublicPageShell } from '@/features/shell/components/public-page-shell';
 import { publicPageMainLayouts } from '@/features/shell/content/public-page-layouts';
 import { useI18n } from '@/shared/i18n/use-i18n';
@@ -42,7 +42,7 @@ export function HomePage() {
       </section>
 
       <div className="home-map-panel">
-        <VietnamMapBoard />
+        <VietnamMapModel />
       </div>
     </PublicPageShell>
   );
