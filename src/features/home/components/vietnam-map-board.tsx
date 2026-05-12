@@ -32,7 +32,7 @@ export function VietnamMapBoard() {
 
       <div className="absolute inset-0 -rotate-1 rounded-sm border border-[#e5c9a3] bg-[#fdf2d0] shadow-xl">
 
-        <div className="pointer-events-none absolute inset-4 z-10 flex items-center justify-center">
+        <div className="absolute inset-4 z-10">
           <VietnamMapModel />
         </div>
 

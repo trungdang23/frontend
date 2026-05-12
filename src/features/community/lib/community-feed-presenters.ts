@@ -151,7 +151,7 @@ export function decorateCommunityPosts(posts: CommunityPost[]): CommunityFeedCar
     const displayName = post.author.displayName || post.userId || post.id;
 
     return {
-      authorName: post.author.displayName,
+      authorName: displayName,
       avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(displayName)}`,
       coverImageUrl: post.coverImageUrl || post.trip?.coverImageUrl || null,
       decorativeCommentCount: (hash % 18) + 6,
