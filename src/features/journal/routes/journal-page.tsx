@@ -266,25 +266,6 @@ export function JournalPage() {
             </p>
           </div>
 
-          {journalQuery.data ? (
-            <dl className="grid gap-3 text-sm text-[#6a5948] sm:grid-cols-2 lg:grid-cols-1">
-              <div>
-                <dt className="font-semibold text-[#4f382c]">
-                  {t("journalPage.meta.trip")}
-                </dt>
-                <dd>{journalQuery.data.trip.name}</dd>
-              </div>
-              <div>
-                <dt className="font-semibold text-[#4f382c]">
-                  {t("journalPage.meta.updatedAt")}
-                </dt>
-                <dd>
-                  {formatDisplayDate(journalQuery.data.journal.updatedAt)}
-                </dd>
-              </div>
-            </dl>
-          ) : null}
-
           {activeJournal ? renderEditorPanel(activeJournal) : null}
         </section>
 

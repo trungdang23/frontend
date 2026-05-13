@@ -1784,6 +1784,20 @@ Giảm các điểm vào bị lặp: planner mở thẳng quyển sổ lập k�
 
 ## Follow-up authenticated shell logout
 
+## Follow-up owner journal header cleanup
+
+Status: `Implemented in source`
+
+### Mục tiêu
+
+Giảm phần lặp trong header journal owner-side khi tên chuyến đi đã được đặt nổi bật ở đầu trang.
+
+### Scope
+
+- [x] bỏ khối meta lặp lại `Chuyến đi` + tên chuyến đi bên dưới tiêu đề lớn
+- [x] bỏ dòng `Cập nhật` + thời gian cập nhật trong cùng khối meta
+- [x] giữ nguyên tiêu đề lớn và mô tả hành trình phía trên editor
+
 ### Mục tiêu
 
 Đưa hành động đăng xuất vào chrome chung để người dùng thoát tài khoản từ planner, journal, profile, community hoặc trang public mà không phải tìm trong một page riêng.
