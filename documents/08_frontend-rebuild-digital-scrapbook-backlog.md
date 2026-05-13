@@ -1431,6 +1431,7 @@ Nới framing của model 3D trên homepage để mesh không bị crop trong ca
 - [x] fit camera homepage map theo bounding box thực của model và nới lại zoom range an toàn
 - [x] không dùng raw `userId` làm tên người đăng trên community card
 - [x] nhận thêm fallback field tên phổ biến từ author payload và cập nhật test presenter liên quan
+- [x] luôn hiện nhãn tên người đăng với fallback thân thiện khi author summary vẫn thiếu tên
 
 ## FR-C - Structured planner surfaces
 
