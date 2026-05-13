@@ -5,6 +5,7 @@ import type {
   SaveTripJournalPayload,
   TripJournalAssetListResult,
   TripJournalAssetResult,
+  TripJournalRevisionListResult,
   TripJournalResult,
   UpdateTripJournalPayload,
 } from "@/features/journal/types/journal";
@@ -146,6 +147,34 @@ export async function updateTripJournalVisibility(
       method: "PATCH",
       auth: true,
       body: payload,
+    },
+  );
+
+  return normalizeTripJournalAssetUrls(result);
+}
+
+export async function listTripJournalRevisions(
+  tripId: string,
+  options: RequestOptions = {},
+) {
+  return request<TripJournalRevisionListResult>(
+    `/trips/${tripId}/journal/revisions`,
+    {
+      auth: true,
+      signal: options.signal,
+    },
+  );
+}
+
+export async function restoreTripJournalRevision(
+  tripId: string,
+  revisionId: string,
+) {
+  const result = await request<TripJournalResult>(
+    `/trips/${tripId}/journal/revisions/${revisionId}/restore`,
+    {
+      method: "POST",
+      auth: true,
     },
   );
 

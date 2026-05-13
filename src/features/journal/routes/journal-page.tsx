@@ -17,7 +17,9 @@ import {
 import {
   deleteTripJournalAsset,
   getTripJournal,
+  listTripJournalRevisions,
   listTripJournalAssets,
+  restoreTripJournalRevision,
   saveTripJournal,
   uploadTripJournalAsset,
 } from "@/features/journal/api/journal-api";
@@ -41,6 +43,7 @@ import type {
   JournalSceneObject,
   TripJournalAsset,
   TripJournal,
+  TripJournalRevision,
   TripJournalResult,
 } from "@/features/journal/types/journal";
 import { PublicPageShell } from "@/features/shell/components/public-page-shell";
@@ -76,6 +79,11 @@ export function JournalPage() {
   const journalAssetsQuery = useQuery({
     queryKey: journalQueryKeys.assets(tripId),
     queryFn: ({ signal }) => listTripJournalAssets(tripId, { signal }),
+    enabled: Boolean(tripId),
+  });
+  const journalRevisionsQuery = useQuery({
+    queryKey: journalQueryKeys.revisions(tripId),
+    queryFn: ({ signal }) => listTripJournalRevisions(tripId, { signal }),
     enabled: Boolean(tripId),
   });
   const activeJournal = draftJournal ?? journalQuery.data?.journal ?? null;
@@ -125,6 +133,9 @@ export function JournalPage() {
       void queryClient.invalidateQueries({
         queryKey: journalQueryKeys.mine(),
       });
+      void queryClient.invalidateQueries({
+        queryKey: journalQueryKeys.revisions(tripId),
+      });
     },
   });
   const uploadJournalAssetMutation = useMutation({
@@ -141,6 +152,28 @@ export function JournalPage() {
     onSuccess: () => {
       void queryClient.invalidateQueries({
         queryKey: journalQueryKeys.assets(tripId),
+      });
+    },
+  });
+  const restoreJournalRevisionMutation = useMutation({
+    mutationFn: async (revisionId: string) =>
+      restoreTripJournalRevision(tripId, revisionId),
+    onSuccess: (result) => {
+      const fingerprint = serializeJournalScene(result.journal);
+
+      lastCompletedSaveReasonRef.current = "manual";
+      lastAutosaveFingerprintRef.current = fingerprint;
+      setDraftJournal(result.journal);
+      setSelectedObjectId(null);
+      queryClient.setQueryData<TripJournalResult>(
+        journalQueryKeys.detail(tripId),
+        result,
+      );
+      void queryClient.invalidateQueries({
+        queryKey: journalQueryKeys.mine(),
+      });
+      void queryClient.invalidateQueries({
+        queryKey: journalQueryKeys.revisions(tripId),
       });
     },
   });
@@ -712,7 +745,125 @@ export function JournalPage() {
             {t("journalPage.editor.saveError")}
           </p>
         ) : null}
+
+        {renderRevisionHistory()}
       </div>
+    );
+  }
+
+  function renderRevisionHistory() {
+    const revisions = journalRevisionsQuery.data?.revisions ?? [];
+
+    return (
+      <section className="mt-4 rounded-[0.95rem] border border-[#d7b88f]/35 bg-[#fffaf0]/75 p-3">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 className="font-marker text-[1.02rem] font-bold leading-none text-[#4f382c]">
+              {t("journalPage.editor.revisions.title")}
+            </h2>
+            <p className="mt-1 text-xs font-medium text-[#8a6d51]">
+              {t("journalPage.editor.revisions.description")}
+            </p>
+          </div>
+          <span className="rounded-full bg-white/70 px-3 py-1 font-marker text-[0.9rem] leading-none text-[#6b4938]">
+            {t("journalPage.editor.revisions.count", {
+              count: revisions.length,
+            })}
+          </span>
+        </div>
+
+        {journalRevisionsQuery.isLoading ? (
+          <p className="mt-3 font-marker text-[1rem] leading-tight text-[#6b4938]">
+            {t("journalPage.editor.revisions.loading")}
+          </p>
+        ) : null}
+
+        {journalRevisionsQuery.isError ? (
+          <p
+            className="mt-3 font-marker text-[1rem] leading-tight text-[#b42318]"
+            role="alert"
+          >
+            {t("journalPage.editor.revisions.loadError")}
+          </p>
+        ) : null}
+
+        {!journalRevisionsQuery.isLoading &&
+        !journalRevisionsQuery.isError &&
+        revisions.length === 0 ? (
+          <p className="mt-3 font-marker text-[1rem] leading-tight text-[#6b4938]">
+            {t("journalPage.editor.revisions.empty")}
+          </p>
+        ) : null}
+
+        {!journalRevisionsQuery.isLoading &&
+        !journalRevisionsQuery.isError &&
+        revisions.length > 0 ? (
+          <div className="mt-3 grid gap-2">
+            {revisions.map((revision, index) => {
+              const isLatestRevision = index === 0;
+              const isRestoringRevision =
+                restoreJournalRevisionMutation.isPending &&
+                restoreJournalRevisionMutation.variables === revision.id;
+
+              return (
+                <div
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-[0.8rem] border border-[#e7d4b3]/70 bg-white/80 px-3 py-2"
+                  key={revision.id}
+                >
+                  <div>
+                    <p className="font-marker text-[0.98rem] font-bold leading-none text-[#4f382c]">
+                      {formatRevisionDateTime(revision.createdAt)}
+                    </p>
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.12em] text-[#8a6d51]">
+                      {t("journalPage.editor.revisions.summary", {
+                        count: revision.objectCount,
+                        version: revision.sceneVersion,
+                      })}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {isLatestRevision ? (
+                      <span className="rounded-full bg-[#fff4c7] px-3 py-1 font-marker text-[0.88rem] leading-none text-[#7a5637]">
+                        {t("journalPage.editor.revisions.latest")}
+                      </span>
+                    ) : null}
+                    <button
+                      className="inline-flex items-center justify-center rounded-full border border-[#8b6244]/25 bg-white/70 px-3 py-2 font-marker text-[0.95rem] font-bold leading-none text-[#6b4938] transition hover:-translate-y-0.5 disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-45"
+                      disabled={isLatestRevision || restoreJournalRevisionMutation.isPending}
+                      onClick={() => {
+                        void handleRestoreRevision(revision);
+                      }}
+                      type="button"
+                    >
+                      {isRestoringRevision
+                        ? t("journalPage.editor.revisions.restoring")
+                        : t("journalPage.editor.revisions.restore")}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : null}
+
+        {restoreJournalRevisionMutation.isSuccess ? (
+          <p
+            className="mt-3 font-marker text-[1rem] leading-tight text-[#31521c]"
+            role="status"
+          >
+            {t("journalPage.editor.revisions.restoreSuccess")}
+          </p>
+        ) : null}
+
+        {restoreJournalRevisionMutation.isError ? (
+          <p
+            className="mt-3 font-marker text-[1rem] leading-tight text-[#b42318]"
+            role="alert"
+          >
+            {t("journalPage.editor.revisions.restoreError")}
+          </p>
+        ) : null}
+      </section>
     );
   }
 
@@ -840,12 +991,28 @@ export function JournalPage() {
     );
   }
 
+  async function handleRestoreRevision(revision: TripJournalRevision) {
+    restoreJournalRevisionMutation.reset();
+    saveJournalMutation.reset();
+
+    const message = isDirty
+      ? t("journalPage.editor.revisions.restoreDirtyConfirm")
+      : t("journalPage.editor.revisions.restoreConfirm");
+
+    if (!window.confirm(message)) {
+      return;
+    }
+
+    await restoreJournalRevisionMutation.mutateAsync(revision.id);
+  }
+
   function addJournalObject(
     type: JournalObjectType,
     journal: TripJournal,
     photoProps: Record<string, unknown> = {},
   ) {
     saveJournalMutation.reset();
+    restoreJournalRevisionMutation.reset();
     const nextObject = createJournalObject(type, journal, photoProps);
 
     setDraftJournal({
@@ -870,6 +1037,7 @@ export function JournalPage() {
 
   async function addPhotoObject(journal: TripJournal) {
     saveJournalMutation.reset();
+    restoreJournalRevisionMutation.reset();
     uploadJournalAssetMutation.reset();
 
     if (selectedImageFile) {
@@ -922,6 +1090,7 @@ export function JournalPage() {
     position: { x: number; y: number },
   ) {
     saveJournalMutation.reset();
+    restoreJournalRevisionMutation.reset();
     setDraftJournal((currentJournal) => {
       const journal = currentJournal ?? journalQuery.data?.journal;
 
@@ -963,6 +1132,7 @@ export function JournalPage() {
     size: { width: number; height: number; x?: number; y?: number },
   ) {
     saveJournalMutation.reset();
+    restoreJournalRevisionMutation.reset();
     setDraftJournal((currentJournal) => {
       const journal = currentJournal ?? journalQuery.data?.journal;
 
@@ -1008,6 +1178,7 @@ export function JournalPage() {
 
   function rotateJournalObjectOnPage(objectId: string, rotation: number) {
     saveJournalMutation.reset();
+    restoreJournalRevisionMutation.reset();
     setDraftJournal((currentJournal) => {
       const journal = currentJournal ?? journalQuery.data?.journal;
 
@@ -1140,6 +1311,7 @@ export function JournalPage() {
     resolveObjects: (objects: JournalSceneObject[]) => JournalSceneObject[],
   ) {
     saveJournalMutation.reset();
+    restoreJournalRevisionMutation.reset();
     setDraftJournal((currentJournal) => {
       const journal = currentJournal ?? journalQuery.data?.journal;
 
@@ -1333,6 +1505,22 @@ function formatDisplayDate(value: string) {
 
   return new Intl.DateTimeFormat("vi-VN", {
     day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+}
+
+function formatRevisionDateTime(value: string) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat("vi-VN", {
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
     month: "2-digit",
     year: "numeric",
   }).format(date);

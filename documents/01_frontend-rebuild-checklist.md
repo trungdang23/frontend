@@ -77,7 +77,7 @@ Status: `In progress`
 - [~] dựng planner canonical workspace tại `/app/trips/:tripId/planner`; tree owner flow, node CRUD cơ bản, budget summary, edit metadata qua route riêng, và cleanup planner compatibility cơ bản đã có, nhưng reorder/editor chuyên biệt và notebook helper cleanup sâu hơn còn deferred
 - [x] dựng journal scene renderer
 - [x] dựng journal editor interactions tối giản cho note/ảnh/sticker/tape, drag object, selected-object controls, autosave debounce và leave guard qua data router; inspector property panel (x/y/width/height/rotation/lock) và multi-anchor resize handles đã có
-- [~] chốt journal API contract phase đầu với `GET/PUT/PATCH/DELETE /trips/:tripId/journal`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`; page-level contract còn deferred
+- [~] chốt journal API contract phase đầu với `GET /trips/:tripId/journal`, `GET /trips/:tripId/journal/revisions`, `PUT/PATCH/DELETE /trips/:tripId/journal`, `POST /trips/:tripId/journal/revisions/:revisionId/restore`, `GET /journals/mine`, `GET /public/journals`, và `GET /public/trips/:tripId/journal`; page-level contract còn deferred
 - [~] chốt asset flow phase đầu bằng owner-only journal image upload, asset library/delete, và signed URL delivery; cloud storage, orphan cleanup, và trip-delete cleanup còn deferred
 - [x] cập nhật deploy smoke checklist theo route mới
 

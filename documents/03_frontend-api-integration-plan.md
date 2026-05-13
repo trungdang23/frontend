@@ -93,9 +93,11 @@ Ghi chú:
 
 - `GET /journals/mine`
 - `GET /trips/:tripId/journal`
+- `GET /trips/:tripId/journal/revisions`
 - `PUT /trips/:tripId/journal`
 - `PATCH /trips/:tripId/journal`
 - `DELETE /trips/:tripId/journal`
+- `POST /trips/:tripId/journal/revisions/:revisionId/restore`
 - `GET /public/journals`
 - `GET /public/trips/:tripId/journal`
 - `POST /trips/:tripId/journal/assets`
@@ -134,7 +136,9 @@ Nhóm endpoint dài hạn đề xuất:
 Phase đầu hiện đã có:
 
 - `GET /trips/:tripId/journal`
+- `GET /trips/:tripId/journal/revisions` để owner xem revision history gần đây
 - `PUT /trips/:tripId/journal`
+- `POST /trips/:tripId/journal/revisions/:revisionId/restore` để owner khôi phục snapshot cũ
 - `PATCH /trips/:tripId/journal` để đổi riêng visibility của journal
 - `DELETE /trips/:tripId/journal`
 - `GET /journals/mine`

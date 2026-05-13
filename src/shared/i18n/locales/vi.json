@@ -546,6 +546,22 @@
       "deleteObjectShort": "Xoá",
       "objectControlLabel": "Chọn và di chuyển mảnh nhật ký",
       "objectCount": "{{count}} mảnh",
+      "revisions": {
+        "title": "Các lần lưu gần đây",
+        "description": "Khôi phục nhanh một snapshot cũ nếu muốn quay lại bố cục trước đó.",
+        "count": "{{count}} revision",
+        "loading": "Đang tải lịch sử lưu...",
+        "loadError": "Chưa tải được lịch sử lưu.",
+        "empty": "Chưa có revision nào để khôi phục.",
+        "summary": "{{count}} mảnh · v{{version}}",
+        "latest": "Mới nhất",
+        "restore": "Khôi phục",
+        "restoring": "Đang khôi phục...",
+        "restoreSuccess": "Đã khôi phục snapshot đã chọn.",
+        "restoreError": "Chưa khôi phục được snapshot này.",
+        "restoreConfirm": "Khôi phục snapshot này về journal hiện tại?",
+        "restoreDirtyConfirm": "Bạn đang có thay đổi chưa lưu. Khôi phục snapshot này sẽ bỏ phần chỉnh sửa hiện tại. Tiếp tục?"
+      },
       "objectTypes": {
         "note": "Note",
         "photo": "Ảnh",

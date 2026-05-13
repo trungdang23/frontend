@@ -539,6 +539,22 @@
       "deleteObjectShort": "Delete",
       "objectControlLabel": "Select and move journal piece",
       "objectCount": "{{count}} pieces",
+      "revisions": {
+        "title": "Recent saves",
+        "description": "Restore an older snapshot if you want to roll the layout back quickly.",
+        "count": "{{count}} revisions",
+        "loading": "Loading revision history...",
+        "loadError": "Unable to load revision history.",
+        "empty": "No revisions are available yet.",
+        "summary": "{{count}} pieces · v{{version}}",
+        "latest": "Latest",
+        "restore": "Restore",
+        "restoring": "Restoring...",
+        "restoreSuccess": "The selected snapshot has been restored.",
+        "restoreError": "Unable to restore this snapshot.",
+        "restoreConfirm": "Restore this snapshot to the current journal?",
+        "restoreDirtyConfirm": "You have unsaved changes. Restoring this snapshot will discard the current edits. Continue?"
+      },
       "objectTypes": {
         "note": "Note",
         "photo": "Photo",

@@ -13,7 +13,7 @@
 - `app/providers`, `shared/api`, `auth/session`, `trips` API, `community` API, và i18n baseline vẫn còn.
 - Route `/`, `/community`, `/auth/login`, `/auth/register`, `/app/planner`, `/app/profile`, `/app/trips/:tripId/planner`, `/app/trips/:tripId/journal`, `/public/trips/:tripId`, và `/public/trips/:tripId/journal` đã có screen thật.
 - Route target `/app/trips/:tripId/planner` và `/app/trips/:tripId/journal` hiện là route chính thật; `/app/trips/:tripId`, `/app/planner?tripId=...`, và `/app/journal?tripId=...` là compatibility redirects.
-- Journal feature hiện có API client, query key, type model, owner journal listing for profile, scene renderer, public read-only journal route, drag object, selected-object controls, manual save dirty state, debounce autosave, owner-only image upload phase đầu, và leave guard qua data router cho internal navigation cùng beforeunload. Editor shell tách riêng, resize handles, asset management đầy đủ, revision/history, và custom confirm UI vẫn deferred.
+- Journal feature hiện có API client, query key, type model, owner journal listing for profile, scene renderer, public read-only journal route, drag object, selected-object controls, manual save dirty state, debounce autosave, owner-only image upload phase đầu, revision history list/restore baseline, và leave guard qua data router cho internal navigation cùng beforeunload. Editor shell tách riêng, diff viewer, multi-tab conflict handling, và custom confirm UI vẫn deferred.
 
 ## Kiến trúc mục tiêu
 

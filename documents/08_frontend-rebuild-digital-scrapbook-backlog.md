@@ -1697,7 +1697,7 @@ Kết nối editor với backend theo một contract bền vững.
   - [~] snapshot save
   - [~] debounce autosave
   - [x] manual save fallback
-- [ ] chốt revision model tối thiểu
+- [x] chốt revision model tối thiểu
 - [ ] tách asset metadata khỏi scene payload
 - [ ] dựng publish/read-only flow
 
@@ -1706,6 +1706,36 @@ Kết nối editor với backend theo một contract bền vững.
 - save/load vòng kín
 - published journal render đúng scene đã lưu
 - không cần đổi cả database platform để chạy feature này
+
+## Follow-up journal revision history v1
+
+Status: `Implemented in source`
+
+### Mục tiêu
+
+Mở revision history tối thiểu cho owner journal để có thể xem các snapshot đã lưu gần đây và khôi phục một snapshot cũ mà chưa cần page-level CRUD hoặc undo/redo command stack.
+
+### Việc cần làm
+
+- [x] thêm journal revision types/query keys/API client riêng cho owner flow
+- [x] hiển thị danh sách revision gần đây trong journal editor với mốc thời gian rõ ràng
+- [x] cho phép restore một revision cũ về snapshot journal hiện tại
+- [x] sau restore, đồng bộ lại editor draft/query cache và trạng thái autosave hiện tại
+- [x] giữ scope ở mức snapshot history; chưa mở page-level history hay diff viewer
+
+### Acceptance criteria
+
+- owner thấy được một danh sách revision mới nhất của trip journal hiện tại
+- bấm restore một revision cũ làm scene editor và scene saved cùng đổi về snapshot đã chọn
+- autosave/manual save hiện tại không bị vỡ sau restore
+
+### Deferred
+
+- diff viewer giữa hai revision
+- rename/note revision thủ công
+- multi-tab conflict resolution
+- undo/redo command stack
+- page-level revisions riêng
 
 ## Follow-up share independence and community discovery
 

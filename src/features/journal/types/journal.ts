@@ -58,6 +58,18 @@ export type TripJournalAssetListResult = {
   assets: TripJournalAsset[];
 };
 
+export type TripJournalRevision = {
+  id: string;
+  tripId: string;
+  sceneVersion: number;
+  objectCount: number;
+  createdAt: string;
+};
+
+export type TripJournalRevisionListResult = {
+  revisions: TripJournalRevision[];
+};
+
 export type SaveTripJournalPayload = {
   sceneVersion: number;
   page: JournalPage;

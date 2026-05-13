@@ -5,4 +5,6 @@ export const journalQueryKeys = {
   publicList: () => ["public", "journals", "list"] as const,
   publicDetail: (tripId: string) =>
     ["public", "trips", "journal", tripId] as const,
+  revisions: (tripId: string) =>
+    ["trips", "journal", tripId, "revisions"] as const,
 };
