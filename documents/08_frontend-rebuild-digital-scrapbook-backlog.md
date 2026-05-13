@@ -1433,6 +1433,18 @@ Nới framing của model 3D trên homepage để mesh không bị crop trong ca
 - [x] nhận thêm fallback field tên phổ biến từ author payload và cập nhật test presenter liên quan
 - [x] luôn hiện nhãn tên người đăng với fallback thân thiện khi author summary vẫn thiếu tên
 
+## Follow-up homepage map default scale and canvas expansion
+
+### Mục tiêu
+
+Tăng độ hiện diện mặc định của model 3D trên homepage, đồng thời nới panel/canvas để người dùng zoom gần hơn mà mesh không bị cảm giác chạm mép hoặc bị khung nhỏ che bớt khi tương tác.
+
+### Scope của lượt triển khai này
+
+- [x] tăng framing mặc định để model hiển thị lớn hơn ngay từ lần tải đầu
+- [x] nới panel chứa canvas trên mobile và desktop để vùng hiển thị rộng hơn
+- [x] mở thêm khoảng zoom gần an toàn để người dùng soi model kỹ hơn mà không bị crop khó chịu
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

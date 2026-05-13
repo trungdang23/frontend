@@ -270,10 +270,11 @@
   .home-map-panel {
     position: relative;
     width: 100%;
-    max-width: min(24rem, calc(100vw - 1.25rem));
-    aspect-ratio: 1 / 1.4;
+    max-width: min(28rem, calc(100vw - 0.75rem));
+    aspect-ratio: 1 / 1.24;
     justify-self: center;
-    padding-bottom: 4rem;
+    min-height: clamp(24rem, 72vw, 33rem);
+    padding-bottom: 3rem;
   }
 
   .home-map-panel .home-map-board {
@@ -355,8 +356,9 @@
     }
 
     .home-map-panel {
-      max-width: clamp(9rem, 38vh, 14rem);
-      aspect-ratio: 1 / 1.4;
+      max-width: clamp(11rem, 44vh, 16.5rem);
+      aspect-ratio: 1 / 1.24;
+      min-height: 0;
       justify-self: end;
       padding-bottom: 0;
     }
@@ -505,8 +507,9 @@
     }
 
     .home-map-panel {
-      max-width: 24rem;
-      aspect-ratio: 1 / 1.4;
+      max-width: 28rem;
+      aspect-ratio: 1 / 1.24;
+      min-height: clamp(26rem, 46vh, 34rem);
       justify-self: end;
       padding-top: 0.5rem;
       padding-bottom: 0;

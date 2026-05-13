@@ -11,6 +11,9 @@ import type { Group } from 'three';
 
 const VIETNAM_MAP_MODEL_URL = '/model/Map3d.glb';
 const VIETNAM_MAP_MODEL_SCALE = 0.9;
+const VIETNAM_MAP_BOUNDS_MARGIN = 0.94;
+const VIETNAM_MAP_MIN_DISTANCE = 1.2;
+const VIETNAM_MAP_MAX_DISTANCE = 14;
 
 useGLTF.preload(VIETNAM_MAP_MODEL_URL);
 
@@ -32,7 +35,7 @@ function VietnamMapMesh() {
 export function VietnamMapModel() {
   return (
     <Canvas
-      camera={{ position: [0, 0, 6.8], fov: 38 }}
+      camera={{ position: [0, 0.15, 6.2], fov: 34 }}
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       style={{ background: 'transparent', width: '100%', height: '100%' }}
@@ -42,7 +45,7 @@ export function VietnamMapModel() {
       <directionalLight intensity={0.6} position={[-3, 2, -2]} color="#d4b483" />
 
       <Suspense fallback={null}>
-        <Bounds clip fit margin={1.14} observe>
+        <Bounds clip fit margin={VIETNAM_MAP_BOUNDS_MARGIN} observe>
           <VietnamMapMesh />
         </Bounds>
         <ContactShadows blur={2.4} far={3.4} opacity={0.24} position={[0, -1.75, 0]} scale={5.8} />
@@ -51,8 +54,8 @@ export function VietnamMapModel() {
         enableDamping
         enablePan={false}
         makeDefault
-        maxDistance={12}
-        minDistance={1.8}
+        maxDistance={VIETNAM_MAP_MAX_DISTANCE}
+        minDistance={VIETNAM_MAP_MIN_DISTANCE}
         target={[0, 0, 0]}
       />
     </Canvas>
