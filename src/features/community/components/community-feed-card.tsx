@@ -14,7 +14,7 @@ type CommunityFeedCardProps = {
 
 export function CommunityFeedCard({ card }: CommunityFeedCardProps) {
   const { t } = useI18n();
-  const showAuthorName = Boolean(card.authorName);
+  const showAuthorName = Boolean(card.authorName?.trim());
   const className =
     'group relative flex flex-col items-center bg-white p-3 pb-8 text-left shadow-[4px_4px_15px_rgba(0,0,0,0.15)] transition-transform duration-300 [transform:rotate(var(--card-rotate))] hover:z-10 hover:[transform:rotate(0deg)_scale(1.02)]';
   const style = {

@@ -1,9 +1,16 @@
 import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Center, ContactShadows, OrbitControls, useGLTF } from '@react-three/drei';
+import {
+  Bounds,
+  Center,
+  ContactShadows,
+  OrbitControls,
+  useGLTF,
+} from '@react-three/drei';
 import type { Group } from 'three';
 
 const VIETNAM_MAP_MODEL_URL = '/model/Map3d.glb';
+const VIETNAM_MAP_MODEL_SCALE = 0.9;
 
 useGLTF.preload(VIETNAM_MAP_MODEL_URL);
 
@@ -15,7 +22,7 @@ function VietnamMapMesh() {
       cacheKey={VIETNAM_MAP_MODEL_URL}
       position={[0, 0, 0]}
       precise
-      scale={0.96}
+      scale={VIETNAM_MAP_MODEL_SCALE}
     >
       <primitive object={scene} />
     </Center>
@@ -25,7 +32,7 @@ function VietnamMapMesh() {
 export function VietnamMapModel() {
   return (
     <Canvas
-      camera={{ position: [0, 0, 6.2], fov: 35 }}
+      camera={{ position: [0, 0, 6.8], fov: 38 }}
       dpr={[1, 1.5]}
       gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
       style={{ background: 'transparent', width: '100%', height: '100%' }}
@@ -35,15 +42,17 @@ export function VietnamMapModel() {
       <directionalLight intensity={0.6} position={[-3, 2, -2]} color="#d4b483" />
 
       <Suspense fallback={null}>
-        <VietnamMapMesh />
-        <ContactShadows blur={2} far={3} opacity={0.25} position={[0, -1.8, 0]} scale={6} />
+        <Bounds clip fit margin={1.14} observe>
+          <VietnamMapMesh />
+        </Bounds>
+        <ContactShadows blur={2.4} far={3.4} opacity={0.24} position={[0, -1.75, 0]} scale={5.8} />
       </Suspense>
       <OrbitControls
         enableDamping
         enablePan={false}
         makeDefault
-        maxDistance={9}
-        minDistance={2.2}
+        maxDistance={12}
+        minDistance={1.8}
         target={[0, 0, 0]}
       />
     </Canvas>

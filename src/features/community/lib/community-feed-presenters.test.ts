@@ -72,4 +72,54 @@ describe('community feed presenters', () => {
     expect(cards[0]?.authorName).toBe('Chủ chuyến đi');
     expect(cards[0]?.avatarUrl).toContain('/user-avatars/trip-owner');
   });
+
+  it('uses legacy author name fields before hiding the label', () => {
+    const cards = decorateCommunityPosts([
+      {
+        author: {
+          avatarUrl: null,
+          displayName: null,
+          id: 'user-legacy',
+          name: 'Tên cũ vẫn cần hiện',
+        } as CommunityPost['author'] & { name: string },
+        content: 'Bài viết cũ',
+        coverImageUrl: null,
+        createdAt: '2026-04-22T12:00:00.000Z',
+        id: 'post-legacy',
+        title: 'Post legacy',
+        trip: null,
+        tripId: null,
+        updatedAt: '2026-04-22T12:00:00.000Z',
+        userId: 'user-legacy',
+        visibility: 'public',
+      } satisfies CommunityPost,
+    ]);
+
+    expect(cards[0]?.authorName).toBe('Tên cũ vẫn cần hiện');
+  });
+
+  it('does not fall back to raw user ids when the post author has no display name', () => {
+    const cards = decorateCommunityPosts([
+      {
+        author: {
+          avatarUrl: null,
+          displayName: null,
+          id: 'user-no-name',
+        },
+        content: 'Bài viết chưa có display name',
+        coverImageUrl: null,
+        createdAt: '2026-04-22T12:00:00.000Z',
+        id: 'post-no-name',
+        title: 'Post không tên tác giả',
+        trip: null,
+        tripId: null,
+        updatedAt: '2026-04-22T12:00:00.000Z',
+        userId: 'user-no-name',
+        visibility: 'public',
+      } satisfies CommunityPost,
+    ]);
+
+    expect(cards[0]?.authorName).toBeNull();
+    expect(cards[0]?.avatarUrl).toContain('seed=user-no-name');
+  });
 });

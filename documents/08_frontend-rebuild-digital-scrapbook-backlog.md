@@ -1420,6 +1420,18 @@ Khôi phục model 3D bản đồ Việt Nam ở trang chủ sau khi mesh GLB re
 - [x] tinh chỉnh góc nhìn chính diện, scale mặc định lớn hơn, và bật xoay/zoom model
 - [x] nới khung chứa bản đồ và cho zoom gần hơn mà không làm model bị bó trong canvas
 
+## Follow-up homepage map framing and community author labels
+
+### Mục tiêu
+
+Nới framing của model 3D trên homepage để mesh không bị crop trong canvas khi viewport đổi, đồng thời để card community ưu tiên hiển thị tên người đăng thật thay vì rơi về raw `userId` khi author summary thiếu hoặc lệch shape.
+
+### Scope của lượt triển khai này
+
+- [x] fit camera homepage map theo bounding box thực của model và nới lại zoom range an toàn
+- [x] không dùng raw `userId` làm tên người đăng trên community card
+- [x] nhận thêm fallback field tên phổ biến từ author payload và cập nhật test presenter liên quan
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

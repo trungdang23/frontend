@@ -78,6 +78,15 @@ const TAPE_CLASSES = [
   'bg-[rgba(167,215,173,0.78)]',
 ] as const;
 
+type CommunityAuthorLike = {
+  avatarUrl?: string | null;
+  displayName?: string | null;
+  fullName?: string | null;
+  id?: string | null;
+  name?: string | null;
+  username?: string | null;
+};
+
 function hashString(value: string) {
   let hash = 0;
 
@@ -151,14 +160,20 @@ function createAvatarFallbackUrl(seed: string) {
 }
 
 function resolveAuthorName(
-  author: { displayName: string | null } | null | undefined,
-  fallback: string,
+  author: CommunityAuthorLike | null | undefined,
+  fallback: string | null = null,
 ) {
-  return author?.displayName?.trim() || fallback;
+  return (
+    author?.displayName?.trim() ||
+    author?.name?.trim() ||
+    author?.fullName?.trim() ||
+    author?.username?.trim() ||
+    fallback
+  );
 }
 
 function resolveAuthorAvatarUrl(
-  author: { avatarUrl?: string | null } | null | undefined,
+  author: CommunityAuthorLike | null | undefined,
   seed: string,
 ) {
   return resolveUserAvatarUrl(author?.avatarUrl) || createAvatarFallbackUrl(seed);
@@ -167,11 +182,12 @@ function resolveAuthorAvatarUrl(
 export function decorateCommunityPosts(posts: CommunityPost[]): CommunityFeedCard[] {
   return posts.map((post) => {
     const hash = hashString(post.id);
-    const displayName = resolveAuthorName(post.author, post.userId || post.id);
+    const displayName = resolveAuthorName(post.author);
+    const avatarSeed = post.author?.id || post.userId || post.id;
 
     return {
       authorName: displayName,
-      avatarUrl: resolveAuthorAvatarUrl(post.author, displayName),
+      avatarUrl: resolveAuthorAvatarUrl(post.author, avatarSeed),
       coverImageUrl: post.coverImageUrl || post.trip?.coverImageUrl || null,
       decorativeCommentCount: (hash % 18) + 6,
       decorativeLikeCount: (hash % 260) + 48,
@@ -262,7 +278,7 @@ function createTripFeedCard({
 }): CommunityFeedCard {
   const hash = hashString(seed);
   const author = resolveTripAuthor(trip);
-  const authorName = resolveAuthorName(author, trip.userId || trip.id);
+  const authorName = resolveAuthorName(author);
   const normalized = [
     trip.name,
     trip.destination,
@@ -275,7 +291,7 @@ function createTripFeedCard({
 
   return {
     authorName,
-    avatarUrl: resolveAuthorAvatarUrl(author, authorName),
+    avatarUrl: resolveAuthorAvatarUrl(author, author?.id || trip.userId || trip.id),
     coverImageUrl,
     decorativeCommentCount: (hash % 18) + 6,
     decorativeLikeCount: (hash % 260) + 48,
