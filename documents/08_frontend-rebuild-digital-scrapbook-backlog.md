@@ -1445,6 +1445,17 @@ Tăng độ hiện diện mặc định của model 3D trên homepage, đồng t
 - [x] nới panel chứa canvas trên mobile và desktop để vùng hiển thị rộng hơn
 - [x] mở thêm khoảng zoom gần an toàn để người dùng soi model kỹ hơn mà không bị crop khó chịu
 
+## Follow-up homepage map motion cue and larger default presence
+
+### Mục tiêu
+
+Làm model homepage trông rõ là một object 3D sống và có thể tương tác bằng cách tăng hiện diện mặc định thêm một nấc và thêm chuyển động bob nhẹ khi idle.
+
+### Scope của lượt triển khai này
+
+- [x] tăng kích thước cảm nhận mặc định của model thêm một nấc nhưng không để mesh chạm khung
+- [x] thêm hiệu ứng lên xuống nhẹ ở trạng thái idle để gợi ý model là khối 3D tương tác được
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu

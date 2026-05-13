@@ -4,15 +4,16 @@ import {
   Bounds,
   Center,
   ContactShadows,
+  Float,
   OrbitControls,
   useGLTF,
 } from '@react-three/drei';
 import type { Group } from 'three';
 
 const VIETNAM_MAP_MODEL_URL = '/model/Map3d.glb';
-const VIETNAM_MAP_MODEL_SCALE = 0.9;
-const VIETNAM_MAP_BOUNDS_MARGIN = 0.94;
-const VIETNAM_MAP_MIN_DISTANCE = 1.2;
+const VIETNAM_MAP_MODEL_SCALE = 0.98;
+const VIETNAM_MAP_BOUNDS_MARGIN = 0.9;
+const VIETNAM_MAP_MIN_DISTANCE = 1.05;
 const VIETNAM_MAP_MAX_DISTANCE = 14;
 
 useGLTF.preload(VIETNAM_MAP_MODEL_URL);
@@ -46,7 +47,13 @@ export function VietnamMapModel() {
 
       <Suspense fallback={null}>
         <Bounds clip fit margin={VIETNAM_MAP_BOUNDS_MARGIN} observe>
-          <VietnamMapMesh />
+          <Float
+            floatingRange={[-0.12, 0.14]}
+            rotationIntensity={0.12}
+            speed={1.45}
+          >
+            <VietnamMapMesh />
+          </Float>
         </Bounds>
         <ContactShadows blur={2.4} far={3.4} opacity={0.24} position={[0, -1.75, 0]} scale={5.8} />
       </Suspense>
