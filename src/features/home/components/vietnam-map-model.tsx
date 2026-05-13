@@ -11,9 +11,9 @@ import {
 import type { Group } from 'three';
 
 const VIETNAM_MAP_MODEL_URL = '/model/Map3d.glb';
-const VIETNAM_MAP_MODEL_SCALE = 0.98;
-const VIETNAM_MAP_BOUNDS_MARGIN = 0.9;
-const VIETNAM_MAP_MIN_DISTANCE = 1.05;
+const VIETNAM_MAP_MODEL_SCALE = 1.18;
+const VIETNAM_MAP_BOUNDS_MARGIN = 0.74;
+const VIETNAM_MAP_MIN_DISTANCE = 0.9;
 const VIETNAM_MAP_MAX_DISTANCE = 14;
 
 useGLTF.preload(VIETNAM_MAP_MODEL_URL);
@@ -46,11 +46,11 @@ export function VietnamMapModel() {
       <directionalLight intensity={0.6} position={[-3, 2, -2]} color="#d4b483" />
 
       <Suspense fallback={null}>
-        <Bounds clip fit margin={VIETNAM_MAP_BOUNDS_MARGIN} observe>
+        <Bounds clip fit margin={VIETNAM_MAP_BOUNDS_MARGIN}>
           <Float
-            floatingRange={[-0.12, 0.14]}
-            rotationIntensity={0.12}
-            speed={1.45}
+            floatingRange={[-0.2, 0.22]}
+            rotationIntensity={0.2}
+            speed={2.05}
           >
             <VietnamMapMesh />
           </Float>
@@ -60,6 +60,8 @@ export function VietnamMapModel() {
       <OrbitControls
         enableDamping
         enablePan={false}
+        autoRotate
+        autoRotateSpeed={0.55}
         makeDefault
         maxDistance={VIETNAM_MAP_MAX_DISTANCE}
         minDistance={VIETNAM_MAP_MIN_DISTANCE}

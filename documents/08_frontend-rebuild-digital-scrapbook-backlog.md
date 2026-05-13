@@ -1456,6 +1456,18 @@ Làm model homepage trông rõ là một object 3D sống và có thể tương 
 - [x] tăng kích thước cảm nhận mặc định của model thêm một nấc nhưng không để mesh chạm khung
 - [x] thêm hiệu ứng lên xuống nhẹ ở trạng thái idle để gợi ý model là khối 3D tương tác được
 
+## Follow-up homepage map motion visibility correction
+
+### Mục tiêu
+
+Sửa lượt tinh chỉnh trước đó khi motion cue quá nhẹ và framing làm model trông nhỏ hơn, để model vừa lớn lên rõ rệt vừa có chuyển động idle dễ nhận ra ngay khi mở trang.
+
+### Scope của lượt triển khai này
+
+- [x] bỏ cấu hình fit gây triệt tiêu cảm giác phóng to hoặc làm motion khó nhìn thấy
+- [x] tăng hiện diện mặc định của model thêm một nấc rõ ràng
+- [x] làm motion idle và cue tương tác dễ nhận ra hơn ngay lần nhìn đầu
+
 ## FR-C - Structured planner surfaces
 
 ### Mục tiêu
